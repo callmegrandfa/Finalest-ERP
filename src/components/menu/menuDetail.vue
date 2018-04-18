@@ -193,6 +193,25 @@
                     </div>
                  </div>
             </el-col>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="auditInformation.createdTime" disabled></el-input>
+                    
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInformation.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                    <el-input v-model="auditInformation.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+        </el-col>
+
+
+
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -413,8 +432,13 @@
             expand:{
                 expandId_moduleParentId:[],//默认上级菜单树形展开id
                 expandId_Fn:[],//默认分配功能树形展开id
-            }
-            
+            },
+            auditInformation:{//审计信息
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },
             
       
         }
@@ -946,6 +970,23 @@
                     </span>
                 );
             }
+        },
+           GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
         }
     }
 
@@ -1037,6 +1078,11 @@
     background-color: #fff;
     padding-top: 15px;
   }
+  .menuDetail .getPadding{
+      padding: 0 10px;
+  }
+     
+
  .menuDetail .goBack{
      border: none;
      background-color: transparent; 
