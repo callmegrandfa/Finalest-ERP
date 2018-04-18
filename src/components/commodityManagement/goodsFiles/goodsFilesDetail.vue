@@ -1470,7 +1470,7 @@ export default {
    }
 }
 }   
-    
+  
   </script>
 
 <style>

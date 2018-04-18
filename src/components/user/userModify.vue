@@ -470,6 +470,7 @@
   export default({
     data(){
       return{
+        saveSuccess:false,
         firstModify:false,
         secondModify:false,
         ifModify:false,
@@ -620,29 +621,37 @@
       search(val) {
         this.$refs.tree.filter(val);
       },
-      addData:{
+        addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
         },
         checkedTable:{
-            handler:function(val,oldVal){
+             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.secondModify){ 
-                    _this.secondModify=!_this.secondModify;
+                if(!_this.saveSuccess){
+                    if(!_this.secondModify){
+                        _this.secondModify=!_this.secondModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                    _this.ifModify=false;
                 }
             },
             deep:true,
-        },
-    },
+        }
+     },
     methods: {
         getSelectData(){
             let _this=this;
@@ -699,6 +708,10 @@
                 modifiedBy:res.result.modifiedBy,
                 modifiedTime:res.result.modifiedTime,
             }
+                _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.secondModify=false;
+                _this.ifModify=false;
            },function(res){
 
            })
@@ -871,9 +884,10 @@
                             modifiedBy:res.result.modifiedBy,
                             modifiedTime:res.result.modifiedTime,
                         }
+                        _this.saveSuccess=true;
                         _this.firstModify=false;
-                        _this.ifModify=false;
                         _this.secondModify=false;
+                        _this.ifModify=false;
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}

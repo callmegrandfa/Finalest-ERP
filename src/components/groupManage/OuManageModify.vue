@@ -1058,7 +1058,6 @@ export default({
                 "ouTypes":[],//组织职能
             },
             companyOuId:0,//纪录组织本身id
-            ouTypes:[],//储存ouTypes
             basCompany:{//其他信息
                 "ouParentid": "",//整数
                 "legalPerson": "",
@@ -1473,24 +1472,12 @@ export default({
         this.$refs.trees.filter(val);
       },
       Company(val){
-          let _this=this;
           if(val){
-            //   let flag=false
-            //   $.each(_this.ouTypes,function(index,val){
-            //       if(val==1){
-            //           flag=true
-            //       }
-            //   })
-            //   if(flag){//当前组织是公司类型
-            //       _this.addData.companyOuId=this.companyOuId
-            //   }else{//当前组织不是公司类型
-            //       _this.addData.companyOuId=''
-            //   }
-              _this.addData.companyOuId=this.companyOuId
-              _this.addData.basCompany=this.basCompany
+              this.addData.companyOuId=this.companyOuId
+              this.addData.basCompany=this.basCompany
           }else{
-              _this.addData.companyOuId=''
-              delete _this.addData.basCompany
+              this.addData.companyOuId=''
+              delete this.addData.basCompany
           }
       },
       Business(val){
@@ -1639,8 +1626,8 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
-                _this.companyOuId=res.result.id;//储存当前公司ID
-                _this.ouTypes=res.result.ouTypes;//储存当前ouTypes
+                _this.companyOuId=res.result.id;
+          
                 _this.change_ouType()
              
                 if(res.result.basCompany!=null && typeof(res.result.basCompany)!='undefined' && res.result.basCompany!=[]){

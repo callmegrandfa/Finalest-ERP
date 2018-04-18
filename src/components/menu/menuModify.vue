@@ -350,6 +350,7 @@
   export default({
     data(){
         return{
+            saveSuccess:false,
             firstModify:false,
             secondModify:false,
             ifModify:false,
@@ -489,27 +490,34 @@
       addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
         },
-        checked:{
+      checked:{
             handler:function(val,oldVal){
-                
                 let _this=this;
-                if(!_this.secondModify){ 
-                    _this.secondModify=!_this.secondModify;
+                if(!_this.saveSuccess){
+                    if(!_this.secondModify){
+                        _this.secondModify=!_this.secondModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                    _this.ifModify=false;
                 }
             },
             deep:true,
-        },
-    },
+        }
+     },
     methods:{
         getData(){
             let _this=this;
@@ -547,6 +555,13 @@
                 _this.item.id=res.result.moduleParentId;
                 _this.item.moduleName=res.result.moduleParentId_ModuleName;
                 _this.loadPermission();
+                _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.secondModify=false;
+                // _this.thirfModify=false;
+                _this.forthModify=false;
+                _this.ifModify=false;
+                // _this.fiveModify=false;
             },function(res){
             })
         },
@@ -814,9 +829,11 @@
                             modifiedTime:res.result.modifiedTime,
                         }
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.saveSuccess=true;
                         _this.firstModify=false;
                         _this.secondModify=false;
                         _this.ifModify=false;
+                        
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
