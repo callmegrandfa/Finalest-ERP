@@ -1110,6 +1110,9 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
+ .menuModify .getPadding{
+      padding: 0 10px;
+  }
 .menu_box{
     display: none;
 }
