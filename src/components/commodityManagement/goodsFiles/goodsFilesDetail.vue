@@ -1462,15 +1462,15 @@ export default {
                 + " " + date.getHours() + seperator2 + date.getMinutes()
                 + seperator2 + date.getSeconds();
             return currentdate;
-     }
+     },
     
-        ,fileChange(data){
+        fileChange(data){
             console.log(data)
 
    }
-
+}
 }   
-}  
+  
   </script>
 
 <style>
