@@ -232,7 +232,7 @@
                     
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
-                    v-model="addData.ouName" 
+                    v-model="addData.ouFullname" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
@@ -1037,46 +1037,46 @@ export default({
                 "status": 1,//整数
                 "remark": "",
                 "ouTypes":[1,3],//组织职能
-                basCompany:{//其他信息
-                    "ouParentid": "",//整数
-                    "legalPerson": "",
-                    "status": 1,//整数
-                    "isGroupCompany": false,
-                    "regCapital": "",//整数
-                    "vatRegno": "",
-                    "regtime": "",
-                    "legalPersonIdnr": "",
-                    "mgtDeptCode": "",
-                    "mgtDeptName": "",
-                    "businessStart": "",
-                    "businessEnd": "",
-                    "legalPersonType": "",
-                    "introduction": "",
-                    "contact": "",
-                    "businessAddress": "",
-                    "contactAddress": "",
-                    "zipCode": "",
-                    "phone": "",
-                    "fax": "",
-                    "email": "",
-                    "webUrl": "",
-                    "remark": ""
-                },
-                basBusiness: {
-                    "ouParentid": '',
-                    "stmOuId": '',
-                    "status": 1
-                },
-                basFinance: {
-                    "stateTaxNo": "",
-                    "localTaxNo": "",
-                    "taxpayerRegNo": "",
-                    "taxpayerCode": "",
-                    "taxType": "",
-                    "delegateTaxType": "",
-                    "isTaxOu": false,
-                    "status": 1
-                },
+                // basCompany:{//其他信息
+                //     "ouParentid": "",//整数
+                //     "legalPerson": "",
+                //     "status": 1,//整数
+                //     "isGroupCompany": false,
+                //     "regCapital": "",//整数
+                //     "vatRegno": "",
+                //     "regtime": "",
+                //     "legalPersonIdnr": "",
+                //     "mgtDeptCode": "",
+                //     "mgtDeptName": "",
+                //     "businessStart": "",
+                //     "businessEnd": "",
+                //     "legalPersonType": "",
+                //     "introduction": "",
+                //     "contact": "",
+                //     "businessAddress": "",
+                //     "contactAddress": "",
+                //     "zipCode": "",
+                //     "phone": "",
+                //     "fax": "",
+                //     "email": "",
+                //     "webUrl": "",
+                //     "remark": ""
+                // },
+                // basBusiness: {
+                //     "ouParentid": '',
+                //     "stmOuId": '',
+                //     "status": 1
+                // },
+                // basFinance: {
+                //     "stateTaxNo": "",
+                //     "localTaxNo": "",
+                //     "taxpayerRegNo": "",
+                //     "taxpayerCode": "",
+                //     "taxType": "",
+                //     "delegateTaxType": "",
+                //     "isTaxOu": false,
+                //     "status": 1
+                // },
             },
             dateRange:[],//有效时间
             basCompany:{//其他信息
@@ -1564,6 +1564,7 @@ export default({
             // 会计期间方案值,启用年月
                 // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                 _this.addData.baseCurrencyId=resp.result.localCurrencyId;//本位币种id
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
                     // 会计期间方案下拉
                     _this.selectData.accCchemeId=res.result;
@@ -1580,7 +1581,7 @@ export default({
                          _this.ifModify=false;
                     // }
                 })
-                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+               
             })
             if(_this.$route.params.id!="default"){
                 _this.addData.ouParentid=parseInt(_this.$route.params.id);
@@ -1681,7 +1682,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
+                // _this.loadIcon();
             },function(res){
             })
         },
@@ -1692,7 +1693,7 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            _this.loadIcon();
+            // _this.loadIcon();
         },function(res){
         })
     },
@@ -1793,9 +1794,8 @@ export default({
         },
         isGroupCompany(){
             let _this=this;
-            _this.isUpdate()
             _this.basCompany.ouParentid='';
-            _this.validation.reset(0)
+            _this.validation.reset()
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1823,9 +1823,14 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
-                    // console.log(_this.addData)
+                    if(_this.Finance){
+                        _this.addData.basBusiness=_this.basBusiness;
+                    }
+                    if(_this.Business){
+                        _this.addData.basFinance=_this.basFinance;
+                    }
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
@@ -1946,8 +1951,15 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
+                    if(_this.Finance){
+                        _this.addData.basBusiness=_this.basBusiness;
+                    }
+                    if(_this.Business){
+                        _this.addData.basFinance=_this.basFinance;
+                    }
+                    
                     
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageDetail/default'

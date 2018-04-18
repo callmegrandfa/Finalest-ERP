@@ -1007,7 +1007,7 @@ export default({
 
                     //---根据区id反向获得行政地区所有资料
                     self.$axios.gets('/api/services/app/AdAreaManagement/Get',{Id:res.result.adAreaId}).then(function(res){
-                        // console.log(res);
+                        //console.log(res);
                         let ids = res.result.areaFullPathId;
                         let newid = ids.split('>')
                         //---保存获取的省市区id

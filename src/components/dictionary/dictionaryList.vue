@@ -20,9 +20,6 @@
                              :expand-on-click-node="false"
                              :filter-node-method="filterNode"
                              @node-click="nodeClick">
-                             <!-- oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" -->
-                             
-                             <!-- :render-content="renderContent" -->
                     </el-tree>
                 </el-col>   
             </el-col>
@@ -397,16 +394,15 @@
             loadTree(){
                 let self=this;
                 self.treeLoading=true;
-                self.$axios.gets('/api/services/app/DictManagement/GetDictionaryTree')
-                .then(function(res){
+                self.$axios.gets('/api/services/app/DictManagement/GetDictionaryTree').then(function(res){
                     console.log(res)
                     self.componyTree=res.result;
                     // console.log(self.componyTree)
                     self.treeLoading=false;
                     self.loadIcon();
-               },function(res){
-                   self.treeLoading=false;
-               })
+                },function(res){
+                    self.treeLoading=false;
+                })
             },
             loadIcon(){
                 let self=this;
