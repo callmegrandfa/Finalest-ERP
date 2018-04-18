@@ -1462,7 +1462,7 @@ export default {
                 + " " + date.getHours() + seperator2 + date.getMinutes()
                 + seperator2 + date.getSeconds();
             return currentdate;
-     }
+     },
     
         fileChange(data){
             console.log(data)
