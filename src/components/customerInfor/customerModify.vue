@@ -184,9 +184,11 @@
                                             :data="ouAr"
                                             :props="selectOuProps"
                                             node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
+                                            ref="outree"
+                                            :default-expanded-keys="ouExpandId"
+                                            :filter-node-method="ouFilterNode"
+                                            :render-content="renderContentOu"
+                                            highlight-current
                                             :expand-on-click-node="false"
                                             @node-click="ouNodeClick"></el-tree> 
 
@@ -254,10 +256,12 @@
                                             :data="cuAr"
                                             :props="selectCuProps"
                                             node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
+                                            ref="cutree"
+                                            :filter-node-method="cuFilterNode"
+                                            :default-expanded-keys="cuExpandId"
+                                            :render-content="renderContentCu"
                                             :expand-on-click-node="false"
+                                            highlight-current
                                             @node-click="cuNodeClick"></el-tree>
 
                                 <el-option v-show="false"
@@ -612,13 +616,6 @@
                                 </el-table-column>
 
                                 <el-table-column prop="proId" label="省" width="180">
-                                    <!-- <template slot-scope="scope">
-                                        <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.completeAddress" 
-                                            type="text"    
-                                            @change="handleAddressChange(scope.$index,scope.row)"/> 
-                                    </template> -->
                                     <template slot-scope="scope">
                                         <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row)'>
                                             <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
@@ -627,7 +624,6 @@
                                             </el-option>
                                         </el-select>   
                                     </template>
-                                 
                                 </el-table-column>
 
                                 <el-table-column prop="cityId" label="市" width="180">
@@ -718,7 +714,7 @@
 
                                             <el-input placeholder="搜索..."
                                                     class="selectSearch"
-                                                    v-model="ouSearch"></el-input> 
+                                                    v-model="ywSearch"></el-input> 
                                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                                     :data="ywAr"
                                                     :props="selectYwProps"
@@ -992,6 +988,12 @@ export default({
             },
             deep: true,
         },
+        cuSearch(val){
+            this.$refs.cutree.filter(val)
+        },
+        ouSearch(val){
+            this.$refs.outree.filter(val)
+        }
     },
     data() {
         return{
@@ -1014,6 +1016,7 @@ export default({
                     ouFullname:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认打开第一个树节点
             //-----------------------
 
             //---客户分类树形下拉-----
@@ -1028,6 +1031,7 @@ export default({
                     cuName:'',
                 },
                 cuAr:[],//客户分类下拉框
+                cuExpandId:[],//默认打开第一个树节点
             //-----------------------
 
             //---财务组织树形下拉-----
@@ -1208,6 +1212,8 @@ export default({
             InitBankData:[],
             InitAddData:[],
             InitOuData:[],
+            //使用组织里业务组织树形搜索框-------
+            ywSearch:'',
         }
     },
     validators: {
@@ -1410,6 +1416,7 @@ export default({
             self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res);
                 self.cuAr = res;
+                self.cuExpandId=self.defauleExpandTree(res,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1418,6 +1425,7 @@ export default({
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1536,6 +1544,60 @@ export default({
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
+        cuFilterNode(value,data){
+            if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+        },
+        ouFilterNode(value,data){
+            if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+        },
+        //---树render-content----------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        renderContentCu(h, { node, data, store }){//客户分类
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+        },    
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
+        },
+        //-----------------------------------------------------                    
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;

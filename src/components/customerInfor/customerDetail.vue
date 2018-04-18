@@ -151,8 +151,10 @@
                                     :data="ouAr"
                                     :props="selectOuProps"
                                     node-key="id"
-                                    default-expand-all
-                                    ref="tree"
+                                    ref="outree"
+                                    highlight-current
+                                    :default-expanded-keys="ouExpandId"
+                                    :render-content="renderContentOu"
                                     :filter-node-method="filterNode"
                                     :expand-on-click-node="false"
                                     @node-click="ouNodeClick"></el-tree> 
@@ -223,10 +225,12 @@
                                      :data="cuAr"
                                      :props="selectCuProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
+                                     ref="cutree"
+                                     :render-content="renderContentCu"
+                                     :default-expanded-keys="cuExpandId"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
+                                     highlight-current
                                      @node-click="cuNodeClick"></el-tree>
 
                             <el-option v-show="false"
@@ -870,6 +874,7 @@ export default({
                     ouFullname:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认展开第一个树节点
             //-----------------------
 
             //---客户分类树形下拉-----
@@ -884,6 +889,7 @@ export default({
                     cuName:'',
                 },
                 cuAr:[],//客户分类下拉框
+                cuExpandId:[],
              //-----------------------
 
             //---财务组织树形下拉-----
@@ -1161,6 +1167,13 @@ export default({
     //   search(val) {
     //     this.$refs.tree.filter(val);
     //   }
+        cuSearch(val){
+            this.$refs.cutree.filter(val)
+        },
+        ouSearch(val){
+            this.$refs.outree.filter(val)
+        }
+
     },
     methods:{
         //---下拉的数据------------------------------------------------------
@@ -1170,6 +1183,7 @@ export default({
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1206,7 +1220,8 @@ export default({
             self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res[0]);
                 self.cuAr = res;
-                console.log(self.cuAr)
+                //console.log(self.cuAr)
+                self.cuExpandId=self.defauleExpandTree(res,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1722,6 +1737,52 @@ export default({
             // if (!value) return true;
             //     return data.areaName.indexOf(value) !== -1;
         },
+        //---树render-content----------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        renderContentCu(h, { node, data, store }){//客户分类
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+        },  
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
+        },
+        //-----------------------------------------------------     
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;

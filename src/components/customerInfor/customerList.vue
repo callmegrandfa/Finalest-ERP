@@ -26,11 +26,14 @@
                                      :data="cuAr"
                                      :props="selectCuProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
-                                     :expand-on-click-node="false"
-                                     @node-click="cuNodeClick"></el-tree>
+                                     ref="khtree"
+                                     :default-expanded-keys="expandId"
+                                     :filter-node-method="khFilterNode"
+                                     @node-click="cuNodeClick"     
+                                     :render-content="renderContentKh"
+                                     :expand-on-click-node="false"                              
+                                     highlight-current
+                                     ></el-tree>
 
                             <el-option v-show="false"
                                        :key="countCu.id" 
@@ -55,10 +58,12 @@
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                                      :data="ouAr"
                                      :props="selectOuProps"
+                                     :default-expanded-keys="expandZhId"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     ref="zhtree"
+                                     highlight-current
+                                     :render-content="renderContentZh"
+                                     :filter-node-method="zhFilterNode"
                                      :expand-on-click-node="false"
                                      @node-click="ouNodeClick"></el-tree>
                             <el-option v-show="false"
@@ -332,14 +337,15 @@
                 cuSearch:'',
                 selectCuProps:{
                     children: 'childNodes',
-                    label: 'classFullname',
+                    label: 'className',
                     id:'id'
-                },
+                },                
                 cuItem:{
                     id:'',
                     cuFullname:'',
                 },
                 cuAr:[],//客户分类下拉框
+                expandId:[],//默认打开第一个树形节点
                 //-----------------------
                 //---所属组织树形下拉-----
                 ouSearch:'',
@@ -353,6 +359,7 @@
                     ouFullname:'',
                 },
                 ouAr:[],//所属组织下拉框
+                expandZhId:[],
                 //-----------------------
                 //---行政地区树形下拉-----
                 adSearch:'',//树形搜索框的
@@ -433,6 +440,14 @@
             this.loadSelect();
             
         },
+        watch:{
+            cuSearch(val){
+                this.$refs.khtree.filter(val)
+            },
+            ouSearch(val){
+                this.$refs.zhtree.filter(val)
+            }
+        },
         computed:{
             countCu () {
                 return this.cuItem;
@@ -452,7 +467,7 @@
             loadAllList:function(){//获取所有列表数据
                 let self = this;
                 this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
-                    console.log(res);
+                    //console.log(res);
                     self.allList = res.result.items;
                     self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
@@ -466,17 +481,20 @@
             loadSelect:function(){
                 let self = this;
                 //客户分类
+             
                 self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
-                    console.log(res);
                     self.cuAr = res;
+                    self.expandId=self.defauleExpandTree(res,'id')
+                    console.log(self.expandId)
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 })
                 //组织单元
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree',{AreaType:1}).then(function(res){
-                    console.log(res);
+                    //console.log(res);
                     self.ouAr = res.result;
+                    self.expandZhId=self.defauleExpandTree(res.result,'id')
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -547,7 +565,6 @@
                         self.allList = res.result;
                         self.total = 0;
                         self.totalPage = 0;
-
                     }
                     
                 },function(res){
@@ -738,6 +755,14 @@
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
+        khFilterNode(value,data){//客户分类搜索过滤
+            if (!value) return true;
+                return data.className.indexOf(value) !== -1;
+        },
+        zhFilterNode(value,data){//所属组织搜索过滤
+            if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+        },        
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;
@@ -773,6 +798,53 @@
         },
         //-----------------------------------------------------
 
+        //---树render-content----------------------------------
+        renderContentKh(h, { node, data, store }){//客户分类
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+        },
+        renderContentZh(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },        
+        //------------------------------------------------------
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
+        },
+        //-----------------------------------------------------
         //---获取错误信息---------------------------------------
         getErrorMessage(message,details,validationErrors){
             let _this=this;
