@@ -315,13 +315,11 @@
                 </el-table>   
             </el-col>
             <el-col :span="24" class="transfer_footer">
-                <el-col :span="18">
+                <div style="float:right">
                     <span>共{{totalPageLeftUser}}页</span>
-                </el-col>
-                <el-col :span="6">
                     <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
                     <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                </el-col>
+                </div>
             </el-col>
         </el-col>
         <el-col :span="2" class="transfer_btns">
@@ -365,13 +363,11 @@
                 
             </el-col>
             <el-col :span="24" class="transfer_footer">
-                <el-col :span="18">
+                <div style="float:right">
                     <span>共{{totalPageRightUser}}页</span>
-                </el-col>
-                <el-col :span="6">
                     <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
                     <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                </el-col>
+                </div>
             </el-col>
         </el-col>
     </el-col>
