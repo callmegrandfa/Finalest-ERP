@@ -1205,13 +1205,28 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.getAllRoleData();
+            // _this.getAllRoleData();
             _this.firstModify=false;
             _this.secondModify=false;
             _this.ifModify=false;
         },
         clearData(){
             let _this=this;
+              _this.addData={
+                userCode: "",
+                displayName: "",
+                phoneNumber: "",
+                email: "",
+                userGroupId: "",
+                ouId: "",
+                status: 1,
+                userType: "",
+                languageId: 9,
+                isReg: false,
+                remark: "",
+                roleCodes: [],
+            },
+            _this.validation.reset(); 
             _this.getDefault()
         },
         saveAdd(){
