@@ -351,7 +351,12 @@ export default {
         message: "",
         validationErrors: []
       },
-       auditInfo:{},//审计信息
+       auditInfo:{
+          createdBy:"",
+          createdTime:"",
+          modifiedBy:"",
+          modifiedTime:"",
+       },//审计信息
        expand:{
             expandId_addDataOu:[],//默认下拉树形展开id
             isHere_addDataOu:false,//是否存在id于树形
@@ -418,8 +423,27 @@ export default {
                     modifiedBy:res.result.modifiedBy,
                     modifiedTime:res.result.modifiedTime,
                 }
-          
+
+
           });
+          self.$axios
+        .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
+        .then(
+          function(res) {
+            // console.log(res);
+             self.selectParentTree = res;
+             self.defauleExpandTree('classParentId','expandId_addDataOu',res,'id','children')
+                if(self.expand.expandId_addDataOu<1){
+                    self.expand.expandId_addDataOu=[self.selectParentTree[0].id]
+                   
+                }
+                //  console.log(self.expand.expandId_addDataOu<1);
+            self.loadCheckSelect('classParentId',self.customerClassData.classParentId);
+          },
+          function(res) {
+            // self.treeLoading = false;
+          }
+        );
       }
     },
     defauleExpandTree(model,expandName,response,responseKey,children){

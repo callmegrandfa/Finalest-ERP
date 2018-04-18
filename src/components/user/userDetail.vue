@@ -515,7 +515,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -1201,13 +1201,28 @@
         Cancel(){
             let _this=this;
             _this.clearData();
-            _this.getAllRoleData();
+            // _this.getAllRoleData();
             _this.firstModify=false;
             _this.secondModify=false;
             _this.ifModify=false;
         },
         clearData(){
             let _this=this;
+              _this.addData={
+                userCode: "",
+                displayName: "",
+                phoneNumber: "",
+                email: "",
+                userGroupId: "",
+                ouId: "",
+                status: 1,
+                userType: "",
+                languageId: 9,
+                isReg: false,
+                remark: "",
+                roleCodes: [],
+            },
+            _this.validation.reset(); 
             _this.getDefault()
         },
         saveAdd(){
