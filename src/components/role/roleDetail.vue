@@ -222,7 +222,7 @@
                             <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
                             <el-table-column prop="ouTypes" label="组织类型"></el-table-column>
-
+                            <el-table-column prop="ouName" label="组织名称"></el-table-column>
                             <el-table-column prop="assignPerson" label="授权人"></el-table-column>
 
                             <el-table-column label="授权时间">
@@ -497,28 +497,30 @@
      
     <el-col :span="22" class="auditInformation getPadding">
         <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor"><label>创建人</label><el-input disabled="disabled"></el-input></div>
+         <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
             <div class="bgcolor">
                 <label>创建时间</label>
                 <el-date-picker 
-                type="date" 
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss" 
-                disabled>
-            </el-date-picker>
-        </div>
-            <div class="bgcolor"><label>修改人</label><el-input disabled="disabled"></el-input></div>
-            <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker 
+                v-model="auditInformation.createdTime" 
                 type="date" 
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss" 
                 disabled>
                 </el-date-picker>
             </div>
-        </div>                                  
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker 
+                v-model="auditInformation.modifiedTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
+        </div>                                   
     </el-col>
 </el-row>       
  <!-- dialog数据变动提示 -->
@@ -740,7 +742,12 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
-
+            auditInformation:{//审计信息
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },
             expand:{
                 expandId_addDataOu:[],//默认下拉树形展开id
                 isHere_addDataOu:false,//是否存在id于树形
@@ -870,29 +877,23 @@ export default({
             _this.loadTree_ou()
             })
         },
-        // getModifyData(){
-        //     let _this=this;
-        //      _this.$axios.gets('/api/services/app/Role/Get',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         // _this.addData=res.result;
-        //         _this.addData={
-        //             "ouId": res.result.ouId,
-        //             "roleCode": res.result.roleCode,
-        //             "displayName": res.result.displayName,
-        //             "status": res.result.status,
-        //             "remark": res.result.remark,
-        //             "id": res.result.id,
-        //             }
-        //         _this.auditInformation={//审计信息
-        //             createdBy:res.result.createdBy,
-        //             createdTime:res.result.createdTime,
-        //             modifiedBy:res.result.modifiedBy,
-        //             modifiedTime:res.result.modifiedTime,
-        //         }
-
-        //         },function(res){
-        //     })
-        // },
+             GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        },
          open(tittle,iconClass,className) {
             this.$notify({
             position: 'bottom-right',

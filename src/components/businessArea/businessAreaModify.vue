@@ -257,6 +257,7 @@
   export default({
     data(){
       return{
+        saveSuccess:false,
         firstModify:false,
         ifModify:false,
     // 错误信息提示开始
@@ -380,15 +381,19 @@
         addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
+          }
         },
-    },
     methods: {
         getSelectData(){
             let _this=this;
@@ -468,6 +473,9 @@
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
                 // _this.loadTree('ouId',res.result.ouId);  
+                _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.ifModify=false;
             },function(res){    
 
             })  
@@ -586,6 +594,7 @@
                     _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
                     .then(function(res){
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                         _this.saveSuccess=true;
                         _this.firstModify=false;
                         _this.ifModify=false;
                     },function(res){
