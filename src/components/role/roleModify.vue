@@ -1079,9 +1079,9 @@ export default({
              let _this=this;
             _this.$axios.deletes('/api/services/app/Role/Delete',{id:_this.$route.params.id})
             .then(function(res){
+                 _this.open('删除成功','el-icon-circle-check','successERP');
                 _this.dialogUserConfirm=false;
-                _this.open('删除成功','el-icon-circle-check','successERP');
-                _this.add();
+                _this.back();
             },function(res){
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
