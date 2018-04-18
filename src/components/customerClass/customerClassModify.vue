@@ -2,14 +2,14 @@
     <div class="customerClassModify">
         <el-row class="fixed">
             <el-col :span="24">
-                <button @click="isBack" class="erp_bt bt_back">
+                <button @click="isBack(1)" class="erp_bt bt_back" >
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
                 
-              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="save" plain class="erp_bt bt_save" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -26,14 +26,14 @@
                 </div>
                 <span class="btDetail">保存并新增</span>
               </button>
-                  <button class="erp_bt bt_add" @click="goDetail" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
+                  <button class="erp_bt bt_add" @click="addNew" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delModify" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
+                <button class="erp_bt bt_del" @click="delModify(3)" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -255,19 +255,19 @@
 <script>
 export default {
   created: function() {
+    // let self = this;
+    // self.loadData();
+    // self.loadOuTree();
+    
+   
+  },
+  mounted:function(){
     let self = this;
     self.loadData();
-    // self.loadOuTree();
-    self.loadStatus();
     self.loadParentTree();
-  },
+    self.loadStatus();
+    },
   computed: {
-    // countOu () {
-    //     return this.ouItem;
-    //     },
-    // count() {
-    //   return this.parentItem;
-    // }
   },
   watch: {
     parentSearch(val) {
@@ -399,6 +399,7 @@ export default {
       //根据id加载信息
       let self = this;
       if (self.$route.params.id != "default") {
+          self.firstModify = false;
         self.$axios
           .gets("/api/services/app/ContactClassManagement/Get", {
             id: self.$route.params.id
@@ -546,10 +547,14 @@ export default {
     //-------------------------------------------------------
 
     //---顶部删除按钮-----------------------------------------
-    delModify: function() {
-      let self = this;
-      self.dialogDelConfirm = true;
-    },
+      delModify:function(num){
+          let self = this;
+          if(!self.ifModify){
+              self.who = num
+              self.dialogDelConfirm = true;
+          }
+          
+      },
     //---保存新增---------------------------------------------
     Modify: function() {
       //判断数据是否修改过
@@ -689,7 +694,7 @@ export default {
         customClass: className
       });
     },
-    back(row) {
+    back(){
       this.$store.state.url = "/customerClass/customerClassList/default";
       this.$router.push({ path: this.$store.state.url }); //点击切换路由
     },
@@ -703,6 +708,13 @@ export default {
       //点击新增跳转
       this.$store.state.url = "/customerClass/customerClassDetail/default";
       this.$router.push({ path: this.$store.state.url }); //点击切换路由
+    },
+     addNew:function(){
+        let self = this;
+        if(!self.ifModify){
+            this.$store.state.url='/customerClass/customerClassDetail/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        }
     },
     //---------------------------------------------------------
     //---错误提示-------------------------------------------
