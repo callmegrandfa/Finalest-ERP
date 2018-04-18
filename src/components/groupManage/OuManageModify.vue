@@ -1454,11 +1454,6 @@ export default({
         }
       },
     },
-    computed:{
-        count () {
-            return this.ischeck;
-            },
-    },
     created:function(){
         let _this=this;
          _this.loadTree();
