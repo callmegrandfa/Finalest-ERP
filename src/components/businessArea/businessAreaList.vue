@@ -211,6 +211,9 @@
                 row:{},//存储用户点击删除条目数据
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
                 multipleSelection: [],//复选框选中数据
+                idArray: {
+                    ids: []
+                },
 //--------------确认删除开始-----------------    
                 searchLeft:'',
                 timeout:null,
@@ -417,24 +420,29 @@
                 }
             },
             delRow(){//多项删除
-                let _this=this;
-                let data={
-                    "createList": [],
-                    "updateList": [],
-                    "deleteList": _this.multipleSelection
+               let _this=this;
+                 for (let i in _this.multipleSelection) {
+                    _this.idArray.ids.push(_this.multipleSelection[i].id);
                 }
-                _this.$axios.posts('/api/services/app/OpAreaManagement/CUDAggregate',data)
+                if(_this.idArray.ids.length > 0){
+                _this.$axios.posts('/api/services/app/OpAreaManagement/BatchDelete',_this.idArray)
                 .then(function(res){
                      _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                         _this.loadTableData();
                         _this.loadTree();
+                        _this.idArray = {
+                             ids: [],
+                         };
                 },function(res){
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                    
                     _this.dialogUserConfirm=false;
                     _this.errorMessage=true;
+                    _this.idArray = {
+                        ids: [],
+                    };
                 })
+                }
             },
             delThis(){//单项删除
                 let _this=this;
