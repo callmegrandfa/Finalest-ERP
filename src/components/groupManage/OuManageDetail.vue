@@ -1577,6 +1577,8 @@ export default({
                     // if(flag){
                         _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间方案 
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     // }
                 })
                
@@ -1835,6 +1837,8 @@ export default({
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1965,7 +1969,6 @@ export default({
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.clearData();
                         _this.firstModify=false;
-                        _this.secondModify=false;
                         _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
