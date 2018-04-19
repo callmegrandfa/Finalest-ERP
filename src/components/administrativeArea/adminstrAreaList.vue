@@ -202,7 +202,7 @@
     </div>
 </template>
 
-<script>
+ <script>
     import submitError from '../Common/submitError';
     export default {
         name:'adminstrAreaList',
