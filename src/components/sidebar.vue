@@ -494,10 +494,10 @@ export default {
     left: 150px;
     overflow: hidden;
     cursor: pointer;
-     transition: all 2s;
-    -moz-transition: all 2s;
-    -webkit-transition: all 2s;
-    -o-transition: all 2s,;
+     transition: all .5s;
+    -moz-transition: all .5s;
+    -webkit-transition: all .5s;
+    -o-transition: all .5s;
 }
 
 .infoActive{

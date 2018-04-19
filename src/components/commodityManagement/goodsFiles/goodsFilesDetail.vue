@@ -125,9 +125,9 @@
                     placeholder=""
                     v-model="product_MainTable.brandId">
                         <el-option 
-                        v-for="item in selectData.categoryId" 
+                        v-for="item in selectData.brand" 
                         :key="item.id" 
-                        :label="item.accperiodSchemeName" 
+                        :label="item.brandName" 
                         :value="item.id">
                         </el-option>
                     </el-select>
@@ -142,9 +142,9 @@
                     placeholder=""
                     v-model="product_MainTable.unitId">
                         <el-option 
-                        v-for="item in selectData.categoryId" 
+                        v-for="item in selectData.unit" 
                         :key="item.id" 
-                        :label="item.accperiodSchemeName" 
+                        :label="item.unitId_UnitName"
                         :value="item.id">
                         </el-option>
                     </el-select>
@@ -199,9 +199,9 @@
                 <el-col :span="24">
                     <div class="bgcolor longWidth">
                         <label></label>
-                        <el-checkbox :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.uniqueMgt">唯一码管理</el-checkbox>
-                        <el-checkbox :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.lotMgt">批次管理</el-checkbox>
-                        <el-checkbox :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.validityMgt">有效期管理</el-checkbox>
+                        <el-checkbox v-if="CategoryData.uniqueCodeMgt" :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.uniqueMgt">唯一码管理</el-checkbox>
+                        <el-checkbox v-if="CategoryData.lotMgt" :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.lotMgt">批次管理</el-checkbox>
+                        <el-checkbox v-if="CategoryData.validityMgt" :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.validityMgt">保质期管理</el-checkbox>
                     </div>
                     <div class="bgcolor" v-if="product_MainTable.validityMgt">
                         <label>保质天数</label>
@@ -806,6 +806,7 @@ export default {
                 modifiedTime:this.GetDateTime(),//修改人
                 modifiedBy:this.$store.state.name//修改时间
             },//审计信息
+            "CategoryData":{},//当前类目的关联信息
             "product_MainTable":{//商品档案主表
                 'id':0,
                 "groupId": 1,
@@ -935,11 +936,13 @@ export default {
             isSave:true,//是否可以保存
             selectData:{//select数据
                 Status001:[],//启用状态
-                ouParentid:[],//上级业务单元
-                accCchemeId:[],//会计期间方案
-                baseCurrencyId:[],//本位币种
-                OUType:[],//组织类型
-                ou:[],
+                // ouParentid:[],//上级业务单元
+                // accCchemeId:[],//会计期间方案
+                // baseCurrencyId:[],//本位币种
+                // OUType:[],//组织类型
+                // ou:[],
+                brand:[],//品牌
+                unit:[],//单位
             },
              response:{
                 details:'',
@@ -1043,7 +1046,7 @@ export default {
       search_categoryId(val) {
         this.$refs.tree.filter(val);
       },
-      'product_MainTable.categoryId'(val){
+      'product_MainTable.categoryId'(val){//类目值
           if(val!=''){
               this.isCategoryIdEmpty=true
           }else{
@@ -1054,46 +1057,70 @@ export default {
             if(!val){
                 delete this.product_MainTable.validDays;//保质天数
             }
-      }
+      },
+      
     },
     methods:{
         getDefault(){
             let _this=this;
-           _this.product_MainTable={
-                "groupId": 1,
-                "categoryId": '',//类目ID 
-                "brandId": 1,//品牌
-                "productCode": "",//商品编码
-                "productName": "",//商品名称
-                "mnemonic": "",//助记码
-                "barcode": "",//条码(产品级，囯码) 
-                "saleDate": "",//上市日期
-                "unitId": 1,//基本单位
-                "uniqueMgt": false,//唯一码管理 
-                "lotMgt": false,//批次管理 
-                "validityMgt": false,//有效期管理 
-                "validDays": 0,//保质天数 
-                "multiUnitEnabled": false,//启用多单位 ,
-                "isSuite": false,//是否套件
-                "purchasePrice": 0,//进货价 
-                "purchaseUnit": '',//进货默认单位 
-                "wholePrice": 0,//批发价
-                "wholeUnit": '',//批发默认单位
-                "discount": 1,//折扣
-                "vipPrice": '',//会员价 
-                "retailPrice": 0,//零售价
-                "retailUnit": 0,//零售默认单位
-                "remark": "",//备注
-                "status": 0,//状态
-                }
+        //    _this.product_MainTable={
+        //         "groupId": 1,
+        //         "categoryId": '',//类目ID 
+        //         "brandId": 1,//品牌
+        //         "productCode": "",//商品编码
+        //         "productName": "",//商品名称
+        //         "mnemonic": "",//助记码
+        //         "barcode": "",//条码(产品级，囯码) 
+        //         "saleDate": "",//上市日期
+        //         "unitId": 1,//基本单位
+        //         "uniqueMgt": false,//唯一码管理 
+        //         "lotMgt": false,//批次管理 
+        //         "validityMgt": false,//有效期管理 
+        //         "validDays": 0,//保质天数 
+        //         "multiUnitEnabled": false,//启用多单位 ,
+        //         "isSuite": false,//是否套件
+        //         "purchasePrice": 0,//进货价 
+        //         "purchaseUnit": '',//进货默认单位 
+        //         "wholePrice": 0,//批发价
+        //         "wholeUnit": '',//批发默认单位
+        //         "discount": 1,//折扣
+        //         "vipPrice": '',//会员价 
+        //         "retailPrice": 0,//零售价
+        //         "retailUnit": 0,//零售默认单位
+        //         "remark": "",//备注
+        //         "status": 0,//状态
+        //         }
         },
         getSelectData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-            // 启用状态
-            _this.selectData.Status001=res.result;
+                // 启用状态
+                _this.selectData.Status001=res.result;
             })
-           
+           _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+                // 品牌
+                if(res.result.totalCount>0){
+                    _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount})
+                    .then(function(resp){
+                        _this.selectData.brand=resp.result.items;
+                    })
+                }else{
+                    _this.selectData.brand=[]
+                }
+
+            })
+             _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+                // 单位，多单位
+                if(res.result.totalCount>0){
+                    _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount})
+                    .then(function(resp){
+                        _this.selectData.unit=resp.result.items;
+                    })
+                }else{
+                    _this.selectData.unit=[]
+                }
+
+            })
         },
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
@@ -1238,10 +1265,12 @@ export default {
         },
         changeCategoryId(){//类目改变
             let _this=this;
+            _this.CategoryData={}
             if(_this.product_MainTable.categoryId!=''){
                 _this.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:_this.product_MainTable.categoryId})
                 .then(function(res){
-                    console.log(res)    
+                    // console.log(res.result)
+                    _this.CategoryData=res.result
                 },function(res){
 
                 })
