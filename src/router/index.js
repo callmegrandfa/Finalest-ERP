@@ -216,6 +216,15 @@ const commercialSpecificationModify= ()=>//商品规格平台详情
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
+const specification= ()=>//商品规格组
+    import ('../components/commodityManagement/specification')
+const specificationOfGoodsList= ()=>//商品规格组specification
+    import ('../components/commodityManagement/specificationOfGoodsList') 
+const specificationOfGoodsDetails= ()=>//商品规格组
+    import ('../components/commodityManagement/specificationOfGoodsDetails')
+const specificationOfGoodsModify= ()=>//商品规格组
+    import ('../components/commodityManagement/specificationOfGoodsModify')  
+
  // 职员资料
     const staff = () =>
     import ('../components/staffInfo/staff')
@@ -588,6 +597,19 @@ const routes = [
                     // { path: '/commodityleimu/CommodityCategories/:id', component: CommodityCategories, name: 'CommodityCategories' },
                     { path: '/commodityProperty/commodityPropertyModify/:id', component: commodityPropertyModify, name: 'commodityPropertyModify' },
                     { path: '/commodityProperty/commodityPropertyDetails/:id', component: commodityPropertyDetails, name: 'commodityPropertyDetails' },
+                ]
+            },
+            {
+                path: '/specification',
+                component: specification,
+                name: 'specification',
+                redirect: function() { //商品规格组
+                    return redirectRouter('specification')
+                },
+                children: [
+                    { path: '/specification/specificationOfGoodsList/:id', component: specificationOfGoodsList, name: 'specificationOfGoodsList' }, //商品属性
+                    { path: '/specification/specificationOfGoodsDetails/:id', component: specificationOfGoodsDetails, name: 'specificationOfGoodsDetails' },
+                    { path: '/specification/specificationOfGoodsModify/:id', component: specificationOfGoodsModify, name: 'specificationOfGoodsModify' },
                 ]
             },
             {
