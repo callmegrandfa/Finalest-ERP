@@ -434,6 +434,7 @@
                     _this.errorMessage=true;
                 })
             },
+            // -----批量删除----------------
             delRow(){
                 let _this=this;
                 for (let i in _this.multipleSelection) {
