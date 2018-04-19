@@ -151,8 +151,10 @@
                                     :data="ouAr"
                                     :props="selectOuProps"
                                     node-key="id"
-                                    default-expand-all
-                                    ref="tree"
+                                    ref="outree"
+                                    highlight-current
+                                    :default-expanded-keys="ouExpandId"
+                                    :render-content="renderContentOu"
                                     :filter-node-method="filterNode"
                                     :expand-on-click-node="false"
                                     @node-click="ouNodeClick"></el-tree> 
@@ -223,10 +225,12 @@
                                      :data="cuAr"
                                      :props="selectCuProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
+                                     ref="cutree"
+                                     :render-content="renderContentCu"
+                                     :default-expanded-keys="cuExpandId"
                                      :filter-node-method="filterNode"
                                      :expand-on-click-node="false"
+                                     highlight-current
                                      @node-click="cuNodeClick"></el-tree>
 
                             <el-option v-show="false"
@@ -349,16 +353,22 @@
                     <div class="bgcolor area">
                         <label>行政地区</label>
                         <div class="areaBox">
-                            <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
+                            <el-select v-model="proIDT" class="areaDrop" placeholder="选择省" @change='chooseProvince(proIDT)'>
                                 <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                 </el-option>
-                            </el-select>
-                            <el-select v-model="cityId" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityId)'>
-                                <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                <el-option v-show='false' label='无' :value="provinceValue">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="createContactParams.adAreaId" class="areaDrop" placeholder="选择区" @change='chooseDis()'>
+                            <el-select v-model="cityIdT" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityIdT)'>
+                                <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                </el-option>
+                                <el-option v-show="false" label="无" :value="cityValue">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="quIdT" class="areaDrop" placeholder="选择区" @change='chooseDis(quIdT)'>
                                 <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                </el-option>
+                                <el-option v-show="false" label="无" :value="areaValue">
                                 </el-option>
                             </el-select>
                         </div>
@@ -587,32 +597,47 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="phone" label="省" width="180">
+                            <el-table-column prop="proId" label="省" width="180">
+                                <!-- <template slot-scope="scope">
+                                    <input class="input-need" 
+                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                        v-model="scope.row.completeAddress" 
+                                        type="text"    
+                                        @change="handleAddressChange(scope.$index,scope.row)"/> 
+                                </template> -->
                                 <template slot-scope="scope">
-                                    <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
-                                        <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row.proId)'>
+                                        <el-option v-for="item in areaProArray1" :key="item.id" :label="item.areaName" :value="item.id">
+                                        </el-option>
+                                        <el-option v-show="false" label="无" :value="provinceValue">
+                                        </el-option>
+                                    </el-select>   
+                                </template>
+                                
+                            </el-table-column>
+
+                            <el-table-column prop="cityId" label="市" width="180">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row.cityId)'>
+                                        <el-option v-for="item in areaCityArray2" :key="item.id" :label="item.areaName" :value="item.id">
+                                        </el-option>
+                                        <el-option v-show="false" label="无" :value="cityValue">
                                         </el-option>
                                     </el-select>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="id" label="市" width="180">
+                            <el-table-column prop="quId" label="区" width="180">
                                 <template slot-scope="scope">
-                                    <el-select  class="areaDrop" placeholder="选择市" v-model="cityId" @change='chooseCity(cityId)'>
-                                        <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                    <el-select v-model="scope.row.quId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row.quId)'>
+                                        <el-option v-for="item in areaDisArray3" :key="item.id" :label="item.areaName" :value="item.id">
                                         </el-option>
-                                    </el-select> 
+                                        <el-option v-show="false" label="无" :value="areaValue">
+                                        </el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="phone" label="区" width="180">
-                                <template slot-scope="scope">
-                                    <el-select  class="areaDrop" placeholder="选择区" v-model="createContactParams.adAreaId" @change='chooseDis()'>
-                                        <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
-                                        </el-option>
-                                    </el-select> 
-                                </template>
-                            </el-table-column>
 
                             <el-table-column prop="contactPerson" label="联系人" width="180">
                                 <template slot-scope="scope">
@@ -767,7 +792,7 @@
     <!-- dialog -->
 
     <!-- dialog是否删除提示 -->
-    <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+    <!-- <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
         <template slot="title">
             <span class="dialog_font">提示</span>
         </template>
@@ -782,7 +807,7 @@
             <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
             <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
         </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- dialog -->
 
     <!-- dialog错误信息提示 -->
@@ -855,6 +880,7 @@ export default({
                     ouFullname:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认展开第一个树节点
             //-----------------------
 
             //---客户分类树形下拉-----
@@ -869,6 +895,7 @@ export default({
                     cuName:'',
                 },
                 cuAr:[],//客户分类下拉框
+                cuExpandId:[],
              //-----------------------
 
             //---财务组织树形下拉-----
@@ -884,11 +911,21 @@ export default({
                 },
                 fiAr:[],//财务组织下拉框
             //-----------------------    
-
-            //---行政地区树形下拉-----
+            //上面的行政地区----------
+                proIDT:'',
+                cityIdT:'',
+                quIdT:'',
+                provinceValue:0,
+                cityValue:0,
+                areaValue:0,
                 areaProArray:[],//行政地区(省)
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
+
+            //---行政地区树形下拉-----
+                areaProArray1:[],//行政地区(省)
+                areaCityArray2:[],//行政地区(市)
+                areaDisArray3:[],//行政地区(区)
                 proId:'',//省id
                 cityId:'',//市id
             //-----------------------
@@ -1013,7 +1050,7 @@ export default({
             zrows:[],
             backId:'',
             //---确认删除-----------------               
-            dialogDelConfirm:false,//用户删除保存提示信息
+            //dialogDelConfirm:false,//用户删除保存提示信息
             // row:{},//存储用户点击删除条目数据
             // choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
             //--------------------  
@@ -1146,6 +1183,13 @@ export default({
     //   search(val) {
     //     this.$refs.tree.filter(val);
     //   }
+        cuSearch(val){
+            this.$refs.cutree.filter(val)
+        },
+        ouSearch(val){
+            this.$refs.outree.filter(val)
+        }
+
     },
     methods:{
         //---下拉的数据------------------------------------------------------
@@ -1155,6 +1199,7 @@ export default({
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1191,7 +1236,8 @@ export default({
             self.$axios.gets('/api/services/app/ContactClassManagement/GetTreeList',{Ower:1}).then(function(res){
                 // console.log(res[0]);
                 self.cuAr = res;
-                console.log(self.cuAr)
+                //console.log(self.cuAr)
+                self.cuExpandId=self.defauleExpandTree(res,'id')
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1227,9 +1273,10 @@ export default({
                 console.log('err'+res)
             });
             //行政地区获取省
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
-                console.log(res);
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
+                //console.log(res);
                 self.areaProArray = res.result;
+                self.areaProArray1 = res.result;
                 // self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1401,8 +1448,11 @@ export default({
                     addressId: 0,
                     contactPerson: "",
                     phone: "",
-                    isDefault: false
-                };
+                    isDefault: false,
+                    proId:'',
+                    cityId:'',
+                    quId:''
+                };               
                 self.addressData.unshift(self.yrows.newCol);
                 self.addAddressList.unshift(self.yrows.newCol)
         },
@@ -1431,69 +1481,139 @@ export default({
             if(self.who == 1){//银行单项删除
                 self.bankData.splice(self.whoIndex,1);
                 self.addBankList.splice(self.whoIndex,1);
-                self.dialogDelConfirm = false;
+                //self.dialogDelConfirm = false;
             };
             if(self.who == 2){//地址单项删除
                 self.addressData.splice(self.whoIndex,1);
                 self.addAddressList.splice(self.whoIndex,1)
-                self.dialogDelConfirm = false;
+                //self.dialogDelConfirm = false;
             };
             if(self.who == 3){//组织单项删除
                 self.ouData.splice(self.whoIndex,1);
                 self.addOuList.splice(self.whoIndex,1);
-                self.dialogDelConfirm = false;
+                //self.dialogDelConfirm = false;
             }
             if(self.who == 4){//银行批量删
                 let x = [];
-                $.each(self.addBankList,function(index,value){
+                $.each(self.bankData,function(index,value){
                     let flag = false;
                     $.each(self.multipleSelection,function(i,val){
-                        if(value == val){
+                        if(value==val){
                             flag = true;
                         }
                     })
                     if(!flag){
                         x.push(value)
                     }
-                }) 
-                self.addBankList = x;
+                })
                 self.bankData = x;
-                self.dialogDelConfirm = false;
+                self.addBankList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addBankList.push(x[i])
+                        console.log(self.addBankList)
+                    }
+                }
             }
-            if(self.who == 5){//地址批量删
+            if(self.who == 5){//地址多项删除
                 let x = [];
-                $.each(self.addAddressList,function(index,value){
+                $.each(self.addressData,function(index,value){
                     let flag = false;
                     $.each(self.multipleSelectionAdd,function(i,val){
-                        if(value == val){
+                        if(value==val){
                             flag = true;
                         }
                     })
                     if(!flag){
                         x.push(value)
                     }
-                }) 
-                self.addAddressList = x;
+                })
                 self.addressData = x;
-                self.dialogDelConfirm = false;
-            }
-            if(self.who == 6){//地址批量删
+                self.addAddressList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addAddressList.push(x[i])
+                        console.log(self.addAddressList)
+                    }
+                }
+            }   
+            if(self.who == 6){//使用组织多项删除 
                 let x = [];
-                $.each(self.addOuList,function(index,value){
+                $.each(self.ouData,function(index,value){
                     let flag = false;
                     $.each(self.multipleSelectionOu,function(i,val){
-                        if(value == val){
+                        if(value==val){
                             flag = true;
                         }
                     })
                     if(!flag){
                         x.push(value)
                     }
-                }) 
-                self.addOuList = x;
+                })
                 self.ouData = x;
-                self.dialogDelConfirm = false;
+                self.addOuList = [];
+                for(let i in x){
+                    if(x[i].id==''||x[i].id==undefined){
+                        // console.log(x[i])
+                        self.addOuList.push(x[i])
+                        console.log(self.addOuList)
+                    }
+                }  
             }
+
+            // if(self.who == 4){//银行批量删
+            //     let x = [];
+            //     $.each(self.addBankList,function(index,value){
+            //         let flag = false;
+            //         $.each(self.multipleSelection,function(i,val){
+            //             if(value == val){
+            //                 flag = true;
+            //             }
+            //         })
+            //         if(!flag){
+            //             x.push(value)
+            //         }
+            //     }) 
+            //     self.addBankList = x;
+            //     self.bankData = x;
+            //     //self.dialogDelConfirm = false;
+            // }
+            // if(self.who == 5){//地址批量删
+            //     let x = [];
+            //     $.each(self.addAddressList,function(index,value){
+            //         let flag = false;
+            //         $.each(self.multipleSelectionAdd,function(i,val){
+            //             if(value == val){
+            //                 flag = true;
+            //             }
+            //         })
+            //         if(!flag){
+            //             x.push(value)
+            //         }
+            //     }) 
+            //     self.addAddressList = x;
+            //     self.addressData = x;
+            //     //self.dialogDelConfirm = false;
+            // }
+            // if(self.who == 6){//地址批量删
+            //     let x = [];
+            //     $.each(self.addOuList,function(index,value){
+            //         let flag = false;
+            //         $.each(self.multipleSelectionOu,function(i,val){
+            //             if(value == val){
+            //                 flag = true;
+            //             }
+            //         })
+            //         if(!flag){
+            //             x.push(value)
+            //         }
+            //     }) 
+            //     self.addOuList = x;
+            //     self.ouData = x;
+            //     //self.dialogDelConfirm = false;
+            // }
 
         },
         //-----------------------------------------------------
@@ -1503,19 +1623,22 @@ export default({
             let self = this;
             self.who = who;
             self.whoIndex = index;
-            self.dialogDelConfirm = true;
+            self.sureDel();
+            //self.dialogDelConfirm = true;
         },
         handleAddDelete:function(index,row,who){//表格内删除操作 who:1银行 2地址 3使用组织
             let self = this;
             self.who = who;
             self.whoIndex = index;
-            self.dialogDelConfirm = true;
+            self.sureDel();
+            //self.dialogDelConfirm = true;
         },
         handleOuDelete:function(index,row,who){//表格内删除操作 who:1银行 2地址 3使用组织
             let self = this;
             self.who = who;
             self.whoIndex = index;
-            self.dialogDelConfirm = true;
+            self.sureDel();
+            //self.dialogDelConfirm = true;
         },
 
         //-------------------------------------------------------
@@ -1525,7 +1648,8 @@ export default({
             let self = this;
             if(self.multipleSelection.length>0){
                 self.who = num;
-                self.dialogDelConfirm = true; 
+                self.sureDel();
+                //self.dialogDelConfirm = true; 
             }else{
                 self.$message({
                     type: 'info',
@@ -1537,7 +1661,8 @@ export default({
             let self = this;
             if(self.multipleSelectionAdd.length>0){
                 self.who = num;
-                self.dialogDelConfirm = true; 
+                self.sureDel();
+                //self.dialogDelConfirm = true; 
             }else{
                 self.$message({
                     type: 'info',
@@ -1549,7 +1674,8 @@ export default({
             let self = this;
             if(self.multipleSelectionOu.length>0){
                 self.who = num;
-                self.dialogDelConfirm = true; 
+                self.sureDel();
+                //self.dialogDelConfirm = true; 
             }else{
                 self.$message({
                     type: 'info',
@@ -1657,30 +1783,33 @@ export default({
         //----------------------------------------------------------
 
         //---选择省市区-----------------------------------------------
-            chooseProvince:function(id){
+            chooseProvince:function(res){
                 let self = this;
-                // console.log(id)
-                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
-                    console.log(res);
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
+                    //console.log(res);
                     self.areaCityArray = res.result;
+                    self.areaCityArray2 = res.result;
                     // self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 });
 
             },
-            chooseCity:function(id){
+            chooseCity:function(res){
                 let self = this;
-                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
                     // console.log(res);
                     self.areaDisArray = res.result;
+                    self.areaDisArray3 = res.result;
+
                     // self.loadIcon();
                 },function(res){
                     console.log('err'+res)
                 })
             },
-            chooseDis:function(){
+            chooseDis:function(res){
                 let self = this;
+                self.createContactParams.adAreaId=res;
                 // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
             },
             //-----------------------------------------------------------
@@ -1704,6 +1833,52 @@ export default({
             // if (!value) return true;
             //     return data.areaName.indexOf(value) !== -1;
         },
+        //---树render-content----------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        renderContentCu(h, { node, data, store }){//客户分类
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.className}
+                    </span>
+                );
+            }
+        },  
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
+        },
+        //-----------------------------------------------------     
         cuNodeClick:function(data){
             let self = this;
             self.cuItem.id = data.id;

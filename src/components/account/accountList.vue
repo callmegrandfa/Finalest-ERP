@@ -375,7 +375,7 @@ import dialogBox from '../../base/dialog/dialog'
                     //调取默认数据
                     _this.seletChange();
                     //console.log(_this.treeData)
-                    console.log(_this.componyTree)
+                    //console.log(_this.componyTree)
                     let l=_this.treeData.length;
                     var y=_this.treeData[l-1];
                     var x={'label':y}
@@ -447,7 +447,6 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.chooseDate=[];
                 $.each(_this.componyTreeData,function(index,value){
                     if(value.periodYear==data.label){
-                        console.log(value)
                         _this.id=value.id;  
                         _this.periodYear=value.periodYear;
                         _this.periodNum=value.periodNum;
@@ -501,7 +500,7 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.periodYear='';
                 _this.periodNum='';
                 _this.chooseDate=[];
-                _this.addData.accperiodContents=[];
+                _this.tableData=[];
                 _this.remark='';
                 let nowTime=new Date();
                 _this.creatTime=_this.resdatetime(nowTime)
@@ -734,9 +733,7 @@ import dialogBox from '../../base/dialog/dialog'
             createMonth(){
                 let _this=this;
                 _this.$validate().then(function (success) {
-                console.log(_this.chooseDate[0])
                 var startdate = new Date(_this.chooseDate[0]);  
-                console.log(startdate)
                 var enddate = new Date(_this.chooseDate[1]);
                 var startmonth =_this.resmonth(startdate);
                 var endmonth =_this.resmonth(enddate);
@@ -744,7 +741,6 @@ import dialogBox from '../../base/dialog/dialog'
                 var endYear=_this.resyear(enddate);
                 var startday=_this.resday(startdate);
                 if(_this.chooseDate[0]!=undefined&&startyear!=endYear){
-                    console.log(_this.chooseDate[0],_this.chooseDate[1])
                     _this.chooseDate=["",""];
                     _this.$alert('开始日期的年份需与结束日期年份相同', {
                             confirmButtonText: '确定'

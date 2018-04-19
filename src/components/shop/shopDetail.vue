@@ -896,8 +896,8 @@ export default({
 
             if(self.who == 1){//单项删除
                 self.addList.splice(self.whoIndex,1);
-                self.dialogDelConfirm = false;
-                self.open('删除成功','el-icon-circle-check','successERP');
+                //self.dialogDelConfirm = false;
+                //self.open('删除成功','el-icon-circle-check','successERP');
             };
 
             if(self.who == 2){//批量删除
@@ -915,7 +915,7 @@ export default({
                 })
                 self.addList = x;
                 // console.log(self.addList)
-                self.dialogDelConfirm = false;
+                //self.dialogDelConfirm = false;
             }
 
         },
@@ -926,7 +926,8 @@ export default({
             let self = this;
             self.who = who;
             self.whoIndex = index;
-            self.dialogDelConfirm = true;
+            self.sureDel();
+            //self.dialogDelConfirm = true;
         },
         //-------------------------------------------------------
 
@@ -935,7 +936,8 @@ export default({
             let self = this;
             if(self.multipleSelection.length>0){
                 self.who = num;
-                self.dialogDelConfirm = true; 
+                self.sureDel();
+                //self.dialogDelConfirm = true; 
             }else{
                 self.$message({
                     type: 'info',

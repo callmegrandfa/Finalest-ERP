@@ -4,11 +4,14 @@
         <div id="bgl">
             <el-row >
                 <el-col :span="24" class="border-left" id="bg-white">
-                    
 
                         <el-col :span="5">
                             <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
                                 :data="componyTree"
+                                v-loading="treeLoading" 
+                                :filter-node-method="filterNode"
+                                :highlight-current="true"
+                                node-key="id"
                                 :props="defaultProps"
                                 default-expand-all
                                 ref="tree"
@@ -22,12 +25,12 @@
                                 <el-col :span="24" class="bg-white">
                                     <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                                 </el-col>
-                                <el-table :data="tableData" @row-click="rowClick" @selection-change="handleSelectionChange" border style="width: 100%">
+                                <el-table v-loading="tableLoading" :data="tableData"  @row-click="rowClick" @selection-change="handleSelectionChange" border style="width: 100%">
                                     <el-table-column type="selection" label="" width="50">
                                     </el-table-column>
                                     <el-table-column  label="规格名称" prop="specId_SpecName" width="150">
                                         <template slot-scope="scope">
-                                           <el-select clearable filterable  
+                                           <el-select disabled="disabled"
                                             class="specId"
                                             placeholder=""
                                             :class="{errorclass:scope.row.specId==''&&isSave==true}"
@@ -41,14 +44,14 @@
                                         <template slot-scope="scope">
                                             <img :id="scope.row.id"  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.specValueCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>
 
-                                            <input class="input-need" :class="{errorclass:scope.row.specValueCode==''&&isSave==true}" 
+                                            <input class="input-need bluecolor" :class="{errorclass:scope.row.specValueCode==''&&isSave==true}" 
                                                     v-model="scope.row.specValueCode" 
                                                     type="text"/>
                                         </template>
                                     </el-table-column>
                                     <el-table-column prop="specValueName" label="规格值名称">
                                         <template slot-scope="scope">
-                                            <input class="input-need" :class="{errorclass:scope.row.specValueName==''&&isSave==true}" 
+                                            <input class="input-need bluecolor" :class="{errorclass:scope.row.specValueName==''&&isSave==true}" 
                                                     v-model="scope.row.specValueName" 
                                                     type="text"/>
                                         </template>
@@ -66,7 +69,7 @@
                                             class="specId"
                                             placeholder=""
                                              
-                                            v-model="scope.row.status">
+                                            v-model="scope.row.status" :class="'specId'+scope.row.status">
                                                 <el-option v-for="item in statusoptions" :key="item.value" :label="item.label" :value="item.value">
                                                 </el-option>
                                             </el-select>
@@ -86,7 +89,12 @@
                                         </template>
                                     </el-table-column>
                                 </el-table>
-                            <el-pagination style="margin-top:20px;"  class="text-right"  background layout="total, prev, pager, next"  :page-count="totalPage" >
+                                <!-- @current-change="handleCurrentChange"
+                                        :current-page="pageIndex"
+                                        :page-size="oneItem"
+                                        :total="totalItem" -->
+                            <el-pagination style="margin-top:20px;"  class="text-right"  background layout="total, prev, pager, next,jumper" :current-page="pageIndex"  @current-change="handleCurrentChange" :page-size="eachPage"
+                                        :total="totalItem" >
                              </el-pagination>   
                         </el-col>
 
@@ -108,6 +116,23 @@
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm1" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">{{dialogUserConfirmContent}}</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" style="width:100%" @click="dialogUserConfirm1 = false">确 定</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -167,6 +192,8 @@ import Tree from '../../base/tree/tree'
                 "remark": "st54ring"
                 },
                 value1:'',
+                oneItem: 10,
+                totalItem: 0, 
                 response:{
                     details:'',
                     message:'',
@@ -247,13 +274,10 @@ import Tree from '../../base/tree/tree'
                 }],
                 statusoptions: [{
                     value: 0,
-                    label: '未启用'
+                    label: '停用'
                     }, {
                     value: 1,
                     label: '启用'
-                    }, {
-                    value: '',
-                    label: ''
                     }],
                 idArray:{
                     ids:[]
@@ -267,26 +291,33 @@ import Tree from '../../base/tree/tree'
                 addArray:[],
                 updateArray:[],
                 updateList:[],
-                pageIndex:-1,//分页的当前页码
+                pageIndex:0,//分页的当前页码
                 SelectionChange:[],
                 currentPage:1,//分页的当前页码
                 tableModel:'commodityBrand',
-              totalPage:100,//当前分页总数
-              isUpdate:false,//是否进行修改
-              isUpdate1:true,//是否进行修改
-              isUpdate2:true,//是否进行修改
-              ifWidth:true,
-              updateId:'',
-              isSave:false,
-              eachPage:10,//每页有多少条信息
-              page:1,//当前页
-              addbac: [],
-              addabc:''
+                tableLoading: true,
+                totalPage:100,//当前分页总数
+                dialogUserConfirmContent: '',
+                isUpdate:false,//是否进行修改
+                isUpdate1:true,//是否进行修改
+                isUpdate2:true,//是否进行修改
+                ifWidth:true,
+                updateId:'',
+                treeLoading:true,
+                isSave:false,
+                ifTreeNode:false,
+                dialogUserConfirm1:false,
+                isaddac: true,
+                eachPage:10,//每页有多少条信息
+                page:1,//当前页
+                addbac: [],
+                addabc:''
             }
         },
         created:function(){   
             this.loadTree();   
-            this.loadTableData();
+            // this.loadTableData();
+            this.TreeNodeClick(0);
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -303,7 +334,7 @@ import Tree from '../../base/tree/tree'
             tableData:{
                 handler: function (val, oldVal) {
                         if(oldVal.length>0){
-                            console.log(this.updateArray.length)
+                            // console.log(this.updateArray.length)
                             if(this.updateArray.length == 0 && this.updateId==""){
                              
                                 this.isUpdate=false
@@ -328,39 +359,45 @@ import Tree from '../../base/tree/tree'
             }
         },
         methods:{
+            Init(){//数据初始化
+                this.isCancel=false;
+                this.isUpdate=false;
+                this.isAdd=false;
+                this.isSave=false;
+                this.pageFlag=true;
+                this.updateArray=[];
+                this.addData1.createList=[];
+                this.updateId="";
+            },
             btmlog:function(data){
                 let _this=this;
                 if(data == '新增' ){
-                    // if(_this.bottonbox.botton[2].text != '取消'){
-                    //     _this.bottonbox.botton.splice(2,0,{
-                    //         class: 'erp_bt bt_auxiliary',
-                    //         imgsrc: 'img src="../../../static/image/common/u470.png',
-                    //         show:true,
-                    //         text: '取消'
-                    //     })
-                    // }
-                    _this.statusButton(true,true,false) 
+                    if(_this.isaddac){
+                        _this.dialogUserConfirmContent = '请点击左边树形选项,在新增商品规格值'
+                        _this.dialogUserConfirm1 = true;   
+                    }else if(_this.value1 == 0){
+                        _this.dialogUserConfirmContent = '最大节点不允许新增商品规格值，请选择其他节点'
+                        _this.dialogUserConfirm1 = true;
+                    } else{ 
+                        _this.statusButton(true,true,false) 
+                        let newcol={
+                            "groupId": 1,
+                            "specId": _this.value1,
+                            "specValueCode": "",
+                            "specValueName": "",
+                            "seq": 0,
+                            "status": 1,
+                            "remark": "",
+                            "createdBy":this.$store.state.name,
+                            "createdTime":this.GetDateTime(),
+                            modifiedBy:this.$store.state.name,
+                            modifiedTime:this.GetDateTime()
+                        };
+                        this.tableData.unshift(newcol);
+                        this.addData1.createList.unshift(newcol); 
+                    }
                     
-                    let newcol={
-                        "groupId": 1,
-                        "specId": _this.value1,
-                        "specValueCode": "",
-                        "specValueName": "",
-                        "seq": 0,
-                        "status": 0,
-                        "remark": "",
-                        "createdBy":this.$store.state.name,
-                        "createdTime":this.GetDateTime(),
-                        modifiedBy:this.$store.state.name,
-                        modifiedTime:this.GetDateTime()
-                    };
-                    // this.isUpdate=true;
-                    // this.isAdd=true;
-                    this.tableData.unshift(newcol);
-                    // this.addArray.unshift(newcol);
-                    this.addData1.createList.unshift(newcol);
                 }else if(data == '新增保存'){
-
                     this.isSave=true;
                     let _this=this;
                     if(_this.addData1.createList.length>0 && _this.isUpdate2){//新增保存
@@ -371,12 +408,12 @@ import Tree from '../../base/tree/tree'
                                     message: '红色框内为必填项！',
                                     type: 'error'
                                 });
+                                return;
                             }
                         }
                         if(_this.addData1.createList.length==1){//单条新增
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.loadTableData();
-                                _this.loadTree(); 
+                                _this.TreeNodeClick(_this.value1);
                                 _this.statusButton(false,false,true);
                                 _this.isUpdate=true; 
                                 _this.isUpdate2 = true;
@@ -390,14 +427,13 @@ import Tree from '../../base/tree/tree'
                                 }
                             }); 
                         }else{//批量新增 
-
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.loadTableData();
+                                _this.TreeNodeClick(_this.value1);
                                 _this.statusButton(false,false,true) 
                                 _this.isUpdate=true;
                                 _this.isUpdate2 = true;
                                 _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
-                                _this.isAdd=false
+                                _this.isAdd=false;
                             },function(res){
                                 if(res && res!=''){
                                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
@@ -407,7 +443,6 @@ import Tree from '../../base/tree/tree'
                             }); 
                         }                    
                     }else if( _this.isUpdate ){//修改保存
-
                         if(_this.updateArray.length==1){//单条修改
                             let updataIndex = -1;
                             for(let i in _this.tableData){
@@ -418,8 +453,7 @@ import Tree from '../../base/tree/tree'
                             }
                             _this.tableData[updataIndex].status = 0
                             _this.$axios.puts('/api/services/app/SpecValueManagement/Update',_this.tableData[updataIndex]).then(function(res){
-                                _this.loadTableData();
-                                _this.loadTree();
+                                _this.TreeNodeClick(_this.value1);
                                 _this.isUpdate=false;
                                 _this.isUpdate2 = true;
                                 _this.statusButton(false,false,true) 
@@ -434,9 +468,8 @@ import Tree from '../../base/tree/tree'
                         }else{//批量修改
                            _this.addData1.createList.splice(0,_this.addData1.createList.length);
                             _this.addData1.updateList=_this.tableData;
-                            console.log(_this.addData1)
                             _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.loadTableData();
+                                _this.TreeNodeClick(_this.value1);
                                 _this.isUpdate2 = true;
                                 _this.isUpdate=false;
                                 _this.statusButton(false,false,true) 
@@ -452,29 +485,33 @@ import Tree from '../../base/tree/tree'
                         }
                     }
                 }else if(data == '取消'){
-                    
-                    _this.statusButton(false,false,true) 
-                    this.loadTableData();
+                    if(_this.bottonbox.botton[2].increased ){
+                        this.TreeNodeClick(_this.value1);
+                        _this.statusButton(false,false,true) 
+                    }   
                 }else if(data == '删除'){
-                    let _this=this;
-                    for(var i in this.SelectionChange){
-                        this.idArray.ids.push(this.SelectionChange[i].id)
-                    }
-                    if(_this.idArray.ids.indexOf(undefined)!=-1){
+                    if(this.bottonbox.botton[3].increased){
+                        let _this=this;
+                        for(var i in this.SelectionChange){
+                            this.idArray.ids.push(this.SelectionChange[i].id)
+                        }
+                        if(_this.idArray.ids.indexOf(undefined)!=-1){
+                                this.$message({
+                                    type: 'warning',
+                                    message: '新增数据请在行内删除'
+                                });
+                                return;
+                        }
+                        if(_this.idArray.ids.length>0){
+                            _this.dialogUserConfirm = true;
+                        }else{
                             this.$message({
-                                type: 'warning',
-                                message: '新增数据请在行内删除'
+                                type: 'info',
+                                message: '请勾选需要删除的数据！'
                             });
-                            return;
+                        }
                     }
-                    if(_this.idArray.ids.length>0){
-                        _this.dialogUserConfirm = true;
-                    }else{
-                        this.$message({
-                            type: 'info',
-                            message: '请勾选需要删除的数据！'
-                        });
-                    }
+                    
                 }else if(data == '启用'){
                     _this.statusButton(true,true,false) 
                     _this.isUpdate2 = false;
@@ -541,6 +578,10 @@ import Tree from '../../base/tree/tree'
                     _this.response.validationErrors=validationErrors;
                 }
             },
+            filterNode(value, data) {
+                if (!value) return true;
+                 return data.moduleName.indexOf(value) !== -1;
+            },
             sureAjax(){
                 let _this=this;
                 if(_this.addabc != ''){
@@ -548,11 +589,10 @@ import Tree from '../../base/tree/tree'
                         this.tableData.splice(index,1);
                         this.addArray.splice(index,1);
                         _this.dialogUserConfirm = false;
-                        console.log(this.addArray);
+                        // console.log(this.addArray);
                     }else{
                         _this.$axios.deletes('/api/services/app/SpecValueManagement/Delete',{Id:_this.addabc.id}).then(function(res){
                             _this.loadTableData();
-                            _this.loadTree();
                             _this.dialogUserConfirm = false;
                             _this.open('删除成功','el-icon-circle-check','successERP');              
                         },function(res){
@@ -596,34 +636,41 @@ import Tree from '../../base/tree/tree'
                  _this.addabc =  row      
 
             },
+            handleCurrentChange(val){
+                let _this = this;
+                // _this.pageIndex 
+                _this.currentPage = val;
+                console.log(_this.pageIndex)
+                if(_this.value1 == ''){
+                   _this.loadTableData(); 
+               }else{
+                    _this.TreeNodeClick1(_this.value1)
+               }
+            },
             loadTableData(){
                 let _this=this;
                 _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecValueManagement/GetAll?SkipCount=0&MaxResultCount=10').then(function(res){
-                    
-                    // console.log(res)
+                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecValueManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     for(let i=0;i<_this.tableData.length;i++){
                         _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
                         _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
                     }
-                    let countPage=res.result.totalCount;
+                    _this.tableLoading = false;
+                    _this.totalItem=res.result.totalCount;
                     _this.Init();
-                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
+                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
                   
                 })
-                // _this.$axios.gets('/api/services/app/UserGroup/GetAll').then(function(res){ 
-                // // 所属用户组
-                //     _this.selectData.userGroupId=res.result.items;
-                //     console.log(_this.selectData.userGroupId)
-                // })
-
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll').then(function(res){ 
-                    // 菜单_this.statusoptions
-                    // _this.selectData.OUType=res.result.items;
-                    _this.selectData.userGroupId=res.result.items;
-                    console.log(_this.selectData.userGroupId)
-                    // console.log(_this.selectData[0].specName)
+                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){ 
+                    let totalAll = res.result.totalCount;
+                    if(totalAll > 0){
+                        _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:totalAll}).then(function(res){
+                            _this.selectData.userGroupId=res.result.items;
+                            // console.log(_this.selectData.userGroupId)
+                        })
+                    }
+                    
                 })
             },
             loadTree(){//获取tree data
@@ -638,16 +685,53 @@ import Tree from '../../base/tree/tree'
                     _this.treeLoading=false;
                 })
             },
-            TreeNodeClick(data){//树节点点击回调             
-                let _this=this;
+            TreeNodeClick(data){//树节点点击回调
+                let _this=this; 
+                _this.pageIndex = 0
                 _this.tableLoading=true;
-                _this.value1 = data.id;
-                console.log(data.id)
-                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:data.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){ 
-                    //   _this.tableData.splice(0,_this.tableData.length);             
+                _this.currentPage = 1;
+                _this.isaddac = false;
+                if(data.id == 0 || data.id){
+                   _this.value1 = data.id; 
+                }else{
+                    _this.value1 = data;
+                }
+                _this.ifTreeNode = true;
+
+                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
                     _this.tableData = res.result.items ;
-                    // _this.totalCount=res.result.length
-                    // _this.tableLoading=false;   
+                    _this.tableLoading = false;
+                    for(let i=0;i<_this.tableData.length;i++){
+                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                    }
+                    _this.Init();
+                    _this.totalItem=res.result.totalCount;
+                    // _this.Init();
+                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
+                })
+            },
+            TreeNodeClick1(data){//树节点点击回调
+                let _this=this; 
+                _this.tableLoading=true;
+                _this.isaddac = false;
+                if(data.id == 0 || data.id){
+                   _this.value1 = data.id; 
+                }else{
+                    _this.value1 = data;
+                }
+
+                _this.ifTreeNode = true;
+                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
+                    _this.tableData = res.result.items ;
+                    _this.tableLoading = false;
+                    for(let i=0;i<_this.tableData.length;i++){
+                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                    }
+                    _this.totalItem=res.result.totalCount;
+                    // _this.Init();
+                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
                 })
             },
             loadIcon(){
@@ -670,7 +754,7 @@ import Tree from '../../base/tree/tree'
                 let _this=this;
                 _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecManagement/GetSearch',_this.searchItem).then(function(res){
                     // _this.tableData=res.result;   
-                    console.log(res)                
+                    // console.log(res)                
                 })
             },
             handleSelectionChange(val) {//点击复选框选中的数据
@@ -701,16 +785,6 @@ import Tree from '../../base/tree/tree'
                 duration: 3000,
                 customClass:className
                 });
-            },
-            Init(){//数据初始化
-                this.isCancel=false;
-                this.isUpdate=false;
-                this.isAdd=false;
-                this.isSave=false;
-                this.pageFlag=true;
-                this.updateArray=[];
-                this.addArray=[];
-                this.updateId="";
             },
             statusButton(a,b,c){
                 this.bottonbox.botton[1].increased = a;
@@ -797,7 +871,8 @@ import Tree from '../../base/tree/tree'
     width: 19px;
     float: right;
     margin-right: 10px;
-} 
+}
+
 .h48{
     height: 48px;
     line-height: 48px;
@@ -809,9 +884,39 @@ import Tree from '../../base/tree/tree'
 .commodity .smallBgcolor .el-input input{
     height: 28px!important; 
 }
+#bg-white .bluecolor{
+    
+    color: #409EFF;
+}
+#bg-white .input-need{
+    
+}
 </style>
 
 <style>
+#bg-white .specId0 .el-input__inner{
+
+    color: rgb(255, 102, 102);
+}
+#bg-white .specId1 .el-input__inner{
+   
+    color: rgb(57, 202, 119);
+}
+#bg-white .el-input.is-disabled .el-input__inner{
+    background-color: transparent;
+    color: rgb(57, 202, 119);
+}
+
+#bg-white table .el-input__inner{
+    text-align: center;
+}
+#bg-white .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+    background-color: #e4e4e4;
+    color: red;
+}
+/*#bg-white .is-current{
+    background-color: #EC5464 !important;
+}*/
 .specId .el-input--suffix .el-input__inner{padding-right: 0;}
 .specId .el-input__inner{border:none;}
 .el-checkbox__inner{

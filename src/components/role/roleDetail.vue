@@ -10,7 +10,7 @@
             <button @click="isDeleteThis" class="erp_bt bt_del" :disabled="ifModify" :class="{erp_fb_bt : ifModify}"><div class="btImg" ><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button> -->
             <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
             <button plain @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
-            <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -187,10 +187,10 @@
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
                     :render-content="renderContent_ouTreeDataRight"
+                    :default-expanded-keys="expand.expandId_dialogOu"
                     :data="ouTreeDataRight"
                     show-checkbox
                     :highlight-current="true"
-                    default-expand-all
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
@@ -222,7 +222,7 @@
                             <el-table-column prop="ouCode" label="组织编码"></el-table-column>
 
                             <el-table-column prop="ouTypes" label="组织类型"></el-table-column>
-
+                            <el-table-column prop="ouName" label="组织名称"></el-table-column>
                             <el-table-column prop="assignPerson" label="授权人"></el-table-column>
 
                             <el-table-column label="授权时间">
@@ -315,13 +315,11 @@
                 </el-table>   
             </el-col>
             <el-col :span="24" class="transfer_footer">
-                <el-col :span="18">
+                <div style="float:right">
                     <span>共{{totalPageLeftUser}}页</span>
-                </el-col>
-                <el-col :span="6">
                     <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
                     <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                </el-col>
+                </div>
             </el-col>
         </el-col>
         <el-col :span="2" class="transfer_btns">
@@ -365,13 +363,11 @@
                 
             </el-col>
             <el-col :span="24" class="transfer_footer">
-                <el-col :span="18">
+                <div style="float:right">
                     <span>共{{totalPageRightUser}}页</span>
-                </el-col>
-                <el-col :span="6">
                     <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
                     <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
-                </el-col>
+                </div>
             </el-col>
         </el-col>
     </el-col>
@@ -425,6 +421,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :default-expanded-keys="expand.expandId_mmenu"
                                         :render-content="renderContent_Fn"
                                         :highlight-current="true"
                                         v-loading="fnTreeLoading" 
@@ -433,7 +430,6 @@
                                         node-key="id"
                                         ref="tree_fn"
                                         :filter-node-method="filterNodeFn"
-                                        default-expand-all
                                         @node-click="fnNodeClick"
                                         :expand-on-click-node="false">
                                     </el-tree>
@@ -448,7 +444,7 @@
                                 <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
                             <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
-                                <span v-for="(x,index) in showCheckedFnTable" :key="index">
+                                <!-- <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
                                         class="fnCheckBox"
@@ -458,6 +454,15 @@
                                         {{i.displayName}}
                                         </el-checkbox>
                                     </span>
+                                </span> -->
+                                <span v-for="(i,index) in headerFn" :key="index">
+                                    <el-checkbox
+                                    class="fnCheckBox"
+                                    v-model="i.check" 
+                                    @change="selectHeaderFn(i)"
+                                    >
+                                    {{i.displayName}}
+                                    </el-checkbox>
                                 </span>
                             </el-col>   
                             <el-col :span="24">
@@ -497,28 +502,30 @@
      
     <el-col :span="22" class="auditInformation getPadding">
         <h4 class="h4">审计信息</h4>
-        <div>
-            <div class="bgcolor"><label>创建人</label><el-input disabled="disabled"></el-input></div>
+         <div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
             <div class="bgcolor">
                 <label>创建时间</label>
                 <el-date-picker 
-                type="date" 
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss" 
-                disabled>
-            </el-date-picker>
-        </div>
-            <div class="bgcolor"><label>修改人</label><el-input disabled="disabled"></el-input></div>
-            <div class="bgcolor">
-                <label>修改时间</label>
-                <el-date-picker 
+                v-model="auditInformation.createdTime" 
                 type="date" 
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss" 
                 disabled>
                 </el-date-picker>
             </div>
-        </div>                                  
+            <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
+            <div class="bgcolor">
+                <label>修改时间</label>
+                <el-date-picker 
+                v-model="auditInformation.modifiedTime" 
+                type="date" 
+                format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
+                disabled>
+                </el-date-picker>
+            </div>
+        </div>                                   
     </el-col>
 </el-row>       
  <!-- dialog数据变动提示 -->
@@ -550,7 +557,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -706,6 +713,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            headerFn:[],//全选下面复选框
             nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
@@ -740,7 +748,12 @@ export default({
             totalPageFn:0,//当前分页总数
             oneItemFn:10,//每页有多少条信息
             pageFn:1,//当前页   
-
+            auditInformation:{//审计信息
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },
             expand:{
                 expandId_addDataOu:[],//默认下拉树形展开id
                 isHere_addDataOu:false,//是否存在id于树形
@@ -870,29 +883,23 @@ export default({
             _this.loadTree_ou()
             })
         },
-        // getModifyData(){
-        //     let _this=this;
-        //      _this.$axios.gets('/api/services/app/Role/Get',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         // _this.addData=res.result;
-        //         _this.addData={
-        //             "ouId": res.result.ouId,
-        //             "roleCode": res.result.roleCode,
-        //             "displayName": res.result.displayName,
-        //             "status": res.result.status,
-        //             "remark": res.result.remark,
-        //             "id": res.result.id,
-        //             }
-        //         _this.auditInformation={//审计信息
-        //             createdBy:res.result.createdBy,
-        //             createdTime:res.result.createdTime,
-        //             modifiedBy:res.result.modifiedBy,
-        //             modifiedTime:res.result.modifiedTime,
-        //         }
-
-        //         },function(res){
-        //     })
-        // },
+             GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        },
          open(tittle,iconClass,className) {
             this.$notify({
             position: 'bottom-right',
@@ -1051,8 +1058,9 @@ export default({
                     //ajax
                     _this.$axios.posts('/api/services/app/Role/Create',_this.addData)
                     .then(function(res){
-                        _this.add()
+                        _this.add();
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.Cancel();
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1098,9 +1106,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showPageTableOu=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).nowData
-            _this.ouTotalItem=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalItem
-            _this.ouTotalPage=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage)
+            _this.showPageTableOu=x.nowData
+            _this.ouTotalItem=x.TotalItem
+            _this.ouTotalPage=x.TotalPage
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -1181,65 +1190,15 @@ export default({
             let _this=this;
             _this.addOu=data.ouId;
         },
-        // loadOuTable(){//获取分配组织数据
-        //     let _this=this;
-        //     _this.ouTableLoading=true
-
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
-        //     .then(function(res){ 
-        //         // console.log(res)
-        //         _this.ouCheckAll=res.result.items;
-        //         _this.ouTotalItem=res.result.totalCount
-        //         _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
-        //         _this.ouTableLoading=false;
-        //         // _this.storeCheckOu=[];
-        //         // $.each(res.result.items,function(index,val){
-        //         //     _this.storeCheckOu.push(val.ouId)
-        //         // })           
-        //         _this.loadOuTreeAll();
-        //         },function(res){
-        //         _this.ouTableLoading=false;
-        //     })
-        // },
-        // getAllCheckOu(){//获取所有关联权限
-        //      let _this=this;
-        //      _this.ouTableLoading=true
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
-        //     .then(function(resp){ 
-        //         if(resp.result.totalCount>0){
-        //             _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:resp.result.totalCount})
-        //             .then(function(res){ 
-        //                 // console.log(res)
-        //                 _this.ouCheckAll=res.result.items;
-        //                 _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
-        //                 _this.ouTableLoading=false;
-        //                 })
-        //         }else{
-        //             _this.ouCheckAll=[]
-        //             _this.ouTableLoading=false;
-        //         }
-    
-        //     })
-        // },
         loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
             .then(function(res){
                 _this.ouTreeDataRight=res.result;
+                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
             },function(res){
             })
         },
-        // loadOuTreeLeft(){
-        //     let _this=this;
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.ouTreeDataLeft=res.result;
-        //         // console.log(res.result)
-        //         //  _this.treeLoading=false;
-        //     },function(res){
-        //     //    _this.treeLoading=false;
-        //     })
-        // },
         ouDialogSure(){//dialog点击确认
             let _this=this;
             _this.dialogOu=false;
@@ -1324,6 +1283,10 @@ export default({
                         v.check=true;
                     })
                 }) 
+                $.each(_this.headerFn,function(index,value){
+                    value.checkAll=true
+                    value.check=value.checkAll
+                })
                 $('.fnCheckBox').each(function(){
                    if(!$(this).find('.el-checkbox__input').hasClass('is-checked')){
                        $(this).css('display','block')
@@ -1334,6 +1297,10 @@ export default({
                     $.each(val.children,function(i,v){
                         v.check=false;
                     })
+                })
+                $.each(_this.headerFn,function(index,value){
+                    value.checkAll=false
+                    value.check=value.checkAll
                 })
                 if(_this.showCheckFns){
                     setTimeout(function(){
@@ -1350,11 +1317,22 @@ export default({
         isCheckAllFn(){//是否全选
             let _this=this;
             let flag=true;
+            $.each(_this.headerFn,function(index,value){
+                // checkHeaderFn.push({displayName:value.displayName,check:true})
+                value.checkAll=true
+            })
             $.each(_this.showCheckedFnTable,function(index,val){
                 $.each(val.children,function(i,v){
                     if(v.check==false){
                         flag=false
                     }
+                    $.each(_this.headerFn,function(ind,value){
+                        if(value.displayName==v.displayName){
+                            if(!v.check){
+                                value.checkAll=false
+                            }
+                        }
+                    })
                 })
             })
             if(flag){
@@ -1362,6 +1340,10 @@ export default({
             }else{
                 _this.checkAllFns=false
             }
+            $.each(_this.headerFn,function(index,value){
+                value.check=value.checkAll
+            })
+            // console.log(_this.headerFn)
         },
         showCheckFn(){//查看已选
             let _this=this;
@@ -1392,49 +1374,39 @@ export default({
             if (!value) return true;
             return data.displayName.indexOf(value) !== -1;
         },
-        // getCheckFn(){//获取关联权限
-        //     let _this=this;
-        //     // /api/services/app/Role/GetAllPermissions
-        //     _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.checked=res.result.items;
-        //         _this.pageTable=res.result.items;
-        //         _this.clickFnTreeData=[];
-        //         $.each(_this.fnTreeData,function(inde,val){
-        //             let item={moduleName:val.displayName,children:[]}
-        //             let head=[];
-        //             $.each(val.children,function(index,value){
-        //                 // console.log(value)
-        //                 head.push({displayName:value.displayName,permissionName:value.permissionName})  
-        //                 let x={check:false,permissionName:value.permissionName}
-                        
-        //                 $.each(_this.checked,function(indexs,val){
-        //                     if(value.permissionName==val.displayName){
-        //                         x.check=true;
-        //                         x.displayName=value.displayName
-        //                     }
-        //                 })
-        //                 item.children.push(x)
-        //             })
-        //             item.head=head
-        //             _this.clickFnTreeData.push(item)
-        //             $('#FnPagination').css('display','block')
-        //         })
-        //         _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-        //         _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-        //         _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
-        //         _this.isCheckAllFn()
-        //         },function(res){
-        //     })
-        // },
+       
         FnPageChange(val){//分页
             let _this=this;
             _this.pageFn=val;
-            _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-            _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-            _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+            let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn)
+            _this.showCheckedFnTable=x.nowData
+            _this.totalItemFn=x.TotalItem
+            _this.totalPageFn=x.TotalPage
+            _this.loadHeadCheckbox();
             _this.isCheckAllFn();
             _this.showCheckFnReset();
+        },
+        selectHeaderFn(data){
+            let _this=this;
+            let checkAll=true;
+            $.each(_this.showCheckedFnTable,function(index,val){
+                    $.each(val.children,function(i,v){
+                    if(data.displayName==v.displayName){ 
+                        if(data.check){
+                            v.check=true  
+                        }else{
+                            v.check=false
+                        }
+                    }
+                })
+            })
+            $.each(_this.headerFn,function(index,value){
+                value.checkAll=value.check
+                if(!value.checkAll){
+                    checkAll=false
+                }
+            })
+            _this.checkAllFns=checkAll
         },
         fnLoadTree(){
             let _this=this;
@@ -1443,17 +1415,24 @@ export default({
             .then(function(res){
                 // console.log(res)
                 _this.fnTreeData=res;
-                _this.fnTreeLoading=false;
-                // _this.getCheckFn();
+                _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')
                  _this.clickFnTreeData=[];
                  $.each(_this.fnTreeData,function(index1,value1){
                     let item1={moduleName:value1.moduleName,children:[]}
-                    let head1=[];
-                    
+                    // let head1=[];
                     if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
                         $.each(value1.permissionDtos,function(index2,value2){
-                            // console.log(value2)
-                            head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            // head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            // let repeat1=false
+                            // $.each(_this.headerFn,function(indexH,heads){
+                            //     if(heads.displayName==value2.displayName){
+                            //         repeat1=true
+                            //         return false
+                            //     }
+                            // })
+                            // if(!repeat1){
+                            //     _this.headerFn.push({displayName:value2.displayName,check:false})
+                            // }
                             let x1={check:false,permissionName:value2.permissionName}
                             x1.check=false;
                             x1.displayName=value2.displayName
@@ -1463,10 +1442,20 @@ export default({
                     if(typeof(value1.childNodes)!='undefined' && value1.childNodes!=null && value1.childNodes.length>0){
                         $.each(value1.childNodes,function(index2,value2){
                             let item2={moduleName:value2.moduleName,children:[]}
-                            let head2=[];
+                            // let head2=[];
                             if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
                                 $.each(value2.permissionDtos,function(index3,value3){
-                                    head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    // head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    // let repeat2=false;
+                                    // $.each(_this.headerFn,function(indexH,heads){
+                                    //     if(heads.displayName==value3.displayName){
+                                    //         repeat2=true
+                                    //         return false
+                                    //     }
+                                    // })
+                                    // if(!repeat2){
+                                    //     _this.headerFn.push({displayName:value3.displayName,check:false})
+                                    // }
                                     let x2={check:false,permissionName:value3.permissionName}
                                     x2.check=false;
                                     x2.displayName=value3.displayName
@@ -1476,61 +1465,62 @@ export default({
                             if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
                                 $.each(value2.childNodes,function(index3,value3){
                                     let item3={moduleName:value3.moduleName,children:[]}
-                                    let head3=[];
+                                    // let head3=[];
                                     if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
                                         $.each(value3.permissionDtos,function(index4,value4){
-                                            head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            // head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            // let repeat3=false;
+                                            // $.each(_this.headerFn,function(indexH,heads){
+                                            //     if(heads.displayName!=value4.displayName){
+                                            //         repeat3=true;
+                                            //         return false
+                                            //     }
+                                            // })
+                                            // if(!repeat3){
+                                            //     _this.headerFn.push({displayName:value4.displayName,check:false})
+                                            // }
                                             let x3={check:false,permissionName:value4.permissionName}
                                             x3.check=false;
                                             x3.displayName=value4.displayName
                                             item3.children.push(x3)
                                         })
                                     }
-                                    item3.head=head3
+                                    // item3.head=head3
                                     _this.clickFnTreeData.push(item3)
                                 })
                             }
-                            item2.head=head2
+                            // item2.head=head2
                             _this.clickFnTreeData.push(item2)
                         })
                     }
-                    // console.log(head1)
-                    item1.head=head1
+                    // item1.head=head1
                     _this.clickFnTreeData.push(item1)
                 })
-                // console.log(_this.clickFnTreeData)
-                // $.each(_this.fnTreeData,function(inde,val){
-                //     let item={moduleName:val.displayName,children:[]}
-                //     let head=[];
-                //     $.each(val.children,function(index,value){
-                //         // console.log(value)
-                //         head.push({displayName:value.displayName,permissionName:value.permissionName})  
-                //         let x={check:false,permissionName:value.permissionName}
-                //         x.check=false;
-                //         x.displayName=value.displayName
-                            
-                //         item.children.push(x)
-                //     })
-                //     item.head=head
-                //     _this.clickFnTreeData.push(item)
-                // })
                 $('#FnPagination').css('display','block')
-                _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-                _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-                _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+                let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn);
+                _this.showCheckedFnTable=x.nowData
+                _this.totalItemFn=x.TotalItem
+                _this.totalPageFn=x.TotalPage
+                _this.loadHeadCheckbox()
+                _this.fnTreeLoading=false;
             },function(res){
                 _this.fnTreeLoading=false;
             })
         },
-        loadIcon(){
+        loadHeadCheckbox(){//获取表格上方复选框
             let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            _this.headerFn=[]
+            $.each(_this.showCheckedFnTable,function(index,val){
+                $.each(val.children,function(i,v){
+                    let repeat3=false;
+                    $.each(_this.headerFn,function(indexH,heads){
+                        if(heads.displayName==v.displayName){
+                            repeat3=true;
+                            return false
+                        }
+                    })
+                    if(!repeat3){
+                        _this.headerFn.push({displayName:v.displayName,check:false,checkAll:true})
                     }
                 })
             })
@@ -1555,22 +1545,7 @@ export default({
         
         selectChangeFn(x,permissionName){
             let _this=this;
-            if(x){//选中状态为true
-                _this.checked.push({
-                    name:permissionName,
-                    displayName:permissionName,
-                    id:0,
-                    description:'',
-                })
-            }else{//选中状态为false
-                for(let i=0;i<_this.checked.length;i++){//移除已选
-                    if(permissionName==_this.checked[i].displayName){
-                        _this.checked.splice(i,1)
-                    }
-                }
-            }
             _this.isCheckAllFn()
-            // console.log(_this.checked)
         },
         fnNodeClick(data){//获取点击所有权限
             let _this=this;
@@ -1620,7 +1595,8 @@ export default({
 
             })
             if(flag){
-                _this.showCheckedFnTable=showCheckedFnTable
+                _this.showCheckedFnTable=showCheckedFnTable;
+                _this.loadHeadCheckbox();
                 $('#FnPagination').css('display','none')
             }
         },
@@ -1711,9 +1687,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).nowData
-            _this.totalItemLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalItem
-            _this.totalPageLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser)
+            _this.showCheckedUser=x.nowData
+            _this.totalItemLeftUser=x.TotalItem
+            _this.totalPageLeftUser=x.TotalPage
 
         },
         searchRightUserTable(){//右侧数据搜索
@@ -1728,9 +1705,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showNoCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).nowData
-            _this.totalItemRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalItem
-            _this.totalPageRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser)
+            _this.showNoCheckedUser=x.nowData
+            _this.totalItemRightUser=x.TotalItem
+            _this.totalPageRightUser=x.TotalPage
 
         },
         searchBottomUserTable(){
@@ -1746,9 +1724,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUserTable=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         editDialog(){
             let _this=this;
@@ -1815,9 +1794,10 @@ export default({
         userBottomPageChange(val){//页码改变
             let _this=this;
             _this.pageBottomUser=val;
-            _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         uniqueArray(array1, array2){//求差集
             var result = [];
@@ -1894,32 +1874,6 @@ export default({
             return nowData
         },
        
-        // GetUsers(){//获取左侧表格数据
-        //     let _this=this;
-        //     _this.userTableLoading=true;
-        //     _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
-            
-        //    .then(function(response){//获取已选角色
-        //         let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-        //         if(totalCheckedAll>0){
-        //             _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
-        //             .then(function(resp){//获取已选角色
-        //                 _this.checkedUserTable=resp.result.items;
-                    
-        //                 _this.showCheckedUserTable=resp.result.items;
-        //                  _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-        //                 _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-        //                 _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
-        //                 _this.getAllUserData()//获取所有角色数据
-        //             })
-        //         }else{
-        //             _this.showCheckedUserTable=[]
-        //             _this.checkedUserTable=[]
-        //             _this.getAllUserData()//获取所有角色数据
-        //         }
-                
-        //    })
-        // },
         getAllUserData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
@@ -1983,17 +1937,19 @@ export default({
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
 
                 _this.showCheckedUserTable=_this.uniqueArray(_this.showCheckedUserTable,json);
-                _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-                _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-                _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+                let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+                _this.showCheckedUserTable=x.nowData
+                _this.totalItemBottomUser=x.TotalItem
+                _this.totalPageBottomUser=x.TotalPage
         },
         dialogUserConfirmUser(){//确认
             let _this=this;
             _this.dialogUser=false;
             _this.showCheckedUserTable=_this.checkedUserTable
-             _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+             _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         
 
         },

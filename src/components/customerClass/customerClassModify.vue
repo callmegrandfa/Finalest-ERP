@@ -2,14 +2,14 @@
     <div class="customerClassModify">
         <el-row class="fixed">
             <el-col :span="24">
-                <button @click="isBack" class="erp_bt bt_back">
+                <button @click="isBack(1)" class="erp_bt bt_back" >
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
                     <span class="btDetail">返回</span>
                 </button>
                 
-              <button @click="save" plain class="erp_bt bt_save" :disabled="!ifModify" :class="{erp_fb_bt : !ifModify}">
+              <button @click="save" plain class="erp_bt bt_save" :class="{erp_fb_bt : !ifModify}">
                     <div class="btImg">
                       <img src="../../../static/image/common/bt_save.png">
                     </div>
@@ -26,14 +26,14 @@
                 </div>
                 <span class="btDetail">保存并新增</span>
               </button>
-                  <button class="erp_bt bt_add" @click="goDetail" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
+                  <button class="erp_bt bt_add" @click="addNew" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_add.png">
                     </div>
                     <span class="btDetail">新增</span>
                 </button>
 
-                <button class="erp_bt bt_del" @click="delModify" :disabled="ifModify" :class="{erp_fb_bt : ifModify}">
+                <button class="erp_bt bt_del" @click="delModify(3)" :class="{erp_fb_bt : ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
@@ -152,18 +152,29 @@
             <el-col :span="24" class="getPadding">
                 <h4 class="h4">审计信息</h4>
                 <div>
-                    <div class="bgcolor"><label>创建人</label><el-input v-model="customerClassData.createdBy" disabled></el-input></div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInfo.createdBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>创建时间</label>
-                      
-
-                        <el-input v-model="customerClassData.createdTime" disabled></el-input>
-                      
+                        <el-date-picker
+                          v-model="auditInfo.createdTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                        </el-date-picker>
                     </div>
-                    <div class="bgcolor"><label>修改人</label><el-input  v-model="customerClassData.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInfo.modifiedBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>修改时间</label> 
-                      <el-input v-model="customerClassData.modifiedTime" disabled></el-input>
+                        <el-date-picker
+                          v-model="auditInfo.modifiedTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                        </el-date-picker>
                     </div>
                 </div>                                  
             </el-col>
@@ -244,32 +255,37 @@
 <script>
 export default {
   created: function() {
+    // let self = this;
+    // self.loadData();
+    // self.loadOuTree();
+    
+   
+  },
+  mounted:function(){
     let self = this;
     self.loadData();
-    // self.loadOuTree();
-    self.loadStatus();
     self.loadParentTree();
-  },
+    self.loadStatus();
+    },
   computed: {
-    // countOu () {
-    //     return this.ouItem;
-    //     },
-    // count() {
-    //   return this.parentItem;
-    // }
   },
   watch: {
     parentSearch(val) {
       this.$refs.tree.filter(val);
     },
     customerClassData:{
+      
         handler: function (val, oldVal) {
-            let self = this;
+           let self=this;
+           if(!self.saveSuccess){
             if(!self.firstModify){
                 self.firstModify = !self.firstModify;
             }else{
                 self.ifModify = true;
             }
+        }else{
+              self.ifModify=true;
+             }
         },
         deep: true,
     }
@@ -277,6 +293,7 @@ export default {
   },
   data() {
     return {
+      saveSuccess:false,
       ifModify: false, //判断是否修改过
       firstModify:false,//进入页面数据改变一次
       isEdit: true, //判断是否要修改
@@ -305,10 +322,6 @@ export default {
         classParentId_ClassName:"",
         remark: "",
         status: "",
-        createdTime:this.GetDateTime(),//创建时间
-        createdBy:this.$store.state.name,//创建人
-        modifiedTime:this.GetDateTime(),//修改人
-        modifiedBy:this.$store.state.name//修改时间
       },
       //---确认删除-----------------
       dialogDelConfirm: false, //用户删除保存提示信息
@@ -337,8 +350,14 @@ export default {
         details: "",
         message: "",
         validationErrors: []
-      }
-      , expand:{
+      },
+       auditInfo:{
+          createdBy:"",
+          createdTime:"",
+          modifiedBy:"",
+          modifiedTime:"",
+       },//审计信息
+       expand:{
             expandId_addDataOu:[],//默认下拉树形展开id
             isHere_addDataOu:false,//是否存在id于树形
             expandId_dialogOu:[],//默认dialog组织树形展开id
@@ -380,6 +399,7 @@ export default {
       //根据id加载信息
       let self = this;
       if (self.$route.params.id != "default") {
+          self.firstModify = false;
         self.$axios
           .gets("/api/services/app/ContactClassManagement/Get", {
             id: self.$route.params.id
@@ -392,13 +412,39 @@ export default {
             // console.log(self.parentItem.id);
             self.parentItem.className =  res.result.classParentId_ClassName;
             // console.log(res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
-            self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
+            // self.customerClassData.createdTime= res.result.createdTime.substring(0,19).replace('T',' ')
         
-            self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
+            // self.customerClassData.modifiedTime= res.result.modifiedTime.substring(0,19).replace('T',' ');
             // self.customerClassData.modifiedTime= res.result.modifiedTime.replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
             // self.loadParentTree();
-          
+
+             self.auditInfo={
+                    createdBy:res.result.createdBy,
+                    createdTime:res.result.createdTime,
+                    modifiedBy:res.result.modifiedBy,
+                    modifiedTime:res.result.modifiedTime,
+                }
+
+
           });
+          self.$axios
+        .gets("api/services/app/ContactClassManagement/GetTreeList",{Ower:1})
+        .then(
+          function(res) {
+            // console.log(res);
+             self.selectParentTree = res;
+             self.defauleExpandTree('classParentId','expandId_addDataOu',res,'id','children')
+                if(self.expand.expandId_addDataOu<1){
+                    self.expand.expandId_addDataOu=[self.selectParentTree[0].id]
+                   
+                }
+                //  console.log(self.expand.expandId_addDataOu<1);
+            self.loadCheckSelect('classParentId',self.customerClassData.classParentId);
+          },
+          function(res) {
+            // self.treeLoading = false;
+          }
+        );
       }
     },
     defauleExpandTree(model,expandName,response,responseKey,children){
@@ -483,23 +529,6 @@ export default {
           })
       },
     //-------------------------------------------------------
-     GetDateTime: function () {
-                var date = new Date();
-                var seperator1 = "-";
-                var seperator2 = ":";
-                var month = date.getMonth() + 1;
-                var strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
-                }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
-                }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
-                    + seperator2 + date.getSeconds();
-                return currentdate;
-            },
     //---树--------------------------------------------------
     filterNode(value, data) {
       // console.log(data)
@@ -518,10 +547,14 @@ export default {
     //-------------------------------------------------------
 
     //---顶部删除按钮-----------------------------------------
-    delModify: function() {
-      let self = this;
-      self.dialogDelConfirm = true;
-    },
+      delModify:function(num){
+          let self = this;
+          if(!self.ifModify){
+              self.who = num
+              self.dialogDelConfirm = true;
+          }
+          
+      },
     //---保存新增---------------------------------------------
     Modify: function() {
       //判断数据是否修改过
@@ -568,10 +601,16 @@ export default {
               .puts(
                 "/api/services/app/ContactClassManagement/Update", self.customerClassData).then(
                 function(res) {
-                  // self.customerClassData.modifiedTime=res.result.modifiedTime.substring(0,19).replace('T',' ');
+                  self.auditInfo={
+                      createdBy:res.result.createdBy,
+                      createdTime:res.result.createdTime,
+                      modifiedBy:res.result.modifiedBy,
+                      modifiedTime:res.result.modifiedTime,
+                        }
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                     // 修改成功，点返回不弹出对话框
                    self.ifModify = false;
+                   self.saveSuccess = false;
                 },
                 function(res) {
                   // self.open("修改失败", "el-icon-error", "faildERP");
@@ -655,7 +694,7 @@ export default {
         customClass: className
       });
     },
-    back(row) {
+    back(){
       this.$store.state.url = "/customerClass/customerClassList/default";
       this.$router.push({ path: this.$store.state.url }); //点击切换路由
     },
@@ -669,6 +708,13 @@ export default {
       //点击新增跳转
       this.$store.state.url = "/customerClass/customerClassDetail/default";
       this.$router.push({ path: this.$store.state.url }); //点击切换路由
+    },
+     addNew:function(){
+        let self = this;
+        if(!self.ifModify){
+            this.$store.state.url='/customerClass/customerClassDetail/default'
+            this.$router.push({path:this.$store.state.url})//点击切换路由
+        }
     },
     //---------------------------------------------------------
     //---错误提示-------------------------------------------

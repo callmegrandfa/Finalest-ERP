@@ -952,7 +952,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -973,7 +973,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -1009,6 +1009,7 @@ export default({
             errorMessage:false,
             // 错误信息提示结束
             dialogUserConfirm:false,//信息更改提示控制
+            title:'',
             choseDoing:'',//存储点击按钮判断信息
             search:'',
             search_companyOuId:'',
@@ -1453,11 +1454,6 @@ export default({
         }
       },
     },
-    computed:{
-        count () {
-            return this.ischeck;
-            },
-    },
     created:function(){
         let _this=this;
          _this.loadTree();
@@ -1800,6 +1796,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -1809,6 +1806,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
@@ -1830,6 +1828,7 @@ export default({
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -1938,16 +1937,16 @@ export default({
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
                         if(_this.Company){
-                            _this.basCompany.businessStart=_this.dateRange[0];
-                            _this.basCompany.businessEnd=_this.dateRange[1];
-                        //     _this.addData.basCompany=_this.basCompany;
+                        _this.basCompany.businessStart=_this.dateRange[0];
+                        _this.basCompany.businessEnd=_this.dateRange[1];
+                        _this.addData.basCompany=_this.basCompany;
                         }
-                        // if(_this.Business){
-                        //     _this.addData.basBusiness=_this.basBusiness;
-                        // }
-                        // if(_this.Finance){
-                        //     _this.addData.basFinance=_this.basFinance;
-                        // }
+                        if(_this.Finance){
+                            _this.addData.basBusiness=_this.basBusiness;
+                        }
+                        if(_this.Business){
+                            _this.addData.basFinance=_this.basFinance;
+                        }
                         _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                              _this.auditInfo={
                                 createdBy:res.result.createdBy,
@@ -1978,9 +1977,15 @@ export default({
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
                         if(_this.Company){
-                            _this.basCompany.businessStart=_this.dateRange[0];
-                            _this.basCompany.businessEnd=_this.dateRange[1];
-                        //     _this.addData.basCompany=_this.basCompany;
+                        _this.basCompany.businessStart=_this.dateRange[0];
+                        _this.basCompany.businessEnd=_this.dateRange[1];
+                        _this.addData.basCompany=_this.basCompany;
+                        }
+                        if(_this.Finance){
+                            _this.addData.basBusiness=_this.basBusiness;
+                        }
+                        if(_this.Business){
+                            _this.addData.basFinance=_this.basFinance;
                         }
                              _this.$axios.puts('/api/services/app/OuManagement/Update',_this.addData).then(function(res){
                             _this.open('保存成功','el-icon-circle-check','successERP');

@@ -177,31 +177,32 @@
                 </div>    
             </el-col>
             
-            <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
-                        <label>创建人</label>
-                        <el-input 
-                        v-model="info.createdBy"
-                        disabled
-                        ></el-input>
-                    </div>
-                </div>    
-            </el-col>
-            
-            <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
+           <el-col :span="22" class="auditInformation getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
+                    <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker
-                        type="date"
-                        disabled
-                        v-model="info.createdTime"
+                        <el-date-picker 
+                        v-model="auditInformation.createdTime" 
+                        type="date" 
                         format="yyyy-MM-dd HH:mm:ss"
-                        value-format="yyyy-MM-dd HH:mm:ss">
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
                         </el-date-picker>
                     </div>
-                </div>    
+                    <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.modifiedTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
+                </div>                                  
             </el-col>
       </el-row>
       <!-- dialog数据变动提示 -->
@@ -212,7 +213,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -257,8 +258,10 @@
   export default({
     data(){
       return{
+        saveSuccess:false,
         firstModify:false,
         ifModify:false,
+        title:'',
     // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -294,6 +297,12 @@
             label: 'name',
             id:'id'
         },
+      auditInformation:{//审计信息
+            createdBy:"",
+            createdTime:"",
+            modifiedBy:"",
+            modifiedTime:"",
+            },
 
         info:{//创建人，创建时间
             createdBy:'',
@@ -380,15 +389,19 @@
         addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
+          }
         },
-    },
     methods: {
         getSelectData(){
             let _this=this;
@@ -458,16 +471,21 @@
                     "status":  res.result.status,
                     "remark":  res.result.remark
                     }
-                _this.info={
-                    createdTime:res.result.createdTime,
+                 _this.auditInformation={//审计信息
                     createdBy:res.result.createdBy,
-                }    
+                    createdTime:res.result.createdTime,
+                    modifiedBy:res.result.modifiedBy,
+                    modifiedTime:res.result.modifiedTime,
+                } 
                  _this.item_ou.id=res.result.ouId;
                  _this.item_ou.ouName=res.result.ouName;
                 _this.item_area.id=res.result.areaParentId;
                 _this.item_area.areaName=res.result.areaParentId_AreaName;
                 _this.getAreaTree(res.result.ouId)
                 // _this.loadTree('ouId',res.result.ouId);  
+                _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.ifModify=false;
             },function(res){    
 
             })  
@@ -521,6 +539,7 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -530,12 +549,14 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -579,13 +600,19 @@
         },
         save(){
             let _this=this;
-            
             _this.$validate()
             .then(function (success) {
                 if (success) {
                     _this.$axios.puts('/api/services/app/OpAreaManagement/Update',_this.addData)
                     .then(function(res){
+                          _this.auditInformation={//审计信息
+                            createdBy:res.result.createdBy,
+                            createdTime:res.result.createdTime,
+                            modifiedBy:res.result.modifiedBy,
+                            modifiedTime:res.result.modifiedTime,
+                        }
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                         _this.saveSuccess=true;
                         _this.firstModify=false;
                         _this.ifModify=false;
                     },function(res){
@@ -607,7 +634,7 @@
             .then(function(res){
                 _this.dialogUserConfirm=false;
                 _this.open('删除成功','el-icon-circle-check','successERP');
-                _this.add();
+                _this.back();
             },function(res){
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
@@ -754,6 +781,9 @@
  .businessAreaModify .el-row{
     background-color: #fff;
   }
+.businessAreaModify  .getPadding{
+     padding: 0 10px;
+ }
  .businessAreaModify .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;

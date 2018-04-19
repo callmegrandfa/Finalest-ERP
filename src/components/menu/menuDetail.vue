@@ -4,7 +4,7 @@
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
                 <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
-                <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
                 <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
                 <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
               <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -16,7 +16,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单编码</label>
                         <el-input 
-                        
+                        @change="isUpdate"
                         class="moduleCode" 
                         :class="{redBorder : validation.hasError('addData.moduleCode')}" 
                         v-model="addData.moduleCode"  
@@ -31,7 +31,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单名称</label>
                         <el-input 
-                        
+                         @change="isUpdate"
                         class="moduleName" 
                         :class="{redBorder : validation.hasError('addData.moduleName')}" 
                         v-model="addData.moduleName"  
@@ -47,7 +47,7 @@
                         <label><small>*</small>子系统</label>
                         <el-select clearable filterable  
                         class="systemId" 
-                        
+                         @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.systemId')}" 
                         placeholder=""
                         v-model="addData.systemId">
@@ -66,7 +66,7 @@
                     <el-select clearable
                         class="moduleParentId" 
                         placeholder=""
-                        
+                         @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.moduleParentId')}" 
                         v-model="addData.moduleParentId"  >
                         <el-input
@@ -103,7 +103,7 @@
                         <label><small>*</small>状态</label>
                         <el-select clearable filterable  
                         class="status" 
-                        
+                         @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.status')}" 
                         v-model="addData.status"
                         placeholder="">
@@ -126,7 +126,7 @@
                         placeholder=""></el-input> -->
                         <i :class="addData.ico" aria-hidden="true" style="position: absolute;right: 35px;z-index: 10;top: 6px;font-size: 25px;"></i>
                         <el-select clearable filterable  
-                        
+                         @change="isUpdate"
                         class="ico" 
                         :class="{redBorder : validation.hasError('addData.ico')}" 
                         placeholder=""
@@ -146,7 +146,7 @@
                         <label><small>*</small>路由地址</label>
                         <el-input 
                         class="url" 
-                        
+                         @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.url')}" 
                         v-model="addData.url"  
                         placeholder=""></el-input>
@@ -160,7 +160,7 @@
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
                         <el-input
-                            
+                             @change="isUpdate"
                             type="textarea"
                             v-model="addData.remark"  
                             :class="{redBorder : validation.hasError('addData.remark')}" 
@@ -193,6 +193,25 @@
                     </div>
                  </div>
             </el-col>
+            <el-col :span="24" class="getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="auditInformation.createdTime" disabled></el-input>
+                    
+                    </div>
+                    <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInformation.modifiedBy" disabled></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label> 
+                    <el-input v-model="auditInformation.modifiedTime" disabled></el-input>
+                    </div>
+                </div>                                  
+        </el-col>
+
+
+
         </el-row>
         <el-dialog :visible.sync="dialogTableVisible" title="分配功能" class="transfer_dialog">
                 <el-col :span="24">
@@ -311,7 +330,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -413,8 +432,13 @@
             expand:{
                 expandId_moduleParentId:[],//默认上级菜单树形展开id
                 expandId_Fn:[],//默认分配功能树形展开id
-            }
-            
+            },
+            auditInformation:{//审计信息
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },
             
       
         }
@@ -510,7 +534,8 @@
                 _this.item.moduleName=_this.$route.params.name;
                 _this.item.id=_this.$route.params.id;
             }
-            // _this.loadTree()
+            _this.firstModify=false;
+            _this.ifModify=false;
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -765,9 +790,9 @@
             let _this=this;
             if(!_this.isEdit){
                 let json=[val]
-                if(_this.storeNodeClickData[_this.nowClickNode]){
-                    _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
-                    _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
+                if(_this.storeNodeClickData[val.moduleName]){
+                    _this.storeNodeClickData[val.moduleName].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
+                    _this.storeNodeClickData[val.moduleName].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
 
                     _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
                     _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
@@ -824,6 +849,9 @@
                 _this.back()
             }
         },
+        isUpdate(){//判断是否修改过信息
+        this.ifModify=true;
+        },
         isCancel(){
             let _this=this;
             if(_this.ifModify){
@@ -845,7 +873,7 @@
             let _this=this;
             _this.clearData();
             _this.firstModify=false;
-            _this.secondModify=false;
+            // _this.secondModify=false;
             _this.ifModify=false;
         },
         CancelTree(){
@@ -906,6 +934,11 @@
                         _this.$store.state.url='/menu/menuDetail/default'
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.firstModify=false;
+                        _this.secondModify=false;
+                        _this.ifModify=false;
+                        // console.log(_this.ifModify)
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -946,6 +979,23 @@
                     </span>
                 );
             }
+        },
+           GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
         }
     }
 
@@ -1037,6 +1087,11 @@
     background-color: #fff;
     padding-top: 15px;
   }
+  .menuDetail .getPadding{
+      padding: 0 10px;
+  }
+     
+
  .menuDetail .goBack{
      border: none;
      background-color: transparent; 

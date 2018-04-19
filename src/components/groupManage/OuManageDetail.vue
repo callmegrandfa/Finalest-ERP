@@ -5,7 +5,7 @@
          <el-col :span="24">
             <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>      
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -232,7 +232,7 @@
                     
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('addData.ouName')}"
-                    v-model="addData.ouName" 
+                    v-model="addData.ouFullname" 
                     placeholder=""></el-input>
                 </div>
                 <div class="bgcolor">
@@ -250,7 +250,7 @@
                         v-model="search">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_ouParentid"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
@@ -336,7 +336,7 @@
                         v-model="search_companyOuId">
                         </el-input>
                         <el-tree
-                         
+                         :render-content="renderContent_companyOuId"
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
@@ -910,8 +910,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                 format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"  
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -921,8 +921,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+               format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
                 type="date"
                 disabled
                 placeholder="">
@@ -960,7 +960,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -982,6 +982,7 @@
 
 <script>
 export default({
+    
     data() {
         return{
             groupId:1,
@@ -1015,7 +1016,12 @@ export default({
             show:true,
             ifShow:true,
             activeName: 'Company',
-            auditInfo:{},//审计信息
+            auditInfo:{
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },//审计信息
             addData:{
                 "ouCode": "",
                 "ouName": "",
@@ -1031,46 +1037,46 @@ export default({
                 "status": 1,//整数
                 "remark": "",
                 "ouTypes":[1,3],//组织职能
-                basCompany:{//其他信息
-                    "ouParentid": "",//整数
-                    "legalPerson": "",
-                    "status": 1,//整数
-                    "isGroupCompany": false,
-                    "regCapital": "",//整数
-                    "vatRegno": "",
-                    "regtime": "",
-                    "legalPersonIdnr": "",
-                    "mgtDeptCode": "",
-                    "mgtDeptName": "",
-                    "businessStart": "",
-                    "businessEnd": "",
-                    "legalPersonType": "",
-                    "introduction": "",
-                    "contact": "",
-                    "businessAddress": "",
-                    "contactAddress": "",
-                    "zipCode": "",
-                    "phone": "",
-                    "fax": "",
-                    "email": "",
-                    "webUrl": "",
-                    "remark": ""
-                },
-                basBusiness: {
-                    "ouParentid": '',
-                    "stmOuId": '',
-                    "status": 1
-                },
-                basFinance: {
-                    "stateTaxNo": "",
-                    "localTaxNo": "",
-                    "taxpayerRegNo": "",
-                    "taxpayerCode": "",
-                    "taxType": "",
-                    "delegateTaxType": "",
-                    "isTaxOu": false,
-                    "status": 1
-                },
+                // basCompany:{//其他信息
+                //     "ouParentid": "",//整数
+                //     "legalPerson": "",
+                //     "status": 1,//整数
+                //     "isGroupCompany": false,
+                //     "regCapital": "",//整数
+                //     "vatRegno": "",
+                //     "regtime": "",
+                //     "legalPersonIdnr": "",
+                //     "mgtDeptCode": "",
+                //     "mgtDeptName": "",
+                //     "businessStart": "",
+                //     "businessEnd": "",
+                //     "legalPersonType": "",
+                //     "introduction": "",
+                //     "contact": "",
+                //     "businessAddress": "",
+                //     "contactAddress": "",
+                //     "zipCode": "",
+                //     "phone": "",
+                //     "fax": "",
+                //     "email": "",
+                //     "webUrl": "",
+                //     "remark": ""
+                // },
+                // basBusiness: {
+                //     "ouParentid": '',
+                //     "stmOuId": '',
+                //     "status": 1
+                // },
+                // basFinance: {
+                //     "stateTaxNo": "",
+                //     "localTaxNo": "",
+                //     "taxpayerRegNo": "",
+                //     "taxpayerCode": "",
+                //     "taxType": "",
+                //     "delegateTaxType": "",
+                //     "isTaxOu": false,
+                //     "status": 1
+                // },
             },
             dateRange:[],//有效时间
             basCompany:{//其他信息
@@ -1558,6 +1564,7 @@ export default({
             // 会计期间方案值,启用年月
                 // _this.addData.accCchemeId=res.result.accSchemeId;//会计期间方案 
                 // _this.addData.accStartMonth=res.result.accStartMonth;//启用年月
+                 _this.addData.baseCurrencyId=resp.result.localCurrencyId;//本位币种id
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
                     // 会计期间方案下拉
                     _this.selectData.accCchemeId=res.result;
@@ -1571,10 +1578,10 @@ export default({
                         _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间方案 
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
                         _this.firstModify=false;
-                         _this.ifModify=false;
+                        _this.ifModify=false;
                     // }
                 })
-                // _this.addData.baseCurrencyId=res.result.localCurrencyId;//本位币种id
+               
             })
             if(_this.$route.params.id!="default"){
                 _this.addData.ouParentid=parseInt(_this.$route.params.id);
@@ -1787,9 +1794,8 @@ export default({
         },
         isGroupCompany(){
             let _this=this;
-            _this.isUpdate()
             _this.basCompany.ouParentid='';
-            _this.validation.reset(0)
+            _this.validation.reset()
         },
         getErrorMessage(message,details,validationErrors){
             let _this=this;
@@ -1817,15 +1823,22 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
-                    // console.log(_this.addData)
+                    if(_this.Finance){
+                        _this.addData.basBusiness=_this.basBusiness;
+                    }
+                    if(_this.Business){
+                        _this.addData.basFinance=_this.basFinance;
+                    }
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1940,13 +1953,23 @@ export default({
                    if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
-                        // _this.addData.basCompany=_this.basCompany;
+                        _this.addData.basCompany=_this.basCompany;
                     }
+                    if(_this.Finance){
+                        _this.addData.basBusiness=_this.basBusiness;
+                    }
+                    if(_this.Business){
+                        _this.addData.basFinance=_this.basFinance;
+                    }
+                    
                     
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
                         _this.$store.state.url='/OuManage/OuManageDetail/default'
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1954,6 +1977,58 @@ export default({
                 }
             });    
         },
+        renderContent_companyOuId(h, { node, data, store }){
+                
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+        renderContent_ouParentid(h, { node, data, store }){
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouName}
+                    </span>
+                );
+            }
+        },
+              GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            }
     }
 
 })        

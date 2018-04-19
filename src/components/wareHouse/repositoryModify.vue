@@ -142,9 +142,11 @@
                                         :data="ouAr"
                                         :props="selectOuProps"
                                         node-key="id"
-                                        default-expand-all
-                                        ref="ouTree"
+                                        ref="outree"
                                         :filter-node-method="ouFilterNode"
+                                        highlight-current
+                                        :render-content="renderContentOu"
+                                        :default-expanded-keys="ouExpandId"
                                         :expand-on-click-node="false"
                                         @node-click="ouNodeClick"></el-tree> 
                                 <el-option v-show="false"
@@ -366,7 +368,6 @@
 
               <el-table :data="repositoryAddressData" border style="width: 100%" stripe @selection-change="handleSelectionChange">
                     <el-table-column type="selection"></el-table-column>
-
                     <el-table-column prop="contactPerson" label="联系人" >
                         <template slot-scope="scope">
                             <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
@@ -648,6 +649,7 @@
                     ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认打开第一个树节点
                 //-----------------------
                 //---行政地区树形下拉-----
                 areaProArray:[],//行政地区(省)
@@ -797,6 +799,7 @@
 
             repositoryAddressData:{
                 handler:function(val,oldVal){
+                    //console.log(val,oldVal)
                     let self = this;
                     if(!self.firstAddModify){
                         self.firstAddModify = !self.firstAddModify;
@@ -829,6 +832,9 @@
                     // console.log(self.redAr)
                 },
                 deep:true,
+            },
+            ouSearch(val){
+                this.$refs.outree.filter(val)
             }
         },
         
@@ -969,7 +975,7 @@
                 let self = this;
                 this.$axios.gets('/api/services/app/StockAddressManagement/GetAllByStockId',{id:self.$route.params.id}).then(function(res){
                         console.log(res);
-                        self.repositoryAddressData = res.result;
+                        self.repositoryAddressData = res.result.items;
                         self.InitAddData = self.deepCopy(res.result);
                         // $.each(res.result,function(index,v) {
                         //     self.InitAddData.push(v)
@@ -998,6 +1004,7 @@
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                     // console.log(res);
                     self.ouAr = res.result;
+                    self.ouExpandId=self.defauleExpandTree(res.result,'id')
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -1033,6 +1040,7 @@
                         stock_MainTable:self.repositoryData,
                         stockAddress_ChildTable:self.repositoryAddressData
                     }
+                    self.sureDel();
                     // console.log(submitData)
                     self.$axios.posts('/api/services/app/StockManagement/AggregateCreateOrUpdate',submitData).then(function(res){
                         console.log(res);
@@ -1120,7 +1128,17 @@
                 self.who = who;
                 self.whoIndex = index;
                 self.whoId = row.id;
-                self.dialogDelConfirm = true;
+                if(self.who ==1){
+                    self.idArray.ids = [];
+                    console.log(self.repositoryAddressData)
+                    if(self.whoId>0){
+                            self.repositoryAddressData.splice(self.whoIndex,1)
+                    }else{
+                        self.repositoryAddressData.splice(self.whoIndex,1);
+                        self.addList.splice(self.whoIndex,1);
+                    }
+                }
+                //self.dialogDelConfirm = true;
             },
             //---------------------------------------------------
 
@@ -1138,8 +1156,35 @@
                 }
 
                 if(self.allDelArray.ids.length>0){
-                    self.dialogDelConfirm = true;   
+                    //self.dialogDelConfirm = true;   
                     self.who = num;
+                    if(self.who == 2){
+                        let x = []; 
+                        $.each(self.repositoryAddressData,function(index,value){
+                            let flag = false;
+                            $.each(self.multipleSelection,function(i,val){
+                                if(value==val){
+                                    flag = true;
+                                }
+                            })
+                            if(!flag){
+                                x.push(value)
+                            }
+                        })
+                            
+                        self.repositoryAddressData = x;
+                        self.addList = [];
+                        for(let i in x){
+                            if(x[i].id==''||x[i].id==undefined){
+                                // console.log(x[i])
+                                self.addList.push(x[i])
+                                console.log(self.addList)
+                            }
+                        }
+                        
+                        
+                    }
+
                 } else{
                     self.$message({
                         type: 'info',
@@ -1168,58 +1213,58 @@
                     self.idArray.ids = [];
                     if(self.whoId>0){
                         self.$axios.deletes('/api/services/app/StockAddressManagement/Delete',{id:self.whoId}).then(function(res){
-                            self.open('删除地址成功','el-icon-circle-check','successERP');
-                            self.repositoryAddressData.splice(self.whoIndex,1)
-                            self.dialogDelConfirm = false;
+                            //self.open('删除地址成功','el-icon-circle-check','successERP');
+                            // self.repositoryAddressData.splice(self.whoIndex,1)
+                            // self.dialogDelConfirm = false;
                         },function(res){
                             self.dialogDelConfirm = false;
                             self.errorMessage = true;
                             self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         }) 
                     }else{
-                        self.repositoryAddressData.splice(self.whoIndex,1);
-                        self.addList.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
-                        self.open('删除新增行成功','el-icon-circle-check','successERP');
+                        // self.repositoryAddressData.splice(self.whoIndex,1);
+                        // self.addList.splice(self.whoIndex,1);
+                        // self.dialogDelConfirm = false;
+                        // self.open('删除新增行成功','el-icon-circle-check','successERP');
                     }
                     
                 }
 
                 if(self.who == 2){
-                    let x = []; 
-                    $.each(self.repositoryAddressData,function(index,value){
-                        let flag = false;
-                        $.each(self.multipleSelection,function(i,val){
-                            if(value==val){
-                                flag = true;
-                            }
-                        })
-                        if(!flag){
-                            x.push(value)
-                        }
-                    })
+                    // let x = []; 
+                    // $.each(self.repositoryAddressData,function(index,value){
+                    //     let flag = false;
+                    //     $.each(self.multipleSelection,function(i,val){
+                    //         if(value==val){
+                    //             flag = true;
+                    //         }
+                    //     })
+                    //     if(!flag){
+                    //         x.push(value)
+                    //     }
+                    // })
                         
-                    self.repositoryAddressData = x;
-                    self.addList = [];
-                    for(let i in x){
-                        if(x[i].id==''||x[i].id==undefined){
-                            // console.log(x[i])
-                            self.addList.push(x[i])
-                            console.log(self.addList)
-                        }
-                    }
+                    // self.repositoryAddressData = x;
+                    // self.addList = [];
+                    // for(let i in x){
+                    //     if(x[i].id==''||x[i].id==undefined){
+                    //         // console.log(x[i])
+                    //         self.addList.push(x[i])
+                    //         console.log(self.addList)
+                    //     }
+                    // }
                         
                     self.$axios.posts('/api/services/app/StockAddressManagement/BatchDelete',self.idArray).then(function(res){
-                        self.open('删除地址成功','el-icon-circle-check','successERP');
+                        //self.open('删除地址成功','el-icon-circle-check','successERP');
                         // self.loadAddData();
-                        self.dialogDelConfirm = false;
+                        //self.dialogDelConfirm = false;
                     },function(res){
-                        self.dialogDelConfirm = false;
+                        //self.dialogDelConfirm = false;
                         self.errorMessage = true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                     
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                     
                     
                 }
@@ -1395,6 +1440,36 @@
                     })
                 })
             },
+            //---树render-content----------------------------------
+            renderContentOu(h, { node, data, store }){//所属组织
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouFullname}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouFullname}
+                        </span>
+                    );
+                }
+            },
+            //---树通用----------------------------------------------
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
+            //-----------------------------------------------------       
+
             ouNodeClick:function(data){
                 console.log(data)
                 let self = this;
@@ -1440,7 +1515,7 @@
             },
             ouFilterNode(value, data) {
                 if (!value) return true;
-                    return data.ouName.indexOf(value) !== -1;
+                    return data.indexOf(value) !== -1;
             },
             opFilterNode(value, data) {
                 console.log(value)
