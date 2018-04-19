@@ -952,7 +952,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -962,23 +962,6 @@
             </span>
         </el-dialog>
         <!-- dialog -->
-         <!-- dialog是否删除提示 -->
-        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">确认删除？</p>
-                </el-col>
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
-            </span>
-        </el-dialog>
 <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
@@ -1026,7 +1009,7 @@ export default({
             errorMessage:false,
             // 错误信息提示结束
             dialogUserConfirm:false,//信息更改提示控制
-            dialogDelConfirm:false,
+            title:'',
             choseDoing:'',//存储点击按钮判断信息
             search:'',
             search_companyOuId:'',
@@ -1813,6 +1796,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -1822,6 +1806,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
@@ -1842,7 +1827,8 @@ export default({
         },
         isDeleteThis(){
             let _this=this;
-            _this.dialogDelConfirm=true;
+            _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -1856,7 +1842,7 @@ export default({
                 _this.dialogUserConfirm=false;
             }else if(_this.choseDoing=='deleteThis'){
                 _this.deleteThis();
-                _this.dialogDelConfirm=false;
+                _this.dialogUserConfirm=false;
             }
         },
         back(){
@@ -2020,12 +2006,12 @@ export default({
              let _this=this;
             _this.$axios.deletes('/api/services/app/OuManagement/Delete',{id:_this.$route.params.id})
             .then(function(res){
-                _this.dialogDelConfirm=false;
+                _this.dialogUserConfirm=false;
                 _this.open('删除成功','el-icon-circle-check','successERP');
                 _this.add();
             },function(res){
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                _this.dialogDelConfirm=false;
+                _this.dialogUserConfirm=false;
                 _this.errorMessage=true;
             })
         },
