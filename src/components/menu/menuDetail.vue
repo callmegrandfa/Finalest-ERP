@@ -930,6 +930,11 @@
                         _this.$store.state.url='/menu/menuDetail/default'
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.firstModify=false;
+                        _this.secondModify=false;
+                        _this.ifModify=false;
+                        // console.log(_this.ifModify)
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
