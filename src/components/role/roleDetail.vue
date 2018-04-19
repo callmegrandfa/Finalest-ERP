@@ -187,10 +187,10 @@
                 <vue-scroll :ops="$store.state.option">
                     <el-tree
                     :render-content="renderContent_ouTreeDataRight"
+                    :default-expanded-keys="expand.expandId_dialogOu"
                     :data="ouTreeDataRight"
                     show-checkbox
                     :highlight-current="true"
-                    default-expand-all
                     node-key="ouId"
                     ref="tree"
                     :filter-node-method="filterNode"
@@ -421,6 +421,7 @@
                             <el-col :span="24" class="fnTreeWrapper">
                                 <vue-scroll :ops="$store.state.option">
                                     <el-tree
+                                        :default-expanded-keys="expand.expandId_mmenu"
                                         :render-content="renderContent_Fn"
                                         :highlight-current="true"
                                         v-loading="fnTreeLoading" 
@@ -429,7 +430,6 @@
                                         node-key="id"
                                         ref="tree_fn"
                                         :filter-node-method="filterNodeFn"
-                                        default-expand-all
                                         @node-click="fnNodeClick"
                                         :expand-on-click-node="false">
                                     </el-tree>
@@ -1194,6 +1194,7 @@ export default({
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
             .then(function(res){
                 _this.ouTreeDataRight=res.result;
+                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
             },function(res){
             })
         },
@@ -1413,7 +1414,7 @@ export default({
             .then(function(res){
                 // console.log(res)
                 _this.fnTreeData=res;
-                _this.fnTreeLoading=false;
+                _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')
                  _this.clickFnTreeData=[];
                  $.each(_this.fnTreeData,function(index1,value1){
                     let item1={moduleName:value1.moduleName,children:[]}
@@ -1500,6 +1501,7 @@ export default({
                 _this.totalItemFn=x.TotalItem
                 _this.totalPageFn=x.TotalPage
                 _this.loadHeadCheckbox()
+                _this.fnTreeLoading=false;
             },function(res){
                 _this.fnTreeLoading=false;
             })

@@ -1294,7 +1294,7 @@ export default({
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:_this.$route.params.id})
             .then(function(res){
                 _this.ouTreeDataRight=res.result;
-
+                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
             },function(res){
             })
         },
@@ -1549,26 +1549,8 @@ export default({
                             _this.clickFnTreeData.push(item2)
                         })
                     }
-                    // console.log(head1)
                     // item1.head=head1
                     _this.clickFnTreeData.push(item1)
-                    // let item={moduleName:val.displayName,children:[]}
-                    // let head=[];
-                    // $.each(val.children,function(index,value){
-                    //     // console.log(value)
-                    //     head.push({displayName:value.displayName,permissionName:value.permissionName})  
-                    //     let x={check:false,permissionName:value.permissionName}
-                    //     x.displayName=value.displayName
-                    //     $.each(_this.checked,function(indexs,vals){
-                    //         if(value.permissionName==vals.displayName){
-                    //             x.check=true;
-                    //         }
-                    //     })
-                    //     item.children.push(x)
-                    // })
-                    // item.head=head
-                    // _this.clickFnTreeData.push(item)
-                    
                 })
                 $('#FnPagination').css('display','block')
                 let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn)
@@ -1577,6 +1559,7 @@ export default({
                 _this.totalPageFn=x.TotalPage
                 _this.isCheckAllFn()
                 _this.loadHeadCheckbox()
+                
                 },function(res){
             })
         },
@@ -1605,6 +1588,7 @@ export default({
             _this.showCheckedFnTable=x.nowData
             _this.totalItemFn=x.TotalItem
             _this.totalPageFn=x.TotalPage
+            _this.loadHeadCheckbox();
             _this.isCheckAllFn();
             _this.showCheckFnReset();
         },
@@ -1616,23 +1600,11 @@ export default({
                 // console.log(res)
                 _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
+                _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')
                 // _this.loadIcon();
                 _this.getCheckFn();
             },function(res){
                 _this.fnTreeLoading=false;
-            })
-        },
-        loadIcon(){
-            let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                    }
-                })
             })
         },
         uniqueArrayFn(array1, array2,array1Key,array2Key){//求差集
@@ -1762,7 +1734,7 @@ export default({
                 _this.selectTree_ou=res.result;
                
                 _this.defauleExpandTree('ouId','expandId_addDataOu',res.result,'id','children')
-                if(_this.expand.expandId_addDataOu<1){
+                if(_this.expand.expandId_addDataOu.length<1){
                     _this.expand.expandId_addDataOu=[_this.selectTree_ou[0].id]
                 }
                 _this.loadCheckSelect('ouId',_this.addData.ouId);
