@@ -444,7 +444,7 @@
                                 <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
                             <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
-                                <span v-for="(x,index) in showCheckedFnTable" :key="index">
+                                <!-- <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
                                         class="fnCheckBox"
@@ -454,6 +454,15 @@
                                         {{i.displayName}}
                                         </el-checkbox>
                                     </span>
+                                </span> -->
+                                <span v-for="(i,index) in headerFn" :key="index">
+                                    <el-checkbox
+                                    class="fnCheckBox"
+                                    v-model="i.check" 
+                                    @change="selectHeaderFn(i)"
+                                    >
+                                    {{i.displayName}}
+                                    </el-checkbox>
                                 </span>
                             </el-col>   
                             <el-col :span="24">
@@ -704,6 +713,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            headerFn:[],//全选下面复选框
             nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
@@ -1095,9 +1105,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showPageTableOu=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).nowData
-            _this.ouTotalItem=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalItem
-            _this.ouTotalPage=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage)
+            _this.showPageTableOu=x.nowData
+            _this.ouTotalItem=x.TotalItem
+            _this.ouTotalPage=x.TotalPage
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -1178,46 +1189,6 @@ export default({
             let _this=this;
             _this.addOu=data.ouId;
         },
-        // loadOuTable(){//获取分配组织数据
-        //     let _this=this;
-        //     _this.ouTableLoading=true
-
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
-        //     .then(function(res){ 
-        //         // console.log(res)
-        //         _this.ouCheckAll=res.result.items;
-        //         _this.ouTotalItem=res.result.totalCount
-        //         _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
-        //         _this.ouTableLoading=false;
-        //         // _this.storeCheckOu=[];
-        //         // $.each(res.result.items,function(index,val){
-        //         //     _this.storeCheckOu.push(val.ouId)
-        //         // })           
-        //         _this.loadOuTreeAll();
-        //         },function(res){
-        //         _this.ouTableLoading=false;
-        //     })
-        // },
-        // getAllCheckOu(){//获取所有关联权限
-        //      let _this=this;
-        //      _this.ouTableLoading=true
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
-        //     .then(function(resp){ 
-        //         if(resp.result.totalCount>0){
-        //             _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:resp.result.totalCount})
-        //             .then(function(res){ 
-        //                 // console.log(res)
-        //                 _this.ouCheckAll=res.result.items;
-        //                 _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
-        //                 _this.ouTableLoading=false;
-        //                 })
-        //         }else{
-        //             _this.ouCheckAll=[]
-        //             _this.ouTableLoading=false;
-        //         }
-    
-        //     })
-        // },
         loadOuTreeAll(){
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
@@ -1226,17 +1197,6 @@ export default({
             },function(res){
             })
         },
-        // loadOuTreeLeft(){
-        //     let _this=this;
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.ouTreeDataLeft=res.result;
-        //         // console.log(res.result)
-        //         //  _this.treeLoading=false;
-        //     },function(res){
-        //     //    _this.treeLoading=false;
-        //     })
-        // },
         ouDialogSure(){//dialog点击确认
             let _this=this;
             _this.dialogOu=false;
@@ -1321,6 +1281,10 @@ export default({
                         v.check=true;
                     })
                 }) 
+                $.each(_this.headerFn,function(index,value){
+                    value.checkAll=true
+                    value.check=value.checkAll
+                })
                 $('.fnCheckBox').each(function(){
                    if(!$(this).find('.el-checkbox__input').hasClass('is-checked')){
                        $(this).css('display','block')
@@ -1331,6 +1295,10 @@ export default({
                     $.each(val.children,function(i,v){
                         v.check=false;
                     })
+                })
+                $.each(_this.headerFn,function(index,value){
+                    value.checkAll=false
+                    value.check=value.checkAll
                 })
                 if(_this.showCheckFns){
                     setTimeout(function(){
@@ -1347,11 +1315,22 @@ export default({
         isCheckAllFn(){//是否全选
             let _this=this;
             let flag=true;
+            $.each(_this.headerFn,function(index,value){
+                // checkHeaderFn.push({displayName:value.displayName,check:true})
+                value.checkAll=true
+            })
             $.each(_this.showCheckedFnTable,function(index,val){
                 $.each(val.children,function(i,v){
                     if(v.check==false){
                         flag=false
                     }
+                    $.each(_this.headerFn,function(ind,value){
+                        if(value.displayName==v.displayName){
+                            if(!v.check){
+                                value.checkAll=false
+                            }
+                        }
+                    })
                 })
             })
             if(flag){
@@ -1359,6 +1338,10 @@ export default({
             }else{
                 _this.checkAllFns=false
             }
+            $.each(_this.headerFn,function(index,value){
+                value.check=value.checkAll
+            })
+            // console.log(_this.headerFn)
         },
         showCheckFn(){//查看已选
             let _this=this;
@@ -1389,49 +1372,39 @@ export default({
             if (!value) return true;
             return data.displayName.indexOf(value) !== -1;
         },
-        // getCheckFn(){//获取关联权限
-        //     let _this=this;
-        //     // /api/services/app/Role/GetAllPermissions
-        //     _this.$axios.gets('/api/services/app/Role/GetPermissions',{Id:_this.$route.params.id})
-        //     .then(function(res){
-        //         _this.checked=res.result.items;
-        //         _this.pageTable=res.result.items;
-        //         _this.clickFnTreeData=[];
-        //         $.each(_this.fnTreeData,function(inde,val){
-        //             let item={moduleName:val.displayName,children:[]}
-        //             let head=[];
-        //             $.each(val.children,function(index,value){
-        //                 // console.log(value)
-        //                 head.push({displayName:value.displayName,permissionName:value.permissionName})  
-        //                 let x={check:false,permissionName:value.permissionName}
-                        
-        //                 $.each(_this.checked,function(indexs,val){
-        //                     if(value.permissionName==val.displayName){
-        //                         x.check=true;
-        //                         x.displayName=value.displayName
-        //                     }
-        //                 })
-        //                 item.children.push(x)
-        //             })
-        //             item.head=head
-        //             _this.clickFnTreeData.push(item)
-        //             $('#FnPagination').css('display','block')
-        //         })
-        //         _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-        //         _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-        //         _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
-        //         _this.isCheckAllFn()
-        //         },function(res){
-        //     })
-        // },
+       
         FnPageChange(val){//分页
             let _this=this;
             _this.pageFn=val;
-            _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-            _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-            _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+            let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn)
+            _this.showCheckedFnTable=x.nowData
+            _this.totalItemFn=x.TotalItem
+            _this.totalPageFn=x.TotalPage
+            _this.loadHeadCheckbox();
             _this.isCheckAllFn();
             _this.showCheckFnReset();
+        },
+        selectHeaderFn(data){
+            let _this=this;
+            let checkAll=true;
+            $.each(_this.showCheckedFnTable,function(index,val){
+                    $.each(val.children,function(i,v){
+                    if(data.displayName==v.displayName){ 
+                        if(data.check){
+                            v.check=true  
+                        }else{
+                            v.check=false
+                        }
+                    }
+                })
+            })
+            $.each(_this.headerFn,function(index,value){
+                value.checkAll=value.check
+                if(!value.checkAll){
+                    checkAll=false
+                }
+            })
+            _this.checkAllFns=checkAll
         },
         fnLoadTree(){
             let _this=this;
@@ -1441,16 +1414,23 @@ export default({
                 // console.log(res)
                 _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
-                // _this.getCheckFn();
                  _this.clickFnTreeData=[];
                  $.each(_this.fnTreeData,function(index1,value1){
                     let item1={moduleName:value1.moduleName,children:[]}
-                    let head1=[];
-                    
+                    // let head1=[];
                     if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
                         $.each(value1.permissionDtos,function(index2,value2){
-                            // console.log(value2)
-                            head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            // head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            // let repeat1=false
+                            // $.each(_this.headerFn,function(indexH,heads){
+                            //     if(heads.displayName==value2.displayName){
+                            //         repeat1=true
+                            //         return false
+                            //     }
+                            // })
+                            // if(!repeat1){
+                            //     _this.headerFn.push({displayName:value2.displayName,check:false})
+                            // }
                             let x1={check:false,permissionName:value2.permissionName}
                             x1.check=false;
                             x1.displayName=value2.displayName
@@ -1460,10 +1440,20 @@ export default({
                     if(typeof(value1.childNodes)!='undefined' && value1.childNodes!=null && value1.childNodes.length>0){
                         $.each(value1.childNodes,function(index2,value2){
                             let item2={moduleName:value2.moduleName,children:[]}
-                            let head2=[];
+                            // let head2=[];
                             if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
                                 $.each(value2.permissionDtos,function(index3,value3){
-                                    head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    // head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    // let repeat2=false;
+                                    // $.each(_this.headerFn,function(indexH,heads){
+                                    //     if(heads.displayName==value3.displayName){
+                                    //         repeat2=true
+                                    //         return false
+                                    //     }
+                                    // })
+                                    // if(!repeat2){
+                                    //     _this.headerFn.push({displayName:value3.displayName,check:false})
+                                    // }
                                     let x2={check:false,permissionName:value3.permissionName}
                                     x2.check=false;
                                     x2.displayName=value3.displayName
@@ -1473,61 +1463,61 @@ export default({
                             if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
                                 $.each(value2.childNodes,function(index3,value3){
                                     let item3={moduleName:value3.moduleName,children:[]}
-                                    let head3=[];
+                                    // let head3=[];
                                     if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
                                         $.each(value3.permissionDtos,function(index4,value4){
-                                            head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            // head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            // let repeat3=false;
+                                            // $.each(_this.headerFn,function(indexH,heads){
+                                            //     if(heads.displayName!=value4.displayName){
+                                            //         repeat3=true;
+                                            //         return false
+                                            //     }
+                                            // })
+                                            // if(!repeat3){
+                                            //     _this.headerFn.push({displayName:value4.displayName,check:false})
+                                            // }
                                             let x3={check:false,permissionName:value4.permissionName}
                                             x3.check=false;
                                             x3.displayName=value4.displayName
                                             item3.children.push(x3)
                                         })
                                     }
-                                    item3.head=head3
+                                    // item3.head=head3
                                     _this.clickFnTreeData.push(item3)
                                 })
                             }
-                            item2.head=head2
+                            // item2.head=head2
                             _this.clickFnTreeData.push(item2)
                         })
                     }
-                    // console.log(head1)
-                    item1.head=head1
+                    // item1.head=head1
                     _this.clickFnTreeData.push(item1)
                 })
-                // console.log(_this.clickFnTreeData)
-                // $.each(_this.fnTreeData,function(inde,val){
-                //     let item={moduleName:val.displayName,children:[]}
-                //     let head=[];
-                //     $.each(val.children,function(index,value){
-                //         // console.log(value)
-                //         head.push({displayName:value.displayName,permissionName:value.permissionName})  
-                //         let x={check:false,permissionName:value.permissionName}
-                //         x.check=false;
-                //         x.displayName=value.displayName
-                            
-                //         item.children.push(x)
-                //     })
-                //     item.head=head
-                //     _this.clickFnTreeData.push(item)
-                // })
                 $('#FnPagination').css('display','block')
-                _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-                _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-                _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+                let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn);
+                _this.showCheckedFnTable=x.nowData
+                _this.totalItemFn=x.TotalItem
+                _this.totalPageFn=x.TotalPage
+                _this.loadHeadCheckbox()
             },function(res){
                 _this.fnTreeLoading=false;
             })
         },
-        loadIcon(){
+        loadHeadCheckbox(){//获取表格上方复选框
             let _this=this;
-            _this.$nextTick(function () {
-                $('.preNode').remove();   
-                $('.el-tree-node__label').each(function(){
-                    if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                        $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                    }else{
-                        $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            _this.headerFn=[]
+            $.each(_this.showCheckedFnTable,function(index,val){
+                $.each(val.children,function(i,v){
+                    let repeat3=false;
+                    $.each(_this.headerFn,function(indexH,heads){
+                        if(heads.displayName==v.displayName){
+                            repeat3=true;
+                            return false
+                        }
+                    })
+                    if(!repeat3){
+                        _this.headerFn.push({displayName:v.displayName,check:false,checkAll:true})
                     }
                 })
             })
@@ -1552,22 +1542,7 @@ export default({
         
         selectChangeFn(x,permissionName){
             let _this=this;
-            if(x){//选中状态为true
-                _this.checked.push({
-                    name:permissionName,
-                    displayName:permissionName,
-                    id:0,
-                    description:'',
-                })
-            }else{//选中状态为false
-                for(let i=0;i<_this.checked.length;i++){//移除已选
-                    if(permissionName==_this.checked[i].displayName){
-                        _this.checked.splice(i,1)
-                    }
-                }
-            }
             _this.isCheckAllFn()
-            // console.log(_this.checked)
         },
         fnNodeClick(data){//获取点击所有权限
             let _this=this;
@@ -1617,7 +1592,8 @@ export default({
 
             })
             if(flag){
-                _this.showCheckedFnTable=showCheckedFnTable
+                _this.showCheckedFnTable=showCheckedFnTable;
+                _this.loadHeadCheckbox();
                 $('#FnPagination').css('display','none')
             }
         },
@@ -1708,9 +1684,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).nowData
-            _this.totalItemLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalItem
-            _this.totalPageLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser)
+            _this.showCheckedUser=x.nowData
+            _this.totalItemLeftUser=x.TotalItem
+            _this.totalPageLeftUser=x.TotalPage
 
         },
         searchRightUserTable(){//右侧数据搜索
@@ -1725,9 +1702,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showNoCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).nowData
-            _this.totalItemRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalItem
-            _this.totalPageRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser)
+            _this.showNoCheckedUser=x.nowData
+            _this.totalItemRightUser=x.TotalItem
+            _this.totalPageRightUser=x.TotalPage
 
         },
         searchBottomUserTable(){
@@ -1743,9 +1721,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUserTable=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         editDialog(){
             let _this=this;
@@ -1812,9 +1791,10 @@ export default({
         userBottomPageChange(val){//页码改变
             let _this=this;
             _this.pageBottomUser=val;
-            _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         uniqueArray(array1, array2){//求差集
             var result = [];
@@ -1891,32 +1871,6 @@ export default({
             return nowData
         },
        
-        // GetUsers(){//获取左侧表格数据
-        //     let _this=this;
-        //     _this.userTableLoading=true;
-        //     _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:1})
-            
-        //    .then(function(response){//获取已选角色
-        //         let totalCheckedAll=response.result.totalCount;//获取总共当前关联角色条数
-        //         if(totalCheckedAll>0){
-        //             _this.$axios.gets('/api/services/app/Role/GetUsers',{id:_this.$route.params.id,SkipCount:0,MaxResultCount:totalCheckedAll})
-        //             .then(function(resp){//获取已选角色
-        //                 _this.checkedUserTable=resp.result.items;
-                    
-        //                 _this.showCheckedUserTable=resp.result.items;
-        //                  _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-        //                 _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-        //                 _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
-        //                 _this.getAllUserData()//获取所有角色数据
-        //             })
-        //         }else{
-        //             _this.showCheckedUserTable=[]
-        //             _this.checkedUserTable=[]
-        //             _this.getAllUserData()//获取所有角色数据
-        //         }
-                
-        //    })
-        // },
         getAllUserData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/User/GetAll',{SkipCount:0,MaxResultCount:1})//获取所有角色
@@ -1980,17 +1934,19 @@ export default({
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
 
                 _this.showCheckedUserTable=_this.uniqueArray(_this.showCheckedUserTable,json);
-                _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-                _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-                _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+                let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+                _this.showCheckedUserTable=x.nowData
+                _this.totalItemBottomUser=x.TotalItem
+                _this.totalPageBottomUser=x.TotalPage
         },
         dialogUserConfirmUser(){//确认
             let _this=this;
             _this.dialogUser=false;
             _this.showCheckedUserTable=_this.checkedUserTable
-             _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+             _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         
 
         },

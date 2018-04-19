@@ -439,7 +439,7 @@
                                 <i class="fa fa-cog" aria-hidden="true" @click="nextDivIsShow = !nextDivIsShow"></i>
                             </el-col>
                             <el-col :span="24" class="checkbox_group" v-show="nextDivIsShow">
-                                <span v-for="(x,index) in showCheckedFnTable" :key="index">
+                                <!-- <span v-for="(x,index) in showCheckedFnTable" :key="index">
                                     <span v-for="(i,inde) in x.children" :key="inde">
                                         <el-checkbox
                                         class="fnCheckBox"
@@ -449,6 +449,15 @@
                                         {{i.displayName}}
                                         </el-checkbox>
                                     </span>
+                                </span> -->
+                                <span v-for="(i,index) in headerFn" :key="index">
+                                    <el-checkbox
+                                    class="fnCheckBox"
+                                    v-model="i.check" 
+                                    @change="selectHeaderFn(i)"
+                                    >
+                                    {{i.displayName}}
+                                    </el-checkbox>
                                 </span>
                             </el-col>   
                             <el-col :span="24">
@@ -719,6 +728,7 @@ export default({
             searchBottomUser:'',//搜索
 
 //-----------关联权限---------------
+            headerFn:[],//全选下面复选框
             nextDivIsShow:true,//按钮组显示隐藏
             filterTextFn:'',//树形搜索框值
             // dialogFn:false,
@@ -1150,9 +1160,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showPageTableOu=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).nowData
-            _this.ouTotalItem=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalItem
-            _this.ouTotalPage=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage)
+            _this.showPageTableOu=x.nowData
+            _this.ouTotalItem=x.TotalItem
+            _this.ouTotalPage=x.TotalPage
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -1405,11 +1416,22 @@ export default({
         isCheckAllFn(){//是否全选
             let _this=this;
             let flag=true;
+            $.each(_this.headerFn,function(index,value){
+                // checkHeaderFn.push({displayName:value.displayName,check:true})
+                value.checkAll=true
+            })
             $.each(_this.showCheckedFnTable,function(index,val){
                 $.each(val.children,function(i,v){
                     if(v.check==false){
                         flag=false
                     }
+                    $.each(_this.headerFn,function(ind,value){
+                        if(value.displayName==v.displayName){
+                            if(!v.check){
+                                value.checkAll=false
+                            }
+                        }
+                    })
                 })
             })
             if(flag){
@@ -1417,6 +1439,9 @@ export default({
             }else{
                 _this.checkAllFns=false
             }
+            $.each(_this.headerFn,function(index,value){
+                value.check=value.checkAll
+            })
         },
         showCheckFn(){//查看已选
             let _this=this;
@@ -1459,12 +1484,12 @@ export default({
                 // console.log(_this.fnTreeData)
                 $.each(_this.fnTreeData,function(index1,value1){
                     let item1={moduleName:value1.moduleName,children:[]}
-                    let head1=[];
+                    // let head1=[];
                     
                     if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
                         $.each(value1.permissionDtos,function(index2,value2){
                             // console.log(value2)
-                            head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
+                            // head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
                             let x1={check:false,permissionName:value2.permissionName}
                             x1.check=false;
                             x1.displayName=value2.displayName
@@ -1479,10 +1504,10 @@ export default({
                     if(typeof(value1.childNodes)!='undefined' && value1.childNodes!=null && value1.childNodes.length>0){
                         $.each(value1.childNodes,function(index2,value2){
                             let item2={moduleName:value2.moduleName,children:[]}
-                            let head2=[];
+                            // let head2=[];
                             if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
                                 $.each(value2.permissionDtos,function(index3,value3){
-                                    head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
+                                    // head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
                                     let x2={check:false,permissionName:value3.permissionName}
                                     x2.check=false;
                                     x2.displayName=value3.displayName
@@ -1497,10 +1522,10 @@ export default({
                             if(typeof(value2.childNodes)!='undefined' && value2.childNodes!=null && value2.childNodes.length>0){
                                 $.each(value2.childNodes,function(index3,value3){
                                     let item3={moduleName:value3.moduleName,children:[]}
-                                    let head3=[];
+                                    // let head3=[];
                                     if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
                                         $.each(value3.permissionDtos,function(index4,value4){
-                                            head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
+                                            // head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
                                             let x3={check:false,permissionName:value4.permissionName}
                                             x3.check=false;
                                             x3.displayName=value4.displayName
@@ -1512,16 +1537,16 @@ export default({
                                             })
                                         })
                                     }
-                                    item3.head=head3
+                                    // item3.head=head3
                                     _this.clickFnTreeData.push(item3)
                                 })
                             }
-                            item2.head=head2
+                            // item2.head=head2
                             _this.clickFnTreeData.push(item2)
                         })
                     }
                     // console.log(head1)
-                    item1.head=head1
+                    // item1.head=head1
                     _this.clickFnTreeData.push(item1)
                     // let item={moduleName:val.displayName,children:[]}
                     // let head=[];
@@ -1542,19 +1567,40 @@ export default({
                     
                 })
                 $('#FnPagination').css('display','block')
-                _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-                _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-                _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+                let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn)
+                _this.showCheckedFnTable=x.nowData
+                _this.totalItemFn=x.TotalItem
+                _this.totalPageFn=x.TotalPage
                 _this.isCheckAllFn()
+                _this.loadHeadCheckbox()
                 },function(res){
+            })
+        },
+        loadHeadCheckbox(){//获取表格上方复选框
+            let _this=this;
+            _this.headerFn=[]
+            $.each(_this.showCheckedFnTable,function(index,val){
+                $.each(val.children,function(i,v){
+                    let repeat3=false;
+                    $.each(_this.headerFn,function(indexH,heads){
+                        if(heads.displayName==v.displayName){
+                            repeat3=true;
+                            return false
+                        }
+                    })
+                    if(!repeat3){
+                        _this.headerFn.push({displayName:v.displayName,check:false,checkAll:true})
+                    }
+                })
             })
         },
         FnPageChange(val){//分页
             let _this=this;
             _this.pageFn=val;
-            _this.showCheckedFnTable=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).nowData
-            _this.totalItemFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalItem
-            _this.totalPageFn=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn).TotalPage
+            let x=_this.paginationUserSearch(_this.clickFnTreeData,_this.oneItemFn,_this.pageFn)
+            _this.showCheckedFnTable=x.nowData
+            _this.totalItemFn=x.TotalItem
+            _this.totalPageFn=x.TotalPage
             _this.isCheckAllFn();
             _this.showCheckFnReset();
         },
@@ -1602,23 +1648,44 @@ export default({
             }
             return result;
         },
-        
+        selectHeaderFn(data){
+            let _this=this;
+            let checkAll=true;
+            $.each(_this.showCheckedFnTable,function(index,val){
+                    $.each(val.children,function(i,v){
+                    if(data.displayName==v.displayName){ 
+                        if(data.check){
+                            v.check=true  
+                        }else{
+                            v.check=false
+                        }
+                    }
+                })
+            })
+            $.each(_this.headerFn,function(index,value){
+                value.checkAll=value.check
+                if(!value.checkAll){
+                    checkAll=false
+                }
+            })
+            _this.checkAllFns=checkAll
+        },
         selectChangeFn(x,permissionName){
             let _this=this;
-            if(x){//选中状态为true
-                _this.checked.push({
-                    name:permissionName,
-                    displayName:permissionName,
-                    id:0,
-                    description:'',
-                })
-            }else{//选中状态为false
-                for(let i=0;i<_this.checked.length;i++){//移除已选
-                    if(permissionName==_this.checked[i].displayName){
-                        _this.checked.splice(i,1)
-                    }
-                }
-            }
+            // if(x){//选中状态为true
+            //     _this.checked.push({
+            //         name:permissionName,
+            //         displayName:permissionName,
+            //         id:0,
+            //         description:'',
+            //     })
+            // }else{//选中状态为false
+            //     for(let i=0;i<_this.checked.length;i++){//移除已选
+            //         if(permissionName==_this.checked[i].displayName){
+            //             _this.checked.splice(i,1)
+            //         }
+            //     }
+            // }
             _this.isCheckAllFn()
             // console.log(_this.checked)
         },
@@ -1724,9 +1791,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).nowData
-            _this.totalItemLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalItem
-            _this.totalPageLeftUser=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemLeftUser,_this.pageLeftUser)
+            _this.showCheckedUser=x.nowData
+            _this.totalItemLeftUser=x.TotalItem
+            _this.totalPageLeftUser=x.TotalPage
 
         },
         searchRightUserTable(){//右侧数据搜索
@@ -1741,9 +1809,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showNoCheckedUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).nowData
-            _this.totalItemRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalItem
-            _this.totalPageRightUser=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemRightUser,_this.pageRightUser)
+            _this.showNoCheckedUser=x.nowData
+            _this.totalItemRightUser=x.TotalItem
+            _this.totalPageRightUser=x.TotalPage
 
         },
         searchBottomUserTable(){
@@ -1759,9 +1828,10 @@ export default({
                     newJson.push(val)
                 }
             })
-            _this.showCheckedUserTable=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(newJson,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         editDialog(){
             let _this=this;
@@ -1828,9 +1898,10 @@ export default({
         userBottomPageChange(val){//页码改变
             let _this=this;
             _this.pageBottomUser=val;
-            _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+            _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
         },
         uniqueArray(array1, array2){//求差集
             var result = [];
@@ -1921,9 +1992,10 @@ export default({
                         _this.checkedUserTable=resp.result.items;
                     
                         _this.showCheckedUserTable=resp.result.items;
-                         _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-                        _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-                        _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+                        let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+                         _this.showCheckedUserTable=x.nowData
+                        _this.totalItemBottomUser=x.TotalItem
+                        _this.totalPageBottomUser=x.TotalPage
                         _this.getAllUserData()//获取所有角色数据
                     })
                 }else{
@@ -1997,17 +2069,19 @@ export default({
                 _this.showCheckedUser=_this.pagination([],json,_this.oneItemLeftUser,_this.pageLeftUser,'left')
 
                 _this.showCheckedUserTable=_this.uniqueArray(_this.showCheckedUserTable,json);
-                _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-                _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-                _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+                let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser);
+                _this.showCheckedUserTable=x.nowData
+                _this.totalItemBottomUser=x.TotalItem
+                _this.totalPageBottomUser=x.TotalPage
         },
         dialogUserConfirmUser(){//确认
             let _this=this;
             _this.dialogUser=false;
             _this.showCheckedUserTable=_this.checkedUserTable
-             _this.showCheckedUserTable=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).nowData
-            _this.totalItemBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalItem
-            _this.totalPageBottomUser=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser).TotalPage
+            let x=_this.paginationUserSearch(_this.checkedUserTable,_this.oneItemBottomUser,_this.pageBottomUser)
+             _this.showCheckedUserTable=x.nowData
+            _this.totalItemBottomUser=x.TotalItem
+            _this.totalPageBottomUser=x.TotalPage
 
         },
         cancelPushUser(){//取消
