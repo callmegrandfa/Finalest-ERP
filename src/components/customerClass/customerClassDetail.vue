@@ -278,6 +278,7 @@
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                firstModify:false,
                 treeLoading: false,
                 errorMessage:false,//错误信息提示
                 detail_message_ifShow:false,
@@ -324,17 +325,17 @@
         parentSearch(val) {
            this.$refs.tree.filter(val);
         },
-        addData:{
-            handler:function(val,oldVal){
-                let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
-                }else{
-                    _this.update=true
-                }
-            },
-            deep:true,
-        },
+        // addData:{
+        //     handler:function(val,oldVal){
+        //         let _this=this;
+        //         if(!_this.firstModify){
+        //             _this.firstModify=!_this.firstModify;
+        //         }else{
+        //             _this.update=true
+        //         }
+        //     },
+        //     deep:true,
+        // },
     },
     methods: {
         getSelectData(){
@@ -482,7 +483,8 @@
                           self.clearData();
                           self.validation.reset();
                           self.update=false;
-                        //  console.log(self.update)
+                        //   self.firstModify=true;
+                         console.log(self.firstModify)
                     },function(res){    
                         // self.open('保存失败','el-icon-error','faildERP');
                         if(res && res!=''){ 
