@@ -777,7 +777,6 @@ export default new vuex.Store({
         commodityBrandQueryParams:"",//条件查询参数
         commodityBrandTreeQueryParams:"",//树节点查询参数
         commodityBrandNewCol:'',
-        commodityBrandIfDel:true,//是否删除
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
         commodityBrandSelection:[],//选中数据集合
@@ -807,7 +806,6 @@ export default new vuex.Store({
         storeHouseModifyUpdateColArray:[],//表格内修改数据集合
         storeHouseModifyUpdateRow:'',//修改表格行数据
         storeHouseModifyUpdateRowId:'',//修改的表格行ID
-        storeHouseModifyIfDel:true,//是否删除
 
         queryparams:{},
         tableLoading:true,
@@ -863,12 +861,6 @@ export default new vuex.Store({
         Init_ifTreeQuery(state,data){//是否点击树节点查询
             state[state.tableName+'TreeQuery']=data
         },
-        // Init_status(state,data){//状态下拉
-        //     state[state.tableName+'statusOptions']=data
-        // },
-        setIfDel(state,data){//配置是否删除参数
-            state[state.tableName+'IfDel']=data
-        },
         setHttpApi(state,api){//初始化api地址
             state[state.tableName+'HttpApi']=api;
         },
@@ -905,9 +897,6 @@ export default new vuex.Store({
         setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
         },
-        // setUpdateRowId(state,id){//重置修改行id
-        //     state[state.tableName+'UpdateRowId']=id;
-        // },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);
@@ -921,17 +910,6 @@ export default new vuex.Store({
     },
     actions:{
         InitTable(context){//表格初始化
-            axios.get(context.state[context.state.tableName+'HttpApi'],{
-                params:context.state[context.state.tableName+'Params']
-            }).then(function(res){
-                context.commit('Init_Table',res.data.result.items);
-                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
-                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
-                context.commit('Init_pagination',totalPage);
-                },function(res){
-            })
-        },
-        QueryTable(context){//根据查询条件
             axios.get(context.state[context.state.tableName+'QueryApi'],{
                 params:context.state[context.state.tableName+'QueryParams']
             }).then(function(res){
@@ -939,38 +917,26 @@ export default new vuex.Store({
                 context.commit('Init_TotalCount',Number(res.data.result.totalCount));
                 let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
                 context.commit('Init_pagination',totalPage);
-                },function(res){
-            })
-        },
-        TreeQueryTable(context){//根据树节点查询条件
-            axios.get(context.state[context.state.tableName+'TreeQueryApi'],{
-                params:context.state[context.state.tableName+'TreeQueryParams']
-            }).then(function(res){
-                context.commit('Init_Table',res.data.result.items);
-                context.commit('Init_TotalCount',Number(res.data.result.totalCount));
-                let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
-                context.commit('Init_pagination',totalPage);
-                },function(res){
-            })
+                }).catch(function(err){
+                    console.log(err)
+                })
         },
         addCol(context,item){//添加行
             //通过参数传递
             context.commit('add_col',item)
         },
-        AddUpdateArray(context){//更改行id
-            if(context.state[context.state.tableName+'UpdateColArray'].length==0){
-                if(context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined")
-                context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
-            }else{
-                if(context.state[context.state.tableName+'UpdateColArray'].indexOf(context.state[context.state.tableName+'UpdateRowId'])==-1&&context.state[context.state.tableName+'UpdateRowId']!=""&&typeof(context.state[context.state.tableName+'UpdateRowId'])!="undefined"){
-                    context.commit('Add_UpdateArray',context.state[context.state.tableName+'UpdateRowId'])
+        AddUpdateArray(context,updateRow){
+            let repeat=false;
+            for(let i in context.state[context.state.tableName+'UpdateColArray']){
+                if(updateRow.id==context.state[context.state.tableName+'UpdateColArray'][i].id){
+                    repeat=true
                 }else{
-                    return
+                    repeat=false;
                 }
             }
-        },
-        getRowId(context,id){
-            context.commit('get_RowId',id);
+            if(!repeat){
+                context.commit('Add_UpdateArray',updateRow)
+            }
         },
         queryTable(context){
       

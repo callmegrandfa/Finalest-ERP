@@ -1,6 +1,16 @@
 .el-col-24{
   border-bottom: none;
 }
+/* 按钮图标 */
+.iconfont{
+  font-size: 12px!important;
+  color: #fff;
+}
+.erp_bt span {
+  color: #fff;
+  font-size: 12px;
+  margin-left: 4px;
+}
 /* 搜索 */
 /* <el-input
     placeholder="搜索..."
