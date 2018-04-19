@@ -4,7 +4,7 @@
             <el-col :span="24">
                 <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> 
                 <button plain @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>  
-                <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+                <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
                 <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
                 <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                 <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -72,7 +72,7 @@
                         <small>*</small>用户编码</label>
                         <el-input 
                         class="userCode" 
-                        
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.userCode')}" 
                         v-model="addData.userCode" 
                         placeholder=""></el-input>
@@ -86,7 +86,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>用户名称</label>
                     <el-input 
-                    
+                    @change="isUpdate"
                     class="displayName" 
                     :class="{redBorder : validation.hasError('addData.displayName')}" 
                     v-model="addData.displayName"  
@@ -101,7 +101,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>手机号码</label>
                     <el-input 
-                    
+                    @change="isUpdate"
                     class="phoneNumber" 
                     :class="{redBorder : validation.hasError('addData.phoneNumber')}" 
                     v-model="addData.phoneNumber"  
@@ -116,7 +116,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>邮箱</label>
                     <el-input 
-                    
+                    @change="isUpdate"
                     class="email" 
                     :class="{redBorder : validation.hasError('addData.email')}"
                     v-model="addData.email"  
@@ -133,7 +133,7 @@
                     <el-select clearable filterable  
                     class="userGroupId" 
                     placeholder=""
-                    
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.userGroupId')}"
                     v-model="addData.userGroupId">
                         <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
@@ -151,7 +151,7 @@
                     <el-select clearable 
                     class="ouId" 
                     placeholder=""
-                    
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.ouId')}"
                     v-model="addData.ouId">
                         <!-- <el-option v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id">
@@ -191,7 +191,7 @@
                     <el-select clearable filterable  
                     class="userType" 
                     placeholder=""
-                    
+                    @change="isUpdate"
                     :class="{redBorder : validation.hasError('addData.userType')}"
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
@@ -208,7 +208,7 @@
                     <label>语种</label>
                     <el-select clearable filterable  
                     class="languageId" 
-                    
+                    @change="isUpdate" 
                     placeholder=""
                     :class="{redBorder : validation.hasError('addData.languageId')}"
                     v-model="addData.languageId">
@@ -226,7 +226,7 @@
                         <label>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
-                            
+                            @change="isUpdate"
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -251,7 +251,7 @@
                         <label>状态</label>
                         <el-select clearable filterable  
                         class="status" 
-                        
+                        @change="isUpdate"
                         placeholder=""
                         :class="{redBorder : validation.hasError('addData.status')}"
                         v-model="addData.status">
@@ -279,7 +279,7 @@
                         <label>备注</label>
                         <el-input
                         class="remark" 
-                        
+                        @change="isUpdate"
                         :class="{redBorder : validation.hasError('addData.remark')}"
                         v-model="addData.remark"
                         type="textarea"
@@ -1181,6 +1181,9 @@
                 _this.back()
             }
         },
+        isUpdate(){//判断是否修改过信息
+        this.ifModify=true;
+        },
         isCancel(){
             let _this=this;
             if(_this.ifModify){
@@ -1243,6 +1246,8 @@
                         _this.$store.state.url='/user/userDetail/default'
                         _this.$router.push({path:_this.$store.state.url})
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.Cancel();
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1349,6 +1354,9 @@
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;
   }
+  .userDetail .getPadding {
+    padding: 0 10px;
+}
   .userDetail .bgcolor .isGive{
     display: block;
     float: left;
