@@ -1577,8 +1577,6 @@ export default({
                     // if(flag){
                         _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间方案 
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
-                        _this.firstModify=false;
-                         _this.ifModify=false;
                     // }
                 })
                
