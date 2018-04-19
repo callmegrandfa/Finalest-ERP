@@ -64,6 +64,7 @@
                 <label><small>*</small>类目</label>
                 <el-select clearable filterable  class="categoryId"
                 @focus="showErrprTips"
+                @change="changeCategoryId"
                 :class="{redBorder : validation.hasError('product_MainTable.categoryId')}"
                 placeholder=""
                 v-model="product_MainTable.categoryId">
@@ -1096,43 +1097,6 @@ export default {
         },
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
-        },
-        showErrprTipsSelect(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.target).parent('.el-input').parent('.el-select').hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
-        },
-        showErrprTipsRangedate(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //     if($(e.$el).hasClass($(this).attr('name'))){
-            //         $(this).addClass('display_block')
-            //     }else{
-            //         $(this).removeClass('display_block')
-            //     }
-            // })
-        },
-        showErrprTipsTextArea(e){
-            $('.tipsWrapper').css({display:'none'})
-            // $('.tipsWrapper').each(function(){
-            //   if($(e.target).parent('.el-textarea').hasClass($(this).attr('name'))){
-            //       $(this).addClass('display_block')
-            //   }else{
-            //       $(this).removeClass('display_block')
-            //   }
-            // })
         },
         filterNode_categoryId(value, data) {
             if (!value) return true;
@@ -1271,6 +1235,17 @@ export default {
         },
         saveAdd(){
             
+        },
+        changeCategoryId(){//类目改变
+            let _this=this;
+            if(_this.product_MainTable.categoryId!=''){
+                _this.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:_this.product_MainTable.categoryId})
+                .then(function(res){
+                    console.log(res)    
+                },function(res){
+
+                })
+            }
         },
 //----------------------商品规格------------------
         showGoodsDialog(data){//选中编辑规格组，显示dialog
