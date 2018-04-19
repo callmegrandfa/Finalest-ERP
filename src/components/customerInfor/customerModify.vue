@@ -383,19 +383,19 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(proId)'>
+                                <el-select v-model="proIDT" class="areaDrop" placeholder="选择省" @change='chooseProvince(proIDT)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show='false' label='无' :value="provinceValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="cityId" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityId)'>
+                                <el-select v-model="cityIdT" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityIdT)'>
                                     <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show="false" label="无" :value="cityValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="customerData.adAreaId" class="areaDrop" placeholder="选择区" @change='chooseDis()'>
+                                <el-select v-model="quIdT" class="areaDrop" placeholder="选择区" @change='chooseDis(quIdT)'>
                                     <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show="false" label="无" :value="areaValue">
@@ -615,10 +615,10 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="proId" label="省" width="180">
+                                <el-table-column prop="adAreaLevel1" label="省" width="180">
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row)'>
-                                            <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                        <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row.proId)'>
+                                            <el-option v-for="item in areaProArray1" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="provinceValue">
                                             </el-option>
@@ -626,10 +626,10 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="cityId" label="市" width="180">
+                                <el-table-column prop="adAreaLevel2" label="市" width="180">
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row)'>
-                                            <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                        <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row.cityId)'>
+                                            <el-option v-for="item in areaCityArray2" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="cityValue">
                                             </el-option>
@@ -637,10 +637,10 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="quId" label="区" width="180">
+                                <el-table-column prop="adAreaLevel3" label="区" width="180">
                                     <template slot-scope="scope">
-                                        <el-select v-model="scope.row.quId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row)'>
-                                            <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
+                                        <el-select v-model="scope.row.disId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row.disId)'>
+                                            <el-option v-for="item in areaDisArray3" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="areaValue">
                                             </el-option>
@@ -719,7 +719,6 @@
                                                     :data="ywAr"
                                                     :props="selectYwProps"
                                                     node-key="id"
-                                                    default-expand-all
                                                     ref="tree"
                                                     :filter-node-method="filterNode"
                                                     :expand-on-click-node="false"
@@ -866,6 +865,7 @@ export default({
         self.loadSelect();
     },
     watch:{
+
         customerData:{
             handler: function (val, oldVal) {
                 let self = this;
@@ -1053,6 +1053,12 @@ export default({
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
             //-----------------------
+            //---从表行政地区树形下拉-----
+                areaProArray1:[],//行政地区(省)
+                areaCityArray2:[],//行政地区(市)
+                areaDisArray3:[],//行政地区(区)
+            //-----------------------
+
             //---业务地区树形下拉-----
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
@@ -1087,7 +1093,11 @@ export default({
             addAr:[],//地址类型下拉
             tranAr:[],//运输方式下拉
             //-----------------------
-  
+            //上面的行政地区----------
+            proIDT:'',
+            cityIdT:'',
+            quIdT:'',
+            //-----------------------
             activeName: 'bank',//tabs标签页默认激活name
             
             supplier:true,//同为供应商
@@ -1153,6 +1163,9 @@ export default({
                 "completeAddress": "",
                 "contactPerson": "",
                 "phone": "",
+                "adAreaLevel1":"",
+                "adAreaLevel2":"",
+                "adAreaLevel3":"",
                 "isDefault": true
             },
             createOuParams:{//创建组织参数
@@ -1201,9 +1214,9 @@ export default({
             provinceValue:0,
             cityValue:0,
             areaValue:0,
-            proId:'',
-            cityId:'',
-            disId:'',
+            // proId:'',//送货地址处行政地区
+            // cityId:'',
+            // disId:'',
             //-----------------------------
             redBankAr:[],
             redAddAr:[],
@@ -1314,11 +1327,14 @@ export default({
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
-
+                    self.proIDT=self.customerData.adAreaId_AreaFullPathName.split(">")[0]
+                    self.cityIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[1]
+                    self.quIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[2]
                     //行政地区获取省
                     self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
                         console.log(res);
                         self.areaProArray = res.result;
+                        self.areaProArray1=res.result;
                         console.log(self.areaProArray)
                         // self.loadIcon();
                     },function(res){
@@ -1364,7 +1380,7 @@ export default({
         loadBankData:function(){//银行数据
             let self = this;
             self.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
-                console.log(res);
+                //console.log(res);
                 self.bankData = res.result;
                 self.InitBankData = self.deepCopy(res.result);
                 for(let i in self.bankData){
@@ -1378,7 +1394,7 @@ export default({
             let self = this;
             //获取所有的地址信息，也可以用contactId获取
             self.$axios.gets('/api/services/app/ContactAddressManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
-                console.log(res);
+                //console.log(res);
                 self.addressData = res.result;
                 self.InitAddData = self.deepCopy(res.result);
                 for(let i in self.addressData){
@@ -1392,7 +1408,7 @@ export default({
             let self = this;
             //获取所有的组织信息，也可以用contactId获取
             self.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                console.log(res);
+                //console.log(res);
                 self.ouData = res.result.items;
                 self.InitOuData = self.deepCopy(res.result.items);
                 self.ywItem.id = res.result.items.ouId;
@@ -1498,9 +1514,10 @@ export default({
         chooseProvince:function(res){
             let self = this;
             console.log(res)
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.proId}).then(function(res){
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
                 // console.log(res);
                 self.areaCityArray = res.result;
+                self.areaCityArray2 = res.result;
                 // self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1509,18 +1526,19 @@ export default({
         },
         chooseCity:function(res){
             let self = this;
-            console.log(res)
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res.cityId}).then(function(res){
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
                 // console.log(res);
-                self.customerData.adAreaId = '';
                 self.areaDisArray = res.result;
+                self.areaDisArray3 = res.result;
                 // self.loadIcon();
             },function(res){
                 console.log('err'+res)
             })
         },
-        chooseDis:function(){
+        chooseDis:function(res){
+            //console.log(res)
             let self = this;
+            self.customerData.adAreaId=res;
             // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
         },
         //-----------------------------------------------------------
@@ -1677,7 +1695,7 @@ export default({
         saveCustomerModify:function(){//修改所有
             let self = this;
             $('.tipsWrapper').css({display:'block'});
-            // console.log(self.customerData)
+            //console.log(self.customerData)
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
@@ -1688,7 +1706,7 @@ export default({
                         contactAddress_ChildTable:self.addressData,
                         contactOu_ChildTable:self.ouData,
                     }
-                    
+                    //console.log(submitData)
                     self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
                         self.open('修改成功','el-icon-circle-check','successERP');
                         self.ifModify = false;
@@ -1696,6 +1714,7 @@ export default({
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         self.errorMessage=true;
                     })
+                    self.sureDel();
                 }
             });
             
@@ -1735,9 +1754,9 @@ export default({
                 "contactPerson": "",
                 "phone": "",
                 "isDefault": false,
-                "proId":'',
-                "cityId":'',
-                "quId":''
+                "adAreaLevel1":'',
+                "adAreaLevel2":'',
+                "adAreaLevel3":''
             };
             self.addressData.unshift(self.yrows.newCol)
             self.addAddressList.unshift(self.yrows.newCol)
@@ -1862,12 +1881,36 @@ export default({
 
         //---从表单项删除-------------------------------------
 
-        handleDelete:function(index,row,who){//银行表格内删除操作
+        handleDelete:function(index,row,who){    
             let self = this;
             self.who = who;
             self.whoIndex = index;
             self.whoId = row.id;
-            self.dialogDelConfirm = true;
+            //self.dialogDelConfirm = true;
+            if(self.who == 1){//银行单项删除
+                if(self.whoId>0){
+                    self.bankData.splice(self.whoIndex,1);
+                }else{
+                    self.bankData.splice(self.whoIndex,1);
+                    self.addBankList.splice(self.whoIndex,1);
+                }            
+            }else if(self.who == 2){//地址单项删除
+            
+                if(self.whoId>0){
+                        self.addressData.splice(self.whoIndex,1);                       
+                }else{
+                    self.addressData.splice(self.whoIndex,1);
+                    self.addAddressList.splice(self.whoIndex,1);
+                }
+            }else if(self.who == 3){//使用组织单项删除
+                if(self.whoId>0){
+                        self.ouData.splice(self.whoIndex,1);
+                }else{
+                    self.ouData.splice(self.whoIndex,1);
+                    self.addOuList.splice(self.whoIndex,1);
+                }
+
+            }
         },
         //---------------------------------------------------
 
@@ -1880,121 +1923,121 @@ export default({
                 if(self.whoId>0){
                     // console.log(self.dialogDelConfirm)
                     self.$axios.deletes('/api/services/app/ContactBankManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除银行资料成功','el-icon-circle-check','successERP');
-                        self.bankData.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
+                        //self.open('删除银行资料成功','el-icon-circle-check','successERP');
+                        //self.bankData.splice(self.whoIndex,1);
+                        //self.dialogDelConfirm = false;
                         console.log(self.dialogDelConfirm)
                     },function(res){
-                        self.open('删除银行资料失败','el-icon-error','faildERP');
-                        self.dialogDelConfirm = false;
-                        self.errorMessage=true;
+                        //self.open('删除银行资料失败','el-icon-error','faildERP');
+                        //self.dialogDelConfirm = false;
+                        //self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
-                    self.bankData.splice(self.whoIndex,1);
-                    self.addBankList.splice(self.whoIndex,1);
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    //self.bankData.splice(self.whoIndex,1);
+                    //self.addBankList.splice(self.whoIndex,1);
+                    //self.dialogDelConfirm = false;
+                    //self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
             }
 
             if(self.who == 2){//地址单项删除
                 if(self.whoId>0){
                     self.$axios.deletes('/api/services/app/ContactAddressManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除地址资料成功','el-icon-circle-check','successERP');
-                        self.addressData.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
+                        // self.open('删除地址资料成功','el-icon-circle-check','successERP');
+                        // self.addressData.splice(self.whoIndex,1);
+                        //self.dialogDelConfirm = false;
                     },function(res){
-                        self.open('删除地址资料失败','el-icon-error','faildERP');
-                        self.dialogDelConfirm = false;
-                        self.errorMessage=true;
+                        //self.open('删除地址资料失败','el-icon-error','faildERP');
+                        //self.dialogDelConfirm = false;
+                        //self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         
                     })
                 }else{
-                    self.addressData.splice(self.whoIndex,1);
-                    self.addAddressList.splice(self.whoIndex,1);
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    //self.addressData.splice(self.whoIndex,1);
+                    //self.addAddressList.splice(self.whoIndex,1);
+                    //self.dialogDelConfirm = false;
+                    //self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
             }
 
             if(self.who == 3){//使用组织单项删除
                 if(self.whoId>0){
                     self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.whoId}).then(function(res){
-                        self.open('删除使用组织成功','el-icon-circle-check','successERP');
-                        self.ouData.splice(self.whoIndex,1);
-                        self.dialogDelConfirm = false;
+                        // self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                        // self.ouData.splice(self.whoIndex,1);
+                        // self.dialogDelConfirm = false;
                     },function(res){
-                        self.dialogDelConfirm = false;
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        // self.dialogDelConfirm = false;
+                        // self.errorMessage=true;
+                        // self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
-                    self.ouData.splice(self.whoIndex,1);
-                    self.addOuList.splice(self.whoIndex,1);
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    // self.ouData.splice(self.whoIndex,1);
+                    // self.addOuList.splice(self.whoIndex,1);
+                    // self.dialogDelConfirm = false;
+                    // self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
             }
 
             if(self.who == 4){//银行多项删除  
-                let x = [];
-                $.each(self.bankData,function(index,value){
-                    let flag = false;
-                    $.each(self.multipleSelection,function(i,val){
-                        if(value==val){
-                            flag = true;
-                        }
-                    })
-                    if(!flag){
-                        x.push(value)
-                    }
-                })
-                self.bankData = x;
-                self.addBankList = [];
-                for(let i in x){
-                    if(x[i].id==''||x[i].id==undefined){
-                        // console.log(x[i])
-                        self.addBankList.push(x[i])
-                        console.log(self.addBankList)
-                    }
-                }
+                // let x = [];
+                // $.each(self.bankData,function(index,value){
+                //     let flag = false;
+                //     $.each(self.multipleSelection,function(i,val){
+                //         if(value==val){
+                //             flag = true;
+                //         }
+                //     })
+                //     if(!flag){
+                //         x.push(value)
+                //     }
+                // })
+                // self.bankData = x;
+                // self.addBankList = [];
+                // for(let i in x){
+                //     if(x[i].id==''||x[i].id==undefined){
+                //         // console.log(x[i])
+                //         self.addBankList.push(x[i])
+                //         console.log(self.addBankList)
+                //     }
+                // }
                 self.$axios.posts('/api/services/app/ContactBankManagement/BatchDelete',self.idArrayBank).then(function(res){
-                    self.open('删除银行资料成功','el-icon-circle-check','successERP');
+                    //self.open('删除银行资料成功','el-icon-circle-check','successERP');
                     // self.loadBankData();
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                 },function(res){
-                    self.dialogDelConfirm = false;
-                    self.errorMessage = true;
+                    // self.dialogDelConfirm = false;
+                    // self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 })    
             }
 
             if(self.who == 5){//地址多项删除
-                let x = [];
-                $.each(self.addressData,function(index,value){
-                    let flag = false;
-                    $.each(self.multipleSelectionAdd,function(i,val){
-                        if(value==val){
-                            flag = true;
-                        }
-                    })
-                    if(!flag){
-                        x.push(value)
-                    }
-                })
-                self.addressData = x;
-                self.addAddressList = [];
-                for(let i in x){
-                    if(x[i].id==''||x[i].id==undefined){
-                        // console.log(x[i])
-                        self.addAddressList.push(x[i])
-                        console.log(self.addAddressList)
-                    }
-                }  
+                // let x = [];
+                // $.each(self.addressData,function(index,value){
+                //     let flag = false;
+                //     $.each(self.multipleSelectionAdd,function(i,val){
+                //         if(value==val){
+                //             flag = true;
+                //         }
+                //     })
+                //     if(!flag){
+                //         x.push(value)
+                //     }
+                // })
+                // self.addressData = x;
+                // self.addAddressList = [];
+                // for(let i in x){
+                //     if(x[i].id==''||x[i].id==undefined){
+                //         // console.log(x[i])
+                //         self.addAddressList.push(x[i])
+                //         console.log(self.addAddressList)
+                //     }
+                // }  
                 self.$axios.posts('/api/services/app/ContactAddressManagement/BatchDelete',self.idArrayAdd).then(function(res){
-                    self.open('删除地址成功','el-icon-circle-check','successERP');
+                    //self.open('删除地址成功','el-icon-circle-check','successERP');
                     // self.loadAddData();
                     self.dialogDelConfirm = false;
                 },function(res){
@@ -2005,33 +2048,33 @@ export default({
             }
 
             if(self.who == 6){//使用组织多项删除 
-                let x = [];
-                $.each(self.ouData,function(index,value){
-                    let flag = false;
-                    $.each(self.multipleSelectionOu,function(i,val){
-                        if(value==val){
-                            flag = true;
-                        }
-                    })
-                    if(!flag){
-                        x.push(value)
-                    }
-                })
-                self.ouData = x;
-                self.addOuList = [];
-                for(let i in x){
-                    if(x[i].id==''||x[i].id==undefined){
-                        // console.log(x[i])
-                        self.addOuList.push(x[i])
-                        console.log(self.addOuList)
-                    }
-                }  
+                // let x = [];
+                // $.each(self.ouData,function(index,value){
+                //     let flag = false;
+                //     $.each(self.multipleSelectionOu,function(i,val){
+                //         if(value==val){
+                //             flag = true;
+                //         }
+                //     })
+                //     if(!flag){
+                //         x.push(value)
+                //     }
+                // })
+                // self.ouData = x;
+                // self.addOuList = [];
+                // for(let i in x){
+                //     if(x[i].id==''||x[i].id==undefined){
+                //         // console.log(x[i])
+                //         self.addOuList.push(x[i])
+                //         console.log(self.addOuList)
+                //     }
+                // }  
                 self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
-                    self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                    //self.open('删除使用组织成功','el-icon-circle-check','successERP');
                     // self.loadOuData();
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                 },function(res){
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 })    
@@ -2039,9 +2082,9 @@ export default({
 
             if(self.who == 7){//删除
                 self.$axios.deletes('/api/services/app/ContactManagement/Delete',{id:self.$route.params.id}).then(function(res){
-                    self.open('删除资料成功','el-icon-circle-check','successERP');
+                    //self.open('删除资料成功','el-icon-circle-check','successERP');
                     self.back();
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                 },function(res){
                     self.dialogDelConfirm = false;
                     self.errorMessage = true;
@@ -2057,7 +2100,6 @@ export default({
         //---从表多项删除---------------------------------------------
         delMoreBank:function(num){//银行多项删除
             let self = this;
-
             for(let i in self.multipleSelection){
                 self.allBankDel.ids.push(self.multipleSelection[i].id)
             }
@@ -2066,10 +2108,33 @@ export default({
                     self.idArrayBank.ids.push(self.multipleSelection[i].id)
                 }
             }
-
             if(self.allBankDel.ids.length>0){
-                self.dialogDelConfirm = true;   
+                //self.dialogDelConfirm = true;   
                 self.who = num;
+                if(self.who == 4){
+                    let x = [];
+                    $.each(self.bankData,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelection,function(i,val){
+                            if(value==val){
+                                flag = true;
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+                    self.bankData = x;
+                    self.addBankList = [];
+                    for(let i in x){
+                        if(x[i].id==''||x[i].id==undefined){
+                            // console.log(x[i])
+                            self.addBankList.push(x[i])
+                            console.log(self.addBankList)
+                        }
+                    }
+                }
+
             }else{
                 self.$message({
                     type: 'info',
@@ -2081,7 +2146,6 @@ export default({
 
         delMoreAdd:function(num){
             let self = this;
-
             for(let i in self.multipleSelectionAdd){
                 self.allAddDel.ids.push(self.multipleSelectionAdd[i].id)
             }
@@ -2090,10 +2154,33 @@ export default({
                     self.idArrayAdd.ids.push(self.multipleSelectionAdd[i].id)
                 }
             }
-
             if(self.allAddDel.ids.length>0){
-                self.dialogDelConfirm = true;   
+                //self.dialogDelConfirm = true;   
                 self.who = num;
+                if(self.who == 5){//地址多项删除
+                    let x = [];
+                    $.each(self.addressData,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelectionAdd,function(i,val){
+                            if(value==val){
+                                flag = true;
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+                    self.addressData = x;
+                    self.addAddressList = [];
+                    for(let i in x){
+                        if(x[i].id==''||x[i].id==undefined){
+                            // console.log(x[i])
+                            self.addAddressList.push(x[i])
+                            console.log(self.addAddressList)
+                        }
+                    }
+                }  
+                
             }else{
                 self.$message({
                     type: 'info',
@@ -2118,8 +2205,33 @@ export default({
             console.log(self.idArrayOu.ids)
 
             if(self.allOuDel.ids.length>0){
-                self.dialogDelConfirm = true;   
+                //self.dialogDelConfirm = true;   
                 self.who = num;
+                if(self.who == 6){//使用组织多项删除 
+                    let x = [];
+                    $.each(self.ouData,function(index,value){
+                        let flag = false;
+                        $.each(self.multipleSelectionOu,function(i,val){
+                            if(value==val){
+                                flag = true;
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+                    self.ouData = x;
+                    self.addOuList = [];
+                    for(let i in x){
+                        if(x[i].id==''||x[i].id==undefined){
+                            // console.log(x[i])
+                            self.addOuList.push(x[i])
+                            console.log(self.addOuList)
+                        }
+                    }  
+                }
+
+
             }else{
                 self.$message({
                     type: 'info',
@@ -2131,7 +2243,6 @@ export default({
         
         delCustomer:function(num){//删除此页客户资料
             let self = this;
-
             self.who = num;
             self.dialogDelConfirm = true;  
         },
