@@ -119,6 +119,7 @@ export default new vuex.Store({
         specification:{ name: 'specification', url: '/specification/specificationOfGoodsList/:id', parent: 'specification', default: '/specification/specificationOfGoodsList/:id' } , //商品规格组
         specificationOfGoodsList:{ name: 'specificationOfGoodsList', url: '/specification/specificationOfGoodsList/:id', parent: 'specification' } ,
         specificationOfGoodsDetails:{ name: 'specificationOfGoodsDetails', url: '/specification/specificationOfGoodsDetails/:id', parent: 'specification' } ,
+        specificationOfGoodsModify:{ name: 'specificationOfGoodsModify', url: '/specification/specificationOfGoodsModify/:id', parent: 'specification' } ,
 
         tenant:{ name: 'tenant', url: '/tenant/tenantManagement/:id', parent: 'tenant', default: '/tenant/tenantManagement/:id' } , //租户管理
         tenantManagement:{ name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,
