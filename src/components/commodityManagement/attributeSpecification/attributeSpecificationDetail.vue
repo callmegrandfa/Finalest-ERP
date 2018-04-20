@@ -747,7 +747,7 @@ export default({
 
         //---保存------------------
         save:function(){
-            // console.log(1)
+            // self.attData.push({propertyName:x[i].propertyName,propertyCode:x[i].propertyCode,itemSourceId:x[i].itemSourceId,itemType:x[i].itemType,statusTValue:x[i].statusTValue,id:x[i].id});
             let self = this;
             self.submitData.categoryFeature_MainTable.groupId = self.defaultGroupId;
             self.submitData.categoryFeature_MainTable.categoryId = self.categoryId;
@@ -1109,6 +1109,7 @@ export default({
                     self.ifPeriod = res.result.validityMgt;
                     self.submitData.categoryFeature_MainTable.id = res.result.id;
                 }
+                
             },function(res){
                 console.log(self.submitData.categoryFeature_MainTable.id)
             })
