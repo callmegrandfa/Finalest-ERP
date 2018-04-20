@@ -7,7 +7,7 @@
             <span class="versionInfo" :class="{infoActive : $store.state.show}">升级信息</span>
         </li>
        <vue-scroll :ops="ops">
-            <li class="one" @mouseenter="enter1">
+            <!-- <li class="one" @mouseenter="enter1">
                 <span class="menuIcon"><img src="../../static/image/siderbar/常用功能.png"></span>
                 <a class="oneA" href="javascript:;">系统管理</a>
                 <ul class="slidUl slid1">
@@ -25,7 +25,7 @@
                         </li>
                     </vue-scroll> 
                 </ul>
-            </li>
+            </li> -->
             <li class="one" v-for="item in childNodes" :menuId="item.id"  @mouseenter="enter1" v-if="item.status==1">
                 <span class="menuIcon" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url"><i :class="item.ico" style="color:#fff"></i></span>
                 <a class="oneA" href="javascript:;" :moduleParentId="item.moduleParentId" :menuname="item.moduleName" :menuUrl="item.url">{{item.moduleName}}</a>
@@ -65,142 +65,160 @@ export default {
             },
         },
         ids:[],
-        secondLevel1:[{
-                name:'租户管理',
-                thirdInfo:[
-                    {name:'租户管理',address:'tenant'},
-                ]
-            },{
-                name:'集团管理',
-                thirdInfo:[
-                    {name:'集团管理',address:'groupManage'},
-                    {name:'组织管理',address:'OuManage'},
-                ]
-            },{
-                name:'菜单管理',
-                thirdInfo:[
-                    {name:'菜单管理',address:'menu'},
-                ]
-            },{
-                name:'用户管理',
-                thirdInfo:[
-                    {name:'用户资料',address:'user'},
-                ]
-            },
-            {
-                name:'用户组',
-                thirdInfo:[
-                    {name:'用户组',address:'userGroup'},
-                ]
-            },
-            {
-                name:'客户分类',
-                thirdInfo:[
-                    {name:'客户分类',address:'customerClass'},
-                ]
-            },
-            {
-                name:'角色管理',
-                thirdInfo:[
-                    {name:'角色资料',address:'role'},
-                ]
-            },
-            {
-                name:'采购管理',
-                thirdInfo:[
-                     {name:'采购管理列表',address:'order'}, 
-                ]
-            },{
-                name:'客户资料',
-                thirdInfo:[
-                    {name:'客户资料',address:'customer'},
-                ]
-            },{
-                name:'币种资料',
-                thirdInfo:[
-                    {name:'币种资料',address:'currency'},
-                ]
-            },
-            {
-                name:'会计期间',
-                thirdInfo:[
-                    {name:'会计期间',address:'account'},
-                ]
-            },
-            {
-                name:'单据模板',
-                thirdInfo:[
-                     {name:'单据开单模板',address:'bill'}, 
-                ]
-            },{
-                name:'仓库资料',
-                thirdInfo:[
-                     {name:'仓库资料',address:'repository'}, 
-                ]
-            },{
-                name:'仓库资料演示',
-                thirdInfo:[
-                     {name:'仓库资料演示',address:'storeHouse'}, 
-                ]
-            },{
-                name:'仓库资料演示1',
-                thirdInfo:[
-                     {name:'仓库资料演示1',address:'storeHouse1'}, 
-                ]
-            },{
-                name:'系统字典',
-                thirdInfo:[
-                     {name:'系统字典',address:'dictionaryList'}, 
-                ]
-            },{
-                name:'业务地区',
-                thirdInfo:[
-                    {name:'业务地区管理',address:'businessArea'},
-                ]
-            },{
-                name:'部门资料',
-                thirdInfo:[
-                     {name:'部门资料',address:'department'}, 
-                ]
-            },{
-                name:'店铺资料',
-                thirdInfo:[
-                     {name:'店铺资料',address:'shop'}, 
-                ]
-            },{
-                name:'商品属性',
-                thirdInfo:[
-                    {name:'商品属性列表',address:'commodity'},   
-                    {name:'商品规格列表',address:'commercial'},
-                    {name:'商品类目列表',address:'commodityleimu'},
-                    {name:'类目属性规格列表',address:'Property'},
-                    {name:'计量单位',address:'unitOfMeasurement'},
-                    {name:'商品品牌',address:'commodityBrand'},
-                    {name:'商品类目',address:'commodityleimu'},
-                    {name:'商品属性',address:'commodityProperty'},
-                    {name:'商品规格',address:'specificationOfGoods'},
-                    {name:'商品规格组',address:'specification'},
-                    {name:'类目属性规格(平台)列表',address:'classPropertyList'},
-                    {name:'商品档案',address:'goodsFiles'},
-                    {name:'类目属性规格1',address:'attributeSpecificationDetail'},
-                ]
-            },{
-                name:'基础资料',
-                thirdInfo:[
-                    {name:'职员资料',address:'staff'},
-                    {name:'供应商分类',address:'supplierClassify'}
-                ]
-            },{
-                name:'商品管理',
-                thirdInfo:[
-                    {name:'计量单位',address:'count'}
-                ]
-            },{
-                name:'行政地区',
-                thirdInfo:[
-                    {name:'行政地区',address:'adminstrArea'}
-                ]
-            }],
+        // secondLevel1:[
+            // {
+            //     name:'租户管理',
+            //     thirdInfo:[
+            //         {name:'租户管理',address:'tenant'},
+            //     ]
+            // },
+            // {
+            //     name:'集团管理',
+            //     thirdInfo:[
+            //         {name:'集团管理',address:'groupManage'},
+            //         // {name:'组织管理',address:'OuManage'},
+            //     ]
+            // },
+            // {
+            //     name:'菜单管理',
+            //     thirdInfo:[
+            //         {name:'菜单管理',address:'menu'},
+            //     ]
+            // },
+            // {
+            //     name:'用户管理',
+            //     thirdInfo:[
+            //         {name:'用户资料',address:'user'},
+            //     ]
+            // },
+            // {
+            //     name:'用户组',
+            //     thirdInfo:[
+            //         {name:'用户组',address:'userGroup'},
+            //     ]
+            // },
+            // {
+            //     name:'客户分类',
+            //     thirdInfo:[
+            //         {name:'客户分类',address:'customerClass'},
+            //     ]
+            // },
+            // {
+            //     name:'角色管理',
+            //     thirdInfo:[
+            //         {name:'角色资料',address:'role'},
+            //     ]
+            // },
+            // {
+            //     name:'采购管理',
+            //     thirdInfo:[
+            //          {name:'采购管理列表',address:'order'}, 
+            //     ]
+            // },
+            // {
+            //     name:'客户资料',
+            //     thirdInfo:[
+            //         {name:'客户资料',address:'customer'},
+            //     ]
+            // },
+            // {
+            //     name:'币种资料',
+            //     thirdInfo:[
+            //         {name:'币种资料',address:'currency'},
+            //     ]
+            // },
+            // {
+            //     name:'会计期间',
+            //     thirdInfo:[
+            //         {name:'会计期间',address:'account'},
+            //     ]
+            // },
+            // {
+            //     name:'单据模板',
+            //     thirdInfo:[
+            //          {name:'单据开单模板',address:'bill'}, 
+            //     ]
+            // },
+            // {
+            //     name:'仓库资料',
+            //     thirdInfo:[
+            //          {name:'仓库资料',address:'repository'}, 
+            //     ]
+            // },
+            // {
+            //     name:'仓库资料演示',
+            //     thirdInfo:[
+            //          {name:'仓库资料演示',address:'storeHouse'}, 
+            //     ]
+            // },
+            // {
+            //     name:'仓库资料演示1',
+            //     thirdInfo:[
+            //          {name:'仓库资料演示1',address:'storeHouse1'}, 
+            //     ]
+            // },
+            // {
+            //     name:'系统字典',
+            //     thirdInfo:[
+            //          {name:'系统字典',address:'dictionaryList'}, 
+            //     ]
+            // },
+            // {
+            //     name:'业务地区',
+            //     thirdInfo:[
+            //         {name:'业务地区管理',address:'businessArea'},
+            //     ]
+            // },
+            // {
+            //     name:'部门资料',
+            //     thirdInfo:[
+            //          {name:'部门资料',address:'department'}, 
+            //     ]
+            // },
+            // {
+            //     name:'店铺资料',
+            //     thirdInfo:[
+            //          {name:'店铺资料',address:'shop'}, 
+            //     ]
+            // },
+            // {
+            //     name:'商品属性',
+            //     thirdInfo:[
+            //         {name:'商品属性列表',address:'commodity'}, 
+            //         // {name:'商品规格列表',address:'commercial'},//就是商品管理中的商品规格平台
+            //         // {name:'商品类目列表',address:'commodityleimu'},//  商品管理中的商品类目
+            //         {name:'类目属性规格列表',address:'Property'},
+            //         // {name:'计量单位',address:'unitOfMeasurement'},
+            //         // {name:'商品品牌',address:'commodityBrand'},
+            //         // {name:'商品类目',address:'commodityleimu'},
+            //         // {name:'商品属性',address:'commodityProperty'},
+            //         // {name:'商品规格',address:'specificationOfGoods'},
+            //         // {name:'商品规格组',address:'specification'},
+            //         {name:'类目属性规格(平台)列表',address:'classPropertyList'},
+            //         // {name:'商品档案',address:'goodsFiles'},
+            //         {name:'类目属性规格1',address:'attributeSpecificationDetail'},
+            //     ]
+            // },
+            // {
+            //     name:'基础资料',
+            //     thirdInfo:[
+            //         // {name:'职员资料',address:'staff'},
+            //         // {name:'供应商分类',address:'supplierClassify'}
+            //     ]
+            // },
+            // {
+            //     name:'商品管理',
+            //     thirdInfo:[
+            //         {name:'计量单位',address:'count'}
+            //     ]
+            // },
+            // {
+            //     name:'行政地区',
+            //     thirdInfo:[
+            //         {name:'行政地区',address:'adminstrArea'}
+            //     ]
+            // }
+            // ],
             childNodes:[],//菜单数据
         }
         
@@ -209,7 +227,8 @@ export default {
         let _this=this;
         _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
         .then(function(res){
-            // console.log(res[1].childNodes)
+            // console.log(res);
+            // console.log(res[1].childNodes);
             _this.childNodes=res;
             // _this.$nextTick(function(){
             //     let x={}

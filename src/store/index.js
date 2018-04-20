@@ -78,7 +78,7 @@ export default new vuex.Store({
         accountList:{ name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
         accountDetail:{ name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
 
-        currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: 'currency', default: '/customer/currencyList/:id' } , //币种管理
+        currency: { name: 'currency', url: '/currency/currencyList/:id', parent: 'currency', default: '/currency/currencyList/:id' } , //币种管理
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
         commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
