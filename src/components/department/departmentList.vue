@@ -80,7 +80,11 @@
                             <el-table-column prop="manager" label="负责人"></el-table-column>
                             <el-table-column prop="deptParentName" label="上级部门"></el-table-column>
                             <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop='statusTValue' label="状态">
+                            <el-table-column prop='status' label="状态">
+                                 <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                </template>                               
                                 <!-- <template slot-scope="scope">
                                     <el-input v-show="scope.row.status==0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[0].itemName' disabled=""></el-input>
                                     <el-input v-show="scope.row.status==1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='statusC[1].itemName' disabled=""></el-input>
@@ -284,7 +288,7 @@
                 self.tableLoading=true;
                 self.$axios.gets('/api/services/app/DeptManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem,Sorting:self.Sorting}).then(function(res){ 
                     self.tableData = res.result.items;
-                    // console.log(self.tableData)
+                    //console.log(self.tableData)
                      $.each( self.tableData,function(index,value){//处理时间格式
                         if(value.createdTime&&value.createdTime!=''){
                             let createdTime=value.createdTime.slice(0,value.createdTime.indexOf(".")).replace("T"," ");
