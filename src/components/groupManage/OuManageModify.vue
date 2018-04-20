@@ -259,7 +259,8 @@
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -277,6 +278,7 @@
                         :label="item.itemName" 
                         :value="item.itemValue">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -310,6 +312,7 @@
                         :value="item.id" 
                         >
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -344,6 +347,7 @@
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
 
                 </div>
@@ -467,7 +471,7 @@
                                 :value="item.id" 
                                 >
                                 </el-option>
-
+                                <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                 <!-- <el-option 
                                 v-if="basCompany.isGroupCompany"
                                 :label="groupCompany.label" 
@@ -503,9 +507,6 @@
                             <div class="bgcolor">
                                 <label>注册资本</label>
                                 <el-input 
-                                 
-                                
-                                
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.regCapital')}"
                                 class="regCapital"
@@ -763,12 +764,13 @@
                                     
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                    <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                     </el-select>
                                 </div>
                                 <div class="bgcolor">
@@ -780,12 +782,13 @@
                                     
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                    <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option>
+                                   <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                     </el-select>
                                 </div>
                                 <div class="bgcolor">
@@ -1020,6 +1023,11 @@ export default({
                 id:'',
                 ouName:''
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
+
             selectProps: {
                 children: 'children',
                 label: 'ouName',
@@ -1515,7 +1523,7 @@ export default({
                         _this.ifModify=true
                     }
                 }else{
-                    _this.ifModify=false;
+                    _this.ifModify=true;
                 }
             },
             deep:true,
