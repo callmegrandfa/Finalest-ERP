@@ -259,7 +259,8 @@
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -277,6 +278,7 @@
                         :label="item.itemName" 
                         :value="item.itemValue">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -310,6 +312,7 @@
                         :value="item.id" 
                         >
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -344,6 +347,7 @@
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
 
                 </div>
@@ -467,7 +471,7 @@
                                 :value="item.id" 
                                 >
                                 </el-option>
-
+                                <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                 <!-- <el-option 
                                 v-if="basCompany.isGroupCompany"
                                 :label="groupCompany.label" 
@@ -503,9 +507,6 @@
                             <div class="bgcolor">
                                 <label>注册资本</label>
                                 <el-input 
-                                 
-                                
-                                
                                 @focus="showErrprTips"
                                 :class="{redBorder : validation.hasError('basCompany.regCapital')}"
                                 class="regCapital"
@@ -763,12 +764,13 @@
                                     
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                    <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                     </el-select>
                                 </div>
                                 <div class="bgcolor">
@@ -780,12 +782,13 @@
                                     
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                    <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option>
+                                   <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                     </el-select>
                                 </div>
                                 <div class="bgcolor">
@@ -952,7 +955,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -973,7 +976,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -1009,6 +1012,7 @@ export default({
             errorMessage:false,
             // 错误信息提示结束
             dialogUserConfirm:false,//信息更改提示控制
+            title:'',
             choseDoing:'',//存储点击按钮判断信息
             search:'',
             search_companyOuId:'',
@@ -1019,6 +1023,11 @@ export default({
                 id:'',
                 ouName:''
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
+
             selectProps: {
                 children: 'children',
                 label: 'ouName',
@@ -1058,7 +1067,6 @@ export default({
                 "ouTypes":[],//组织职能
             },
             companyOuId:0,//纪录组织本身id
-            ouTypes:[],//储存ouTypes
             basCompany:{//其他信息
                 "ouParentid": "",//整数
                 "legalPerson": "",
@@ -1454,11 +1462,6 @@ export default({
         }
       },
     },
-    computed:{
-        count () {
-            return this.ischeck;
-            },
-    },
     created:function(){
         let _this=this;
          _this.loadTree();
@@ -1473,24 +1476,12 @@ export default({
         this.$refs.trees.filter(val);
       },
       Company(val){
-          let _this=this;
           if(val){
-            //   let flag=false
-            //   $.each(_this.ouTypes,function(index,val){
-            //       if(val==1){
-            //           flag=true
-            //       }
-            //   })
-            //   if(flag){//当前组织是公司类型
-            //       _this.addData.companyOuId=this.companyOuId
-            //   }else{//当前组织不是公司类型
-            //       _this.addData.companyOuId=''
-            //   }
-              _this.addData.companyOuId=this.companyOuId
-              _this.addData.basCompany=this.basCompany
+              this.addData.companyOuId=this.companyOuId
+              this.addData.basCompany=this.basCompany
           }else{
-              _this.addData.companyOuId=''
-              delete _this.addData.basCompany
+              this.addData.companyOuId=''
+              delete this.addData.basCompany
           }
       },
       Business(val){
@@ -1532,7 +1523,7 @@ export default({
                         _this.ifModify=true
                     }
                 }else{
-                    _this.ifModify=false;
+                    _this.ifModify=true;
                 }
             },
             deep:true,
@@ -1639,8 +1630,8 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
-                _this.companyOuId=res.result.id;//储存当前公司ID
-                _this.ouTypes=res.result.ouTypes;//储存当前ouTypes
+                _this.companyOuId=res.result.id;
+          
                 _this.change_ouType()
              
                 if(res.result.basCompany!=null && typeof(res.result.basCompany)!='undefined' && res.result.basCompany!=[]){
@@ -1813,6 +1804,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -1822,6 +1814,7 @@ export default({
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
@@ -1843,6 +1836,7 @@ export default({
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },

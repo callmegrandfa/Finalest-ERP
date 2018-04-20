@@ -15,7 +15,7 @@
                     </div>
                     <span class="btDetail">保存</span>
                 </button>
-                <button @click="isCancel"class="erp_bt bt_cancel">
+                <button @click="isBack"class="erp_bt bt_cancel">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_cancel.png">
                     </div>
@@ -153,16 +153,29 @@
     <el-col :span="24" class="getPadding">
         <h4 class="h4">审计信息</h4>
         <div>
-            <div class="bgcolor"><label>创建人</label><el-input v-model="addData.createdBy" disabled></el-input></div>
+            <div class="bgcolor"><label>创建人</label><el-input v-model="auditInfo.createdBy" disabled></el-input></div>
             <div class="bgcolor">
                 <label>创建时间</label>
-                <el-input v-model="addData.createdTime" disabled></el-input>
-              
+               <el-date-picker
+                          v-model="auditInfo.createdTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                </el-date-picker>
             </div>
-            <div class="bgcolor"><label>修改人</label><el-input  v-model="addData.modifiedBy" disabled></el-input></div>
+            <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInfo.modifiedBy" disabled></el-input></div>
             <div class="bgcolor">
-                <label>修改时间</label> 
-               <el-input v-model="addData.modifiedTime" disabled></el-input>
+                <label>修改时间</label>
+                    <el-date-picker
+                          v-model="auditInfo.modifiedTime"
+                          format="yyyy-MM-dd HH:mm:ss"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="date"
+                          disabled
+                          placeholder="">
+                    </el-date-picker>
             </div>
         </div>                                  
     </el-col>
@@ -250,21 +263,26 @@
                     "status": 1,
                     "remark": "",
                     "mnemonic": "1",
-                    createdTime:this.GetDateTime(),//创建时间
-                    createdBy:this.$store.state.name,//创建人
-                    modifiedTime:this.GetDateTime(),//修改人
-                    modifiedBy:this.$store.state.name//修改时间
+                    
                     },
                     selectData:{//select数据
                         Status001:[],//启用状态
                         customerClass:[],//客户分类
                     },
+                    auditInfo:{
+                        createdTime:this.GetDateTime(),//创建时间
+                        createdBy:this.$store.state.name,//创建人
+                        modifiedTime:this.GetDateTime(),//修改人
+                        modifiedBy:this.$store.state.name//修改时间
+                    },
                 choseDoing:'',//存储点击按钮判断信息
                 dialogUserConfirm:false,//信息更改提示控制
                 update:false,
+                firstModify:false,
                 treeLoading: false,
                 errorMessage:false,//错误信息提示
                 detail_message_ifShow:false,
+                isAddNew:'',//判断点击的是保存还是保存新增
                 response:{
                     details:'',
                     message:'',
@@ -307,6 +325,17 @@
         parentSearch(val) {
            this.$refs.tree.filter(val);
         },
+        // addData:{
+        //     handler:function(val,oldVal){
+        //         let _this=this;
+        //         if(!_this.firstModify){
+        //             _this.firstModify=!_this.firstModify;
+        //         }else{
+        //             _this.update=true
+        //         }
+        //     },
+        //     deep:true,
+        // },
     },
     methods: {
         getSelectData(){
@@ -454,7 +483,8 @@
                           self.clearData();
                           self.validation.reset();
                           self.update=false;
-                        //  console.log(self.update)
+                        //   self.firstModify=true;
+                         console.log(self.firstModify)
                     },function(res){    
                         // self.open('保存失败','el-icon-error','faildERP');
                         if(res && res!=''){ 
@@ -496,7 +526,7 @@
         Cancel(){
             let self=this;
             self.clearData();
-            self.update=false;
+            // self.update=false;
         },
         goModify:function(id){
             // console.log(id)
@@ -526,6 +556,7 @@
                 // "createdBy" :'',
                 // "createdTime"  :''
             }
+            // self.getDefault()
             self.validation.reset(); 
         },
         //---------------------------------------------------------
@@ -565,8 +596,6 @@
             if(self.update){
                 self.dialogUserConfirm=true;
                 self.choseDoing='Cancel'
-            }else{
-                self.Cancel()
             }
         },
 

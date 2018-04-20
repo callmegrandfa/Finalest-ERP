@@ -216,7 +216,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -249,6 +249,9 @@
                 row:{},//存储用户点击删除条目数据
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
                 multipleSelection: [],//复选框选中数据
+                idArray: {
+                    ids: []
+                },
 //--------------确认删除开始-----------------    
                 search:'',
                 selectTree:[
@@ -488,22 +491,28 @@
             },
             delRow(){
                 let _this=this;
-                let data={
-                    "createList": [],
-                    "updateList": [],
-                    "deleteList": _this.multipleSelection
+                for (let i in _this.multipleSelection) {
+                    _this.idArray.ids.push(_this.multipleSelection[i].id);
                 }
-                _this.$axios.deletes('/api/services/app/OuManagement/Delete',data)
+                if(_this.idArray.ids.length > 0){
+                _this.$axios.posts('/api/services/app/Role/BatchDelete',_this.idArray )
                 .then(function(res){
                     _this.open('删除成功','el-icon-circle-check','successERP');
                         _this.loadTableData();
                         _this.loadTree();
+                        _this.idArray = {
+                            ids: [],
+                        };
                         _this.dialogUserConfirm=false;
                 },function(res){
                     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                     _this.errorMessage=true;
                     _this.dialogUserConfirm=false;
+                     _this.idArray = {
+                    ids: [],
+                  };
                 })
+                }
             },
             see(row){
                 this.$store.state.url='/role/roleModify/'+row.id

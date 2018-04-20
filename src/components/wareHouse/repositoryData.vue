@@ -133,9 +133,10 @@
                                         :data="ouAr"
                                         :props="selectOuProps"
                                         node-key="id"
-                                        default-expand-all
-                                        ref="tree"
-                                        :filter-node-method="filterNode"
+                                        ref="outree"
+                                        :filter-node-method="ouFilterNode"
+                                        :default-expanded-keys="ouExpandId"
+                                        :render-content="renderContentOu"
                                         :expand-on-click-node="false"
                                         @node-click="ouNodeClick"></el-tree>
                                 <el-option v-show="false"
@@ -656,14 +657,17 @@
                 return this.opItem;
             },
         },
-        // watch:{
-        //     createRepositoryParams:{
-        //         handler:function(){
-        //             console.log(123)
-        //         },
-        //         deep: true
-        //     }
-        // },
+        watch:{
+            // createRepositoryParams:{
+            //     handler:function(){
+            //         console.log(123)
+            //     },
+            //     deep: true
+            // }
+            ouSearch(val){
+                this.$refs.outree.filter(val)
+            }
+        },
         methods:{
             //---下拉的数据------------------------------------------------------
             loadSelect:function(){
@@ -672,6 +676,7 @@
                 self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                     // console.log(res);
                     self.ouAr = res.result;
+                    self.ouExpandId=self.defauleExpandTree(res.result,'id')
                     self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -1009,16 +1014,51 @@
                     })
                 })
             },
+            //---树render-content----------------------------------
+            renderContentOu(h, { node, data, store }){//所属组织
+                if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouFullname}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouFullname}
+                        </span>
+                    );
+                }
+            },
+
             filterNode(value, data) {
-                console.log(data)
+                //console.log(data)
                 if (!value) return true;
                     return data.areaName.indexOf(value) !== -1;
             },
             opFilterNode(value, data) {
-                console.log(value)
+                //console.log(value)
                 if (!value) return true;
                     return data.areaName.indexOf(value) !== -1;
             },
+            ouFilterNode(value, data) {
+                //console.log(value)
+                if (!value) return true;
+                    return data.ouName.indexOf(value) !== -1;
+            },
+            //---树通用----------------------------------------------
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
+            //-----------------------------------------------------     
             ouNodeClick:function(data){
                 console.log(data)
                 let self = this;
@@ -1203,6 +1243,7 @@
                     ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认打开第一个树节点
                 //-----------------------
                 //---行政地区树形下拉-----
                 areaProArray:[],//行政地区(省)

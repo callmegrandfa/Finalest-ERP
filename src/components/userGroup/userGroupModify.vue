@@ -155,7 +155,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -176,7 +176,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -200,8 +200,10 @@
   export default({
     data(){
       return{
+        saveSuccess:false,
         firstModify:false,
         ifModify:false,
+        title:"",
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -275,15 +277,19 @@
         addData:{
             handler:function(val,oldVal){
                 let _this=this;
-                if(!_this.firstModify){
-                    _this.firstModify=!_this.firstModify;
+                if(!_this.saveSuccess){
+                    if(!_this.firstModify){
+                        _this.firstModify=!_this.firstModify;
+                    }else{
+                        _this.ifModify=true
+                    }
                 }else{
-                    _this.ifModify=true
+                     _this.ifModify=true;
                 }
             },
             deep:true,
+          }
         },
-    },
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
@@ -339,6 +345,9 @@
                     modifiedBy:res.result.modifiedBy,
                     modifiedTime:res.result.modifiedTime,
                 }
+                 _this.saveSuccess=false;
+                _this.firstModify=false;
+                _this.ifModify=false;
             })
         },
         open(tittle,iconClass,className) {
@@ -377,6 +386,7 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                 _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -386,12 +396,14 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -432,6 +444,7 @@
                             modifiedTime:res.result.modifiedTime,
                         }
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                         _this.saveSuccess=true;
                         _this.firstModify=false;
                         _this.ifModify=false;
                     },function(res){

@@ -13,7 +13,7 @@
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_save.png">
                     </div>
-                    <span class="btDetail">保存{{ifModify}}</span>
+                    <span class="btDetail">保存</span>
                 </button>
 
                 <button @click="Cancel(2)" class="erp_bt bt_cancel" :class="{erp_fb_bt:!ifModify}">
@@ -737,7 +737,7 @@ export default({
 
             // checkedAr:[],//进来时数据选中的默认框
             //---确认删除-----------------               
-            dialogDelConfirm:false,//用户删除保存提示信息
+            //dialogDelConfirm:false,//用户删除保存提示信息
             //--------------------  
 
             //---信息修改提示框------------
@@ -1189,6 +1189,7 @@ export default({
                 $('.tipsWrapper').css({display:'block'});
                 self.$validate().then(function(success){
                     if(success){
+                        self.sureDel();
                         $('.tipsWrapper').css({display:'none'});
                         self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
                             self.open('修改店铺信息成功','el-icon-circle-check','successERP');
@@ -1276,51 +1277,51 @@ export default({
             if(self.who == 1){//单项删除
                 self.idArray.ids = [];
                 if(self.whoId>0){
-                    self.contactData.splice(self.whoIndex,1);
-                    self.shopData.shopContacts = self.contactData;
+                    //self.contactData.splice(self.whoIndex,1);
+                    //self.shopData.shopContacts = self.contactData;
                     self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
-                        self.open('删除联系人成功','el-icon-circle-check','successERP');
-                        self.dialogDelConfirm = false;
+                        //self.open('删除联系人成功','el-icon-circle-check','successERP');
+                        //self.dialogDelConfirm = false;
                         self.ifModify = false;
                     },function(res){
-                        self.dialogDelConfirm = false;
+                        //self.dialogDelConfirm = false;
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
                     
-                    self.contactData.splice(self.whoIndex,1);
-                    self.addList.splice(self.whoIndex,1);
+                    // self.contactData.splice(self.whoIndex,1);
+                    // self.addList.splice(self.whoIndex,1);
                     // self.addList = [];
-                    self.dialogDelConfirm = false;
-                    self.open('删除新增行成功','el-icon-circle-check','successERP');
+                    //self.dialogDelConfirm = false;
+                    //self.open('删除新增行成功','el-icon-circle-check','successERP');
                     self.ifModify = false;
                 }
             }
 
             if(self.who == 2){//多项删除  
-                let x=[];
-                $.each(self.contactData,function(index,value){
-                    let flag=false;
-                    $.each(self.multipleSelection,function(i,val){
-                        if(value==val){
-                            flag=true
-                        }
-                    })
-                    if(!flag){
-                        x.push(value)
-                    }
-                })
+                // let x=[];
+                // $.each(self.contactData,function(index,value){
+                //     let flag=false;
+                //     $.each(self.multipleSelection,function(i,val){
+                //         if(value==val){
+                //             flag=true
+                //         }
+                //     })
+                //     if(!flag){
+                //         x.push(value)
+                //     }
+                // })
            
-                self.shopData.shopContacts = x;
+                // self.shopData.shopContacts = x;
                 // console.log(self.shopData.shopContacts)
 
                 self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
-                    self.open('删除联系人成功','el-icon-circle-check','successERP');
+                    //self.open('删除联系人成功','el-icon-circle-check','successERP');
                     self.loadData();
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                 },function(res){
-                    self.dialogDelConfirm = false;
+                    //self.dialogDelConfirm = false;
                     self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 })    
@@ -1350,7 +1351,19 @@ export default({
             self.who = who;
             self.whoIndex = index;
             self.whoId = row.id;
-            self.dialogDelConfirm = true;
+            if(self.who == 1){//单项删除
+                self.idArray.ids = [];
+                if(self.whoId>0){
+                    self.contactData.splice(self.whoIndex,1);
+                    self.shopData.shopContacts = self.contactData;
+                }else{
+                  
+                    self.contactData.splice(self.whoIndex,1);
+                    self.addList.splice(self.whoIndex,1);
+                    self.ifModify = false;
+                }
+            }
+            //self.dialogDelConfirm = true;
         },
         //---------------------------------------------------
         
@@ -1358,6 +1371,7 @@ export default({
         //---从表多项删除---------------------------------------------
         delMore:function(num){//多项删除
             let self = this;
+           
             for(let i in self.multipleSelection){
                 self.allDelArray.ids.push(self.multipleSelection[i].id)
             }
@@ -1368,8 +1382,27 @@ export default({
                 }
             }
             if(self.allDelArray.ids.length>0){
-                self.dialogDelConfirm = true;   
+                //self.dialogDelConfirm = true;   
                 self.who = num;
+                if(self.who == 2){//多项删除  
+                    let x=[];
+                    $.each(self.contactData,function(index,value){
+                        let flag=false;
+                        $.each(self.multipleSelection,function(i,val){
+                            if(value==val){
+                                flag=true
+                            }
+                        })
+                        if(!flag){
+                            x.push(value)
+                        }
+                    })
+            
+                    self.contactData = x; 
+                    //console.log(self.shopContacts)
+                   
+                }
+
             } else{
                 self.$message({
                     type: 'info',
@@ -1382,7 +1415,6 @@ export default({
         
         delShop:function(num){//删除此页店铺
             let self = this;
-
             self.who = num;
             self.dialogDelConfirm = true;  
         },

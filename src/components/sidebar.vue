@@ -437,6 +437,7 @@ export default {
     background-color: #415c84;
     position: fixed;
     top:93px;
+    opacity: 0;
 }
 .slid2{
     transition: left 0.5s;
@@ -493,10 +494,10 @@ export default {
     left: 150px;
     overflow: hidden;
     cursor: pointer;
-     transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s,;
+     transition: all .5s;
+    -moz-transition: all .5s;
+    -webkit-transition: all .5s;
+    -o-transition: all .5s;
 }
 
 .infoActive{
@@ -539,6 +540,7 @@ export default {
 }
   
 .menu li.one:hover .slid1{
+    opacity: 1;
     display: block;
 }
 .menu li.two:hover>a{

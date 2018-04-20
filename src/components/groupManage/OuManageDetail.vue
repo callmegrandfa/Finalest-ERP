@@ -5,7 +5,7 @@
          <el-col :span="24">
             <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>      
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -284,6 +284,7 @@
                         :label="item.itemName" 
                         :value="item.itemValue">
                         </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -317,6 +318,7 @@
                         :value="item.id" 
                         >
                         </el-option>
+                        <el-option v-show="false" :label="item_area_2.currencyName" :value="item_area_2.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -910,8 +912,8 @@
                 <el-date-picker
                 v-model="auditInfo.createdTime"
                 type="date"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+                 format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"  
                 disabled
                 placeholder="">
                 </el-date-picker>
@@ -921,8 +923,8 @@
                 <label>修改时间</label>
                 <el-date-picker
                 v-model="auditInfo.modifiedTime"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd" 
+               format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss" 
                 type="date"
                 disabled
                 placeholder="">
@@ -960,7 +962,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -1001,6 +1003,14 @@ export default({
                 id:'',
                 ouName:''
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
+            item_area_2:{
+                id:2,
+                currencyName:' '
+                },
             selectProps: {
                 children: 'children',
                 label: 'ouName',
@@ -1016,7 +1026,12 @@ export default({
             show:true,
             ifShow:true,
             activeName: 'Company',
-            auditInfo:{},//审计信息
+            auditInfo:{
+                createdTime:this.GetDateTime(),//创建时间
+                createdBy:this.$store.state.name,//创建人
+                modifiedTime:this.GetDateTime(),//修改人
+                modifiedBy:this.$store.state.name//修改时间
+            },//审计信息
             addData:{
                 "ouCode": "",
                 "ouName": "",
@@ -1573,7 +1588,7 @@ export default({
                         _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间方案 
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
                         _this.firstModify=false;
-                         _this.ifModify=false;
+                        _this.ifModify=false;
                     // }
                 })
                
@@ -1677,7 +1692,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                // _this.loadIcon();
+                _this.loadIcon();
             },function(res){
             })
         },
@@ -1688,7 +1703,7 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            // _this.loadIcon();
+            _this.loadIcon();
         },function(res){
         })
     },
@@ -1832,6 +1847,8 @@ export default({
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1960,6 +1977,9 @@ export default({
                         _this.$store.state.url='/OuManage/OuManageDetail/default'
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -2002,6 +2022,23 @@ export default({
                 );
             }
         },
+              GetDateTime: function () {
+                var date = new Date();
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + seperator2 + date.getSeconds();
+                return currentdate;
+            }
     }
 
 })        

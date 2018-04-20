@@ -6,7 +6,7 @@
             <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix" :sortable="item.sortable">
                 <template slot-scope="scope" >
                     <!-- 修改或新增行高亮标志 -->
-                    <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
+                    <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateIDColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
                     <!-- 复选框 -->
                     <el-checkbox v-if="item.controls=='checkbox'" :disabled="item.isDisable" v-model='scope.row[item.prop]'></el-checkbox>
                     <!-- 文本框 -->
@@ -31,13 +31,13 @@
                 <el-pagination style="margin-top:20px;" class="text-right" :page-size="eachPage" :page-sizes="[5, 10, 15]" :total="totalCount"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, sizes, prev, pager, next, jumper"  :page-count="totalPagination" ></el-pagination>
             </el-col>
         </el-row>
-        <dialogBox :message="dialogMessage" :dialogVisible="dialogVisible" :dialogModel="dialogModel"  @confirm="dialogConfirm" @cancel="dialogCancel"></dialogBox>   
+        <dialogBox :dialogSetting='dialogSetting' :errorTips='errorTips' :dialogVisible="dialogVisible" :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>   
     </div>
 </template>
 <script type="text/javascript">
     import dialogBox from '../dialog/dialog'
 	export	default{
-		props:['methodsUrl','cols','tableName',"ifSave",'command','HttpParams',"queryParams",'pluginSetting'],
+		props:['methodsUrl','cols','tableName',"ifSave",'command',"queryParams",'pluginSetting'],
 		data(){
 			return{
                 // currentPage:1,//当前页码
@@ -48,7 +48,6 @@
                 updateId:'',//修改行id
                 rowIndex:'',//修改行index
                 updateRow:'',
-                clickRow:'',
                 options: [{
                     value: 0,
                     label: '禁用'
@@ -58,9 +57,18 @@
                 }],
                 delIndex:'',
                 delRow:'',
-                dialogModel:'',
-                dialogMessage:'',
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                dialogCommand:[],
                 dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                updateArray:[],
                 pageFlag:true,
                 turnPage:-1,
                 targetPage:-1,//目标跳转页
@@ -70,16 +78,13 @@
         created:function(){
             this.classMap=['Disabled','Enabled','Frozen'];
             this.$store.commit('setTableName',this.tableName)//传递具体数据模型名称
-            this.$store.commit('setHttpApi', this.methodsUrl.Initial);//传递数据初始化api
             this.$store.commit('setQueryApi', this.methodsUrl.query);//传递查询数据初始化api
             this.$store.commit('setTreeQueryApi', this.methodsUrl.treeQuery);//传递查询树节点数据初始化api
-            this.$store.commit('setHttpParams', this.HttpParams);
+            this.$store.commit('setQueryParams', this.queryParams);
             this.$store.dispatch('InitTable');//初始化表格数据
             setTimeout(() => {//拷贝初始化数据，和修改行做对比
-                let table= this.deepClone(this.$store.state[this.tableName+'Table'])
-                this.$store.commit('Init_TableClone', table);
-                this.tableClone=this.$store.state[this.tableName+'TableClone'];
-                }, 1500);
+               this.InitTableClone();
+            }, 1500);
         },
         components:{
             dialogBox
@@ -103,9 +108,19 @@
                     return [];
                 }  
             },
-            updateColArray(){//修改row集合
+            updateIDColArray(){//修改row集合
                 if(!this.pluginSetting.isDisable){
-                    return this.$store.state[this.tableName+'UpdateColArray'];                     
+                    this.updateArray=[];
+                    if(this.$store.state[this.tableName+'UpdateColArray'].length>0){
+                        for(let i in this.$store.state[this.tableName+'UpdateColArray']){
+                            this.updateArray.push(this.$store.state[this.tableName+'UpdateColArray'][i].id);
+                            
+                        }
+                        return this.updateArray;
+                    }else{
+                        return [];
+                    }
+                   // return this.$store.state[this.tableName+'UpdateColArray'];                     
                 }else{
                     return [];
                 }               
@@ -146,19 +161,18 @@
             tableData:{
                 handler: function (val, oldVal) {
                     if(oldVal.length>0&&!this.isDisable){
+                        this.rowIndex="";
                         for(let i in this.$store.state[this.tableName+'Table']){
-                            if(this.clickRow.id==this.$store.state[this.tableName+'Table'][i].id){
+                            if(this.updateRow.id==this.$store.state[this.tableName+'Table'][i].id&&typeof(this.updateRow.id)!="undefined"){
                                 this.rowIndex=i;
                             }
                         }
                         if(this.rowIndex==""){
                             return
                         }else{
-                            if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])||this.$store.state[this.tableName+'IfDel']){
-                                //this.$store.commit('setIfDel',false);
-                                this.$store.dispatch('AddUpdateArray');//当表格数据初次加载完毕且表格为可编辑状态，其数据发生改变时   
-                                this.rowIndex="";
-                                this.clickRow="";
+                            if(!this.Compare(this.updateRow,this.$store.state[this.tableName+'Table'][this.rowIndex])){
+                                this.$store.dispatch('AddUpdateArray',this.$store.state[this.tableName+'Table'][this.rowIndex]);
+                                this.updateRow="";//将选取的修改行数据清空
                             }
                         }
                         
@@ -166,20 +180,13 @@
                 },
                 deep: true
             },
-            queryParams:{
-                handler: function (val, oldVal) {
-                    this.ParamsArray=[];
-                    for(let x in val){
-                        if(val[x]!=""&&x!="MaxResultCount"&&x!=SkipCount){
-                            console.log(x);
-                            this.ParamsArray.push(val[x]);
-                        }
-                    }
-                },
-                deep: true
-            },
         },
         methods:{
+            InitTableClone(){
+                let table= this.deepClone(this.$store.state[this.tableName+'Table'])
+                this.$store.commit('Init_TableClone', table);
+                this.tableClone=this.$store.state[this.tableName+'TableClone'];
+            },
             btnClick(row,index,event){
                 if($(event.currentTarget).text()=="查看"){
                     this.modify(row);
@@ -195,9 +202,11 @@
                 let _this=this;
                 _this.delIndex=index;
                 _this.delRow=row;
-                _this.dialogModel="delDialog"
-                _this.dialogMessage="确定删除？";
-                _this.dialogVisible=true;
+                _this.dialogSetting.dialogName="delDialog";//对话框名称
+                _this.dialogCommand=[{text:'确认',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}]
+                _this.dialogSetting.message="确定删除？";//对话框提示信息
+                _this.dialogSetting.dialogType='confirm';
+                _this.dialogVisible=true;//对话框可见
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -209,92 +218,74 @@
                 customClass:className
                 });
             },
-            dialogConfirm(dialogType){//对话框确认
+            dialogClick(parmas){//对话框确认
                 let _this=this;
-                if(dialogType=="delDialog"){//删除确认
-                    if(_this.newColArray.length>0){
-                        _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
-                        _this.newColArray.splice(_this.delIndex,1);
-                        //_this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                        //_this.$store.commit('get_RowId',"")//置空修改行id
-                        if(_this.newColArray.length==0){
-                            _this.$store.commit('setIfDel',true);//设置删除参数为真
+                if(parmas.dialogButton=="确认"){
+                    if(parmas.dialogName=="delDialog"){//删除确认
+                        if(_this.newColArray.length>0){
+                            _this.$store.state[this.tableName+'Table'].splice(this.delIndex,1);
+                            _this.newColArray.splice(_this.delIndex,1);
                         }else{
-                            _this.$store.commit('setIfDel',false);//设置删除参数为假
+                            _this.$axios.deletes(_this.methodsUrl.delete,{Id:_this.delRow.id}).then(function(res){
+                                _this.$store.dispatch('InitTable');//初始化表格数据
+                                _this.open('删除成功','el-icon-circle-check','successERP');  
+                            }).catch(function(err){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: err.error.message
+                                });
+                            })  
                         }
-                    }else{
-                        _this.$axios.deletes(_this.methodsUrl.delete,{Id:_this.delRow.id}).then(function(res){
-                            _this.$store.dispatch('InitTable');//初始化表格数据
-                            _this.open('删除成功','el-icon-circle-check','successERP');  
-                            _this.$store.commit('setIfDel',true);//设置删除参数为真
-                        }).catch(function(err){
-                            _this.$message({
-                                type: 'warning',
-                                message: err.error.message
-                            });
-                        })  
+                    }else if(parmas.dialogName=="pageDialog"){//翻页对话框
+                        this.$store.commit('setCurrentPage',this.targetPage)//跳转至目标分页
+                        this.queryParams.SkipCount=(this.targetPage-1)*this.$store.state[this.tableName+'EachPage'];
+                        this.queryParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
+                        this.$store.commit('setQueryParams', this.queryParams);//重置查询参数
+                        this.$store.dispatch('InitTable');
+                        setTimeout(() => {//拷贝初始化数据，和修改行做对比
+                            this.InitTableClone();
+                        }, 1500);
+                        this.$store.commit('setUpdateColArray',[])//置空修改增集合 
+                        this.$store.commit('setAddColArray',[])//置空修改增集合 
+                        this.$store.commit('get_RowId',"")//置空修改行id
+                        //this.$store.commit('setIfDel',true);//设置删除参数为真
                     }
-                }else if(dialogType=="pageDialog"){//翻页对话框
-                    this.$store.commit('setCurrentPage',this.targetPage)//跳转至目标分页
-                    this.HttpParams.SkipCount=(this.targetPage-1)*this.$store.state[this.tableName+'EachPage'];
-                    this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
-                    this.$store.commit('setHttpParams', this.HttpParams);
-                    if(this.$store.state[this.tableName+'Query']){//查询结果翻页
-                        this.$store.commit('setQueryParams', this.queryParams);
-                        this.$store.dispatch('QueryTable');//查询接口
-                    }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
-
-                    }else{
-                        this.$store.dispatch('InitTable');//初始化表格数据
+                }else if(parmas.dialogButton=="取消"){
+                    if(parmas.dialogName=="pageDialog"){
+                        this.pageFlag=false;
+                        this.$store.commit('setCurrentPage',this.turnPage)   
                     }
-                    this.$store.commit('setUpdateColArray',[])//置空修改增集合 
-                    this.$store.commit('setAddColArray',[])//置空修改增集合 
-                    this.$store.commit('get_RowId',"")//置空修改行id
-                    this.$store.commit('setIfDel',true);//设置删除参数为真
                 }
                 this.dialogVisible=false;              
             },
-            dialogCancel(dialogType){//取消删除
-                if(dialogType=="pageDialog"){
-                    this.pageFlag=false;
-                    this.$store.commit('setCurrentPage',this.turnPage)   
-                }
-                this.dialogVisible=false;   
-            },
             rowClick(row){//获取行id
-                //this.updateId=row.id
-                this.clickRow=row;
-                //this.InitUpdateRow(row.id);
                 for(let i in this.tableClone){
                     if(row.id==this.tableClone[i].id){
                        this.updateRow=this.tableClone[i];
                     }
                 }
-                this.$store.dispatch('getRowId',row.id);//传递获取的行id
             },
             handleSelectionChange(val){//多选操作
                 this.$store.commit('setTableSelection',val);
             },
             handleCurrentChange:function(val){//获取当前页码,分页
                 let _this=this;
-                if((this.newColArray.length>0||this.updateColArray.length>0)&&this.pageFlag){
+                if((this.newColArray.length>0||this.updateArray.length>0)&&this.pageFlag){
                     _this.targetPage=val;
-                    _this.dialogModel="pageDialog"
-                    _this.dialogMessage="当前存在未保存修改项，是否继续翻页?";
-                    _this.dialogVisible=true;
-                }else if(this.newColArray.length==0&&this.updateColArray.length==0){
+                    _this.dialogSetting.dialogName="pageDialog"//对话框名称
+                    _this.dialogSetting.message="当前存在未保存修改项，是否继续翻页?";//对话框提示信息
+                    _this.dialogSetting.dialogType='confirm',
+                    _this.dialogCommand=[{text:'确认',class:'btn-confirm'},{text:'取消',class:'btn-confirm'}]
+                    _this.dialogVisible=true;//对话框是否显示
+                }else if(this.newColArray.length==0&&this.updateArray.length==0){
                     this.$store.commit('setCurrentPage',val)//跳转至目标分页
-                    this.HttpParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
-                    this.HttpParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
-                    this.$store.commit('setHttpParams', this.HttpParams);
-                    if(this.$store.state[this.tableName+'Query']&&this.ParamsArray.length>0){//查询结果翻页                       
-                        this.$store.commit('setQueryParams', this.queryParams);
-                        this.$store.dispatch('QueryTable');//查询接口
-                    }else if(this.$store.state[this.tableName+'TreeQuery']){//树节点返回结果翻页
-
-                    }else{
-                        this.$store.dispatch('InitTable');//初始化表格数据
-                    }
+                    this.queryParams.SkipCount=(val-1)*this.$store.state[this.tableName+'EachPage'];
+                    this.queryParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
+                    this.$store.commit('setQueryParams', this.queryParams);//重置查询参数
+                    this.$store.dispatch('InitTable');
+                    setTimeout(() => {//拷贝初始化数据，和修改行做对比
+                        this.InitTableClone();
+                    }, 1500);
                     this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                     this.$store.commit('setAddColArray',[])//置空修改增集合 
                     this.$store.commit('get_RowId',"")//置空修改行id
@@ -303,9 +294,9 @@
             },
             handleSizeChange(val){//每页显示条数变化
                 this.$store.commit('setEachPage',val)//重置分页显示条数
-                this.HttpParams.SkipCount=(this.$store.state[this.tableName+'CurrentPage']-1)*val;
-                this.HttpParams.MaxResultCount=val;
-                this.$store.commit('setHttpParams', this.HttpParams);
+                this.queryParams.SkipCount=(this.$store.state[this.tableName+'CurrentPage']-1)*val;
+                this.queryParams.MaxResultCount=val;
+                this.$store.commit('setQueryParams', this.queryParams);
                 this.$store.dispatch('InitTable');//初始化表格数据
             },
             // 数据深拷贝
@@ -367,32 +358,89 @@
 	}
 </script>
 <style >
-	.noEdit .el-input__inner {
-        border: none;
-        height: 28px;
-        text-align: center;
-    }
-    .noEdit.is-disabled .el-input__inner{
-        color: #606266;
-        background: #fff;
-    }
-    .update-icon{
-        width:14px;
-        height: 14px;
-        position: absolute;
-        left: -55px;
-        top: 0px;
-    }
-   .normalTable .el-select input.el-input__inner[disabled] {
+.noEdit .el-input__inner {
+    border: none;
+    height: 28px;
+    text-align: center;
+}
+.noEdit.is-disabled .el-input__inner{
+    color: #606266;
+    background: #fff;
+}
+.update-icon{
+    width:14px;
+    height: 14px;
+    position: absolute;
+    left: -55px;
+    top: 0px;
+}
+.normalTable .el-select input.el-input__inner[disabled] {
     background: #fff;
     height: 28px;
     border: 0;
     text-align: center;
 }
+/* 重写el-table样式 */
+.group-management-wrapper .el-table th {
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    text-align: left;
+    padding: 5px 0;
+    text-align: center;
+    background-color: #ececec;
+}
+.group-management-wrapper .el-table td{
+    padding: 3px 0;
+}
+.group-management-wrapper .el-table__body{
+    text-align: center;
+}
+/* 日期控件 */
+table .el-date-editor.el-input{
+    width:100%;
+}
+table .el-input--prefix .el-input__inner{
+    border:none;
+    background-color:transparent;
+    padding-left:0;
+    padding-right:0;
+}
+table .el-input__icon{
+    display:none;
+}
+/* 表格内编辑下拉框样式重构 */
+table .el-input__inner{
+    height: 28px;
+    text-align:center;
+    border:none;
+}
+/* 验证为空 */
+.errorclass{
+    border:1px solid #f98b8b!important;
+}
+/* hover行高亮 */
+.normalTable .el-table__body tr.hover-row>td,
+.normalTable .el-table__body tr.hover-row>td input,
+.normalTable .el-table__body tr.hover-row>td input[disabled]{
+    background: #d4e3f5;
+}
+/* 得到焦点背景为白色 */
+.normalTable .el-table__body tr>td input:focus{
+    background: #fff;
+}
+/* 清空动画 */
+.normalTable.el-table--enable-row-transition .el-table__body td{
+    transition:background-color 0s ease;
+    -webkit-transition: background-color 0s ease;
+}
+/* 重置禁用input样式 */
 .normalTable .el-input.is-disabled .el-input__inner{
+    color: #606266;
     background-color: #fff;
     border-color: #e4e7ed;
 }
+/* 状态颜色定义 */
 .Disabled .el-input--suffix .el-input__inner{
     color: #33CC66
 }
