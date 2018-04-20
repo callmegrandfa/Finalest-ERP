@@ -1,6 +1,6 @@
 <template>
     <div class="at-sp-detail">
-        <el-row class="bg-white h48 pt5">
+        <el-row class="bg-white h48 pt5 fixed">
 
             <button class="erp_bt bt_out">
                 <div class="btImg">
@@ -53,12 +53,13 @@
                 </vue-scroll>
             </el-col>
             <el-col :span="19" class="bg-gray">
-                <el-row class="section-one bg-gray-in pl10">
+                <el-row class="section-style bg-gray-in pl10">
                     <el-row>
                         <div class="bgcolor">
                             <label>商品类目</label>
                             <!-- <span>{{$store.state.option}}</span> -->
                             <el-input placeholder=""
+                                      v-model="categoryName"
                                       :disabled="true"></el-input>
                         </div>
 
@@ -81,46 +82,79 @@
                     </el-row>
                 </el-row>
 
-                <el-row class="section-two pl10">
+                <el-row class="section-style pl10">
                     <el-col :span='24' class="mb10 pl10">
                         <span class="header-title">商品属性</span>
                         <div class="choose-add" @click="dialogAttributeShow">
                             <img src="../../../../static/image/common/bt_add_white.png">
                             <span class='choose-text'>选取</span>
                         </div>
+                        <span class="showBtn" @click="attrShow = !attrShow">
+                            收起
+                            <i class="el-icon-arrow-down" :class="{rotate : !attrShow}"></i>
+                        </span>
                     </el-col>
-                    <el-col :span="24">
-                        <el-table :data="attributeData" stripe border style="width: 100%" class="all-table">
-                            <el-table-column prop="sex" label=" " width="180">
-                                
-                            </el-table-column>
+                    <el-collapse-transition>
+                        <el-col :span="24" v-show="attrShow">   
+                            <el-table :data="attData" stripe border style="width: 100%" class="all-table">
+                                <el-table-column prop="sex" label=" " width="180">
+                                    <template slot-scope="scope" width='50'>
+                                        <span>{{scope.$index+1}}</span>
+                                    </template>
+                                </el-table-column>
 
-                            <el-table-column prop="contactPerson" label="属性编码" width="180">
-                                <!-- <template slot-scope="scope">
-                                    <img v-show='redAr.indexOf(scope.row)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                                    <input class="input-need" 
-                                        :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
-                                        type="text"
-                                        @change="handleChange(scope.$index,scope.row)"/> 
-                                </template> -->
-                            </el-table-column>
+                                <el-table-column prop="propertyCode" label="属性编码" width="180"></el-table-column>
 
-                            <el-table-column prop="sex" label="属性名称" width="180">
-                                
-                            </el-table-column>
+                                <el-table-column prop="propertyName" label="属性名称" width="180"></el-table-column>
 
-                            <el-table-column prop="position" label="启用" width="180">
-                                
-                            </el-table-column>
+                                <el-table-column prop="statusTValue" label="状态" width="180"></el-table-column>
 
-                            <el-table-column label='操作'>
-                                <template slot-scope="scope" >
-                                    <el-button @click="handleDelete(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <el-button @click="handleAttDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            
+                        </el-col>
+                    </el-collapse-transition>
+                </el-row>
+
+                <el-row class="section-style pl10">
+                    <el-col :span='24' class="mb10 pl10">
+                        <span class="header-title">商品规格</span>
+                        <div class="choose-add" @click="dialogSpecShow">
+                            <img src="../../../../static/image/common/bt_add_white.png">
+                            <span class='choose-text'>选取</span>
+                        </div>
+                        <span class="showBtn" @click="specShow = !specShow">
+                            收起
+                            <i class="el-icon-arrow-down" :class="{rotate : !specShow}"></i>
+                        </span>
                     </el-col>
+                    <el-collapse-transition>
+                        <el-col :span="24" v-show="specShow">
+                            <el-table :data="specData" stripe border style="width: 100%" class="all-table">
+                                <el-table-column prop="sex" label=" " width="180">
+                                    <template slot-scope="scope" width='50'>
+                                        <span>{{scope.$index+1}}</span>
+                                    </template>
+                                </el-table-column>
+
+                                <el-table-column prop="specCode" label="属性编码" width="180"></el-table-column>
+
+                                <el-table-column prop="specName" label="属性名称" width="180"></el-table-column>
+
+                                <el-table-column prop="statusTValue" label="状态" width="180"></el-table-column>
+
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <el-button @click="handleSpecDelete(scope.$index,scope.row)" type="text" size="small">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-col>
+                    </el-collapse-transition>
                 </el-row>
             </el-col>
         </el-row>  
@@ -140,7 +174,7 @@
                         </div>    
                     </el-col>    
                     <el-col :span="24" class="transfer_table">
-                        <el-table :data="attributeChooseData" border style="width: 100%" stripe @selection-change="leftChoose" ref="roleTableLeft">
+                        <el-table :data="attLeftOnePageData" border style="width: 100%" stripe @selection-change="leftChoose" ref="roleTableLeft">
                             <el-table-column type="selection"></el-table-column>
                             <el-table-column prop="propertyCode" label="属性编码"></el-table-column>
                             <el-table-column prop="propertyName" label="属性名称"></el-table-column>
@@ -152,8 +186,8 @@
                             <span>共{{totalPageLeftAtt}}页</span>
                         </el-col>
                         <el-col :span="6">
-                            <!-- <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button> -->
-                            <!-- <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button> -->
+                            <el-button class="el_transfer" :disabled="leftBackBtnAttr" @click="pageBackLeftAttr" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="leftNextBtnAttr" @click="pageNextLeftAttr" type="primary" icon="el-icon-arrow-right" round></el-button>
                         </el-col>
                     </el-col>
                 </el-col>
@@ -190,18 +224,96 @@
                             <span>共{{totalPageRightAtt}}页</span>
                         </el-col>
                         <el-col :span="6">
-                            <el-button class="el_transfer" :disabled="rightDownBtnAttr" @click="pageDownRightAttr" type="primary" icon="el-icon-arrow-left" round></el-button>
-                            <el-button class="el_transfer" :disabled="rightBackBtnAttr" @click="pageBackRightAttr" type="primary" icon="el-icon-arrow-right" round></el-button>
+                            <el-button class="el_transfer" :disabled="rightBackBtnAttr" @click="pageBackRightAttr" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="rightNextBtnAttr" @click="pageNextRightAttr" type="primary" icon="el-icon-arrow-right" round></el-button>
                         </el-col>
                     </el-col>
                 </el-col>
             </el-col>
             <span slot="footer">
-                <!-- <button class="transfer_footer_btn transfer_confirm" @click="dialogUserConfirmUser">确 认</button> -->
-                <!-- <button class="transfer_footer_btn" @click="cancelPushUser">取 消</button> -->
+                <button class="transfer_footer_btn transfer_confirm" @click="surePushAttr">确 认</button>
+                <button class="transfer_footer_btn" @click="cancelPushAttr">取 消</button>
             </span>
         </el-dialog>
         <!-- 属性弹出层 结束 -->
+
+        <!-- 规格弹出层 开始 -->
+        <el-dialog :visible.sync="dislogSpec" title="商品规格" class="transfer_dialog">
+            <el-col :span="24">
+                <el-col :span="11" class="transfer_warapper">
+                    <el-col :span="24" class="transfer_header">
+                        <span>已选</span>
+                        <div class="transfer_search" @keyup.enter="searchLeftSpecifications">
+                            <el-input placeholder="搜索..."
+                                      v-model="searchLeftSpec"
+                                      class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>    
+                    </el-col>    
+                    <el-col :span="24" class="transfer_table">
+                        <el-table :data="specLeftOnePageData" border style="width: 100%" stripe @selection-change="leftChooseSpec" ref="roleTableLeft">
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column prop="specCode" label="规格编码"></el-table-column>
+                            <el-table-column prop="specName" label="规格名称"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                        </el-table>   
+                    </el-col>
+                    <el-col :span="24" class="transfer_footer">
+                        <el-col :span="18">
+                            <span>共{{totalPageLeftSpec}}页</span>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button class="el_transfer" :disabled="leftNextBtnSpec" @click="pageBackLeftSpec" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="leftBackBtnSpec" @click="pageNextLeftSpec" type="primary" icon="el-icon-arrow-right" round></el-button>
+                        </el-col>
+                    </el-col>
+                </el-col>
+
+                <el-col :span="2" class="transfer_btns">
+                    <el-col :span="24" class="transfer_btn_wrapper">
+                        <el-button class="el_transfer" :disabled="if_r_to_l_spec" @click="goLeftSpec" type="primary" icon="el-icon-arrow-left" round></el-button>
+                        <el-button class="el_transfer" :disabled="if_l_to_r_spec" @click="goRightSpec" type="primary" icon="el-icon-arrow-right" round></el-button>
+                    </el-col>
+                </el-col>
+
+                <el-col :span="11" class="transfer_warapper">
+                    <el-col :span="24" class="transfer_header">
+                        <span>可选</span>
+                        <div class="transfer_search"  @keyup.enter="searchRightSpecifications">
+                            <el-input placeholder="搜索..."
+                                      v-model="searchRightSpec"
+                                      class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                    </el-col>    
+                    <el-col :span="24" class="transfer_table">
+                        <el-table :data="specRightOnePageData" border style="width: 100%" stripe @selection-change="rightChooseSpec" ref="roleTabRight">
+                            <el-table-column type="selection"></el-table-column>
+                            <el-table-column prop="specCode" label="规格编码"></el-table-column>
+                            <el-table-column prop="specName" label="规格名称"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                        </el-table>  
+                        
+                    </el-col>
+                    <el-col :span="24" class="transfer_footer">
+                        <el-col :span="18">
+                            <span>共{{totalPageRightSpec}}页</span>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button class="el_transfer" :disabled="rightBackBtnSpec" @click="pageBackRightSpec" type="primary" icon="el-icon-arrow-left" round></el-button>
+                            <el-button class="el_transfer" :disabled="rightNextBtnSpec" @click="pageNextRightSpec" type="primary" icon="el-icon-arrow-right" round></el-button>
+                        </el-col>
+                    </el-col>
+                </el-col>
+            </el-col>
+            <span slot="footer">
+                <button class="transfer_footer_btn transfer_confirm" @click="surePushSpec">确 认</button>
+                <button class="transfer_footer_btn" @click="cancelPushSpec">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- 规格弹出层 结束 -->
     </div>
 </template>
 
@@ -210,37 +322,275 @@ export default({
     name:'attributeSpecificationDetail',
     created () {
         let self = this;
+        self.loadDefault();
         self.loadTree();
-        self.loadAttribute();
+        self.loadAttribute(self.categoryId);
+        self.loadSpec(self.categoryId);
     },
     watch: {
-        attributeAllData:{
+        //-----------属性------------------------------------------------------------------
+        attributeAllData:{//监听属性右侧列表的总数据变化
             handler:function(val,oldVal){
                 let self = this;
-                // if(val.length!=oldVal.length){
-                if(self.attributeAllData.length<=self.onePageShow){
+                // console.log(self.attributeAllData.length)
+                if(self.attributeAllData.length<=self.onePageShow){//当总数据小于10的
                     self.attRightOnePageData = self.attributeAllData;
+                    self.rightBackBtnAttr = true;
+                    self.rightNextBtnAttr = true;
                 }else{
+                    self.rightNextBtnAttr = false;
                     self.attRightOnePageData = [];
                     for(let i = (self.rightPageIndex-1)*self.onePageShow;i<self.rightPageIndex*self.onePageShow;i++){
-                        // console.log(self.rightPageIndex-1)
-                        // self.attRightOnePageData = [];
                         self.attRightOnePageData.push(self.attributeAllData[i])
-                        // console.log(self.attRightOnePageData)
                     }
+                    
                 }
-                // }
+                
             },
             deep: true,
-        }
+        },
+
+        attRightOnePageData:{
+            handler:function(val,oldVal){
+                let self = this;
+                if(self.attRightOnePageData.length<=self.onePageShow){
+                    if(self.rightPageIndex == 1){
+
+                    }else if(self.rightPageIndex>1){
+
+                    }
+                }
+            },
+            deep:true,
+        },
+        rightPageIndex:{//监听属性右侧列表的下标变化
+            handler:function(val,oldVal){
+                let self = this;
+                if(self.rightPageIndex<self.totalPageRightAtt){//当前页下标小于总页数（多页）
+                    self.attRightOnePageData = [];
+                    if(self.rightPageIndex == 1){
+                        self.rightBackBtnAttr = true;
+                        self.rightNextBtnAttr = false;
+                        for(let i = (self.rightPageIndex-1)*self.onePageShow;i<self.rightPageIndex*self.onePageShow;i++){
+                            self.attRightOnePageData.push(self.attributeAllData[i])
+                        }
+                    }else{
+                        self.rightBackBtnAttr = false;
+                        self.rightNextBtnAttr = false;
+                        for(let i = (self.rightPageIndex-1)*self.onePageShow;i<self.rightPageIndex*self.onePageShow;i++){
+                            self.attRightOnePageData.push(self.attributeAllData[i])
+                        }
+                    }
+                    
+                }else if(self.rightPageIndex == self.totalPageRightAtt){//当前页下标等于总页数（只有一页/多页）
+                    if(self.rightPageIndex == 1){//只有一页数据
+                        self.attRightOnePageData = self.attributeAllData;
+                        self.rightBackBtnAttr = true;
+                        self.rightNextBtnAttr = true;
+                    }else if(self.rightPageIndex>1){//在最后一页
+                        self.attRightOnePageData = [];
+                        self.rightNextBtnAttr = true;
+                        self.rightBackBtnAttr = false;
+                        for(let i = (self.rightPageIndex-1)*self.onePageShow;i<self.attributeAllData.length;i++){
+                            self.attRightOnePageData.push(self.attributeAllData[i])
+                        }
+                    }
+                }
+            },
+            deep:true,
+        },
+        attributeChooseData:{//监听属性左侧列表的总数据变化
+            handler:function(val,oldVal){
+                let self = this;
+                // console.log(self.attributeChooseData.length)
+                if(self.attributeChooseData.length<=self.onePageShow){
+                    self.attLeftOnePageData = self.attributeChooseData;
+                    self.leftBackBtnAttr = true;
+                    self.leftNextBtnAttr = true;
+                }else{
+                    self.leftNextBtnAttr = false;
+                    self.attLeftOnePageData = [];
+                    for(let i = (self.leftPageIndex-1)*self.onePageShow;i<self.leftPageIndex*self.onePageShow;i++){
+                        self.attLeftOnePageData.push(self.attributeChooseData[i])
+                    }
+                    
+                }
+            },
+            deep:true,
+        },
+        leftPageIndex:{//监听属性左侧列表的下标变化
+            handler:function(){
+                let self = this;
+                console.log(self.leftPageIndex)
+                if(self.leftPageIndex<self.totalPageLeftAtt){//当前页下标小于总页数（多页）
+                    self.attLeftOnePageData = [];
+                    if(self.leftPageIndex == 1){
+                        self.leftBackBtnAttr = true;
+                        self.leftNextBtnAttr = false;
+                        for(let i = (self.leftPageIndex-1)*self.onePageShow;i<self.leftPageIndex*self.onePageShow;i++){
+                            self.attLeftOnePageData.push(self.attributeChooseData[i])
+                        }
+                    }else{
+                        self.leftBackBtnAttr = false;
+                        self.leftNextBtnAttr = false;
+                        for(let i = (self.leftPageIndex-1)*self.onePageShow;i<self.leftPageIndex*self.onePageShow;i++){
+                            self.attLeftOnePageData.push(self.attributeChooseData[i])
+                        }
+                    }
+                    
+                }else if(self.leftPageIndex == self.totalPageLeftAtt){//当前页下标等于总页数（只有一页/多页）
+                    if(self.leftPageIndex == 1){//只有一页数据
+                        self.attLeftOnePageData = self.attributeChooseData;
+                        self.leftBackBtnAttr = true;
+                        self.leftNextBtnAttr = true;
+                    }else if(self.leftPageIndex>1){//在最后一页
+                        self.attLeftOnePageData = [];
+                        self.leftNextBtnAttr = true;
+                        self.leftBackBtnAttr = false;
+                        for(let i = (self.leftPageIndex-1)*self.onePageShow;i<self.attributeChooseData.length;i++){
+                            self.attLeftOnePageData.push(self.attributeChooseData[i])
+                        }
+                    }
+                }
+            },
+            deep:true,
+        },
+        //-----------规格------------------------------------------------------------------
+        specAllData:{//监听规格右侧列表的总数据变化
+            handler:function(val,oldVal){
+                let self = this;
+                // console.log(self.attributeAllData.length)
+                if(self.specAllData.length<=self.onePageShow){//当总数据小于10的
+                    self.specRightOnePageData = self.specAllData;
+                    self.rightBackBtnSpec = true;
+                    self.rightNextBtnSpec = true;
+                }else{
+                    self.rightNextBtnSpec = false;
+                    self.specRightOnePageData = [];
+                    for(let i = (self.specRightPageIndex-1)*self.onePageShow;i<self.specRightPageIndex*self.onePageShow;i++){
+                        self.specRightOnePageData.push(self.specAllData[i])
+                    }
+                    
+                }
+                
+            },
+            deep: true,
+        },
+        specRightPageIndex:{//监听规格右侧列表的下标变化
+            handler:function(val,oldVal){
+                let self = this;
+                if(self.specRightPageIndex<self.totalPageRightSpec){//当前页下标小于总页数（多页）
+                    self.specRightOnePageData = [];
+                    if(self.specRightPageIndex == 1){
+                        self.rightBackBtnSpec = true;
+                        self.rightNextBtnSpec = false;
+                        for(let i = (self.specRightPageIndex-1)*self.onePageShow;i<self.specRightPageIndex*self.onePageShow;i++){
+                            self.specRightOnePageData.push(self.specAllData[i])
+                        }
+                    }else{
+                        self.rightBackBtnSpec = false;
+                        self.rightNextBtnSpec = false;
+                        for(let i = (self.specRightPageIndex-1)*self.onePageShow;i<self.specRightPageIndex*self.onePageShow;i++){
+                            self.specRightOnePageData.push(self.specAllData[i])
+                        }
+                    }
+                    
+                }else if(self.specRightPageIndex == self.totalPageRightSpec){//当前页下标等于总页数（只有一页/多页）
+                    if(self.specRightPageIndex == 1){//只有一页数据
+                        self.specRightOnePageData = self.specAllData;
+                        self.rightBackBtnSpec = true;
+                        self.rightNextBtnSpec = true;
+                    }else if(self.specRightPageIndex>1){//在最后一页
+                        self.specRightOnePageData = [];
+                        self.rightNextBtnSpec = true;
+                        self.rightBackBtnSpec = false;
+                        for(let i = (self.specRightPageIndex-1)*self.onePageShow;i<self.specAllData.length;i++){
+                            self.specRightOnePageData.push(self.specAllData[i])
+                        }
+                    }
+                }
+            },
+            deep:true,
+        },
+        specChooseData:{//监听规格左侧列表的总数据变化
+            handler:function(val,oldVal){
+                let self = this;
+                if(self.specChooseData.length<=self.onePageShow){
+                    self.specLeftOnePageData = self.specChooseData;
+                    self.leftBackBtnSpec = true;
+                    self.leftNextBtnSpec = true;
+                }else{
+                    self.leftNextBtnSpec = false;
+                    self.specLeftOnePageData = [];
+                    for(let i = (self.specLeftPageIndex-1)*self.onePageShow;i<self.specLeftPageIndex*self.onePageShow;i++){
+                        self.specLeftOnePageData.push(self.specChooseData[i])
+                    }
+                    
+                }
+            },
+            deep:true,
+        },
+        specLeftPageIndex:{//监听规格左侧列表的下标变化
+            handler:function(){
+                let self = this;
+                if(self.specLeftPageIndex<self.totalPageLeftSpec){//当前页下标小于总页数（多页）
+                    self.specLeftOnePageData = [];
+                    if(self.specLeftPageIndex == 1){
+                        self.leftBackBtnSpec = true;
+                        self.leftNextBtnSpec = false;
+                        for(let i = (self.specLeftPageIndex-1)*self.onePageShow;i<self.specLeftPageIndex*self.onePageShow;i++){
+                            self.specLeftOnePageData.push(self.specChooseData[i])
+                        }
+                    }else{
+                        self.leftBackBtnSpec = false;
+                        self.leftNextBtnSpec = false;
+                        for(let i = (self.specLeftPageIndex-1)*self.onePageShow;i<self.specLeftPageIndex*self.onePageShow;i++){
+                            self.specLeftOnePageData.push(self.specChooseData[i])
+                        }
+                    }
+                    
+                }else if(self.specLeftPageIndex == self.totalPageLeftSpec){//当前页下标等于总页数（只有一页/多页）
+                    if(self.specLeftPageIndex == 1){//只有一页数据
+                        self.specLeftOnePageData = self.specChooseData;
+                        self.leftBackBtnSpec = true;
+                        self.leftNextBtnSpec = true;
+                    }else if(self.specLeftPageIndex>1){//在最后一页
+                        self.specLeftOnePageData = [];
+                        self.leftNextBtnSpec = true;
+                        self.leftBackBtnSpec= false;
+                        for(let i = (self.specLeftPageIndex-1)*self.onePageShow;i<self.specChooseData.length;i++){
+                            self.specLeftOnePageData.push(self.specChooseData[i])
+                        }
+                    }
+                }
+            },
+            deep:true,
+        },
     },
     data() {
         return{
+            defaultGroupId:'',
+            categoryId:'',
+            categoryName:'',
             ifInherit:false,//继承规格属性到子类目
             ifOne:false,//唯一码管理
             ifBatch:false,//批次管理
             ifPeriod:false,//保质期管理
             treeLoading:false,
+            attrShow:true,
+            specShow:true,
+            submitData:{
+                categoryFeature_MainTable: {
+                    id: '0',
+                    groupId: '',
+                    categoryId: '',
+                    uniqueCodeMgt: true,
+                    lotMgt: true,
+                    validityMgt: true,
+                    attributeInherited: true
+                },
+                categoryFeatureItem_ChildTable: []
+            },
             //---左侧树形--------
             componyTree:  [],
             defaultProps: {
@@ -253,13 +603,13 @@ export default({
 
             //---商品属性弹框-----
             onePageShow:10,
+            attData:[],//生成的属性表格数据
             dislogAttribute:false,
-            attributeData:[],//生成的属性表格数据
 
             attributeChooseData:[],//弹窗内左侧表格总数据
             attributeAllData:[],//弹窗内右侧表格总数据
 
-            attRightOnePageData:[],//弹窗内左侧表格一页数据
+            attRightOnePageData:[],//弹窗内右侧表格一页数据
             attLeftOnePageData:[],//弹窗内左侧表格一页数据
 
             rightPageIndex:1,//右侧弹窗当前页下标
@@ -276,10 +626,58 @@ export default({
 
             if_r_to_l_att:true,//右传左按钮
             if_l_to_r_att:true,//左传右按钮
+
+            rightNextBtnAttr:false,//判定属性右侧向下翻页
+            rightBackBtnAttr:true,//判定属性右侧向上翻页
+
+            leftNextBtnAttr:true,//判定属性左侧向下翻页
+            leftBackBtnAttr:true,//判定属性左侧向上翻页
+            //-------------------
+
+            //---商品规格弹框-----
+            specData:[],//生成的规格表格数据
+            dislogSpec:false,
+
+            specChooseData:[],//弹窗内左侧表格总数据
+            specAllData:[],//弹窗内右侧表格总数据
+
+            specRightOnePageData:[],//弹窗内右侧表格一页数据
+            specLeftOnePageData:[],//弹窗内左侧表格一页数据
+
+            specRightPageIndex:1,//右侧弹窗当前页下标
+            specLeftPageIndex:1,//左侧弹窗当前页下标
+
+            searchLeftSpec:'',//左侧搜索框值
+            searchRightSpec:'',//右侧搜索框值
+
+            totalPageLeftSpec:1,//左侧总页数
+            totalPageRightSpec:1,//右侧总页数
+
+            multipleSelectionSpec:[],//右侧选中数据
+            multipleSelectionLeftSpec:[],//左侧选中数据
+
+            if_r_to_l_spec:true,//右传左按钮
+            if_l_to_r_spec:true,//左传右按钮
+
+            rightNextBtnSpec:false,//判定规格右侧向下翻页
+            rightBackBtnSpec:true,//判定规格右侧向上翻页
+
+            leftNextBtnSpec:true,//判定规格左侧向下翻页
+            leftBackBtnSpec:true,//判定规格左侧向上翻页
             //-------------------
         }
     },
     methods:{
+        //---获取默认数据-------------
+        loadDefault:function(){
+            let self=this;
+            self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                console.log(res)
+                self.defaultGroupId = res.result.defaultGroupId;
+            },function(res){
+                self.treeLoading=false;
+            })
+        },
         //---加载树形数据-------------
         loadTree:function(){
             let self=this;
@@ -296,18 +694,51 @@ export default({
         
         //-------------------------
 
-        //---弹窗内右侧表格数据------
-        loadAttribute:function(){//商品属性
+        //---加载表格数据-----------
+        loadTableAtt:function(id){//属性表格已有数据
             let self = this;
-            self.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id,ItemType:'1'}).then(function(res){
+                console.log(res)
+                if(res.result&&res.result.length>0){
+                    self.attData = res.result;
+                }
+            },function(res){
+
+            })
+        },
+        loadTableSpec:function(id){//规格表格已有数据
+            let self = this;
+            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id,ItemType:'2'}).then(function(res){
+                console.log(res)
+                if(res.result&&res.result.length>0){
+                    self.specData = res.result;
+                }
+            },function(res){
+                
+            })
+        },
+        //-------------------------
+
+        //---属性弹窗内右侧表格数据--
+        loadAttribute:function(id){//商品属性
+            let self = this;
+            self.$axios.gets('/api/services/app/PropertyManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
                 console.log(res);
                 self.attributeAllData = res.result.items;
                 self.totalPageRightAtt = Math.ceil(res.result.totalCount/self.onePageShow);
-                // for(let i =0;i<self.rightPageIndex*self.onePageShow;i++){
-                    // console.log(self.totalPageRightAtt)
-                    // self.attRightOnePageData.push(self.attributeAllData[i])
-                // }
-                
+            },function(res){
+                console.log('err'+res)
+            });
+        },
+        //-------------------------
+
+        //---规格弹窗内右侧表格数据--
+        loadSpec:function(id){//商品规格
+            let self = this;
+            self.$axios.gets('/api/services/app/SpecManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
+                // console.log(res);
+                self.specAllData = res.result.items;
+                self.totalPageRightSpec = Math.ceil(res.result.totalCount/self.onePageShow);
             },function(res){
                 console.log('err'+res)
             });
@@ -316,7 +747,31 @@ export default({
 
         //---保存------------------
         save:function(){
-
+            // console.log(1)
+            let self = this;
+            self.submitData.categoryFeature_MainTable.groupId = self.defaultGroupId;
+            self.submitData.categoryFeature_MainTable.categoryId = self.categoryId;
+            self.submitData.categoryFeature_MainTable.uniqueCodeMgt = self.ifOne;
+            self.submitData.categoryFeature_MainTable.lotMgt = self.ifBatch;
+            self.submitData.categoryFeature_MainTable.validityMgt = self.ifPeriod;
+            self.submitData.categoryFeature_MainTable.attributeInherited = self.ifInherit;
+            // console.log(12)
+            for(let i in self.attData){
+                self.submitData.categoryFeatureItem_ChildTable.push(self.attData[i])
+            }
+            // 
+            for(let i in self.specData){
+                self.submitData.categoryFeatureItem_ChildTable.push(self.specData[i])
+            }
+            console.log(self.submitData)
+            self.$axios.posts('/api/services/app/CategoryFeatureManagement/AggregateCreateOrUpdate',self.submitData).then(function(res){
+                // console.log(res);
+                self.open('保存成功','el-icon-circle-check','successERP');
+            },function(res){
+                console.log(res)
+                // self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                // self.errorMessage=true;
+            });
         },
         //------------------------
 
@@ -325,18 +780,31 @@ export default({
             let self = this;
             self.dislogAttribute = true;
         },
+        dialogSpecShow:function(){
+            let self = this;
+            self.dislogSpec = true;
+        },
         //------------------------
 
-        //---弹框搜索--------------
+        //---属性弹框搜索--------------
         searchLeftAttribute:function(){
-
+            let self = this;
         },
         searchRightAttribute:function(){
-
+            let self = this;
         },
         //------------------------
 
-        //---弹窗内多选------------
+        //---规格弹框搜索--------------
+        searchLeftSpecifications:function(){
+            let self = this;
+        },
+        searchRightSpecifications:function(){
+            let self = this;
+        },
+        //------------------------
+
+        //---属性弹窗内多选------------
         leftChoose:function(val){
             let self = this;
             self.multipleSelectionLeft = val;
@@ -354,18 +822,36 @@ export default({
             }else{
                 self.if_r_to_l_att = true;
             }
-            // console.log(this.multipleSelection)
         },
         //------------------------
 
-        //---数据穿梭-------------
-        goLeftAtt:function(){
-            
+        //---规格弹窗多选----------
+        leftChooseSpec:function(val){
             let self = this;
-            // self.rightPageIndex++;
+            self.multipleSelectionLeftSpec = val;
+            if(self.multipleSelectionLeftSpec.length>0){
+                self.if_l_to_r_spec= false;
+            }else{
+                self.if_l_to_r_spec= true;
+            }
+        },
+        rightChooseSpec:function(val){
+            let self = this;
+            self.multipleSelectionSpec = val;
+            if(self.multipleSelectionSpec.length>0){
+                self.if_r_to_l_spec= false;
+            }else{
+                self.if_r_to_l_spec = true;
+            }
+        },
+
+        //---属性数据穿梭-------------
+        goLeftAtt:function(){//从右往左
+            let self = this;
             for(let i in self.multipleSelection){
                 self.attributeChooseData.push(self.multipleSelection[i])
             }
+            self.totalPageLeftAtt = Math.ceil(self.attributeChooseData.length/self.onePageShow);
             
             let x = [];
             for(let i in self.attributeAllData){
@@ -386,20 +872,196 @@ export default({
             self.totalPageRightAtt = Math.ceil(self.attributeAllData.length/self.onePageShow);
             
         },
-        goRightAtt:function(){
+        goRightAtt:function(){//从左往右
+            let self = this;
+            for(let i in self.multipleSelectionLeft){
+                self.attributeAllData.push(self.multipleSelectionLeft[i])
+            }
+            self.totalPageRightAtt = Math.ceil(self.attributeAllData.length/self.onePageShow);
 
+            let x = [];
+            for(let i in self.attributeChooseData){
+                let flag = true;
+                for(let j in self.multipleSelectionLeft){
+                    if(self.attributeChooseData[i].id == self.multipleSelectionLeft[j].id){
+                        flag = false;
+                    }
+                }
+
+                if(flag){
+                    x.push(self.attributeChooseData[i])
+                }
+            }
+            self.attributeChooseData = x;
+            self.if_l_to_r_att = true;
+            self.totalPageLeftAtt = Math.ceil(self.attributeChooseData.length/self.onePageShow);
         },
         //-----------------------
 
-        //---翻页----------------
-        pageDownRightAttr:function(){//属性的右侧向下翻页
+        //---规格数据穿梭---------
+        goLeftSpec:function(){
             let self = this;
+            for(let i in self.multipleSelectionSpec){
+                self.specChooseData.push(self.multipleSelectionSpec[i])
+            }
+            self.totalPageLeftSpec = Math.ceil(self.specChooseData.length/self.onePageShow);
+            
+            let x = [];
+            for(let i in self.specAllData){
+                let flag = true;
+                for(let j in self.multipleSelectionSpec){
+                    if(self.specAllData[i].id == self.multipleSelectionSpec[j].id){
+                        flag = false;
+                    }
+                }
+
+                if(flag){
+                    x.push(self.specAllData[i])
+                }
+            }
+            //  console.log(x)
+            self.specAllData = x;
+            self.if_r_to_l_spec = true;
+            self.totalPageRightSpec = Math.ceil(self.specAllData.length/self.onePageShow);
         },
-        pageBackRightAttr:function(){//属性的左侧向下翻页
+        goRightSpec:function(){
             let self = this;
+            for(let i in self.multipleSelectionLeftSpec){
+                self.specAllData.push(self.multipleSelectionLeftSpec[i])
+            }
+            self.totalPageRightSpec = Math.ceil(self.specAllData.length/self.onePageShow);
+
+            let x = [];
+            for(let i in self.specChooseData){
+                let flag = true;
+                for(let j in self.multipleSelectionLeftSpec){
+                    if(self.specChooseData[i].id == self.multipleSelectionLeftSpec[j].id){
+                        flag = false;
+                    }
+                }
+
+                if(flag){
+                    x.push(self.specChooseData[i])
+                }
+            }
+            self.specChooseData = x;
+            self.if_l_to_r_spec = true;
+            self.totalPageLeftSpec = Math.ceil(self.specChooseData.length/self.onePageShow);
         },
         //-----------------------
 
+        //---属性翻页----------------
+        pageNextRightAttr:function(){//属性的右侧向下翻页
+            let self = this;
+            if(self.rightPageIndex<self.totalPageRightAtt){
+                self.rightPageIndex++;
+            }else if(self.rightPageIndex==self.totalPageRightAtt){
+                self.rightNextBtnAttr = true;
+            }
+            
+        },
+        pageBackRightAttr:function(){//属性的右侧向上翻页
+            let self = this;
+            if(self.rightPageIndex>1){
+                self.rightPageIndex--;
+            }else if(self.rightPageIndex==self.totalPageRightAtt){
+                self.rightBackBtnAttr = true;
+            }
+        },
+        pageNextLeftAttr:function(){//属性的左侧向下翻页
+            let self = this;
+            if(self.leftPageIndex<self.totalPageLeftAtt){
+                self.leftPageIndex++;
+            }else if(self.leftPageIndex == self.totalPageLeftAtt){
+                self.leftNextBtnAttr = true;
+            }
+        },
+        pageBackLeftAttr:function(){//属性的左侧向上翻页
+            let self = this;
+            if(self.leftPageIndex>1){
+                self.leftPageIndex--;
+            }else if(self.leftPageIndex==self.leftPageIndex){
+                self.leftBackBtnAttr = true;
+            }
+        },
+        //-----------------------
+
+        //---规格翻页------------
+        pageNextRightSpec:function(){//规格的右侧向下翻页
+            let self = this;
+            if(self.specRightPageIndex<self.totalPageRightSpec){
+                self.specRightPageIndex++;
+            }else if(self.specRightPageIndex==self.totalPageRightSpec){
+                self.rightNextBtnSpec = true;
+            }
+            
+        },
+        pageBackRightSpec:function(){//规格的右侧向上翻页
+            let self = this;
+            if(self.specRightPageIndex>1){
+                self.specRightPageIndex--;
+            }else if(self.specRightPageIndex==self.totalPageRightSpec){
+                self.rightBackBtnSpec = true;
+            }
+        },
+        pageNextLeftSpec:function(){//规格的左侧向下翻页
+            let self = this;
+            if(self.specLeftPageIndex<self.totalPageLeftSpec){
+                self.specLeftPageIndex++;
+            }else if(self.leftPageIndex == self.totalPageLeftSpec){
+                self.leftNextBtnSpec = true;
+            }
+        },
+        pageBackLeftSpec:function(){//规格的左侧向上翻页
+            let self = this;
+            if(self.specLeftPageIndex>1){
+                self.specLeftPageIndex--;
+            }else if(self.specLeftPageIndex==self.leftPageIndex){
+                self.leftBackBtnSpec = true;
+            }
+        },
+        //-----------------------
+
+        //---属性弹窗取消、确定----
+        cancelPushAttr:function(){
+            let self = this;
+            self.dislogAttribute =false;
+        },
+        surePushAttr:function(){
+            let self = this;
+            self.attData = self.deepCopy(self.attributeChooseData);
+            self.dislogAttribute =false;
+            
+        },
+        //-----------------------
+
+        //---规格弹窗取消、确定----
+        cancelPushSpec:function(){
+            let self = this;
+            self.dislogSpec =false;
+        },
+        surePushSpec:function(){
+            let self = this;
+            self.specData = self.deepCopy(self.specChooseData);
+            self.dislogSpec =false;
+            
+        },
+        //-----------------------
+
+        //---控制删除-------------
+        handleAttDelete:function(index,row){
+            let self = this;
+            self.attData.splice(index,1);
+            self.attributeChooseData.splice(index,1);
+            self.attributeAllData.push(row);
+        },
+        handleSpecDelete:function(index,row){
+            let self = this;
+            self.specData.splice(index,1);
+            self.specChooseData.splice(index,1);
+            self.specAllData.push(row);
+        },
+        //-----------------------
         //------------------------
         renderContent(h, { node, data, store }){//商品类目
             // console.log(data)
@@ -430,10 +1092,90 @@ export default({
                 return [data[0][key]]
             }
         },
-        nodeClick:function(){
-
+        nodeClick:function(data){
+            let self = this;
+            console.log(data)
+            //---清空数据-----------
+            self.clearData();
+            //---保存上床值---------
+            self.categoryId= data.id;
+            self.categoryName = data.categoryName;
+            //---获取主表数据-------
+            self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.id}).then(function(res){
+                if(res&&res.result){
+                    self.ifInherit = res.result.attributeInherited;
+                    self.ifOne = res.result.uniqueCodeMgt; 
+                    self.ifBatch = res.result.lotMgt;
+                    self.ifPeriod = res.result.validityMgt;
+                    self.submitData.categoryFeature_MainTable.id = res.result.id;
+                }
+            },function(res){
+                console.log(self.submitData.categoryFeature_MainTable.id)
+            })
+            //---获取从表数据-------
+            self.loadTableAtt(data.id);
+            self.loadTableSpec(data.id)
+            //---------------------
         },
         //------------------------
+
+        //---清除数据-------------
+        clearData:function(){
+            let self = this;
+            self.attData = [];
+            self.specData = [];
+            self.ifInherit = false;//继承规格属性到子类目
+            self.ifOne = false;//唯一码管理
+            self.ifBatch = false;//批次管理
+            self.ifPeriod = false;//保质期管理
+        },
+        //-----------------------
+
+        //------------------------------------------------------
+        getType(obj){
+            //tostring会返回对应不同的标签的构造函数
+            var toString = Object.prototype.toString;
+            var map = {
+                '[object Boolean]'  : 'boolean', 
+                '[object Number]'   : 'number', 
+                '[object String]'   : 'string', 
+                '[object Function]' : 'function', 
+                '[object Array]'    : 'array', 
+                '[object Date]'     : 'date', 
+                '[object RegExp]'   : 'regExp', 
+                '[object Undefined]': 'undefined',
+                '[object Null]'     : 'null', 
+                '[object Object]'   : 'object'
+            };
+            if(obj instanceof Element) {
+                return 'element';
+            }
+            return map[toString.call(obj)];
+        },
+        deepCopy(data){
+            let self = this;
+            var type = self.getType(data);
+            var obj;
+            if(type === 'array'){
+                obj = [];
+            } else if(type === 'object'){
+                obj = {};
+            } else {
+                //不再具有下一层次
+                return data;
+            }
+            if(type === 'array'){
+                for(var i = 0, len = data.length; i < len; i++){
+                    obj.push(self.deepCopy(data[i]));
+                }
+            } else if(type === 'object'){
+                for(var key in data){
+                    obj[key] = self.deepCopy(data[key]);
+                }
+            }
+            return obj;
+        },
+        //------------------------------------------------------
         
     },
 
@@ -463,8 +1205,28 @@ export default({
 .pl10{
     padding-left:10px;
 }
-.section-one{
-    padding: 10px;
+.showBtn{
+    display: inline-block;
+    float:right;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 10px;
+     margin-top: 10px;
+}
+.showBtn i{
+    transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s; 
+    color:#cacaca;
+    margin-left: 5px;
+}
+.showBtn i.rotate{
+    transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
 }
 .at-sp-detail .bgcolor{
     margin-bottom:0px;
@@ -473,7 +1235,7 @@ export default({
 .at-sp-detail .bgcolor>label{
     width: 50px;
 }
-.section-two{
+.section-style{
     padding-top: 5px;
 }
 .header-title{
@@ -486,7 +1248,7 @@ export default({
 .choose-add{
     background:#00CACA;
     display: inline-block;
-    padding:2px 10px;
+    padding:1px 10px;
     border-radius: 3px;
     line-height: 25px;
     margin-top: 4px;
