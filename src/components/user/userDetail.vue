@@ -196,6 +196,7 @@
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.userType') }}</div>
@@ -555,6 +556,10 @@
             id:'',
             ouName:''
         },
+        item_area_no:{
+                id:0,
+                ouName:' '
+                },
         selectProps: {
             children: 'children',
             label: 'ouName',
@@ -574,7 +579,7 @@
           "userGroupId": "",
           "ouId": "",
           "status": 1,
-          "userType": "",
+          "userType": 0,
           "languageId": 9,
           "isReg": false,
           "remark": "",
