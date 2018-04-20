@@ -1177,6 +1177,18 @@ export default({
             return obj;
         },
         //------------------------------------------------------
+        //---open-----------
+        open(tittle,iconClass,className) {
+            this.$notify({
+            position: 'bottom-right',
+            iconClass:iconClass,
+            title: tittle,
+            showClose: false,
+            duration: 3000,
+            customClass:className
+            });
+        },
+        //------------------
         
     },
 
