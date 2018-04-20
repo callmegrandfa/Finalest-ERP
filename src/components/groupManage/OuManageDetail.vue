@@ -319,7 +319,6 @@
                         :value="item.id" 
                         >
                         </el-option>
-                        <el-option v-show="false" :label="item_area_2.currencyName" :value="item_area_2.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -1008,10 +1007,6 @@ export default({
             item_area_no:{
                 id:0,
                 ouName:' '
-                },
-            item_area_2:{
-                id:2,
-                currencyName:' '
                 },
             selectProps: {
                 children: 'children',
