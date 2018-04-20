@@ -74,6 +74,7 @@
                             </el-option> -->
                             <el-option v-show="false"  v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -213,6 +214,10 @@
         item_ou:{
             id:"",
             ouName:""
+        },
+        item_area_no:{
+            id:0,
+            ouName:' '
         },
         selectTree_ou:[
         ],
@@ -425,6 +430,21 @@
                 this.getData();
                 this.firstModify=false;
                 this.ifModify=false;
+        },
+         getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         back(row){
             this.$store.state.url='/userGroup/userGroupList/default'
