@@ -768,16 +768,39 @@
                                     v-model="basBusiness.stmOuId"
                                     :class="{redBorder : validation.hasError('basBusiness.stmOuId')}"
                                     @focus="showErrprTips"
-                                    
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                   <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="search">
+                                    </el-input>
+                                    <el-tree
+                                    :render-content="renderContent_ouParentid"
+                                    :data="selectTreeFinance"
+                                    :highlight-current="true"
+                                    :props="selectFinanceProps"
+                                    node-key="id"
+                                    default-expand-all
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick_ou"
+                                    >
+                                    </el-tree> 
+                                    <el-option v-show="false" v-for="item in selectData.ouParentid" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+
+
+                                    <!-- <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option> -->
                                     </el-select>
+                                    
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
@@ -1000,6 +1023,7 @@ export default({
              selectTree:[
             ],
             selectTreeCompany:[],
+            selectTreeFinance:[],
             item_ou:{
                 id:'',
                 ouName:''
@@ -1014,11 +1038,16 @@ export default({
                 id:'id'
             },
             selectPropsCompany:{
-                 children: 'children',
+                children: 'children',
                 label: 'ouName',
                 id:'id'
             },
-             test:'',   
+            selectFinanceProps:{
+                children: 'children',
+                label: 'ouName',
+                id:'id'
+            },
+            test:'',   
             companys:1,
             show:true,
             ifShow:true,
@@ -1491,7 +1520,8 @@ export default({
     created:function(){
         let _this=this;
          _this.loadTree();
-          _this.loadTreeCompany();
+         _this.loadTreeCompany();
+         _this.loadTreeFinance();
          _this.getSelectData();
          _this.getDefault();
     },  
@@ -1700,6 +1730,17 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
+            _this.loadIcon();
+        },function(res){
+        })
+    },
+      loadTreeFinance(){
+        let _this=this;
+        _this.treeLoading=true;
+        _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3})
+        .then(function(res){
+            console.log(res);
+            _this.selectTreeFinance=res.result;
             _this.loadIcon();
         },function(res){
         })
