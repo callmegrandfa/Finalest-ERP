@@ -60,6 +60,7 @@
                                      :render-content="renderContentAd"
                                      ref="adTree"
                                      :filter-node-method="adFilterNode"
+                                     highlight-current
                                      :expand-on-click-node="false"
                                      @node-click="adNodeClick"></el-tree>
                             <el-option v-show="false"
@@ -88,6 +89,7 @@
                                      :props="selectOpProps"
                                      node-key="id"
                                      :render-content="renderContentOp"
+                                     highlight-current
                                      ref="opTree"
                                      :filter-node-method="opFilterNode"
                                      :expand-on-click-node="false"
@@ -214,7 +216,12 @@
                             <el-table-column prop="opAreaFullName" label="业务地区"></el-table-column>
                              
                             <el-table-column prop="stockFullname" label="对应仓库"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="statusTValue" label="状态">
+                                 <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">停用</span>
+                                </template>                               
+                            </el-table-column>
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
@@ -343,7 +350,7 @@
                 opSearch:'',//树形搜索框的
                 selectOpProps:{
                     children: 'childItems',
-                    label: 'ouName',
+                    label: 'name',
                     id:'id'
                 },
                 opItem:[{
@@ -408,6 +415,12 @@
         watch:{
             ouSearch(val){
                 this.$refs.ouTree.filter(val)
+            },
+            adSearch(val){
+                this.$refs.adTree.filter(val)
+            },
+            opSearch(val){
+                this.$refs.opTree.filter(val)
             }
         },
         methods:{
@@ -444,7 +457,7 @@
                     // console.log(res);
                     self.adAr = res.result;
                     // console.log(self.adAr)
-                    self.expendAdId = self.defauleExpandTree(res.result,'id')
+                    self.expandAdId = self.defauleExpandTree(res.result,'id')
                 },function(res){
                     console.log('err'+res)
                 })
@@ -452,7 +465,7 @@
                 self.$axios.gets('/api/services/app/OpAreaManagement/GetTree').then(function(res){
                     console.log(res);
                     self.opAr = res.result;
-                    self.expendOpId = self.defauleExpandTree(res.result,'id')
+                    self.expandOpId = self.defauleExpandTree(res.result,'id')
                     // self.loadIcon();
                 },function(res){
                     console.log('err'+res)
@@ -709,14 +722,14 @@
                 return (
                     <span class="el-tree-node__label" data-id={data.id}>
                     <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
+                        {data.name}
                     </span>
                 );
             }else{
                 return (
                     <span class="el-tree-node__label" data-id={data.id}>
                     <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                        {data.ouName}
+                        {data.name}
                     </span>
                 );
             }
