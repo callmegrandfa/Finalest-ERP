@@ -128,7 +128,8 @@
                         <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -148,6 +149,7 @@
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.userType') }}</div>
@@ -167,6 +169,7 @@
                     v-model="addData.languageId">
                         <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.languageId') }}</div>
@@ -483,6 +486,10 @@
         item:{
             id:'',
             ouName:'',
+        },
+        item_area_no:{
+        id:0,
+        ouName:' '
         },
         selectTree:[
         ],
