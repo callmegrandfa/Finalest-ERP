@@ -251,11 +251,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_ouParentid"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
@@ -339,11 +339,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_companyOuId"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
                         node-key="id"
-                        default-expand-all
                         ref="trees"
                         :filter-node-method="filterNode1"
                         :expand-on-click-node="false"
@@ -777,11 +777,11 @@
                                     </el-input>
                                     <el-tree
                                     :render-content="renderContent_ouParentid"
+                                    :default-expanded-keys="expand_Ou"
                                     :data="selectTreeFinance"
                                     :highlight-current="true"
                                     :props="selectFinanceProps"
                                     node-key="id"
-                                    default-expand-all
                                     ref="tree"
                                     :filter-node-method="filterNode"
                                     :expand-on-click-node="false"
@@ -1049,6 +1049,7 @@ export default({
             },
             test:'',   
             companys:1,
+            expand_Ou:[],
             show:true,
             ifShow:true,
             activeName: 'Company',
@@ -1719,7 +1720,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
             },function(res){
             })
         },
@@ -1730,7 +1731,6 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            _this.loadIcon();
         },function(res){
         })
     },
@@ -1741,21 +1741,8 @@ export default({
         .then(function(res){
             console.log(res);
             _this.selectTreeFinance=res.result;
-            _this.loadIcon();
+            _this.expand_Ou=_this.defauleExpandTree(res.result,'id');
         },function(res){
-        })
-    },
-    loadIcon(){
-        let _this=this;
-        _this.$nextTick(function () {
-            $('.preNode').remove();   
-            $('.el-tree-node__label').each(function(){
-                if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                    $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                }else{
-                    $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                }
-            })
         })
     },
          nodeClick_ou(data,node,self){
@@ -2026,6 +2013,15 @@ export default({
                 }
             });    
         },
+          defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         renderContent_companyOuId(h, { node, data, store }){
                 
             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
