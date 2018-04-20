@@ -53,6 +53,7 @@
                         v-model="addData.systemId">
                             <el-option v-for="item in selectData.systemId" :key="item.id" :label="item.systemName" :value="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.systemId') }}</div>
@@ -91,6 +92,7 @@
                             </el-option> -->
                             <el-option  class="select_tree_option" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
@@ -405,6 +407,10 @@
                 id:"",
                 moduleName:""
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
             selectTree:[
             ],
             selectProps: {
