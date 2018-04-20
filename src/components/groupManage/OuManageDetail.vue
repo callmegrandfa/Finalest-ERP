@@ -265,7 +265,8 @@
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -484,6 +485,7 @@
                                     value=0 
                                     >
                                     </el-option> -->
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                 </el-select>
                             </div>
                             <div class="bgcolor">
@@ -1036,10 +1038,10 @@ export default({
                 "ouCode": "",
                 "ouName": "",
                 "ouFullname": "",
-                "ouParentid": "",//整数
+                "ouParentid": 0,//整数
                 "accCchemeId": "",//整数
                 "accStartMonth": "",
-                "baseCurrencyId": "",//整数
+                "baseCurrencyId": 0,//整数
                 "companyOuId": "",//整数
                 "contactPerson": "",
                 "phone": "",
@@ -1090,7 +1092,7 @@ export default({
             },
             dateRange:[],//有效时间
             basCompany:{//其他信息
-                "ouParentid": "",//整数
+                "ouParentid": 0,//整数
                 "legalPerson": "",
                 "status": 1,//整数
                 "isGroupCompany": false,
@@ -1115,7 +1117,7 @@ export default({
                 "remark": ""
             },
             basBusiness: {
-                "ouParentid": '',
+                "ouParentid": 0,
                 "stmOuId": '',
                 "status": 1
             },
@@ -1844,6 +1846,7 @@ export default({
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                        console.log(res)
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
@@ -1922,7 +1925,7 @@ export default({
                 "ouTypes":[1,3],//组织职能
             };
             _this.basCompany={//其他信息
-                "ouParentid": "",//整数
+                "ouParentid": '',//整数
                 "legalPerson": "",
                 "status": 1,//整数
                 "isGroupCompany": false,
