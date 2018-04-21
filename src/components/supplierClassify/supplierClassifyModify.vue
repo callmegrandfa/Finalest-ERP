@@ -127,7 +127,9 @@
                                 </el-tree>
                                 <!-- <el-option v-show="false" :key="count.Id" :label="count.className" :value="count.Id"   id="supClaDetail_confirmSelect">
                                 </el-option> -->
-                                <el-option v-show="false"  v-for="item in selectData.upSupplierClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
+                                <!-- <el-option v-show="false"  v-for="item in selectData.upSupplierClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id">
+                                </el-option> -->
+                                <el-option v-show="false" :key="treeNode.Id" :label="treeNode.className" :value="treeNode.Id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -343,10 +345,10 @@
                     Status001:[],//启用状态
                     upSupplierClass:[],// 上级供应商分类
                 },
-                //    treeNode:{
-                //         Id:'',
-                //         className:'',
-                //     },
+                treeNode:{
+                    Id:'',
+                    className:'',
+                },
                 // -------树形控件数据
                 expandId:[],//默认展开树节点
                 filterText:'',//过滤节点的关键字
@@ -414,23 +416,18 @@
                     .then(rsp => {
                         // console.log(rsp.result);
                         // _this.treeNode.Id=rsp.result.classParentId;
-                        _this.addData=rsp.result;
+                        _this.addData=rsp.result;                       
                         // if (rsp.result.classParentId==0) {
                         //     _this.selectData.upSupplierClass.className='无'
                         // }
+                        // --------审计信息数据
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
                         _this.timeData.modifiedTime=rsp.result.modifiedTime;
-                        // _this.$axios.gets("/api/services/app/ContactClassManagement/Get",
-                        // {id: rsp.result.classParentId})
-                        // .then(
-                        //     rsp=>{
-                        //         // console.log(rsp.result);
-                        //         _this.treeNode.Id=rsp.result.id;
-                        //         _this.treeNode.className=rsp.result.className;
-                        //     }
-                        // )
+
+                        _this.treeNode.Id=rsp.result.classParentId;
+                        _this.treeNode.className=rsp.result.classParentId_ClassName;
                     });
             },
             // -------------------------提示框
@@ -690,11 +687,21 @@
                })
             },
             nodeClick(data,node,self) {//点击树形控件节点时的回调
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                        if($(this).attr('date')==data.id){
-                            $(this).click()
-                        }
-                    })
+                let _this=this;
+                if (_this.addData.id==data.id) {
+                        alert("上级供应商不能为供应商本身")
+                }else{
+                        _this.treeNode.Id=data.id;
+                        _this.treeNode.className=data.className;
+                }
+                self.$nextTick(function() {
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                });
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //         if($(this).attr('date')==data.id){
+                //             $(this).click()
+                //         }
+                //     })
 
 
                 //    let _this=this;
