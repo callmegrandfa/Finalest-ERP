@@ -232,7 +232,12 @@
                                 </template>
                             </el-table-column>   
                             <el-table-column prop="ficaOuId_OuName" label="对应财务组织"></el-table-column>
-                            <el-table-column prop="statusTValue" label="状态"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                 <template slot-scope="scope">
+                                    <span v-if="scope.row.status=='1'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.status=='0'" style="color:#FF6666;">停用</span>
+                                </template>                               
+                            </el-table-column>
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>
@@ -467,7 +472,7 @@
             loadAllList:function(){//获取所有列表数据
                 let self = this;
                 this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
-                    //console.log(res);
+                    console.log(res);
                     self.allList = res.result.items;
                     self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)

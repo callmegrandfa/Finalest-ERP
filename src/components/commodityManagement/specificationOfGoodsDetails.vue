@@ -144,18 +144,23 @@
                             </el-col>
                             <el-col :span="6" style="float:right">
                                 <div class="right">
-                                    <div class="transfer_search" style="width:100%" @keyup.enter="searchLeftTable">
+                                    <div class="transfer_search" style="width:100%">
                                         <el-input
                                             placeholder="搜索..."
-                                            v-model="searchTableLeft"
+                                            v-model="searchTableLeft1"
                                             class="search_input"
                                             >
                                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
                                         </el-input>
                                     </div>
-                                    <!-- <el-input placeholder="" v-model="input4">
-                                    <template slot="append">查询</template>
-                                  </el-input> --> 
+                                    <!-- <el-autocomplete
+                                        v-model="searchLeft"
+                                        :fetch-suggestions="querySearchAsync"
+                                        class="search_input"
+                                        placeholder="搜索..."
+                                        >
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-autocomplete> -->
                                 </div>
                             </el-col>
                         </el-row>
@@ -184,7 +189,7 @@
                                 </el-table-column>
                                 <el-table-column prop="" label="名称">
                                     <template slot-scope="scope">
-                                        <el-button type="text"  >删除</el-button>
+                                        <el-button type="text" @click="hangdel(scope.row)" >删除</el-button>
                                     </template>
                                 </el-table-column>
                           </el-table> 
@@ -434,6 +439,7 @@ import Textbox from '../../base/textbox/textbox'
                 input4:'',
                 radio:'1',
                 searchTableLeft:'',//搜索\
+                searchTableLeft1:'',//搜索\
                 isDisabled:true,
                 searchTableRight:'',//搜索
                 dialogUserConfirm:false,
@@ -545,6 +551,7 @@ import Textbox from '../../base/textbox/textbox'
                 category:[],//商品类目下拉列表数据   
                 tableTree:[],//商品规格下拉列表数据
                 tableData: [],
+                array4:[],
                 addData:{
                     specgroup_MainTable: {
                         "groupId": 1,
@@ -563,9 +570,7 @@ import Textbox from '../../base/textbox/textbox'
                     specgroupContent_ChildTable: [],
                     delete_IDs:[]
                 },
-                // addDatacontent:{
-                    
-                // },
+                issecrh:false,
                 eachPage:10,//每页有多少条信息
                 page:1,//当前页
             }
@@ -609,6 +614,24 @@ import Textbox from '../../base/textbox/textbox'
                     }
                 },
                 deep:true,
+            },
+            searchTableLeft1:function(){
+                let _this=this;
+                
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableLeft1);
+                $.each(_this.checkedTable,function(index,val){
+                    let str=val.specValueName || val.specValueId_SpecValueName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val)
+                    }
+                })
+                _this.LeftWitchPage="searchLeftTable";
+                _this.searchLeftDatas=newJson;
+                _this.showChecked=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).nowData
+                _this.totalItemLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalItem
+                _this.totalPageLeft=_this.paginationUserSearch(newJson,_this.oneItemLeft,_this.pageLeft).TotalPage
             }
         },
         methods:{
@@ -618,9 +641,9 @@ import Textbox from '../../base/textbox/textbox'
                     _this.saveAndsaveadd('Modify',false);//跳转详情页
                 }else if(data == '取消'){
                     if(_this.bottonbox.botton[0].update){
-                        _this.sureDoing();
+                        _this.dialogUserConfirm = true; 
                     }else{
-                       _this.dialogUserConfirm = true; 
+                       _this.sureDoing();
                     }
                     
                 }else if(data == '保存并新增'){
@@ -638,12 +661,18 @@ import Textbox from '../../base/textbox/textbox'
                 _this.$axios.gets('/api/services/app/CategoryManagement/GetAll?SkipCount=0&MaxResultCount=100').then(function(res){
                     _this.category = res.result.items
                 })
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll').then(function(res){
-                    for(let i=0;i<res.result.items.length;i++){
-                        if(res.result.items[i].specgroupEnable == true){
-                            _this.tableTree.push(res.result.items[i]);
-                        }
+                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+                    let concat1 = res.result.totalCount;
+                    if(concat1 > 0){
+                        _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:concat1}).then(function(res){
+                            for(let i=0;i<res.result.items.length;i++){
+                                if(res.result.items[i].specgroupEnable == true){
+                                    _this.tableTree.push(res.result.items[i]);
+                                }
+                            }
+                        })
                     }
+                    
                 })  
             },
             getAllRoleData(){
@@ -714,11 +743,23 @@ import Textbox from '../../base/textbox/textbox'
                 let _this=this;
                 _this.LeftWitchPage="pagination";
                 _this.RightWitchPage="pagination";
+                _this.array4 =_this.selection_nochecked
                 _this.showChecked = _this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
                 _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
                 
             },
+            hangdel(row){
+                let _this=this;
+                issecrh
+                let json=[row]
+                _this.LeftWitchPage="pagination";
+                _this.RightWitchPage="pagination";
+                _this.checkedTable=_this.uniqueArray(_this.checkedTable,json);
+                _this.showNoChecked=_this.pagination(json,[],_this.oneItemRight,_this.pageRight,'right')
+                _this.showChecked=_this.pagination([],json,_this.oneItemLeft,_this.pageLeft,'left')
+            },
             sureDoing(){//信息变动确定
+                let _this = this;
                 _this.$store.state.url=`/specification/specificationOfGoodsList/default`
                 _this.$router.push({path:_this.$store.state.url});
             },
@@ -757,7 +798,10 @@ import Textbox from '../../base/textbox/textbox'
             CancelTree(){
                 let _this=this;
                 _this.dialogTableVisible=false;
-                _this.getAllRoleData();
+                _this.checkedTable=_this.uniqueArray(_this.checkedTable,_this.array4);
+                _this.showNoChecked=_this.pagination(_this.array4,[],_this.oneItemRight,_this.pageRight,'right')
+                _this.showChecked=_this.pagination([],_this.array4,_this.oneItemLeft,_this.pageLeft,'left')
+                _this.dialogTableVisible=false;
             },
             choose(){
                 this.dialogTableVisible = true;
@@ -1079,9 +1123,9 @@ import Textbox from '../../base/textbox/textbox'
 </style>
 
 <style>
-.specificationOfGoodsDetails .dialog_confirm_message .el-dialog__footer .dialog_footer_bt{
+/*.specificationOfGoodsDetails .dialog_confirm_message .el-dialog__footer .dialog_footer_bt{
     width: 100%;
-}
+}*/
 .specificationOfGoodsDetails .error_tips_info{
     margin-left: 20px;
 }

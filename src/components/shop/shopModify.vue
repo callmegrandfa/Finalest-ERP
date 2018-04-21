@@ -179,9 +179,11 @@
                                             :data="ouAr"
                                             :props="selectOuProps"
                                             node-key="id"
-                                            default-expand-all
-                                            ref="tree"
-                                            :filter-node-method="filterNode"
+                                            ref="outree"
+                                            :filter-node-method="ouFilterNode"
+                                            highlight-current
+                                            :render-content="renderContentOu"
+                                            :default-expanded-keys="ouExpandId"
                                             :expand-on-click-node="false"
                                             @node-click="ouNodeClick"></el-tree> 
 
@@ -686,6 +688,7 @@ export default({
                     ouName:'',
                 },
                 ouAr:[],//所属组织下拉框
+                ouExpandId:[],//默认展开第一个树节点
             //-----------------------
 
             //---行政地区树形下拉-----
@@ -737,7 +740,7 @@ export default({
 
             // checkedAr:[],//进来时数据选中的默认框
             //---确认删除-----------------               
-            //dialogDelConfirm:false,//用户删除保存提示信息
+            dialogDelConfirm:false,//用户删除保存提示信息
             //--------------------  
 
             //---信息修改提示框------------
@@ -1070,6 +1073,7 @@ export default({
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 // console.log(res);
                 self.ouAr = res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')               
                 self.loadIcon();
             },function(res){
                 console.log('err'+res)
@@ -1135,6 +1139,38 @@ export default({
             // console.log(data)
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
+        },
+        ouFilterNode(value,data){
+            if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
+        },
+        //---树render-content----------------------------------
+        renderContentOu(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
         },
         ouNodeClick:function(data){
             
@@ -1280,7 +1316,7 @@ export default({
                     //self.contactData.splice(self.whoIndex,1);
                     //self.shopData.shopContacts = self.contactData;
                     self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
-                        //self.open('删除联系人成功','el-icon-circle-check','successERP');
+                        self.open('删除联系人成功','el-icon-circle-check','successERP');
                         //self.dialogDelConfirm = false;
                         self.ifModify = false;
                     },function(res){

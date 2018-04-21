@@ -136,16 +136,36 @@
                     <label><small>*</small>单位</label>
                     <el-select clearable class="unitId"
                     :disabled="!isCategoryIdEmpty"
-                    
+                    @change="getMoreUnitList"
                     @focus="showErrprTips"
                     :class="{redBorder : validation.hasError('product_MainTable.unitId')}"
                     placeholder=""
                     v-model="product_MainTable.unitId">
-                        <el-option 
+                        <!-- <el-option 
                         v-for="item in selectData.unit" 
                         :key="item.id" 
                         :label="item.unitId_UnitName"
                         :value="item.id">
+                        </el-option> -->
+                        <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search_unitId">
+                        </el-input>
+                        <el-tree
+                        :default-expanded-keys="expand_unitId"
+                        :render-content="renderContent_unitId"
+                        :data="selectTree_unitId"
+                        :highlight-current="true"
+                        :props="selectProps_unitId"
+                        node-key="id"
+                        ref="tree"
+                        :filter-node-method="filterNode_unitId"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick_unitId"
+                        >
+                        </el-tree>
+                        <el-option class="select_tree_option" :key="item_unitId.id" :label="item_unitId.unitName" :value="item_unitId.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -304,11 +324,16 @@
                          <el-table :data="productUnit_ChildTable" border style="width: 100%" stripe>
                             
 
-                            <el-table-column prop="unitId" label="单位类型(无)"></el-table-column>
+                            <el-table-column label="单位类型"></el-table-column>
 
-                            <el-table-column prop="unitId" label="单位"></el-table-column>
+                            <el-table-column prop="unitId_UnitName" label="单位">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.$index==0">{{scope.row.unitId_UnitName}}</span>
+                                    <span v-else>{{scope.row.destUnitId_UnitName}}</span>
+                                </template>
+                            </el-table-column>
 
-                            <el-table-column prop="unitId" label="系数(无)"></el-table-column>
+                            <el-table-column prop="factor" label="系数"></el-table-column>
 
                             <el-table-column prop="purchasePrice" label="进货价">
                                 <template slot-scope="scope">
@@ -381,15 +406,17 @@
                 <el-tab-pane label="商品规格" name="goodsSize">
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 商品规格表格 - - - - - - - - - - - - - - - - - - - - -  -->
                         <el-table :data="productSpec_ChildTable" border style="width: 100%" stripe>
-                            
-
-                            <el-table-column prop="groupId" label="规格编码" width="150">
+                            <el-table-column prop="specName" label="规格编码" width="150">
                                 <template slot-scope="scope">
-                                    <span>{{scope.row.groupId}}</span>
+                                    <span>{{scope.row.specName}}</span>
                                     <button class="showGoodsDialog" @click="showGoodsDialog(scope.row)">···</button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="basSpecgroupId" label="规格组" width="150"></el-table-column>
+                            <el-table-column prop="specName" label="规格组" width="150">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.specName}}</span>
+                                </template>
+                            </el-table-column>
                             <el-table-column prop="productId" label="规格名称">
                                 <template slot-scope="scope">
                                     <span class="sizeNameWrapper">
@@ -683,10 +710,8 @@
             <el-col :span="24" class="_body">
                 <el-col :span="6" class="_body_left">
                     <vue-scroll :ops="$store.state.option">
-                        <p>全部</p>
-                        <p>通用尺码</p>
-                        <p> 裤装尺码</p>
-                        <p>童装尺码</p>
+                        <p @click="getDetailSize()">全部</p>
+                        <p v-for="(item,index) in showSizeDialogData" :key="index" @click="getDetailSize(item)">{{item.specgroupName}}</p>
                     </vue-scroll>
                 </el-col>
                 <el-col :span="18" class="_body_right">
@@ -784,6 +809,7 @@ export default {
             detail_message_ifShow:false,
             errorMessage:false,
             // 错误信息提示结束
+//--------------------类目树形---------------------
             search_categoryId:'',//类目树搜索
             selectTree_categoryId:[],//类目树数据
             selectProps_categoryId: {//类目树默认属性
@@ -796,6 +822,20 @@ export default {
                 id:'',
                 categoryName:''
             },
+//--------------------单位树形---------------------
+            search_unitId:'',//类目树搜索
+            selectTree_unitId:[],//类目树数据
+            selectProps_unitId: {//类目树默认属性
+                children: 'children',
+                label: 'unitName',
+                id:'id'
+            },
+            expand_unitId:[],////类目树默认展开节点id
+            item_unitId:{//类目树选中节点
+                id:'',
+                unitName:''
+            },
+
             ifShow:true,
             activeName_one: 'goodsPrice',
             activeName_two: "goodsSize",
@@ -806,7 +846,7 @@ export default {
                 modifiedTime:this.GetDateTime(),//修改人
                 modifiedBy:this.$store.state.name//修改时间
             },//审计信息
-            "CategoryData":{},//当前类目的关联信息
+            "CategoryData":{},//当前类目的关联信息,批次管理，多单位管理，有效期管理
             "product_MainTable":{//商品档案主表
                 'id':0,
                 "groupId": 1,
@@ -955,6 +995,10 @@ export default {
         update:false,
 //---------------商品规格------------------
         chooseSize:false,//dialog选择尺码
+        chooseSizeData:{
+            // id:[{item1},{item2}]
+        },//dialog选择尺码所有对应id规格组数据
+        showSizeDialogData:[],//dialog左侧渲染数据
         innerVisible:false,//内层表格
 //---------------SKU------------------
        
@@ -1038,12 +1082,16 @@ export default {
     },
     created:function(){
         let _this=this;
-          _this.loadTree_categoryId();
+          _this.loadTree_categoryId();//类目树形
+          _this.loadTree_unitId();//单位树形
          _this.getSelectData();
          _this.getDefault();
     },  
      watch: {
       search_categoryId(val) {
+        this.$refs.tree.filter(val);
+      },
+      search_unitId(val) {
         this.$refs.tree.filter(val);
       },
       'product_MainTable.categoryId'(val){//类目值
@@ -1109,18 +1157,18 @@ export default {
                 }
 
             })
-             _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
-                // 单位，多单位
-                if(res.result.totalCount>0){
-                    _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount})
-                    .then(function(resp){
-                        _this.selectData.unit=resp.result.items;
-                    })
-                }else{
-                    _this.selectData.unit=[]
-                }
+            //  _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+            //     // 单位，多单位
+            //     if(res.result.totalCount>0){
+            //         _this.$axios.gets('/api/services/app/UnitConvertManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount})
+            //         .then(function(resp){
+            //             _this.selectData.unit=resp.result.items;
+            //         })
+            //     }else{
+            //         _this.selectData.unit=[]
+            //     }
 
-            })
+            // })
         },
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
@@ -1129,8 +1177,21 @@ export default {
             if (!value) return true;
             return data.categoryName.indexOf(value) !== -1;
         },
-
-        loadTree_categoryId(){
+        filterNode_unitId(value, data) {
+            if (!value) return true;
+            return data.unitName.indexOf(value) !== -1;
+        },
+        loadTree_unitId(){//单位树形
+            let _this=this;
+            _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree')
+            .then(function(res){
+                _this.selectTree_unitId=res.result;
+                // _this.expand_unitId=[1]
+                _this.expand_unitId=_this.defauleExpandTree(res.result,'id')
+            },function(res){
+            })
+        },
+        loadTree_categoryId(){//类目树形
             let _this=this;
             _this.$axios.gets('/api/services/app/CategoryManagement/GetCategoryTree')
             .then(function(res){
@@ -1153,6 +1214,20 @@ export default {
             // }
         // })
             
+        },
+        nodeClick_unitId(data,node,self){
+            let _this=this;
+            _this.item_unitId.id=data.id;
+            _this.item_unitId.unitName=data.unitName;
+            _this.$nextTick(function(){
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,}).click();
+            })
+            // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+            // if($(this).attr('date')==data.id){
+            //     $(this).click()
+            // }
+        // })
         },
         back(){
             this.$store.state.url='/goodsFiles/goodsFilesList/default'
@@ -1268,9 +1343,29 @@ export default {
             _this.CategoryData={}
             if(_this.product_MainTable.categoryId!=''){
                 _this.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:_this.product_MainTable.categoryId})
-                .then(function(res){
+                .then(function(res){//获取唯一码，批次保质期管理checkbox
                     // console.log(res.result)
                     _this.CategoryData=res.result
+                },function(res){
+
+                })
+                 _this.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{categoryID:_this.product_MainTable.categoryId,ItemType:2})
+                .then(function(res){//获取规格
+                    _this.productSpec_ChildTable=res.result
+                },function(res){
+
+                })
+            }
+
+        },
+        getMoreUnitList(){//启用多单位根据单位获取到单位列表
+             let _this=this;
+            _this.productUnit_ChildTable=[]
+            if(_this.product_MainTable.unitId!=''){
+                _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:_this.product_MainTable.unitId})
+                .then(function(res){
+                    // console.log(res)
+                    _this.productUnit_ChildTable=res.result
                 },function(res){
 
                 })
@@ -1279,7 +1374,37 @@ export default {
 //----------------------商品规格------------------
         showGoodsDialog(data){//选中编辑规格组，显示dialog
             let _this=this;
-            _this.chooseSize=true;
+            if(typeof(_this.chooseSizeData[data.itemSourceId])=='undefined'){
+             _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:1})
+                .then(function(resp){
+                    if(resp.result.totalCount>0){
+                        _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:1})
+                        .then(function(res){
+                            _this.chooseSizeData[data.itemSourceId]=res.result.items;
+                            _this.chooseSize=true;
+                            // _this.productUnit_ChildTable=res.result
+                        })
+                    }else{
+                        _this.chooseSizeData[data.itemSourceId]=[];
+                        _this.chooseSize=true;
+                    }
+                    
+                },function(res){
+
+                })
+            }else{
+                _this.chooseSize=true;
+            }
+            _this.showSizeDialogData=_this.chooseSizeData[data.itemSourceId]
+        },
+        getDetailSize(data){//dialog点击左侧规格组获取详细规格
+            let _this=this;
+            console.log(data)
+            // if(data==0){//点击全部
+            //     // /api/services/app/SpecValueManagement/GetSpecId
+            // }else{//非全部
+            //     // /api/services/app/SpecgroupContentManagement/GetListByCondition
+            // }
         },
 //----------------------图片------------------
         fileChange(data){//上传图片
@@ -1290,7 +1415,7 @@ export default {
             && data[0]!=null 
             && typeof(data[0][key])!='undefined'
             && data[0][key]!=null
-            && data[0][key]!=''){
+            && data[0][key]!==''){
                 return [data[0][key]]
             }
         },
@@ -1307,6 +1432,23 @@ export default {
                     <span class="el-tree-node__label" data-id={data.id}>
                     <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
                         {data.categoryName}
+                    </span>
+                );
+            }
+        },
+        renderContent_unitId(h, { node, data, store }){
+             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.unitName}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.unitName}
                     </span>
                 );
             }
