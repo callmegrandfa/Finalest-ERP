@@ -377,23 +377,37 @@
                     let _this = this;
                     _this.$axios.gets("/api/services/app/EmployeeManagement/Get",
                     {id: this.$route.params.id}).then(rsp => {
-                        // console.log(rsp.result);
+                        console.log(rsp.result);
                         for (let val of rsp.result.employeeTypes) {
                             // console.log(val.employeeTypeid,val.employeeTypeidTValue);
                             _this.addData.employeeTypeIds.push(val.employeeTypeid);
                             // console.log(_this.addData.employeeTypeIds);
                         }
-                        _this.addData.employeeCode=rsp.result.employeeCode,
-                        _this.addData.employeeName=rsp.result.employeeName,
-                        _this.addData.ouId=rsp.result.ouId,
-                        _this.addData.mobile=rsp.result.mobile,
-                        _this.addData.deptId=rsp.result.deptId,
-                        _this.addData.sex=rsp.result.sex,
-                        _this.addData.birthday=rsp.result.birthday,
-                        _this.addData.shopId=rsp.result.shopId,
-                        _this.addData.status=rsp.result.status,
-                        _this.addData.remark=rsp.result.remark,
-                        _this.addData.id=rsp.result.id,
+                        _this.addData.employeeCode=rsp.result.employeeCode;
+                        _this.addData.employeeName=rsp.result.employeeName;
+                        _this.addData.ouId=rsp.result.ouId;
+                        _this.addData.mobile=rsp.result.mobile;
+                        if (rsp.result.deptId!=0) {
+                            _this.addData.deptId=rsp.result.deptId
+                        }
+                        if (rsp.result.sex==0) {
+                           _this.addData.sex=null;
+                        }else{
+                            _this.addData.sex=rsp.result.sex;
+                        }
+                        
+                        if (rsp.result.birthday.indexOf('3000'==0)) {
+                            _this.addData.birthday=null;
+                        }else{
+                            _this.addData.birthday=rsp.result.birthday;
+                        }
+
+                        if (rsp.result.shopId!=0) {
+                           _this.addData.shopId=rsp.result.shopId;
+                        }
+                        _this.addData.status=rsp.result.status;
+                        _this.addData.remark=rsp.result.remark;
+                        _this.addData.id=rsp.result.id;
                         // ------审计信息数据
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;

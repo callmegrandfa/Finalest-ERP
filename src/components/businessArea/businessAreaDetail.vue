@@ -419,6 +419,7 @@
                     },
                 _this.validation.reset();
                 // _this.loadTree('ouId',res.result.id)
+                _this.getAreaTree(res.result.id)
                 })
             }else{
                 
@@ -551,7 +552,7 @@
                 }else{
                     _this.selectTree_area=res.result;
                 }
-                
+                console.log(res)
             },function(res){
             })
         },

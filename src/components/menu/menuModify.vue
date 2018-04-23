@@ -543,7 +543,6 @@
             let _this=this;
              _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
-                console.log(res);
                 if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
                     _this.checked=res.result.permissionDtos;
                     _this.CancelChecked=res.result.permissionDtos;
@@ -993,16 +992,18 @@
         check_push_noCheck_FnThis(val){//删除一个关联角色
             let _this=this;
                 let json=[val]
-                if(_this.storeNodeClickData[_this.nowClickNode]){
-                    _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
-                    _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
+                if(_this.storeNodeClickData[val.moduleName]){
+                    _this.storeNodeClickData[val.moduleName].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
+                    _this.storeNodeClickData[val.moduleName].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
 
                     _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
                     _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
                 }
                 _this.checked=_this.uniqueArray(_this.checked,json);
+                
         },
         nodeClick(data){
+            // console.log(data)
             if(data.permissionName==""){
                 let _this=this;
                 let all=data.children;
@@ -1025,10 +1026,6 @@
 
                     _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
                 }
-                
-        
-                
-
                 _this.checkTable=_this.storeNodeClickData[data.displayName].check;
                 _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
             }

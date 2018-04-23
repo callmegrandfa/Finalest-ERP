@@ -216,6 +216,15 @@ const commercialSpecificationModify= ()=>//商品规格平台详情
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
+const specification= ()=>//商品规格组
+    import ('../components/commodityManagement/specification')
+const specificationOfGoodsList= ()=>//商品规格组specification
+    import ('../components/commodityManagement/specificationOfGoodsList') 
+const specificationOfGoodsDetails= ()=>//商品规格组
+    import ('../components/commodityManagement/specificationOfGoodsDetails')
+const specificationOfGoodsModify= ()=>//商品规格组
+    import ('../components/commodityManagement/specificationOfGoodsModify')  
+
  // 职员资料
     const staff = () =>
     import ('../components/staffInfo/staff')
@@ -384,7 +393,7 @@ const routes = [
             },
 
             {
-                path: '/currency',
+                path: '/currency', 
                 component: currency,
                 name: 'currency',
                 redirect: function() { //币种资料
@@ -591,6 +600,19 @@ const routes = [
                 ]
             },
             {
+                path: '/specification',
+                component: specification,
+                name: 'specification',
+                redirect: function() { //商品规格组
+                    return redirectRouter('specification')
+                },
+                children: [
+                    { path: '/specification/specificationOfGoodsList/:id', component: specificationOfGoodsList, name: 'specificationOfGoodsList' }, //商品属性
+                    { path: '/specification/specificationOfGoodsDetails/:id', component: specificationOfGoodsDetails, name: 'specificationOfGoodsDetails' },
+                    { path: '/specification/specificationOfGoodsModify/:id', component: specificationOfGoodsModify, name: 'specificationOfGoodsModify' },
+                ]
+            },
+            {
                 path: '/dictionary',
                 component: dictionary,
                 name: 'dictionary',
@@ -751,7 +773,7 @@ router.beforeEach((to, from, next) => {
         // store.state[store.state[to.name].parent].url=to.fullPath
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
-            // console.log(to.name);
+            console.log(to.name);
             
             if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
 

@@ -1060,6 +1060,11 @@ export default({
                 label: 'ouName',
                 id:'id'
             },
+            selectFinanceProps:{
+                children: 'children',
+                label: 'ouName',
+                id:'id'
+            },
             groupCompany:{
                 value:0,
                 label:""
@@ -2037,6 +2042,15 @@ export default({
                     }
                 });
         },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         add(){
             let _this=this;
             _this.$store.state.url='/OuManage/OuManageDetail/default'

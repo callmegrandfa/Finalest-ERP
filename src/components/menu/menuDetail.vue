@@ -790,9 +790,9 @@
             let _this=this;
             if(!_this.isEdit){
                 let json=[val]
-                if(_this.storeNodeClickData[_this.nowClickNode]){
-                    _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
-                    _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
+                if(_this.storeNodeClickData[val.moduleName]){
+                    _this.storeNodeClickData[val.moduleName].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
+                    _this.storeNodeClickData[val.moduleName].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
 
                     _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
                     _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
