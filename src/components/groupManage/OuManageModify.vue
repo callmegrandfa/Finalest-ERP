@@ -782,13 +782,33 @@
                                     
                                     placeholder=""
                                     >
-                                    <el-option 
+                                     <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="search">
+                                    </el-input>
+                                    <el-tree
+                                    :render-content="renderContent_ouParentid"
+                                    :default-expanded-keys="expand_Ou"
+                                    :data="selectTreeFinance"
+                                    :highlight-current="true"
+                                    :props="selectFinanceProps"
+                                    node-key="id"
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick_ou"
+                                    >
+                                    </el-tree> 
+                                    <el-option v-show="false" v-for="item in selectData.ouParentid" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+                                    <!-- <el-option 
                                     v-for="item in selectData.ouParentid" 
                                     :key="item.id" 
                                     :label="item.ouName" 
                                     :value="item.id">
-                                    </el-option>
-                                   <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+                                    </el-option> -->
                                     </el-select>
                                 </div>
                                 <div class="bgcolor">
@@ -1019,6 +1039,7 @@ export default({
              selectTree:[
             ],
             selectTreeCompany:[],
+            selectTreeFinance:[],
             item_ou:{
                 id:'',
                 ouName:''
@@ -1043,9 +1064,11 @@ export default({
                 value:0,
                 label:""
             },
+          
             test:'', 
             dateRange:[],//有效时间
             companys:1,
+            expand_Ou:[],
             show:true,
             ifShow:true,
             activeName: 'Company',
@@ -1751,12 +1774,21 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
             },function(res){
             })
              _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
             .then(function(res){
                 // console.log(res);
                 _this.selectTreeCompany=res.result;
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
+            },function(res){
+            })
+            _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3})
+            .then(function(res){
+                console.log(res);
+                _this.selectTreeFinance=res.result;
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id');
             },function(res){
             })
         },
