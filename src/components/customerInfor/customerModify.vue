@@ -381,19 +381,19 @@
                         <div class="bgcolor area">
                             <label>行政地区</label>
                             <div class="areaBox">
-                                <el-select v-model="proIDT" class="areaDrop" placeholder="选择省" @change='chooseProvince(proIDT)'>
+                                <el-select v-model="proIDT" class="areaDrop" placeholder="选择省" @change='chooseProvinceT(proIDT)'>
                                     <el-option v-for="item in areaProArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show='false' label='无' :value="provinceValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="cityIdT" class="areaDrop" placeholder="选择市"  @change='chooseCity(cityIdT)'>
+                                <el-select v-model="cityIdT" class="areaDrop" placeholder="选择市"  @change='chooseCityT(cityIdT)'>
                                     <el-option v-for="item in areaCityArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show="false" label="无" :value="cityValue">
                                     </el-option>
                                 </el-select>
-                                <el-select v-model="quIdT" class="areaDrop" placeholder="选择区" @change='chooseDis(quIdT)'>
+                                <el-select v-model="quIdT" class="areaDrop" placeholder="选择区" @change='chooseDisT(quIdT)'>
                                     <el-option v-for="item in areaDisArray" :key="item.id" :label="item.areaName" :value="item.id">
                                     </el-option>
                                     <el-option v-show="false" label="无" :value="areaValue">
@@ -614,35 +614,66 @@
                                 </el-table-column>
 
                                 <el-table-column prop="adAreaLevel1" label="省" width="180">
-                                    <template slot-scope="scope">
+                                    <!-- <template slot-scope="scope">
                                         <el-select v-model="scope.row.proId" class="areaDrop" placeholder="选择省" @change='chooseProvince(scope.row.proId)'>
                                             <el-option v-for="item in areaProArray1" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="provinceValue">
                                             </el-option>
                                         </el-select>   
+                                    </template> -->
+                                    <template  slot-scope="scope">
+                                            <el-autocomplete
+                                            class="inline-input"
+                                            value-key="areaName"
+                                            v-model="scope.row.adAreaLevel1"
+                                            :fetch-suggestions="querySearch"
+                                            placeholder="选择省"
+                                            @select="handleSelect"
+                                            ></el-autocomplete>
                                     </template>
                                 </el-table-column>
 
                                 <el-table-column prop="adAreaLevel2" label="市" width="180">
-                                    <template slot-scope="scope">
+                                    <!-- <template slot-scope="scope">
                                         <el-select v-model="scope.row.cityId" class="areaDrop" placeholder="选择市" @change='chooseCity(scope.row.cityId)'>
                                             <el-option v-for="item in areaCityArray2" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="cityValue">
                                             </el-option>
                                         </el-select>
+                                    </template> -->
+                                    <template  slot-scope="scope">
+                                            <el-autocomplete
+                                            class="inline-input"
+                                            value-key="areaName"
+                                            v-model="scope.row.adAreaLevel2"
+                                            :fetch-suggestions="querySearchCity"
+                                            placeholder="选择市"
+                                            @select="handleSelectCity"
+                                            ></el-autocomplete>
                                     </template>
+
                                 </el-table-column>
 
                                 <el-table-column prop="adAreaLevel3" label="区" width="180">
-                                    <template slot-scope="scope">
+                                    <!-- <template slot-scope="scope">
                                         <el-select v-model="scope.row.disId" class="areaDrop" placeholder="选择区" @change='chooseDis(scope.row.disId)'>
                                             <el-option v-for="item in areaDisArray3" :key="item.id" :label="item.areaName" :value="item.id">
                                             </el-option>
                                             <el-option v-show="false" label="无" :value="areaValue">
                                             </el-option>
                                         </el-select>
+                                    </template> -->
+                                    <template  slot-scope="scope">
+                                            <el-autocomplete
+                                            class="inline-input"
+                                            value-key="areaName"
+                                            v-model="scope.row.adAreaLevel3"
+                                            :fetch-suggestions="querySearchDis"
+                                            placeholder="选择市"
+                                            @select="handleSelectDis"
+                                            ></el-autocomplete>
                                     </template>
                                 </el-table-column>
 
@@ -656,7 +687,7 @@
                                     </template>
                                 </el-table-column>
 
-                                <el-table-column prop="contactPerson" label="联系电话" width="180">
+                                <el-table-column prop="phone" label="联系电话" width="180">
                                     <template slot-scope="scope">
                                         <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
@@ -764,7 +795,8 @@
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker v-model="customerData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-input v-model="customerData.createdTime" :disabled="true"></el-input>
+                        <!-- <el-date-picker v-model="customerData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker> -->
                     </div>
 
                     <div class="bgcolor">
@@ -774,7 +806,8 @@
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker v-model="customerData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-input v-model="customerData.modifiedTime" :disabled="true"></el-input>                       
+                        <!-- <el-date-picker v-model="customerData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker> -->
                     </div>
                     
                 </div>                                  
@@ -1054,6 +1087,7 @@ export default({
                 areaProArray1:[],//行政地区(省)
                 areaCityArray2:[],//行政地区(市)
                 areaDisArray3:[],//行政地区(区)
+
             //-----------------------
 
             //---业务地区树形下拉-----
@@ -1324,10 +1358,12 @@ export default({
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
                     self.createOuParams.contactId = self.$route.params.id;
-                    self.proIDT=self.customerData.adAreaId_AreaFullPathName.split(">")[0]
-                    self.cityIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[1]
-                    self.quIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[2]
-
+                    self.proIDT=self.customerData.adAreaId_AreaFullPathName.split(">")[0];
+                    self.cityIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[1];
+                    self.quIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[2];
+                    //审计信息时间
+                    self.customerData.createdTime=self.resdatetime(new Date(self.customerData.createdTime));
+                    self.customerData.modifiedTime=self.resdatetime(new Date(self.customerData.modifiedTime));
                     //银行数据
                     self.bankData = res.result.contactBanks_ChildTable;
                     self.InitBankData = self.deepCopy(res.result);
@@ -1407,6 +1443,45 @@ export default({
 
             }
         },
+        querySearch(queryString,cb) {
+            let _this=this;
+            var results = queryString ? _this.areaProArray1.filter(_this.createFilter(queryString)) : _this.areaProArray1;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (areaPro) => {     
+            return (areaPro.areaName.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        handleSelect(item) {
+            this.chooseProvince(item.id);
+        },
+        querySearchCity(queryString,cb) {
+            let _this=this;
+            var results = queryString ? _this.areaCityArray2.filter(_this.createFilter(queryString)) : _this.areaCityArray2;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+        handleSelectCity(item) {
+            this.chooseCity(item.id)
+        }, 
+        querySearchDis(queryString,cb) {
+            let _this=this;
+            var results = queryString ? _this.areaDisArray3.filter(_this.createFilter(queryString)) : _this.areaDisArray3;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },    
+        handleSelectDis(item) {
+            //console.log(item.id);
+        },            
+
+
+
+
+        resdatetime:function(resdatetime){
+            return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
+        },        
         // loadBankData:function(){//银行数据
         //     let self = this;
         //     self.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
@@ -1541,12 +1616,41 @@ export default({
         //------------------------------------------------------------------
 
         //---选择省市区-----------------------------------------------
-        chooseProvince:function(res){
+        chooseProvinceT:function(res){
             let self = this;
             console.log(res)
             self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
                 // console.log(res);
                 self.areaCityArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            });
+
+        },
+        chooseCityT:function(res){
+            let self = this;
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
+                // console.log(res);
+                self.areaDisArray = res.result;
+                // self.loadIcon();
+            },function(res){
+                console.log('err'+res)
+            })
+        },
+        chooseDisT:function(res){
+            //console.log(res)
+            let self = this;
+            self.customerData.adAreaId=res;
+            // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+        },
+        //-----------------------------------------------------------
+        //送货地址选择省市区-----------------------------------------
+        chooseProvince:function(res){
+            let self = this;
+            console.log(res)
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
+                // console.log(res);
                 self.areaCityArray2 = res.result;
                 // self.loadIcon();
             },function(res){
@@ -1558,7 +1662,6 @@ export default({
             let self = this;
             self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:res}).then(function(res){
                 // console.log(res);
-                self.areaDisArray = res.result;
                 self.areaDisArray3 = res.result;
                 // self.loadIcon();
             },function(res){
@@ -1570,8 +1673,7 @@ export default({
             let self = this;
             self.customerData.adAreaId=res;
             // console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
-        },
-        //-----------------------------------------------------------
+        },        
 
         //---树-------------------------------------------------------------
         loadIcon(){
@@ -1736,7 +1838,7 @@ export default({
                         contactAddress_ChildTable:self.addressData,
                         contactOu_ChildTable:self.ouData,
                     }
-                    //console.log(submitData)
+                    console.log(submitData)
                     self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
                         self.open('修改成功','el-icon-circle-check','successERP');
                         self.ifModify = false;
@@ -1960,7 +2062,7 @@ export default({
                     },function(res){
                         //self.open('删除银行资料失败','el-icon-error','faildERP');
                         //self.dialogDelConfirm = false;
-                        //self.errorMessage=true;
+                        self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
@@ -1980,7 +2082,7 @@ export default({
                     },function(res){
                         //self.open('删除地址资料失败','el-icon-error','faildERP');
                         //self.dialogDelConfirm = false;
-                        //self.errorMessage=true;
+                        self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         
                     })
@@ -2000,8 +2102,8 @@ export default({
                         // self.dialogDelConfirm = false;
                     },function(res){
                         // self.dialogDelConfirm = false;
-                        // self.errorMessage=true;
-                        // self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
                 }else{
                     // self.ouData.splice(self.whoIndex,1);
@@ -2039,7 +2141,7 @@ export default({
                     //self.dialogDelConfirm = false;
                 },function(res){
                     // self.dialogDelConfirm = false;
-                    // self.errorMessage = true;
+                    self.errorMessage = true;
                     self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                 })    
             }
