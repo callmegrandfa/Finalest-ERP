@@ -615,17 +615,8 @@ export default({
             },
 
 // -------------分配组织-------------------
-
-            nodeCheckTypes:[{//客户性质
-                value:1,
-                label: '包含所有下级'
-            }, {
-                value:2,
-                label: '只包含当前选项'
-            }],
-            nodeCheckType:1, 
             dialogOu:false,
-            storeCheckOu:[],
+            // storeCheckOu:[],
             allOuLength:0,//所有数据长度，判断是否全选
 //-------------tree right---------------
             ouTreeDataRight:[],//
@@ -638,16 +629,6 @@ export default({
             checkAllOu:false,//全选
             filterTextOu:'',//搜索
             addOu:'default',
-//-------------tree left---------------
-            ouTreeDataLeft:[],//
-            ouDefaultPropsLeft:{
-                children: 'children',
-                label: 'ouName',
-                id:'id'
-            },
-//-------------穿梭按钮-----------
-            fromOuRight:true,
-            fromOuLeft:true,
 //-------------table--------------    
             searchTableOu:'',//搜索框值       
             ouCheckAll:[],//分配组织数据
