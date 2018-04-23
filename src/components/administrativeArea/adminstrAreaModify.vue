@@ -101,7 +101,7 @@
                 <el-col :span="24">
                     <div class="bgMarginAuto">
                         <div class="bgcolor bgLongWidth">
-                        <label><small>*</small>上级地区</label>
+                        <label><small></small>上级地区</label>
                             <el-select @change="isUpdate" filterable  
                             :class="{redBorder : validation.hasError('addData.areaParentId')}"
                             class="areaParentId" 
@@ -273,7 +273,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -420,21 +420,22 @@
                 _this.$axios
                     .gets("/api/services/app/AdAreaManagement/Get", {id:this.$route.params.id})
                     .then(rsp => {
-                        console.log(rsp.result);
+                        // console.log(rsp.result);
                         _this.addData=rsp.result;
                         // _this.addData.areaParentId = rsp.result.areaParentId;
+                        // ------------审计信息
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
                         _this.timeData.modifiedTime=rsp.result.modifiedTime;
 
-                            _this.treeNode.Id=rsp.result.id;
+                            _this.treeNode.Id=rsp.result.areaParentId;
                             _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
-                            // console.log(_this.treeNode);
-                            
                         // if (rsp.result.areaParentId==0) {
+                        //     console.log("hahah123");
+                            
                         //     _this.treeNode.Id=rsp.result.id;
-                        //     _this.treeNode.areaName=rsp.result.areaParentId_AreaName;
+                        //     _this.treeNode.areaName='';
                         // }else{
                         //     _this.$axios.gets("/api/services/app/AdAreaManagement/Get",
                         //     {id: rsp.result.areaParentId})
@@ -708,9 +709,14 @@
             },
             nodeClick(data,node,self){// 节点被点击时的回调
                 let _this=this;
+                if (_this.addData.id==data.id) {
+                    alert("上级地区不能为地区本身")
+                }else{
+                    _this.treeNode.Id=data.id;
+                    _this.treeNode.areaName=data.areaName;
+                }
                     //  console.log(data);
-                _this.treeNode.Id=data.id;
-                _this.treeNode.areaName=data.areaName;
+               
                 // _this.$nextTick(function(){
                 //         $('#adminStrModify_confirmSelect').click()
                 // })

@@ -128,7 +128,8 @@
                         <!-- <el-option v-show="false" :key="item.id" :label="item.ouName" :value="item.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.OUType" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -148,6 +149,7 @@
                     v-model="addData.userType">
                         <el-option v-for="item in selectData.UserType" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.userType') }}</div>
@@ -167,6 +169,7 @@
                     v-model="addData.languageId">
                         <el-option v-for="item in selectData.languageId" :key="item.id" :label="item.displayName" :value="item.id">
                         </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.languageId') }}</div>
@@ -314,13 +317,11 @@
                             </el-table>   
                         </el-col>
                         <el-col :span="24" class="transfer_footer">
-                            <el-col :span="18">
+                            <div style="float:right">
                                 <span>共{{totalPageLeft}}页</span>
-                            </el-col>
-                            <el-col :span="6">
                                 <el-button class="el_transfer" :disabled="leftDownBtn" @click="pageDownLeft" type="primary" icon="el-icon-arrow-left" round></el-button>
                                 <el-button class="el_transfer" :disabled="leftAddBtn" @click="pageAddLeft" type="primary" icon="el-icon-arrow-right" round></el-button>
-                            </el-col>
+                            </div>
                         </el-col>
                 </el-col>
                 <el-col :span="2" class="transfer_btns">
@@ -359,13 +360,11 @@
                         
                     </el-col>
                     <el-col :span="24" class="transfer_footer">
-                        <el-col :span="18">
+                        <div style="float:right">
                             <span>共{{totalPageRight}}页</span>
-                        </el-col>
-                        <el-col :span="6">
                             <el-button class="el_transfer" :disabled="rightDownBtn" @click="pageDownRight" type="primary" icon="el-icon-arrow-left" round></el-button>
                             <el-button class="el_transfer" :disabled="rightAddBtn" @click="pageAddRight" type="primary" icon="el-icon-arrow-right" round></el-button>
-                        </el-col>
+                        </div>
                     </el-col>
                 </el-col>
         </el-col>
@@ -425,7 +424,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -446,7 +445,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -482,10 +481,15 @@
         // 错误信息提示结束
         dialogUserConfirm:false,//信息更改提示控制
         choseDoing:'',//存储点击按钮判断信息
+        title:'',//弹出对话框的标题
         search:'',
         item:{
             id:'',
             ouName:'',
+        },
+        item_area_no:{
+        id:0,
+        ouName:' '
         },
         selectTree:[
         ],
@@ -646,7 +650,7 @@
                         _this.ifModify=true
                     }
                 }else{
-                    _this.ifModify=false;
+                    _this.ifModify=true;
                 }
             },
             deep:true,
@@ -806,6 +810,7 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -815,12 +820,14 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -930,7 +937,7 @@
             .then(function(res){
                 _this.dialogUserConfirm=false;
                 _this.open('删除成功','el-icon-circle-check','successERP');
-                _this.add();
+                _this.back();
             },function(res){
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;

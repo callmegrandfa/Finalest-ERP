@@ -5,7 +5,7 @@
          <el-col :span="24">
             <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>      
             <button class="erp_bt bt_save" plain @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-            <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+            <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
             <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
             <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -251,11 +251,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_ouParentid"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
@@ -265,7 +265,8 @@
                         <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
                         </el-option> -->
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
-                            </el-option>
+                        </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -284,6 +285,7 @@
                         :label="item.itemName" 
                         :value="item.itemValue">
                         </el-option>
+                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -337,11 +339,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_companyOuId"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
                         node-key="id"
-                        default-expand-all
                         ref="trees"
                         :filter-node-method="filterNode1"
                         :expand-on-click-node="false"
@@ -482,6 +484,7 @@
                                     value=0 
                                     >
                                     </el-option> -->
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                                 </el-select>
                             </div>
                             <div class="bgcolor">
@@ -765,16 +768,39 @@
                                     v-model="basBusiness.stmOuId"
                                     :class="{redBorder : validation.hasError('basBusiness.stmOuId')}"
                                     @focus="showErrprTips"
-                                    
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                   <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="search">
+                                    </el-input>
+                                    <el-tree
+                                    :render-content="renderContent_ouParentid"
+                                    :default-expanded-keys="expand_Ou"
+                                    :data="selectTreeFinance"
+                                    :highlight-current="true"
+                                    :props="selectFinanceProps"
+                                    node-key="id"
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick_ou"
+                                    >
+                                    </el-tree> 
+                                    <el-option v-show="false" v-for="item in selectData.ouParentid" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+
+
+                                    <!-- <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option> -->
                                     </el-select>
+                                    
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
@@ -960,7 +986,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -997,22 +1023,33 @@ export default({
              selectTree:[
             ],
             selectTreeCompany:[],
+            selectTreeFinance:[],
             item_ou:{
                 id:'',
                 ouName:''
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
             selectProps: {
                 children: 'children',
                 label: 'ouName',
                 id:'id'
             },
             selectPropsCompany:{
-                 children: 'children',
+                children: 'children',
                 label: 'ouName',
                 id:'id'
             },
-             test:'',   
+            selectFinanceProps:{
+                children: 'children',
+                label: 'ouName',
+                id:'id'
+            },
+            test:'',   
             companys:1,
+            expand_Ou:[],
             show:true,
             ifShow:true,
             activeName: 'Company',
@@ -1026,10 +1063,10 @@ export default({
                 "ouCode": "",
                 "ouName": "",
                 "ouFullname": "",
-                "ouParentid": "",//整数
+                "ouParentid": 0,//整数
                 "accCchemeId": "",//整数
                 "accStartMonth": "",
-                "baseCurrencyId": "",//整数
+                "baseCurrencyId": 0,//整数
                 "companyOuId": "",//整数
                 "contactPerson": "",
                 "phone": "",
@@ -1080,7 +1117,7 @@ export default({
             },
             dateRange:[],//有效时间
             basCompany:{//其他信息
-                "ouParentid": "",//整数
+                "ouParentid": 0,//整数
                 "legalPerson": "",
                 "status": 1,//整数
                 "isGroupCompany": false,
@@ -1105,7 +1142,7 @@ export default({
                 "remark": ""
             },
             basBusiness: {
-                "ouParentid": '',
+                "ouParentid": 0,
                 "stmOuId": '',
                 "status": 1
             },
@@ -1484,7 +1521,8 @@ export default({
     created:function(){
         let _this=this;
          _this.loadTree();
-          _this.loadTreeCompany();
+         _this.loadTreeCompany();
+         _this.loadTreeFinance();
          _this.getSelectData();
          _this.getDefault();
     },  
@@ -1578,7 +1616,7 @@ export default({
                         _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间方案 
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
                         _this.firstModify=false;
-                         _this.ifModify=false;
+                        _this.ifModify=false;
                     // }
                 })
                
@@ -1682,7 +1720,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
             },function(res){
             })
         },
@@ -1693,21 +1731,18 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            _this.loadIcon();
         },function(res){
         })
     },
-    loadIcon(){
+      loadTreeFinance(){
         let _this=this;
-        _this.$nextTick(function () {
-            $('.preNode').remove();   
-            $('.el-tree-node__label').each(function(){
-                if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                    $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                }else{
-                    $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                }
-            })
+        _this.treeLoading=true;
+        _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3})
+        .then(function(res){
+            console.log(res);
+            _this.selectTreeFinance=res.result;
+            _this.expand_Ou=_this.defauleExpandTree(res.result,'id');
+        },function(res){
         })
     },
          nodeClick_ou(data,node,self){
@@ -1834,9 +1869,12 @@ export default({
                     // _this.addData.basBusiness=_this.basBusiness;
                     // _this.addData.basFinance=_this.basFinance;
                     _this.$axios.posts('/api/services/app/OuManagement/Create',_this.addData).then(function(res){
+                        console.log(res)
                         _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1910,7 +1948,7 @@ export default({
                 "ouTypes":[1,3],//组织职能
             };
             _this.basCompany={//其他信息
-                "ouParentid": "",//整数
+                "ouParentid": '',//整数
                 "legalPerson": "",
                 "status": 1,//整数
                 "isGroupCompany": false,
@@ -1965,6 +2003,9 @@ export default({
                         _this.$store.state.url='/OuManage/OuManageDetail/default'
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
+                        _this.clearData();
+                        _this.firstModify=false;
+                        _this.ifModify=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true;
@@ -1972,6 +2013,15 @@ export default({
                 }
             });    
         },
+          defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         renderContent_companyOuId(h, { node, data, store }){
                 
             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){

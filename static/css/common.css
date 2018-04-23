@@ -1459,6 +1459,7 @@ color:#f66;
 }
 .transfer_footer {
   text-align: right;
+  padding-right: 10px;
 }
 .transfer_footer .el_transfer.el-button.is-round{
   border-radius: 10%;

@@ -4,7 +4,7 @@
             <el-col :span="24">
               <button @click="isBack" class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button>
               <button @click="save" class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-              <button @click="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
+              <button @click="isBack" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
               <button plain @click="saveAdd" class="erp_bt bt_saveAdd"><div class="btImg"><img src="../../../static/image/common/bt_saveAdd.png"></div><span class="btDetail">保存并新增</span></button>
               <button class="erp_fb_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
               <button class="erp_fb_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -171,31 +171,34 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.status') }}</div>
                 </div>    
             </el-col>
-            
-            <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
-                        <label>创建人</label>
-                        <el-input 
-                        disabled
-                        ></el-input>
-                    </div>
-                </div>    
-            </el-col>
-            
-            <el-col :span="24">
-                <div class="bgMarginAuto">
-                    <div class="bgcolor bgLongWidth">
+            <el-col :span="22" class="auditInformation getPadding">
+                <h4 class="h4">审计信息</h4>
+                <div>
+                    <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled="disabled"></el-input></div>
+                    <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker
-                        type="date"
-                        disabled
+                        <el-date-picker 
+                        v-model="auditInformation.createdTime" 
+                        type="date" 
                         format="yyyy-MM-dd HH:mm:ss"
-                        value-format="yyyy-MM-dd HH:mm:ss">
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
                         </el-date-picker>
                     </div>
-                </div>    
+                    <div class="bgcolor"><label>修改人</label><el-input v-model="auditInformation.modifiedBy" disabled="disabled"></el-input></div>
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-date-picker 
+                        v-model="auditInformation.modifiedTime" 
+                        type="date" 
+                        format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss" 
+                        disabled>
+                        </el-date-picker>
+                    </div>
+                </div>                                   
             </el-col>
+            
       </el-row>
       <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -315,6 +318,12 @@
             details:'',
             message:'',
         },
+        auditInformation:{//审计信息
+        createdTime:this.GetDateTime(),//创建时间
+        createdBy:this.$store.state.name,//创建人
+        modifiedTime:this.GetDateTime(),//修改人
+        modifiedBy:this.$store.state.name//修改时间
+         },
 //----------按钮操作--------------
         choseDoing:'',//存储点击按钮判断信息
         dialogUserConfirm:false,//信息更改提示控制
@@ -410,6 +419,7 @@
                     },
                 _this.validation.reset();
                 // _this.loadTree('ouId',res.result.id)
+                _this.getAreaTree(res.result.id)
                 })
             }else{
                 
@@ -432,6 +442,23 @@
                 _this.getAreaTree(parseInt(_this.$route.params.id.split(',')[1]))
                 _this.validation.reset();
             }
+        },
+          GetDateTime: function () {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
         },
         getSelectData(){
             let _this=this;
@@ -525,7 +552,7 @@
                 }else{
                     _this.selectTree_area=res.result;
                 }
-                
+                console.log(res)
             },function(res){
             })
         },
@@ -671,6 +698,7 @@
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.$store.state.url='/businessArea/businessAreaDetail/default'
                         _this.$router.push({path:_this.$store.state.url})
+                        _this.Cancel();
                     },function(res){   
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                         _this.errorMessage=true; 
@@ -730,6 +758,9 @@
  .businessAreaDetail .el-row{
     background-color: #fff;
   }
+  .businessAreaDetail  .getPadding{
+     padding: 0 10px;
+ }
  .businessAreaDetail .el-row:first-child{
    padding: 7px 0;
    border-bottom: 1px solid #e4e4e4;

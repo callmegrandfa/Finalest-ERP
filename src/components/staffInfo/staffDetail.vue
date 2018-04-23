@@ -475,6 +475,8 @@
                             $('.tipsWrapper').css({display:'none'})
                             _this.$axios.posts('/api/services/app/EmployeeManagement/Create',_this.addData).then(
                                 rsp=>{
+                                    console.log(rsp);
+                                    
                                     _this.addData.id=rsp.result.id;
                                     _this.$store.state.url='/staff/staffModify/'+rsp.result.id
                                     _this.$router.push({path:_this.$store.state.url})

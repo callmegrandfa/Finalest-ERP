@@ -78,7 +78,7 @@ export default new vuex.Store({
         accountList:{ name: 'accountList', url: '/account/accountList/:id', parent: 'account' } ,
         accountDetail:{ name: 'accountDetail', url: '/account/accountDetail/:id', parent: 'account' } ,
 
-        currency:{ name: 'currency', url: '/currency/currencyList/:id', parent: 'currency', default: '/customer/currencyList/:id' } , //币种管理
+        currency: { name: 'currency', url: '/currency/currencyList/:id', parent: 'currency', default: '/currency/currencyList/:id' } , //币种管理
         currencyList:{ name: 'currencyList', url: '/currency/currencyList/:id', parent: 'currency' } ,
 
         commodityBrand:{name: 'commodityBrand', url: '/commodityBrand/:id', parent: 'commodityBrand', default: '/commodityBrand/:id' },//商品品牌
@@ -119,6 +119,7 @@ export default new vuex.Store({
         specification:{ name: 'specification', url: '/specification/specificationOfGoodsList/:id', parent: 'specification', default: '/specification/specificationOfGoodsList/:id' } , //商品规格组
         specificationOfGoodsList:{ name: 'specificationOfGoodsList', url: '/specification/specificationOfGoodsList/:id', parent: 'specification' } ,
         specificationOfGoodsDetails:{ name: 'specificationOfGoodsDetails', url: '/specification/specificationOfGoodsDetails/:id', parent: 'specification' } ,
+        specificationOfGoodsModify:{ name: 'specificationOfGoodsModify', url: '/specification/specificationOfGoodsModify/:id', parent: 'specification' } ,
 
         tenant:{ name: 'tenant', url: '/tenant/tenantManagement/:id', parent: 'tenant', default: '/tenant/tenantManagement/:id' } , //租户管理
         tenantManagement:{ name: 'tenantManagement', url: '/tenant/tenantManagement/:id', parent: 'tenant' } ,

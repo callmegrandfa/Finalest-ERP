@@ -74,6 +74,7 @@
                             </el-option> -->
                             <el-option v-show="false"  v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.ouId') }}</div>
@@ -155,7 +156,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -176,7 +177,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -203,6 +204,7 @@
         saveSuccess:false,
         firstModify:false,
         ifModify:false,
+        title:"",
          // 错误信息提示开始
         detail_message_ifShow:false,
         errorMessage:false,
@@ -212,6 +214,10 @@
         item_ou:{
             id:"",
             ouName:""
+        },
+        item_area_no:{
+            id:0,
+            ouName:' '
         },
         selectTree_ou:[
         ],
@@ -385,6 +391,7 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                 _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -394,12 +401,14 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除？'
             _this.choseDoing='deleteThis'
 
         },
@@ -421,6 +430,21 @@
                 this.getData();
                 this.firstModify=false;
                 this.ifModify=false;
+        },
+         getErrorMessage(message,details,validationErrors){
+            let _this=this;
+            _this.response.message='';
+            _this.response.details='';
+            _this.response.validationErrors=[];
+            if(details!=null && details){
+                _this.response.details=details;
+            }
+            if(message!=null && message){
+                _this.response.message=message;
+            }
+            if(message!=null && message){
+                _this.response.validationErrors=validationErrors;
+            }
         },
         back(row){
             this.$store.state.url='/userGroup/userGroupList/default'

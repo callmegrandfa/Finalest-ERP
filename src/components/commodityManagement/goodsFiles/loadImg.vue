@@ -3,14 +3,8 @@
       <div class="upload_tittle">{{tittle}}</div>
       <div class="upload_body">
         <div class="upload_warp_img_div">
-            <!-- <div class="upload_warp_img_div_top" v-show="chooseImg">
-              <div class="upload_warp_img_div_text">
-                {{file.name}}
-              </div>
-              <img src="../../../../static/image/goodsFiles/del.png" class="upload_warp_img_div_del" @click="fileDel()">
-            </div> -->
             <img v-show="chooseImg" :src="file.src" @click="fileDel()">
-            <img v-show="!chooseImg" src="../../../../static/image/goodsFiles/upoad.png" @click="fileDel()">
+            <img v-show="!chooseImg" src="../../../../static/image/goodsFiles/upoad.png">
         </div>
       </div>
       <div class="upload_bt" @click="fileClick">上传</div>
@@ -69,7 +63,7 @@
             this.fileAdd(files[i]);
           } else {
             //文件夹处理
-            this.folders(fileList.items[i]);
+            // this.folders(fileList.items[i]);
           }
         }
       },
@@ -100,9 +94,9 @@
           let _this=this;
         // if (this.limit !== undefined) this.limit--;
         // if (this.limit !== undefined && this.limit < 0) return;
-        if(_this.file=={}){
-            return false
-        }
+        // if(_this.file=={}){
+        //     return false
+        // }
         //总大小
         // this.size = this.size + file.size;
         //判断是否为图片文件
@@ -207,7 +201,6 @@
   height: 99px;
   width: 135px;
   background-color: #fff;
-  border-right: 1px solid #f1f4f7;
 }
   .upload_warp_img_div {
     position: relative;
@@ -269,6 +262,7 @@
   
 
   .upload_img {
+    border-right: 1px solid #f1f4f7;
     float: left;
     width: 135px;
     height: 170px;

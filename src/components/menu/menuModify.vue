@@ -53,6 +53,7 @@
                         v-model="addData.systemId">
                             <el-option v-for="item in selectData.systemId" :key="item.id" :label="item.systemName" :value="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.systemId') }}</div>
@@ -91,6 +92,7 @@
                             </el-option> -->
                             <el-option  class="select_tree_option" v-for="item in selectData.menu" :key="item.id" :label="item.moduleName" :value="item.id" :date="item.id">
                             </el-option>
+                            <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                         </el-select>
                     </div>
                     <div class="error_tips_info">{{ validation.firstError('addData.moduleParentId') }}</div>
@@ -198,13 +200,26 @@
                     <div class="bgcolor"><label>创建人</label><el-input v-model="auditInformation.createdBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-input v-model="auditInformation.createdTime" disabled></el-input>
-                    
+                          <el-date-picker
+                            v-model="auditInformation.createdTime"
+                            type="date"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            disabled
+                            placeholder="">
+                         </el-date-picker>
                     </div>
                     <div class="bgcolor"><label>修改人</label><el-input  v-model="auditInformation.modifiedBy" disabled></el-input></div>
                     <div class="bgcolor">
                         <label>修改时间</label> 
-                    <el-input v-model="auditInformation.modifiedTime" disabled></el-input>
+                        <el-date-picker
+                            v-model="auditInformation.modifiedTime"
+                            type="date"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            disabled
+                            placeholder="">
+                         </el-date-picker>
                     </div>
                 </div>                                  
             </el-col>
@@ -305,7 +320,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-question"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                    <p class="dialog_font dialog_body_message">{{title}}</p>
                 </el-col>
             </el-col>
             
@@ -326,7 +341,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
@@ -392,6 +407,10 @@
                 id:"",
                 moduleName:""
             },
+            item_area_no:{
+                id:0,
+                ouName:' '
+                },
             selectTree:[
             ],
             selectProps: {
@@ -410,6 +429,7 @@
                 menu:[],//菜单
                 systemId:[],//子系统
             },
+            title:'',
             response:{
                 details:'',
                 message:'',
@@ -512,7 +532,7 @@
                         _this.ifModify=true
                     }
                 }else{
-                    _this.ifModify=false;
+                    _this.ifModify=true;
                 }
             },
             deep:true,
@@ -523,7 +543,6 @@
             let _this=this;
              _this.$axios.gets('/api/services/app/ModuleManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
-                console.log(res);
                 if(res.result.permissionDtos!=null&&res.result.permissionDtos.length>0){
                     _this.checked=res.result.permissionDtos;
                     _this.CancelChecked=res.result.permissionDtos;
@@ -723,6 +742,7 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='back'
             }else{
                 _this.back()
@@ -732,12 +752,14 @@
             let _this=this;
             if(_this.ifModify){
                 _this.dialogUserConfirm=true;
+                _this.title='此操作将忽略您的更改，是否继续？'
                 _this.choseDoing='Cancel'
             }
         },
         isDeleteThis(){
             let _this=this;
             _this.dialogUserConfirm=true;
+            _this.title='确认删除?'
             _this.choseDoing='deleteThis'
 
         },
@@ -852,12 +874,12 @@
             .then(function(res){
                 _this.dialogUserConfirm=false;
                 _this.open('删除成功','el-icon-circle-check','successERP');
-                _this.add();
+                _this.back();
             },function(res){
                 if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
                 _this.dialogUserConfirm=false;
                 _this.errorMessage=true;
-                _this.open('删除失败','el-icon-error','faildERP');
+                // _this.open('删除失败','el-icon-error','faildERP');
             })
         },
         saveAdd(){
@@ -970,16 +992,18 @@
         check_push_noCheck_FnThis(val){//删除一个关联角色
             let _this=this;
                 let json=[val]
-                if(_this.storeNodeClickData[_this.nowClickNode]){
-                    _this.storeNodeClickData[_this.nowClickNode].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
-                    _this.storeNodeClickData[_this.nowClickNode].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
+                if(_this.storeNodeClickData[val.moduleName]){
+                    _this.storeNodeClickData[val.moduleName].check=_this.uniqueArray(_this.storeNodeClickData[_this.nowClickNode].check,json);
+                    _this.storeNodeClickData[val.moduleName].nochecked=json.concat(_this.storeNodeClickData[_this.nowClickNode].nochecked)
 
                     _this.checkTable=_this.storeNodeClickData[_this.nowClickNode].check
                     _this.nocheckTable=_this.storeNodeClickData[_this.nowClickNode].nochecked
                 }
                 _this.checked=_this.uniqueArray(_this.checked,json);
+                
         },
         nodeClick(data){
+            // console.log(data)
             if(data.permissionName==""){
                 let _this=this;
                 let all=data.children;
@@ -1002,10 +1026,6 @@
 
                     _this.storeNodeClickData[data.displayName]={all:all,check:checkClick,nochecked:nocheckedClick}
                 }
-                
-        
-                
-
                 _this.checkTable=_this.storeNodeClickData[data.displayName].check;
                 _this.nocheckTable=_this.storeNodeClickData[data.displayName].nochecked;
             }
@@ -1093,6 +1113,9 @@
     margin-bottom: 10px;
     margin-top: -10px;
 }
+ .menuModify .getPadding{
+      padding: 0 10px;
+  }
 .menu_box{
     display: none;
 }

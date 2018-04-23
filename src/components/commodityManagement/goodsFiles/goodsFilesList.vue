@@ -12,7 +12,7 @@
                     </el-col>
                 </el-row>
                 <div class="mt20 bgcolor smallBgcolor"><label>商品编码</label><el-input v-model="searchData.ProductCode" placeholder=""></el-input></div>
-                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.ProductName" placeholder=""></el-input></div><div class="bgcolor smallBgcolor"><label>助记码</label><el-input v-model="searchData.displayName" placeholder=""></el-input></div>
+                <div class="bgcolor smallBgcolor"><label>商品名称</label><el-input v-model="searchData.ProductName" placeholder=""></el-input></div>
                 <div class="bgcolor smallBgcolor">
                     <label>上市时间(起)</label>
                      <el-date-picker
@@ -32,15 +32,33 @@
                 <div class="bgcolor smallBgcolor">
                     <label>类目</label>
                     <el-select clearable filterable   v-model="searchData.CategoryId" placeholder="">
-                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
-                        </el-option> -->
+                       <el-input
+                        placeholder="搜索..."
+                        class="selectSearch"
+                        v-model="search_categoryId">
+                        </el-input>
+                        <el-tree
+                        :default-expanded-keys="expand_categoryId"
+                        :render-content="renderContent_categoryId"
+                        :data="selectTree_categoryId"
+                        :highlight-current="true"
+                        :props="selectProps_categoryId"
+                        node-key="id"
+                        ref="tree"
+                        :filter-node-method="filterNode_categoryId"
+                        :expand-on-click-node="false"
+                        @node-click="nodeClick_categoryId"
+                        >
+                        </el-tree>
+                        <el-option class="select_tree_option" :key="item_categoryId.id" :label="item_categoryId.categoryName" :value="item_categoryId.id">
+                        </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
                     <label>品牌</label>
                     <el-select clearable filterable   v-model="searchData.BrandId" placeholder="">
-                        <!-- <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.userGroupName" :value="item.id">
-                        </el-option> -->
+                        <el-option v-for="item in selectData.brand" :key="item.id" :label="item.brandName" :value="item.id">
+                        </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor smallBgcolor">
@@ -50,7 +68,20 @@
                         </el-option>
                     </el-select>
                 </div>
-                
+                <div class="bgcolor smallBgcolor">
+                    <label>材质</label>
+                    <el-select clearable filterable placeholder="">
+                        <!-- <el-option v-for="item in selectData.brand" :key="item.id" :label="item.brandName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>款式</label>
+                    <el-select clearable filterable  placeholder="">
+                        <!-- <el-option v-for="item in selectData.brand" :key="item.id" :label="item.brandName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -255,28 +286,29 @@
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
                 multipleSelection: [],//复选框选中数据
 //--------------确认删除开始-----------------    
-                search:'',
-                selectTree:[
-                ],
-                item:{
-                    id:'',
-                    ouName:'',
-                },
-                selectProps: {
-                    children: 'children',
-                    label: 'ouName',
+                search_categoryId:'',//类目树搜索
+                selectTree_categoryId:[],//类目树数据
+                selectProps_categoryId: {//类目树默认属性
+                    children: 'childNodes',
+                    label: 'categoryName',
                     id:'id'
                 },
-
-
+                expand_categoryId:[],////类目树默认展开节点id
+                item_categoryId:{//类目树选中节点
+                    id:'',
+                    categoryName:''
+                },
                 tableLoading:false,
                 searchData:{
-                    OuCode: "",//编码
-                    Name: "",//名称
-                    CompanyOuId:'',//所属公司
-                    AreaId: '',//行政地区
+                    ProductCode: "",//编码
+                    ProductName: "",//名称
+                    SaleDateStart:'',//上市时间(始)
+                    SaleDateEnd: '',//上市时间(终)
+                    CategoryId: '',//类目
+                    BrandId: '',//品牌
                     Status: '',//启用状态
-                    OuType: '',//组织类型
+                    // OuType: '',//材质
+                    // OuType: '',//款式
                 },
                 searchDataClick:{},
                 tableSearchData:{},
@@ -302,17 +334,18 @@
                 Name:'',//右上角模糊查询
                 selectData:{//select数据
                     Status001:[],//启用状态
+                    brand:[],//商品品牌
                 },
             }
         },
         watch: {
-            search(val) {
+            search_categoryId(val) {
                 this.$refs.tree.filter(val);
-            }
+            },
         },  
         created:function(){       
                 let _this=this;
-                _this.loadTree();
+                _this.loadTree_categoryId();
                 _this.loadTableData();
                 _this.getSelectData()
              },
@@ -336,13 +369,25 @@
                 });
             },
             getSelectData(){
-            let _this=this;
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
-                // 启用状态
-                _this.selectData.Status001=res.result;
-            })
-           
-        },
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
+                    // 启用状态
+                    _this.selectData.Status001=res.result;
+                })
+                _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){ 
+                    // 商品品牌
+                    
+                    if(res.result.totalCount==0){
+                        _this.selectData.brand=[]
+                    }else{
+                        _this.$axios.gets('/api/services/app/BrandManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount})
+                        .then(function(response){
+                            _this.selectData.brand=response.result.items;
+                        })
+                    }
+                    
+                })
+            },
             loadTableData(){//表格
                 let _this=this;
                 _this.ajaxTable({SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},'loadTableData')
@@ -356,55 +401,37 @@
                     _this.totalItem=res.result.totalCount
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
                     _this.tableLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                     },function(res){
                     _this.tableLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
                 })
             },
-            filterNode(value, data) {
+            filterNode_categoryId(value, data) {
                 if (!value) return true;
-                return data.ouName.indexOf(value) !== -1;
+                return data.categoryName.indexOf(value) !== -1;
             },
-            loadTree(){
+            loadTree_categoryId(){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
+                _this.$axios.gets('/api/services/app/CategoryManagement/GetCategoryTree')
                 .then(function(res){
-                    _this.selectTree=res.result;
-                    _this.loadIcon();
+                    _this.selectTree_categoryId=res;
+                    _this.expand_categoryId=_this.defauleExpandTree(res,'id')
                 },function(res){
                 })
             },
-            loadIcon(){
+            nodeClick_categoryId(data,node,self){
                 let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
-            },
-            nodeClick(data,node,self){
-                let _this=this;
-                _this.item.id=data.id;
-                _this.item.ouName=data.ouName;
+                _this.item_categoryId.id=data.id;
+                _this.item_categoryId.categoryName=data.categoryName;
                 _this.$nextTick(function(){
-                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                    // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').click();
+                    $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').css({top:$(self.$el).offset().top-$(self.$el).parents('.el-select-dropdown__list').offset().top+26,}).click();
                 })
-                    
                 // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                //     if($(this).attr('date')==data.id){
-                //         $(this).click()
-                //     }
-                // })
+                // if($(this).attr('date')==data.id){
+                //     $(this).click()
+                // }
+            // })
+                
             },
             handleCurrentChange(val) {//页码改变
                  let _this=this;
@@ -523,13 +550,31 @@
                 _this.page=1
                 _this.ajaxTable({ProductName:_this.Name,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem},"submitSearch");
             },
-             getHeight(){
-                $(".search-container").css({
-                    minHeight:$('.bg-white').css('height')
-                })
-                $(".border-left").css({
-                    minHeight:$('.bg-white').css('height')
-                })
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
+            renderContent_categoryId(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.categoryName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.categoryName}
+                        </span>
+                    );
+                }
             },
             
         },
@@ -560,7 +605,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-
+    min-height: 400px;
 }
 .btn{
     display: inline-block;
