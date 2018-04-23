@@ -157,14 +157,19 @@
                             <el-table-column prop="opAreaId_AreaName" label="业务地区"></el-table-column>
                             <el-table-column prop="stockAddress" label="地址"></el-table-column>
                             <el-table-column prop="manager" label="负责人"></el-table-column>
-                            
-                            <el-table-column prop="status" label="状态">
+                            <el-table-column prop="statusTValue" label="状态">
+                                 <template slot-scope="scope">
+                                    <span v-if="scope.row.statusTValue=='启用'" style="color:#39CA77;">启用</span>
+                                    <span v-else-if="scope.row.statusTValue=='停用'" style="color:#FF6666;">停用</span>
+                                </template>                               
+                            </el-table-column>
+                            <!-- <el-table-column prop="status" label="状态">
                                 <template slot-scope="scope">
                                     <el-input v-show="scope.row.status===''" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[0].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status===0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' disabled=""></el-input>
-                                    <el-input v-show="scope.row.status===1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' disabled=""></el-input>
+                                    <el-input v-show="scope.row.status===0" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[1].label' style="color:#FF6666;" disabled=""></el-input>
+                                    <el-input v-show="scope.row.status===1" :class="scope.$index%2==0?'bgw':'bgg'" v-model='status[2].label' style="color:#39CA77;" disabled=""></el-input>
                                 </template>
-                            </el-table-column>
+                            </el-table-column> -->
                             <el-table-column label="操作" fixed='right'>
                                 <template slot-scope="scope">
                                     <el-button v-on:click="goModify(scope.row.id)" type="text" size="small">查看</el-button>

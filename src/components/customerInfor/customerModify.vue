@@ -42,9 +42,7 @@
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
                     <span class="btDetail">删除</span>
-                </button>
- 
-                
+                </button>         
                 <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
             </el-col>
         </el-row>
@@ -865,7 +863,6 @@ export default({
         self.loadSelect();
     },
     watch:{
-
         customerData:{
             handler: function (val, oldVal) {
                 let self = this;
@@ -1319,10 +1316,10 @@ export default({
                 self.firstModify = false;
                 // self.firstAddModify = false;
                 //根据id获得的客户信息
-                this.$axios.gets('/api/services/app/ContactManagement/Get',{id:self.$route.params.id}).then(function(res){
+                this.$axios.gets('/api/services/app/ContactManagement/GetContactDetail',{id:self.$route.params.id}).then(function(res){
                     console.log(res)
-                    self.customerData = res.result;
-                    console.log(self.customerData)
+                    self.customerData = res.result.contact_MainTable;
+                    //console.log(self.customerData)
                     self.getOuId = res.result.ouId;
                     self.createBankParams.contactId = self.$route.params.id;
                     self.createAddressParams.contactId = self.$route.params.id;
@@ -1330,18 +1327,49 @@ export default({
                     self.proIDT=self.customerData.adAreaId_AreaFullPathName.split(">")[0]
                     self.cityIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[1]
                     self.quIdT=self.customerData.adAreaId_AreaFullPathName.split(">")[2]
+
+                    //银行数据
+                    self.bankData = res.result.contactBanks_ChildTable;
+                    self.InitBankData = self.deepCopy(res.result);
+                    for(let i in self.bankData){
+                        if(self.bankData[i].isDefault == true){
+                            self.checkedAr = self.bankData[i]
+                        }
+                    }
+                    //地址数据
+                    self.addressData = res.result.contactAddresses_ChildTable;
+                    self.InitAddData = self.deepCopy(res.result);
+                    for(let i in self.addressData){
+                        if(self.addressData[i].isDefault == true){
+                            self.checkedAdd = self.addressData[i]
+                        }
+                    }     
+                    //加载使用组织数据
+                    self.ouData = res.result.contactOu_ChildTable;
+                    //console.log(self.ouData)
+                    self.InitOuData = self.deepCopy(res.result.contactOu_ChildTable);
+                    self.ywItem.id = res.result.contactOu_ChildTable.ouId;
+                    self.ywItem.ouName = res.result.contactOu_ChildTable.ouId_OuName;
+                    //业务组织、2是业务组织
+                    self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:'2'}).then(function(res){
+                        console.log(res);
+                        self.ywAr = res.result;
+                    },function(res){
+                        console.log('err'+res)
+                    });    
+
+
                     //行政地区获取省
                     self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
-                        console.log(res);
+                        //console.log(res);
                         self.areaProArray = res.result;
                         self.areaProArray1=res.result;
-                        console.log(self.areaProArray)
+                        //console.log(self.areaProArray)
                         // self.loadIcon();
                     },function(res){
                         console.log('err'+res)
                     });                  
                     
-
                     //业务地区
                     self.$axios.gets('/api/services/app/OpAreaManagement/GetTreeByOuId',{OuId:self.getOuId}).then(function(res){
                         // console.log(res);
@@ -1369,59 +1397,61 @@ export default({
                     self.fiItem.fiFullname = self.customerData.ficaOuId_OuName;
                     self.fiItem.id = self.customerData.ficaOuId;
                 })
+                       
                 
-                self.loadBankData();//加载银行数据
-                self.loadAddData();//加载地址数据
-                self.loadOuData();//加载使用组织数据
+                
+                // self.loadBankData();//加载银行数据
+                // self.loadAddData();//加载地址数据
+                // self.loadOuData();//加载使用组织数据
                 
 
             }
         },
-        loadBankData:function(){//银行数据
-            let self = this;
-            self.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
-                //console.log(res);
-                self.bankData = res.result;
-                self.InitBankData = self.deepCopy(res.result);
-                for(let i in self.bankData){
-                    if(self.bankData[i].isDefault == true){
-                        self.checkedAr = self.bankData[i]
-                    }
-                }
-            })
-        },
-        loadAddData:function(){//地址数据
-            let self = this;
-            //获取所有的地址信息，也可以用contactId获取
-            self.$axios.gets('/api/services/app/ContactAddressManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
-                //console.log(res);
-                self.addressData = res.result;
-                self.InitAddData = self.deepCopy(res.result);
-                for(let i in self.addressData){
-                    if(self.addressData[i].isDefault == true){
-                        self.checkedAdd = self.addressData[i]
-                    }
-                }
-            })
-        },
-        loadOuData:function(){//使用组织数据
-            let self = this;
-            //获取所有的组织信息，也可以用contactId获取
-            self.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
-                //console.log(res);
-                self.ouData = res.result.items;
-                self.InitOuData = self.deepCopy(res.result.items);
-                self.ywItem.id = res.result.items.ouId;
-                self.ywItem.ouName = res.result.items.ouId_OuName;
-                //业务组织、2是业务组织
-                self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:'2'}).then(function(res){
-                    console.log(res);
-                    self.ywAr = res.result;
-                },function(res){
-                    console.log('err'+res)
-                });
-            })
-        },
+        // loadBankData:function(){//银行数据
+        //     let self = this;
+        //     self.$axios.gets('/api/services/app/ContactBankManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
+        //         //console.log(res);
+        //         self.bankData = res.result;
+        //         self.InitBankData = self.deepCopy(res.result);
+        //         for(let i in self.bankData){
+        //             if(self.bankData[i].isDefault == true){
+        //                 self.checkedAr = self.bankData[i]
+        //             }
+        //         }
+        //     })
+        // },
+        // loadAddData:function(){//地址数据
+        //     let self = this;
+        //     //获取所有的地址信息，也可以用contactId获取
+        //     self.$axios.gets('/api/services/app/ContactAddressManagement/GetListByContactId',{ContactId:self.$route.params.id}).then(function(res){
+        //         //console.log(res);
+        //         self.addressData = res.result;
+        //         self.InitAddData = self.deepCopy(res.result);
+        //         for(let i in self.addressData){
+        //             if(self.addressData[i].isDefault == true){
+        //                 self.checkedAdd = self.addressData[i]
+        //             }
+        //         }
+        //     })
+        // },
+        // loadOuData:function(){//使用组织数据
+        //     let self = this;
+        //     //获取所有的组织信息，也可以用contactId获取
+        //     self.$axios.gets('/api/services/app/ContactOuManagement/GetAll',{SkipCount:'0',MaxResultCount:'100'}).then(function(res){
+        //         //console.log(res);
+        //         self.ouData = res.result.items;
+        //         self.InitOuData = self.deepCopy(res.result.items);
+        //         self.ywItem.id = res.result.items.ouId;
+        //         self.ywItem.ouName = res.result.items.ouId_OuName;
+        //         //业务组织、2是业务组织
+        //         self.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:'2'}).then(function(res){
+        //             console.log(res);
+        //             self.ywAr = res.result;
+        //         },function(res){
+        //             console.log('err'+res)
+        //         });
+        //     })
+        // },
         //------------------------------------------------------
 
 

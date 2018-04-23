@@ -774,7 +774,8 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.addData.accperiodContents[j].KjModifiedTime=_this.nowTime();
                         }
                         _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
-                        _this.periodNum=diffMonth
+                        _this.periodNum=diffMonth;
+                        _this.tableData=_this.addData.accperiodContents
                         console.log(_this.addData.accperiodContents)
 
                     }else{
@@ -802,7 +803,8 @@ import dialogBox from '../../base/dialog/dialog'
                         }
                         _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
                         diffMonth=_this.periodNum;
-                        //console.log(_this.addData.accperiodContents)
+                        _this.tableData=_this.addData.accperiodContents
+                        console.log(_this.addData.accperiodContents)
                     }
                 }
 
