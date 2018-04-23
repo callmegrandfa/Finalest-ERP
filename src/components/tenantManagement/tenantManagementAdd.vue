@@ -485,7 +485,6 @@
 <script>
 import Btm from '../../base/btm/btm'
 import Textbox from '../../base/textbox/textbox'
-import Tree from '../../base/tree/tree'
     export default{
         name:'userList',
         data(){
