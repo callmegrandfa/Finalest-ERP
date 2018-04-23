@@ -985,11 +985,11 @@ export default {
                 "multiUnitEnabled": false,//启用多单位 ,
                 "isSuite": false,//是否套件
                 "purchasePrice": 0,//进货价 
-                "purchaseUnit": '',//进货默认单位 
+                "purchaseUnit": 0,//进货默认单位 
                 "wholePrice": 0,//批发价
-                "wholeUnit": '',//批发默认单位
+                "wholeUnit": 0,//批发默认单位
                 "discount": 1,//折扣
-                "vipPrice": '',//会员价 
+                "vipPrice": 0,//会员价 
                 "retailPrice": 0,//零售价
                 "retailUnit": 0,//零售默认单位
                 "remark": "",//备注
@@ -1428,8 +1428,8 @@ export default {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
                     _this.$axios.posts('/api/services/app/ProductManagement/Create',_this.product_MainTable).then(function(res){
-                        // _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
-                        // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        _this.$store.state.url='/goodsFiles/goodsFilesModify/'+res.result.id
+                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
