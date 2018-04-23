@@ -757,6 +757,8 @@ export default new vuex.Store({
         commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
         commodityClassHeadingQuery:false,//条件查询
+        commodityClassHeadingTreeApi:'',//初始化树型接口
+        commodityClassHeadingTreeData:[],//树型数据集合
         commodityClassHeadingTreeQuery:false,//树节点查询
         commodityClassHeadingQueryParams:"",//条件查询参数
         commodityClassHeadingTreeQueryParams:"",//树节点查询参数
@@ -786,6 +788,7 @@ export default new vuex.Store({
         commodityBrandTotalPagination:10,//总页数
         commodityBrandTotalCount:0,//总条数
         commodityBrandEachPage:10,//每页显示条数
+        commodityBrandDialogVisible:false,//对话框是否显示
         //仓库资料列表演示
         storeHouseHttpApi:'',//接口
         storeHouseParams:'',
@@ -832,9 +835,12 @@ export default new vuex.Store({
         } ,
         go2(state) {
             state.fixed = false;
-        } ,
+        },
         Init_Table(state,data){//表格数据模型
             state[state.tableName+'Table']=data;
+        },
+        Init_Tree(state,data){//树型数据
+            state[state.tableName+'TreeData']=data;
         },
         Init_dataSource(state,dictName){//表头配置下拉
             axios.get('/api/services/app/DataDictionary/GetDictItem',{
@@ -867,6 +873,9 @@ export default new vuex.Store({
         setQueryApi(state,api){//查询api地址
             state[state.tableName+'QueryApi']=api;
         },
+        setInitTreeApi(state,api){//初始化树节点接口地址
+            state[state.tableName+'TreeApi']=api;
+        },
         setTreeQueryApi(state,api){//查询树节点api地址
             state[state.tableName+'TreeQueryApi']=api;
         },
@@ -897,6 +906,9 @@ export default new vuex.Store({
         setTableSelection(state,array){//设置表格多选集合
             state[state.tableName+'Selection']=array;
         },
+        setDialogVisible(state,boolean){//设置对话框是否显示
+            state[state.tableName+'DialogVisible']=boolean;
+        },
         add_col(state,data){//表格行内新增
             state[state.tableName+'Table'].unshift(data);
             state[state.tableName+'NewColArray'].unshift(data);
@@ -917,6 +929,13 @@ export default new vuex.Store({
                 context.commit('Init_TotalCount',Number(res.data.result.totalCount));
                 let totalPage=Math.ceil(res.data.result.totalCount/context.state[context.state.tableName+'EachPage']);
                 context.commit('Init_pagination',totalPage);
+                }).catch(function(err){
+                    console.log(err)
+                })
+        },
+        InitTree(context){//树型初始化
+            axios.get(context.state[context.state.tableName+'TreeApi']).then(function(res){
+                context.commit('Init_Tree',res.data);
                 }).catch(function(err){
                     console.log(err)
                 })
