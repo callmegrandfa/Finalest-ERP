@@ -22,7 +22,7 @@
         </el-row> -->
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
-                    <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
+                    <label>集团编码</label><el-input v-model="entryItem.groupCode"></el-input>
                 </div>
                 <div class="bgcolor reset">
                     <label>集团名称</label><el-input v-model="entryItem.groupName" ></el-input>
@@ -31,7 +31,14 @@
                     <label>集团全称</label><el-input v-model="entryItem.groupFullname" ></el-input>
                 </div>
                 <div class="bgcolor reset">
-                    <label>会计方案</label><el-input v-model="entryItem.accSchemeId"></el-input>
+                    <label>会计方案</label>
+                    
+                    <!-- <el-input v-model="entryItem.accSchemeId"></el-input> -->
+                    <el-select  v-model="accSchemeIdItem.accSchemeId" >
+                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+                    </el-select>
                 </div>
                 <div class="bgcolor area">
                     <label>行政地区</label>
@@ -52,11 +59,16 @@
                 </div>
                 <div class="bgcolor reset">
                     <label>启用会计月份</label>
-                    <el-input v-model="entryItem.accStartMonth" disabled></el-input>
+                    <el-select  v-model="beginDateItem.beginDate" >
+                        <el-option v-for="item in beginDateOptions" :key="item.id" :label="item.beginDate" :value="item.beginDate">
+                        </el-option>
+
+                    </el-select>
+                    <!-- <el-input v-model="entryItem.accStartMonth"></el-input> -->
                 </div>
                 <div class="bgcolor reset">
                     <label>本位币种</label>
-                    <el-select  v-model="entryItem.localCurrencyId" disabled >
+                    <el-select  v-model="entryItem.localCurrencyId" >
                         <el-option v-for="item in currencyOptions" :key="item.id" :label="item.currencyName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -66,6 +78,15 @@
                 <div class="bgcolor reset"><label>传真</label><el-input v-model="entryItem.fax" ></el-input></div>
                 <div class="bgcolor reset"><label>总部地址</label><el-input v-model="entryItem.address" ></el-input></div>
                 <div class="bgcolor reset"><label>备注</label><el-input v-model="entryItem.remark"></el-input></div>
+                <div class="bgcolor reset"><label>时区</label>
+                     <el-select  v-model="entryItem.timeZoneId" >
+                        <el-option v-for="item in timeZoneOptions" 
+                                       :key="item.itemValue" 
+                                       :label="item.itemName" 
+                                       :value="item.itemValue">
+                        </el-option>
+                     </el-select>
+                </div>
         </el-row>
         <!-- <el-row class="bg-white">
             <el-col :span="6">
@@ -131,10 +152,18 @@
                     status:'',//启用状态
                     id:'',//id
                     areaId:'',
+                    timeZoneId:''
                 },
+                beginDateItem:{
+                    beginDate:'',
+                },
+                accSchemeIdItem:{
+                     accSchemeId:''
+                },
+                beginDateOptions: [],
                 currencyOptions: [],
+                accSchemeIdOptions:[],
                 tableData:[],
-
                 componyTree:  [{
                     treeId: 1,
                     label: 'HKERP',
@@ -157,12 +186,18 @@
                     children: 'children',
                     label: 'label'
                 },
+                 item_area_no:{
+                    id:0,
+                    ouName:' '
+                },
                 areaCity:true,
                 areaDis:true,
                 areaStr:true,
                 areaProArray:[],//行政地区(省)
                 areaCityArray:[],//行政地区(市)
                 areaDisArray:[],//行政地区(区)
+                accSchemeArray:[],
+                timeZoneOptions:[],
                 pageIndex:-1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -187,14 +222,27 @@
                    }
                 },
                 deep:true
-            }
+            },
+             beginDateItem:{
+                  handler(val, oldVal){
+                   this.entryChangeTimes++
+                   if(this.entryChangeTimes>=2){
+                       this.isCancel=false;
+                   }else{
+                       this.isCancel=true;
+                   }
+                },
+                deep:true
+        }
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
                 _this.loadArea();
                 _this.loadCurrency();
-                //_this.loadTree();
+                _this.loadbeginDate();
+                _this.loadaccScheme();
+                _this.loadTimeZone()
              },
         methods:{
              open(tittle,iconClass,className) {
@@ -207,10 +255,27 @@
                 customClass:className
                 });
             },
+          JsonDistinct:function(json, key) {
+                var res = [json[0]];
+                for (var i = 1; i < json.length; i++) {
+                    var repeat = false;
+                    for (var j = 0; j < res.length; j++) {
+                        if (json[i][key] == res[j][key]) {
+                            repeat = true;
+                            break;
+                        }
+                    }
+                    if (!repeat) {
+                        res.push(json[i]);
+                    }
+                }
+                return res;
+            },
             loadTableData(){//表格
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
-                    _this.entryChangeTimes=0; 
+                    console.log(res);
+                    // _this.entryChangeTimes=0; 
                     _this.areaFullPathName=res.result.areaId_AreaFullPathName;
                     _this.areaFullPathArray=_this.areaFullPathName.split(">");
                     _this.entryItem.areaProId=_this.areaFullPathArray[0];
@@ -220,8 +285,10 @@
                     _this.entryItem.groupName=res.result.groupName;
                     _this.entryItem.groupFullname=res.result.groupFullname;
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
-                    _this.entryItem.accSchemeId=res.result.accSchemeId;
-                    _this.entryItem.accStartMonth=res.result.accStartMonth;
+                    _this.entryItem.timeZoneId=res.result.timeZoneId;
+                    _this.accSchemeIdItem.accSchemeId=res.result.accSchemeId;
+                    _this.beginDateItem.beginDate=res.result.accStartMonth.substring(0,10);
+                    //  _this.beginDateItem.beginDate=res.result.accStartMonth;
                     _this.entryItem.areaId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
@@ -231,13 +298,18 @@
                     _this.entryItem.status=res.result.status;
                     _this.entryItemBak=_this.entryItem;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                    // console.log( _this.beginDateItem.beginDate)
                     },function(res){
                 })
-            },
+            },     
+            
             loadCurrency(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){
-                    _this.currencyOptions=res.result.items
+                    _this.currencyOptions=res.result.items;
+                  
+                    
+
                 })
             },
             loadArea(){
@@ -247,10 +319,61 @@
                   },function(res){
                 })
             },
-            // Update(){//修改
-            //     this.isEdit=false;
-            //     this.isCancel=true;
-            // },
+            loadaccScheme(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
+                    _this.accSchemeIdOptions=res.result;
+                    console.log(res)
+                  },function(res){
+                })
+            },
+            loadTimeZone(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TimeZone'}).then(function(res){ 
+                    _this.timeZoneOptions=res.result;
+                    console.log(res);
+                  },function(res){
+                })
+            },
+
+            JsonDistinct:function(json, key) {
+                var res = [json[0]];
+                for (var i = 1; i < json.length; i++) {
+                    var repeat = false;
+                    for (var j = 0; j < res.length; j++) {
+                        if (json[i][key] == res[j][key]) {
+                            repeat = true;
+                            break;
+                        }
+                    }
+                    if (!repeat) {
+                        res.push(json[i]);
+                      
+                    }
+                }
+                return res;
+            },   
+            EachBeginDateOptions:function(json){
+               for (var i = 0; i < json.length; i++) {
+                   return json[i]
+                 
+               }
+            },
+            loadbeginDate(){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/Accperiod/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
+                _this.beginDateOptions=res.result.items;
+                _this.beginDateOptions=_this.JsonDistinct(_this.beginDateOptions,"beginDate");
+               for(var i=0;i<_this.beginDateOptions.length;i++){
+                //  this.beginDateOptions[i].beginDate.substring(0,10);
+                 _this.beginDateOptions[i].beginDate =_this.beginDateOptions[i].beginDate.substring(0,10)
+
+                  }
+                // beginDateOptions
+
+                },function(res){
+                })
+            },
             ChoosePro(){//选择省份
                 let _this=this;
                 this.areaDis=false;
@@ -287,15 +410,17 @@
                     groupName: _this.entryItem.groupName,
                     groupFullname:_this.entryItem.groupFullname,
                     localCurrencyId: _this.entryItem.localCurrencyId,
-                    accSchemeId:_this.entryItem.accSchemeId,
-                    accStartMonth: _this.entryItem.accStartMonth,
+                    accSchemeId:_this.accSchemeIdItem.accSchemeId,
+                    // accStartMonth: _this.entryItem.accStartMonth,
                     areaId: 0,
                     industry: _this.entryItem.industry,
                     phone: _this.entryItem.phone,
                     fax: _this.entryItem.fax,
                     remark:_this.entryItem.remark,
-                    status: _this.entryItem.status
+                    status: _this.entryItem.status,
+                    accStartMonth:_this.beginDateItem.beginDate
                 }
+              
                 if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
                     updateItem.areaId=_this.entryItem.areaDisId
                 }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""&&typeof(_this.entryItem.areaCityId)!="string"){
@@ -305,6 +430,8 @@
                 }else if(typeof(this.entryItem.areaDisId)=="string"&&typeof(_this.entryItem.areaCityId)=="string"&&typeof(_this.entryItem.areaProId)=="string"){
                     updateItem.areaId=_this.entryItem.areaId
                 }
+                // console.log(updateItem);
+             
                 if(!_this.isCancel){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
                         console.log(updateItem)
