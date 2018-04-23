@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-table class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+        <el-table ref="multipleTable" class="normalTable" @row-click="rowClick" :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
             <el-table-column type="selection" label="" width="50" v-if="pluginSetting.mutiSelect">
             </el-table-column>
             <el-table-column v-for="item in cols" :key="item.prop" :label="item.label" :prop="item.prop" :width="item.width" :fixed="item.isFix" :sortable="item.sortable">
@@ -31,7 +31,7 @@
                 <el-pagination style="margin-top:20px;" class="text-right" :page-size="eachPage" :page-sizes="[5, 10, 15]" :total="totalCount"  @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" background layout="total, sizes, prev, pager, next, jumper"  :page-count="totalPagination" ></el-pagination>
             </el-col>
         </el-row>
-        <dialogBox :dialogSetting='dialogSetting' :errorTips='errorTips' :dialogVisible="dialogVisible" :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>   
+        <dialogBox :dialogSetting='dialogSetting' :errorTips='errorTips' @dialogColse='dialogColse' :dialogVisible="dialogVisible" :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>   
     </div>
 </template>
 <script type="text/javascript">
@@ -116,6 +116,7 @@
                             this.updateArray.push(this.$store.state[this.tableName+'UpdateColArray'][i].id);
                             
                         }
+                        console.log(this.updateArray);
                         return this.updateArray;
                     }else{
                         return [];
@@ -241,10 +242,10 @@
                         this.queryParams.SkipCount=(this.targetPage-1)*this.$store.state[this.tableName+'EachPage'];
                         this.queryParams.MaxResultCount=this.$store.state[this.tableName+'EachPage'];
                         this.$store.commit('setQueryParams', this.queryParams);//重置查询参数
-                        this.$store.dispatch('InitTable');
+                        this.$store.dispatch('InitTable')
                         setTimeout(() => {//拷贝初始化数据，和修改行做对比
                             this.InitTableClone();
-                        }, 1500);
+                        }, 1000);
                         this.$store.commit('setUpdateColArray',[])//置空修改增集合 
                         this.$store.commit('setAddColArray',[])//置空修改增集合 
                         this.$store.commit('get_RowId',"")//置空修改行id
@@ -298,6 +299,9 @@
                 this.queryParams.MaxResultCount=val;
                 this.$store.commit('setQueryParams', this.queryParams);
                 this.$store.dispatch('InitTable');//初始化表格数据
+            },
+            dialogColse(){//对话框关闭回调事件
+                this.dialogVisible=false;
             },
             // 数据深拷贝
             // 递归实现一个深拷贝
@@ -442,12 +446,12 @@ table .el-input__inner{
 }
 /* 状态颜色定义 */
 .Disabled .el-input--suffix .el-input__inner{
-    color: #33CC66
+    color: #FF6666!important;
 }
 .Enabled .el-input--suffix .el-input__inner{
-    color: #FF6666
+    color: #33CC66!important;
 }
 .Frozen .el-input--suffix .el-input__inner{
-    color: #FF6600
+    color: #FF6600!important;
 }
 </style>

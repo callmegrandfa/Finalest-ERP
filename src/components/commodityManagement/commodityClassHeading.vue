@@ -81,7 +81,7 @@
         </div>
         <div id="bgj">
             <el-row >
-                <el-col :span="24" class="border-left" id="bg-white" style="background-color:rgb(249,249,249)">
+                <el-col :span="24" class="border-left" id="bg-white" >
                 	<el-col :span="ifWidth?0:2" class="search-block">
                         <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
@@ -93,8 +93,9 @@
 	                	<btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
 	                </el-col>
                      <el-row style="float:left;width:100%;">
-                        <el-col :span="5">
-                            <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                        <el-col :span="5" class="tree-container">
+                            <Tree :defaultProps='defaultProps' :expandParams='expandParams' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
+                            <!-- <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
                                 :data="classTree"
                                 :props="defaultProps"
                                 default-expand-all
@@ -102,7 +103,7 @@
                                 node-key="id"
                                 :expand-on-click-node="false"
                                 @node-click="TreeNodeClick">
-                            </el-tree>
+                            </el-tree> -->
                         </el-col>
                         <el-col :span="19">
                             <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :tableName="tableModel"  :command="command"></Table>
@@ -117,9 +118,9 @@
 
 <script>
 import Btm from '../../base/btm/btm'
-import Tree from '../../base/tree/tree'
 import Table from '../../base/Table/Table'
 import dialogBox from '../../base/dialog/dialog'
+import Tree from '../../base/Tree/Tree'
     export default{
         name:'customerInfor',
         data(){
@@ -185,6 +186,7 @@ import dialogBox from '../../base/dialog/dialog'
                    treeQuery:'/api/services/app/CategoryManagement/GetCategoryList',//树节点查询
                 },
                 queryParams:{//查询条件参数
+                    CategoryId:'',
                     CategoryCode:'',
                     CategoryName:'',
                     IsService:'',
@@ -275,9 +277,19 @@ import dialogBox from '../../base/dialog/dialog'
                 classTree:  [//类目tree
                     // {areaName:'根目录',id:'0',items:[]},
                 ],
-                defaultProps: {
+                defaultProps: {//tree渲染参数
                     children:'childNodes',
-                    label:'categoryName'
+                    label:'categoryName',
+                    id:'id',
+                },
+                expandParams:{//默认展开节点参数控制
+                    expandId:'id',
+                    expandkey:[],
+                },
+                treeSearch:false,//是否包含树节点过滤功能
+                treeParams:{
+                    treeName:'commodityClassHeading',//树节点名称
+                    treeApi:'/api/services/app/CategoryManagement/GetCategoryTree',//接口地址
                 },
                 delAarry:{
                     ids:[]
@@ -296,8 +308,6 @@ import dialogBox from '../../base/dialog/dialog'
         },
         created:function(){ 
             this.InitStatus();      
-            this.loadTree();
-           //this.loadTableData();
         },
         watch:{
             queryParams:{
@@ -361,27 +371,16 @@ import dialogBox from '../../base/dialog/dialog'
                     _this.column[3].dataSource=res.result;
                 })
             },
-            loadTree(){//获取tree data
-                    let _this=this;
-                    _this.treeLoading=true;
-                    _this.$axios.gets('/api/services/app/CategoryManagement/GetCategoryTree')
-                    .then(function(res){
-                        _this.classTree=res
-                        _this.treeLoading=false;
-                        _this.loadIcon();
-                },function(res){
-                    _this.treeLoading=false;
-                })
-            },
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
+                _this.queryParams.CategoryId=data.id;
                 _this.tableLoading=true;
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryList',{Id:data.id,SkipCount:(_this.currentPage-1)*_this.$store.state.eachPage,MaxResultCount:_this.$store.state.eachPage}).then(function(res){                     
+                    _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){                     
                         //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
-                        _this.queryParams.CategoryCode="";
-                        _this.queryParams.CategoryName="";
-                        _this.queryParams.IsService="";
-                        _this.queryParams.Status="";
+                        // _this.queryParams.CategoryCode="";
+                        // _this.queryParams.CategoryName="";
+                        // _this.queryParams.IsService="";
+                        // _this.queryParams.Status="";
                         _this.$store.commit('Init_Table',res.result.items);
                         let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                         _this.$store.commit('Init_pagination',totalPage);
@@ -389,30 +388,26 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1    
                     })
             },
-            loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
-            },
             query(){//条件查询
                 let _this=this;
-                _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){
-                    _this.$store.commit('Init_ifQuery',true)
-                    _this.$store.commit('Init_Table',res.result.items);
-                    //_this.$store.state[_this.tableModel+'Table']=res.result.items;  
+                _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){//查询表格数据
+                    //_this.$store.commit('Init_ifQuery',true)
+                    _this.$store.commit('Init_Table',res.result.items); 
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                     _this.$store.commit('Init_pagination',totalPage) 
                     _this.$store.commit('Init_TotalCount',res.result.totalCount);
                     _this.$store.commit('setCurrentPage',1)//设置当前页码为初始值1                       
                 })
+                _this.$axios.gets('/api/services/app/CategoryManagement/SearchTree',{//查询树形数据
+                    CategoryCode:_this.queryParams.CategoryCode,
+                    CategoryName:_this.queryParams.CategoryName,
+                    IsService:_this.queryParams.IsService,
+                    Status:_this.queryParams.Status
+                }).then(function(res){
+                    _this.$store.commit('Init_Tree',res.result);
+                }).catch(function(err){
+
+                });;
             },
             open(tittle,iconClass,className) {//提示框
                 this.$notify({
@@ -424,7 +419,7 @@ import dialogBox from '../../base/dialog/dialog'
                 customClass:className
                 });
             },
-            dialogClick(parmas){
+            dialogClick(parmas){//对话框按钮点击事件
                 if(parmas.dialogButton=="确定"){
                     if(parmas.dialogName=="delDialog"){
                         this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
@@ -459,9 +454,9 @@ import dialogBox from '../../base/dialog/dialog'
         },
         components:{
             Btm,
-            Tree,
             Table,
-            dialogBox
+            dialogBox,
+            Tree
         }
     }
 </script>
@@ -511,6 +506,12 @@ import dialogBox from '../../base/dialog/dialog'
 #bgj{
     float: left;
     width: calc(100% - 340px);
+}
+.tree-container{
+    height: 450px;
+}
+.tree-container>div{
+    height: 100%;
 }
 </style>
 

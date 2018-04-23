@@ -6,6 +6,20 @@
             <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
             <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
         </el-row>
+        <!-- <el-row class="bg-white pt20" :gutter="20">
+            <el-col class="" :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
+                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
+            </el-col>
+            <el-col class="" :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
+                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
+            </el-col>
+            <el-col class=" " :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
+                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
+            </el-col>
+            <el-col class=" " :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
+                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
+            </el-col>
+        </el-row> -->
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
                     <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>

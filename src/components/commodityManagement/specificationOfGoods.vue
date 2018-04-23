@@ -174,7 +174,6 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm1/btm'
-import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
