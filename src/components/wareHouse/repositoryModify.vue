@@ -1378,6 +1378,8 @@
                 // console.log(id)
                 self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
                     // console.log(res);
+                    self.cityId = '';
+                    self.repositoryData.adAreaId = '';
                     self.areaCityArray = res.result;
                     // self.loadIcon();
                 },function(res){
