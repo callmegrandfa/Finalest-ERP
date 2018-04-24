@@ -50,10 +50,10 @@
 }
 .search_input{
   width: 100%;
-  margin: 10px 0;
+  /* margin: 10px 0; */
 }
 .search_input .el-input__prefix{
-  top:-4px;
+  /* top:-4px; */
 }
 /* 表单验证 */
 .tipsWrapper{

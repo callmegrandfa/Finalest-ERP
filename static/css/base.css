@@ -37,6 +37,7 @@ abbr,acronym{border:0;}
 .vm{vertical-align:center;}
 .pr{position:relative;}
 .pa{position:absolute;}
+.pf{position: fixed;}
 .abs-right{position:absolute;right:0;}
 .zoom{zoom:1}
 .hidden{visibility:hidden;}
