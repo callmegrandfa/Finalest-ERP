@@ -205,7 +205,7 @@
                 </span>
         </el-dialog>
         <!-- dialog数据提交有误的详细提示信息 -->
-        <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
+        <!-- <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
@@ -230,9 +230,11 @@
             
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">确 认</button>
-                <!-- <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button> -->
+                <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
+        <!-- 数据提交有误 -->
+        <submitError :submitData="submitData"></submitError>
         <!-- dialog -->
         <!-- dialog数据变动提示(是否忽略更改) -->
         <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
@@ -256,6 +258,7 @@
 </template>
  <script>
     import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default {
         name:'unitOfMeasurementList',
         data(){
@@ -267,16 +270,18 @@
                     "modifiedBy": this.$store.state.name,
                     "modifiedTime": this.GetDateTime(),
                 },
+                submitData:{//数据提交有误提示框参数
+                    submitErrorMessage:false,//数据提交有误提示框
+                    detail_message_ifShow: false,//数据提交有误提示框详细信息
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                }, 
                 // -----------------提示框数据
                 dialogUserConfirm:false,//确认是否删除提示框
-                submitErrorMessage:false,//数据提交有误提示框
-                detail_message_ifShow:false,//数据提交有误提示框详细信息
                 dialogUpdateConfirm:false,//是否忽略更改
-                response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
-                },
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
                 activeNames:['1'],//折叠面板的默认激活状态
                 // -------------------------------------树形控件数据
@@ -409,17 +414,17 @@
             },
             getErrorMessage(message,details,validationErrors){//获取提交错误的详细信息
                 let _this=this;
-                _this.response.message='';
-                _this.response.details='';
-                _this.response.validationErrors=[];
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
                 if(details!=null && details){
-                    _this.response.details=details;
+                    _this.submitData.response.details=details;
                 }
                 if(message!=null && message){
-                    _this.response.message=message;
+                    _this.submitData.response.message=message;
                 }
                 if(message!=null && message){
-                    _this.response.validationErrors=validationErrors;
+                    _this.submitData.response.validationErrors=validationErrors;
                 }
             },
             showErrTips(e){// 表单验证错误提示信息
@@ -530,17 +535,18 @@
                         function (success) { 
                             if (success) {
                                 $('.tipsWrapper').css({display:'none'});
-                                console.log("保存按钮点击了");
+                                // console.log("保存按钮点击了");
                                 console.log(_this.formData.unitConvert_ChildTable);
                                 
                                 if (_this.formData.unitConvert_ChildTable.length>1) {
-                                        for(let i=0;i<_this.formData.unitConvert_ChildTable.length-1; i++){
-                                            alert('1')
+                                        for(let i=0;i<_this.formData.unitConvert_ChildTable.length; i++){
+                                            // alert('1')
                                             if (_this.formData.unitConvert_ChildTable[i].destUnitId=='' || _this.formData.unitConvert_ChildTable[i].factor=='') {
                                                 alert('多单位或系数必填');
                                                 return;
                                             }
                                             _this.addList=_this.formData;
+                                            // console.log(_this.addList);
                                             if (i==_this.formData.unitConvert_ChildTable.length-1) {
                                                 _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                                 _this.addList.unit_MainTable=_this.formData.unit_MainTable;
@@ -550,18 +556,18 @@
                                 }else if(_this.formData.unitConvert_ChildTable.length==1){
                                    if (_this.formData.unitConvert_ChildTable[0].destUnitId!='' && _this.formData.unitConvert_ChildTable[0].factor!='') {
                                        console.log(_this.formData.unitConvert_ChildTable);
-                                       alert('2.1')
+                                    //    alert('2.1')
                                        _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                        _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                        console.log(_this.addList);
                                        _this.doSave(_this.addList);
                                    }else{
-                                       alert('2')
+                                    //    alert('2')
                                        alert('多单位或系数必填');
                                        return;
                                    }
                                 }else{
-                                    alert('3')
+                                    // alert('3')
                                     _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                     _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                     _this.doSave(_this.addList)
@@ -573,11 +579,11 @@
             },
             doSave(dataVal){
                 let _this=this;
-                console.log(dataVal);
+                // console.log(dataVal);
                 _this.$axios.posts('/api/services/app/UnitManagement/AggregateCreateOrUpdate',dataVal).then(
                     rsp=>{//success
-                        console.log(dataVal);
-                        console.log('1212');
+                        // console.log(dataVal);
+                        // console.log('1212');
                         // console.log(rsp);
                         _this.addList.unit_MainTable.id=rsp.result;
                         _this.nodeId=rsp.result;
@@ -601,7 +607,7 @@
                         if(rsp && rsp!=''){ 
                             _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
                         };
-                        _this.submitErrorMessage=true;
+                        _this.submitData.submitErrorMessage=true;
                     }
                 )
             },
@@ -615,7 +621,7 @@
             delSave(){//判断从表数据是否有删除，有删除则先删除，成功后再保存
                     let _this=this;   
                     if (_this.delIds.ids.length>0) {
-                        console.log('looklook1');
+                        // console.log('looklook1');
                         // console.log('先删除后保存');
                         _this.$axios.posts('/api/services/app/UnitConvertManagement/BatchDelete',_this.delIds).then(
                                 rsp=>{//success
@@ -628,7 +634,7 @@
                                     if(rsp && rsp!=''){ 
                                         _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
                                     };
-                                    _this.submitErrorMessage=true;
+                                     _this.submitData.submitErrorMessage=true;
                                             }
                                         )
                     }else{
@@ -653,7 +659,7 @@
                     rsp=>{
                         _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors);
                         _this.dialogUserConfirm=false;
-                        _this.submitErrorMessage=true;
+                        _this.submitData.submitErrorMessage=true;
                     }
                 )
             },
@@ -820,6 +826,8 @@
         },
         components:{
             auditInfo,
+            submitError,
+
         },
     }
 </script>
