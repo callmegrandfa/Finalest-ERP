@@ -89,14 +89,6 @@
                             </el-col>
                             <el-col :span="ifWidth?24:22" class="pt5"> 
                             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
-                            <!-- <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
-                            <button :disabled="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                            <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                            <button class="erp_bt bt_del" @click="delBatch"><i class="iconfont icon-shanchu"></i><span>删除</span></button>
-                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
-                            <button class="erp_bt bt_version" @click="handleStatus(1)"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                            <button class="erp_bt bt_auxiliary" @click="handleStatus(0)"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button> -->
                             </el-col>                   
                     </el-row>
                      <el-row class="">
@@ -207,10 +199,8 @@ import dialogBox from '../../base/dialog/dialog'
                     isDisable:false,
                 },
                 httpUrl:{
-                    //Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     delete:'/api/services/app/BrandManagement/Delete',//行内删除
                     query:'/api/services/app/BrandManagement/GetListByCondition',//条件查询
-                    treeQuery:'',//树节点查询
                 },
                 column: [{
                     prop: 'brandCode',
@@ -403,15 +393,15 @@ import dialogBox from '../../base/dialog/dialog'
                     })
                 }
             },
-            Init(){//数据初始化
-                this.isUpdate=false;
-                this.isAdd=false;
-                this.isSave=false;
-                this.pageFlag=true;
-                this.updateArray=[];
-                this.addArray=[];
-                this.updateId="";
-            },
+            // Init(){//数据初始化
+            //     this.isUpdate=false;
+            //     this.isAdd=false;
+            //     this.isSave=false;
+            //     this.pageFlag=true;
+            //     this.updateArray=[];
+            //     this.addArray=[];
+            //     this.updateId="";
+            // },
             InitStatus(){//获取状态枚举表
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
@@ -494,6 +484,7 @@ import dialogBox from '../../base/dialog/dialog'
                         message: '请先编辑保存新增项'
                     });
                 }else{
+                    this.isSave=false;
                     this.$store.dispatch('addCol',newcol);//表格行内新增
                 }                              
             },
@@ -626,7 +617,7 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }).catch(function(err){
-                            console.log(err);
+                                    //err.status;
                             _this.dialogSetting.dialogType="submit";
                             _this.dialogSetting.dialogName='saveDialog'
                             _this.dialogSetting.message="信息提报有误";

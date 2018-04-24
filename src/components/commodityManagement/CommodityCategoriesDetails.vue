@@ -388,7 +388,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                 return currentdate;
             },
             btnClick(btn){             
-                if(btn=="取消"){
+                if(btn=="取消"){//取消确认对话框
                     this.dialogSetting.dialogName='cancelDialog'
                     this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
                     this.dialogSetting.dialogType="confirm";
@@ -396,7 +396,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                     this.dialogVisible=true;
                 }else if(btn=="保存"){
                     this.save();
-                }else if(btn=="删除"){
+                }else if(btn=="删除"){//删除确认对话框
                     this.dialogSetting.dialogName='delDialog'
                     this.dialogSetting.message="确定删除？";
                     this.dialogSetting.dialogType="confirm";

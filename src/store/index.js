@@ -752,33 +752,21 @@ export default new vuex.Store({
         OuId:'',//组织单元ID
         tableName:'',//表格名称
         // 商品类目
-        commodityClassHeadingHttpApi:'',//初始化接口
         commodityClassHeadingQueryApi:'',//查询接口
-        commodityClassHeadingTreeQueryApi:'',//树节点查询接口
-        commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
-        commodityClassHeadingQuery:false,//条件查询
         commodityClassHeadingTreeApi:'',//初始化树型接口
         commodityClassHeadingTreeData:[],//树型数据集合
-        commodityClassHeadingTreeQuery:false,//树节点查询
         commodityClassHeadingQueryParams:"",//条件查询参数
-        commodityClassHeadingTreeQueryParams:"",//树节点查询参数
         commodityClassHeadingTotalCount:0,//总条数
         commodityClassHeadingSelection:[],//选中数据集合
         commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
         commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
-        commodityBrandHttpApi:'',
         commodityBrandQueryApi:'',//查询接口
-        commodityBrandTreeQueryApi:'',//树节点查询接口
-        commodityBrandParams:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandTableClone:[],//品牌表格数据clone
-        commodityBrandQuery:false,//条件查询
-        commodityBrandTreeQuery:false,//树节点查询
         commodityBrandQueryParams:"",//条件查询参数
-        commodityBrandTreeQueryParams:"",//树节点查询参数
         commodityBrandNewCol:'',
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
@@ -879,9 +867,6 @@ export default new vuex.Store({
         },
         setTreeQueryApi(state,api){//查询树节点api地址
             state[state.tableName+'TreeQueryApi']=api;
-        },
-        setHttpParams(state,params){//api请求参数
-            state[state.tableName+'Params']=params;
         },
         setQueryParams(state,params){//查询请求参数
             state[state.tableName+'QueryParams']=params;
