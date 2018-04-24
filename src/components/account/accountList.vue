@@ -368,7 +368,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             loadSelect(){//获取select
                 let _this=this;
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountSystem'}).then(function(res){
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){
                     _this.value=res.result[0].itemName;
                     _this.options=res.result;
                     //console.log(_this.list)

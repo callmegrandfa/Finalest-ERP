@@ -1,6 +1,7 @@
 
 <template>
-    <el-dialog :visible="dialogVisible" v-on:update:visible="visibleSync = $event" class="dialog_confirm_message" width="25%" title="提示">
+    <!-- <el-dialog :visible="dialogVisible" v-on:update:visible="visibleSync = $event" class="dialog_confirm_message" width="25%" title="提示"> -->
+    <el-dialog :visible="dialogVisible" class="dialog_confirm_message" width="25%" title="提示" @close='close'>
         <el-col :span="24" class="detail_message_btnWapper" :visible="dialogSetting.dialogType=='submit'">
             <span v-show="dialogSetting.dialogType=='submit'" @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
         </el-col>
@@ -26,13 +27,11 @@
         </el-col>
         <span slot="footer">
             <button v-for="item in dialogCommand" :class="{dialog_footer_bt_long:dialogCommand.length==1}" :key="item.text" class="dialog_footer_bt dialog_font"  @click="dialogClick(item)">{{item.text}}</button>
-            <!-- <button class="dialog_footer_bt dialog_font" @click="dialogCancel">取 消</button> -->
         </span>
     </el-dialog>
 </template>
 <script type="text/javascript">
 	export default{
-        //props: ['message','dialogVisible','dialogModel','dialogType','dialogCommand','errorTips'],
         props:{
             
             dialogVisible:{//提示框是否可见
@@ -50,9 +49,7 @@
         },
 		data(){
 			return{
-                visibleSync: this.dialogVisible,
                 detail_message_ifShow:false,
-                 //---错误提示框----------------
                 option: {
                     vRail: {
                         width: '5px',
@@ -71,12 +68,17 @@
 			}
 		},
 		created() {
-	      
         },
         watch: {
-            visibleSync(val) {
-                    this.$emit('update:dialogVisible', val)
-                }
+            dialogVisible(val){
+                this.dialogVisible=val;
+            },
+            dialogSetting:{
+                handler:function(val,oldVal){
+                    this.dialogSetting=val;
+                },
+                deep:true
+            }
         },
 	    methods:{
 	    	dialogClick(item){
@@ -86,9 +88,9 @@
                 }
                 this.$emit('dialogClick',param);
             },
-            // dialogCancel(){
-            //     this.$emit('cancel',this.dialogModel);
-            // }
+            close(){
+                this.$emit('dialogColse');
+            }
 	    }
 	}
 </script>

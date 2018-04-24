@@ -31,7 +31,7 @@
                 <el-col :span='24' class="tree-container pl10 pt10">
                     <template>
                       <el-tabs v-model="activeName" @tab-click="handleClick">
-                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()">
+                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()" :key="items.id">
                             <el-tree
                                 :data="items.classTree1" 
                                 :props="defaultProps" 
@@ -160,7 +160,6 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm1/btm'
-import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){

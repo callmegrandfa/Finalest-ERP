@@ -2,7 +2,8 @@
     <div class="CommodityCategoriesDetails commodityDetails">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
-               <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+               <!-- <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm> -->
+               <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
                <el-row class="pl10 pr10" style="margin-top:20px">
                     <el-col :span="24">
                         <el-row>
@@ -212,12 +213,15 @@
                     </el-col>
                 </el-row>
             </el-col>
-        </el-row> 
+        </el-row>
+        <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>      
     </div>
 </template>
 
 <script>
+import dialogBox from '../../base/dialog/dialog'
 import Btm from '../../base/btm/btm'
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
     export default{
         name:'customerInfor',
         data(){
@@ -239,30 +243,27 @@ import Btm from '../../base/btm/btm'
                     value: '选项5',
                     label: '北京烤鸭'
                     }],
-                bottonbox:{
-                   //url: '/commodityleimu/CommodityCategories',
-                   url: '/commodityleimu/commodityClassHeading',
-                   botton:[{
-                    class: 'erp_bt bt_back',
-                    imgsrc: '../../../static/image/common/bt_back.png',
-                    text: '返回',
-                    disabled:false
+                buttonGroup:[{
+                    text:'返回',
+                    class:'bt_back',
+                    icon:'icon-fanhui',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_save',
-                    imgsrc: '../../../static/image/common/bt_save.png',
-                    text: '保存',
-                    disabled:false
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_cancel',
-                    imgsrc: '../../../static/image/common/u470.png',
-                    text: '取消',
-                    disabled:true
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:true,
                 },{
-                    class: 'erp_bt bt_del',
-                    imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除',
-                    disabled:false
-                }]},
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:true,
+                }],
                 addItem:{
                     categoryParentid:"",//上级商品类目
                     categoryCode:"",//商品类目编码
@@ -298,6 +299,18 @@ import Btm from '../../base/btm/btm'
                     value: 0,
                     label: '未启用'
                 }],
+                dialogCommand:[],//底部按钮组控制组
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
                 isUpdate:false,//是否修改
                 isAdd:false,
                 changeTimes:0,
@@ -306,12 +319,12 @@ import Btm from '../../base/btm/btm'
         created(){
             this.loadTree();
             this.InitModify();
-            if(this.$route.params.id=="default"){
-                this.isAdd=true;
-                this.bottonbox.botton[1].disabled=false;
-            }else{
-                this.bottonbox.botton[1].disabled=true;
-            }
+            // if(this.$route.params.id=="default"){
+            //     this.isAdd=true;
+            //     this.buttonGroup[3].disabled=false;
+            // }else{
+            //     this.buttonGroup[3].disabled=true;
+            // }
         },
         validators: {
             'addItem.categoryParentid': function (value) {//上级商品类目
@@ -342,20 +355,15 @@ import Btm from '../../base/btm/btm'
             addItem:{
                 handler: function (val, oldVal) {
                     this.changeTimes++
-                    if(this.changeTimes==2){
-                        this.bottonbox.botton[1].disabled=false;
-                        this.bottonbox.botton[2].disabled=false;
+                    if(this.changeTimes>=2){
+                        this.buttonGroup[3].disabled=false;
+                        this.buttonGroup[2].disabled=false;
                     }
                 },
                 deep:true
             },
             classTree:{
                  handler: function (val, oldVal) {
-                    // if(val.length>0){
-                    //     this.treeNode.categoryParentid=val[0].id;
-                    //     this.treeNode.categoryName=val[0].categoryName;
-                    //     this.addItem.categoryParentid=val[0].id;
-                    // }
                 },
                 deep:true
             }
@@ -379,31 +387,24 @@ import Btm from '../../base/btm/btm'
                     + seperator2 + date.getSeconds();
                 return currentdate;
             },
-            btmlog:function(data){              
-                if(data=="取消"){
-                    if(this.$route.params.id=="default"){
-                        this.validation.reset();
-                        this.isAdd=true;
-                        this.InitData();
-                    }else{
-                        this.InitModify();
-                    }
-                    this.bottonbox.botton[2].disabled=true;
-                }else if(data=="新增保存"){
+            btnClick(btn){             
+                if(btn=="取消"){
+                    this.dialogSetting.dialogName='cancelDialog'
+                    this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
+                }else if(btn=="保存"){
                     this.save();
-                }else if(data=="删除"){
-                    let _this=this;
-                    _this.$axios.deletes('/api/services/app/CategoryManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
-                        _this.$store.state.url=_this.bottonbox.url+'/default';
-           		        _this.$router.push({path:_this.$store.state.url})//点击切换路由
-                        _this.open('删除成功','el-icon-circle-check','successERP'); 
-                        _this.delDialog=false;  
-                    }).catch(function(err){
-                        _this.$message({
-                            type: 'warning',
-                            message: err.error.message
-                        });
-                    }) 
+                }else if(btn=="删除"){
+                    this.dialogSetting.dialogName='delDialog'
+                    this.dialogSetting.message="确定删除？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
+                }else if(btn=="返回"){
+                    this.$store.state.url='/commodityleimu/commodityClassHeading/default'
+           		    this.$router.push({path:this.$store.state.url})//点击切换路由
                 }
             },
             InitModify(){
@@ -498,31 +499,80 @@ import Btm from '../../base/btm/btm'
                 if(!_this.isAdd){
                     let updateData=_this.addItem;
                     _this.$set(updateData, 'id', _this.updateId);
-                    _this.$axios.puts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Update',updateData).then(function(res){
+                    _this.$axios.puts('/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         //_this.InitModify();
                         _this.InitCategoryid();
                         _this.validation.reset();
                         _this.isEdit=true;
-                        _this.bottonbox.botton[2].disabled=true;//取消按钮
-                        _this.bottonbox.botton[1].disabled=true;//保存按钮
+                        _this.changeTimes=0;
+                        _this.buttonGroup[3].disabled=true;//取消按钮
+                        _this.buttonGroup[2].disabled=true;//保存按钮
                         _this.open('修改商品类目成功','el-icon-circle-check','successERP'); 
                         return;   
+                    }).catch(function(err){
+                        _this.dialogSetting.dialogType="submit";
+                        _this.dialogSetting.dialogName='saveDialog'
+                        _this.dialogSetting.message="信息提报有误";
+                        _this.errorTips.message=err.error.message;
+                        _this.errorTips.details='';
+                        _this.dialogCommand=[{text:'确定',class:'btn-confirm'}];
+                        _this.dialogVisible=true;
                     }); 
                 }else{
-                    _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
+                    _this.$axios.posts('/api/services/app/CategoryManagement/Create',_this.addItem).then(function(res){
                         //_this.InitModify();
                         _this.InitCategoryid();
                         _this.InitData();
-                        _this.bottonbox.botton[2].disabled=true;//取消按钮
+                        _this.buttonGroup[3].disabled=true;//取消按钮
                         _this.validation.reset();
                         _this.open('保存商品类目成功','el-icon-circle-check','successERP');    
                     }); 
                 }
                 
             },
+            dialogClick(parmas){//对话框点击事件
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="cancelDialog"){//取消操作确认操作
+                        if(this.$route.params.id=="default"){
+                            this.validation.reset();
+                            this.isAdd=true;
+                            this.InitData();                       
+                            // this.$store.state.url='/commodityleimu/commodityClassHeading/default'
+                            // this.$router.push({path:this.$store.state.url})//点击切换路由
+                        }else{
+                            this.InitModify();
+                        }
+                        this.buttonGroup[2].disabled=true;
+                        this.buttonGroup[3].disabled=true;
+                        this.dialogVisible=false; 
+                    }else if(parmas.dialogName=="delDialog"){//删除确认操作
+                        let _this=this;
+                        _this.$axios.deletes('/api/services/app/CategoryManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
+                            _this.$store.state.url='/commodityleimu/commodityClassHeading/default'
+                            _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                            _this.open('删除成功','el-icon-circle-check','successERP'); 
+                            _this.delDialog=false;  
+                        }).catch(function(err){
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        }) 
+                    }else if(parmas.dialogName=="saveDialog"){//保存报错对话框
+                        this.dialogVisible=false
+                    }
+                }else{
+                    this.dialogVisible=false; 
+                }
+            },
+            dialogColse(){
+                this.dialogVisible=false;
+            },
         },
         components:{
-            Btm
+            Btm,
+            dialogBox,
+            buttonGroup
         }
         
  }   
