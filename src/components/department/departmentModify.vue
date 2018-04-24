@@ -112,8 +112,7 @@
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="selectParentTree"
+                            <el-tree :data="selectParentTree"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
@@ -123,7 +122,7 @@
                                      @node-click="nodeClick"></el-tree>
                             <el-option v-show="false"
                                        :key="count.id" 
-                                       :label="count.deptName" 
+                                       :label="count.name" 
                                        :value="count.id"
                                        id="businessDetail_confirmSelect"></el-option>
                         </el-select>
@@ -342,12 +341,12 @@
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
                     children: 'children',
-                    label: 'deptName',
+                    label: 'name',
                     id:'id'
                 },
                 parentItem:{
                     id:'',
-                    deptName:'',
+                    name:'',
                 },
                 //--------------------
                 status: [],
@@ -433,7 +432,7 @@
                     self.ouItem.id = self.departmentData.ouId;
                     self.ouItem.ouName = self.departmentData.ouFullname;
                     self.parentItem.id = self.departmentData.deptParentid;
-                    self.parentItem.deptName = self.departmentData.deptParentName;
+                    self.parentItem.name = self.departmentData.deptParentName;
 
                     self.firstModify = false;
                     
@@ -504,9 +503,10 @@
             })
         },
         nodeClick:function(data){
+            console.log(data)
             let self = this;
             self.parentItem.id = data.id;
-            self.parentItem.deptName = data.deptName;
+            self.parentItem.name = data.name;
             self.$nextTick(function(){
                 $('#businessDetail_confirmSelect').click()
             })
