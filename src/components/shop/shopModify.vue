@@ -869,7 +869,7 @@ export default({
                 }else{
                     // console.log(self.addList.length)
                     // if(self.addList.length>0){
-                        self.ifModify = true;
+                        //self.ifModify = true;
                     // }
                     
                 } 

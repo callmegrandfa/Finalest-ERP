@@ -11,9 +11,12 @@
             <!-- <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span> -->
         </el-col>
      </el-row>
-     <el-row>
-         <el-col :span="24" class="getPadding">
-             <div class="tipsWrapper">
+<el-row class="nopadding" >  
+    <div class="tabZoo">   
+<el-tabs v-model="activeName_first">    
+    <el-tab-pane label="编辑商品" name="editGoods">                    
+        <el-row>
+         <div class="tipsWrapper">
                     <div class="errorTips">
                         <p class="msgDetail">错误提示：
                             <span 
@@ -60,6 +63,8 @@
                         </p>
                     </div>
                 </div>
+  
+         <el-col :span="24" class="getPadding">
             <div class="bgcolor" style="margin-bottom:0">
                 <label><small>*</small>类目</label>
                 <el-select clearable filterable  class="categoryId"
@@ -141,12 +146,6 @@
                     :class="{redBorder : validation.hasError('product_MainTable.unitId')}"
                     placeholder=""
                     v-model="product_MainTable.unitId">
-                        <!-- <el-option 
-                        v-for="item in selectData.unit" 
-                        :key="item.id" 
-                        :label="item.unitId_UnitName"
-                        :value="item.id">
-                        </el-option> -->
                         <el-input
                         placeholder="搜索..."
                         class="selectSearch"
@@ -240,17 +239,6 @@
                         <el-checkbox :disabled="!isCategoryIdEmpty" @change="showErrprTips" v-model="product_MainTable.isSuite">是否套件</el-checkbox>
                     </div>
                 </el-col>
-                <!-- <el-col :span="24" v-if="product_MainTable.validityMgt">
-                    <div class="bgcolor">
-                        <label>保质天数</label>
-                        <el-input class="validDays" 
-                        @focus="showErrprTips"
-                        :disabled="!isCategoryIdEmpty"
-                        :class="{redBorder : validation.hasError('product_MainTable.validDays')}"
-                        v-model="product_MainTable.validDays">
-                        </el-input>
-                    </div>
-                </el-col> -->
             </el-col> 
         </el-row>
      <!-- </div>    
@@ -567,82 +555,6 @@
                             </el-table-column>
                         </el-table> 
                 </el-tab-pane>
-<!-- - - - - - - - - - - - - - - - - - - - - - - - 商品属性 - - - - - - - - - - - - - - - - - - - - -  -->
-                <el-tab-pane label="商品属性" name="property">
-                    <div class="bgcolor">
-                        <label>类别</label>
-                        <el-input
-                        
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
-                        v-model="productProperty_ChildTable.propertyValueName" >
-                        </el-input>
-                    </div>
-                    <div class="bgcolor">
-                        <label>系列</label>
-                        <el-input
-                        
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
-                        v-model="productProperty_ChildTable.propertyValueName" >
-                        </el-input>
-                    </div>
-                   
-                    <div class="bgcolor">
-                        <label>项目</label>
-                        <el-input
-                        
-                        @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
-                        v-model="productProperty_ChildTable.propertyValueName" >
-                        </el-input>
-                    </div>
-                </el-tab-pane>
-<!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
-                <el-tab-pane label="图片" name="picture">
-                       <!-- <li>
-                           <div>主图</div>
-                           <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            :before-remove="beforeRemove"
-                            :on-exceed="handleExceed"
-                            :file-list="fileList"
-                            :auto-upload="false"
-                            :limit="1"
-                            :show-file-list="false"
-                            :on-change="changePicture"
-                            :on-success="handleAvatarSuccess"
-                            ref="upload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
-                            
-                       </li> -->
-                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
-                            <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
-                            <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
-                </el-tab-pane>
-<!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
-                <el-tab-pane label="使用组织" name="specTeam">
-                    <el-table :data="productOu_ChildTable" border style="width: 100%" stripe>
-                            <el-table-column prop="ouId" label="业务组织">
-                            </el-table-column>
-
-                            <el-table-column prop="ouId" label="上市日期" ></el-table-column>
-
-                            
-                            <el-table-column prop="ouId" label="备注"></el-table-column>
-                            <el-table-column prop="ouId" label="状态">
-                                <template slot-scope="scope">
-                                    <el-checkbox></el-checkbox>
-                                </template>
-                            </el-table-column>
-                        </el-table> 
-                </el-tab-pane>
             </el-tabs>
         </el-col>
     </div>
@@ -677,7 +589,205 @@
             </div>
         </div>                                  
     </el-col>
-</el-row>       
+</el-row>
+</el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 商品属性 - - - - - - - - - - - - - - - - - - - - -  -->
+            <el-tab-pane label="商品属性" name="property">
+                <el-row>
+                    <div class="bgcolor">
+                        <label>类别</label>
+                        <el-input
+                        
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
+                        v-model="productProperty_ChildTable.propertyValueName" >
+                        </el-input>
+                    </div>
+                    <div class="bgcolor">
+                        <label>系列</label>
+                        <el-input
+                        
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
+                        v-model="productProperty_ChildTable.propertyValueName" >
+                        </el-input>
+                    </div>
+                   
+                    <div class="bgcolor">
+                        <label>项目</label>
+                        <el-input
+                        
+                        @focus="showErrprTips"
+                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
+                        v-model="productProperty_ChildTable.propertyValueName" >
+                        </el-input>
+                    </div>
+                </el-row>
+            </el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
+            <el-tab-pane label="图片" name="picture">
+                <el-row>
+                       <!-- <li>
+                           <div>主图</div>
+                           <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList"
+                            :auto-upload="false"
+                            :limit="1"
+                            :show-file-list="false"
+                            :on-change="changePicture"
+                            :on-success="handleAvatarSuccess"
+                            ref="upload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
+                            
+                       </li> -->
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
+                    </el-row>
+                </el-tab-pane>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
+                <el-tab-pane label="使用组织" name="useOu">
+                    <el-row>
+                        <button class="erp_bt bt_add" @click="dialogOuIsShow">
+                            <div class="btImg">
+                                <img src="../../../../static/image/common/bt_add.png">
+                            </div>
+                            <span class="btDetail">选取</span>
+                        </button>
+                        <div class="search_input_group">
+                            <div class="search_input_wapper" @keyup.enter="searchOuTable">
+                                <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchTableOu"
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
+                        </div>
+                        <!-- <el-table :data="productOu_ChildTable" border style="width: 100%" stripe>
+                            <el-table-column prop="ouId" label="业务组织">
+                            </el-table-column>
+
+                            <el-table-column prop="ouId" label="上市日期" ></el-table-column>
+
+                            
+                            <el-table-column prop="ouId" label="备注"></el-table-column>
+                            <el-table-column prop="ouId" label="状态">
+                                <template slot-scope="scope">
+                                    <el-checkbox></el-checkbox>
+                                </template>
+                            </el-table-column>
+                        </el-table>  -->
+                        <el-table 
+                        v-loading="ouTableLoading"
+                        :data="showPageTableOu" 
+                        border 
+                        style="width: 100%" 
+                        stripe>
+
+                            <el-table-column prop="ouName" label="业务组织"></el-table-column>
+                            <el-table-column label="上市日期">
+                                <template slot-scope="scope">
+                                    <el-date-picker
+                                    v-model="scope.row.regtime"
+                                    format="yyyy.MM.dd"
+                                    type="datetime" 
+                                    readonly
+                                    align="center"></el-date-picker>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="remark" label="备注"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <!-- <template slot-scope="scope">
+                                    <el-checkbox v-model="scope.row.status"></el-checkbox>
+                                </template> -->
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text" @click="delCheckOu(scope.row)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="ouHandleCurrentChange"
+                        :current-page="ouPageIndex"
+                        :page-size="ouOneItem"
+                        :total="ouTotalItem">
+                        </el-pagination>   
+                    </el-row>
+                </el-tab-pane>
+</el-tabs>   
+    </div>
+</el-row> 
+                           <!-- 分配组织 -->
+<el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
+        <span slot="title">
+            <span>分配组织</span>
+            <a  href="javascript:;" class="add" @click="addNewOu">+</a>
+            <div class="search_input_group">
+                <div class="search_input_wapper">
+                    <el-input
+                        placeholder="搜索..."
+                        v-model="filterTextOu"
+                        class="search_input"
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </div>
+            </div>
+        </span>
+        <el-col :span="24" class="transfer_warapper">
+            <el-col :span="24" class="checkBoxOuUser">
+                <el-checkbox @change="CheckAllTree" v-model="checkAllOu" class="square_el"></el-checkbox><span>全选</span>
+                <el-checkbox @change="showCheckTree" v-model="showCheck" class="square_el"></el-checkbox><span>查看已选</span>
+            </el-col>
+            <el-col :span="24" class="transfer_table">
+                <vue-scroll :ops="$store.state.option">
+                    <el-tree
+                    :render-content="renderContent_ouTreeDataRight"
+                    :default-expanded-keys="expand.expandId_dialogOu"
+                    :data="ouTreeDataRight"
+                    show-checkbox
+                    :highlight-current="true"
+                    node-key="ouId"
+                    ref="tree"
+                    :filter-node-method="filterNode"
+                    @node-click="ouNodeClickRight"
+                    @check-change="isCheckAllOu"
+                    :expand-on-click-node="false"
+                    :props="ouDefaultPropsRight">
+                    </el-tree>
+                </vue-scroll>
+            </el-col>
+            <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+            <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
+            <!-- <el-button @click="setCheckedNodes">通过 node 设置</el-button>
+            <el-button @click="setCheckedKey">通过 key 设置</el-button> -->
+        </el-col>
+    <span slot="footer">
+        <button class="transfer_footer_btn transfer_confirm" @click="ouDialogSure">确 认</button>
+        <button class="transfer_footer_btn" @click="dialogOu = false">取 消</button>
+    </span>
+</el-dialog>
+<!--dialog结束  -->   
 <!-- dialog尺码选择 -->
         <el-dialog :visible.sync="chooseSize" class="choose_size">
             <el-dialog
@@ -710,18 +820,27 @@
             <el-col :span="24" class="_body">
                 <el-col :span="6" class="_body_left">
                     <vue-scroll :ops="$store.state.option">
-                        <p @click="getDetailSize()">全部</p>
+                        <p @click="getDetailSize(0)">全部</p>
                         <p v-for="(item,index) in showSizeDialogData" :key="index" @click="getDetailSize(item)">{{item.specgroupName}}</p>
                     </vue-scroll>
                 </el-col>
                 <el-col :span="18" class="_body_right">
                     <el-col :span="24" class="_right_body">
-                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>xs</span>
+                        <!-- _this.sizeTableData=res.result.items; -->
+                        <span class="show_size" v-if="witchSpecgroup.spec == 'one'" v-for="(item,index) in sizeTableData" :key="index">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                            {{item.specValueId_SpecValueName}}
+                        </span>
+                        <span class="show_size" v-if="witchSpecgroup.spec == 'all'" v-for="(item,index) in sizeTableData" :key="index">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                            {{item.specValueName }}
+                        </span>
+                        <!-- <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>xs</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>xs</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>XXL</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
                         <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
-                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span>
+                        <span class="show_size"><i class="fa fa-check-square" aria-hidden="true"></i>17码</span> -->
                         <span class="show_size addSize" @click="innerVisible = true">
                             <span class="x"></span>
                             <span class="y"></span>
@@ -733,11 +852,11 @@
                             <button class="transfer_footer_btn" @click="chooseSize = false">取 消</button>
                         </div>
                         <div class="_footer_page transfer_footer">
-                            <span>1</span>
+                            <span>{{page}}</span>
                             <span>/</span>
-                            <span>3</span>
-                            <el-button class="_page_left el_transfer" type="primary" icon="el-icon-arrow-left" round></el-button>
-                            <el-button class="_page_right el_transfer" type="primary" icon="el-icon-arrow-right" round></el-button>
+                            <span>{{totalPage}}</span>
+                            <el-button :disabled="leftDownBtn" class="_page_left el_transfer" type="primary" icon="el-icon-arrow-left" round @click="pageLeft"></el-button>
+                            <el-button :disabled="leftAddBtn" class="_page_right el_transfer" type="primary" icon="el-icon-arrow-right" round @click="pageRight"></el-button>
                         </div>
                     </el-col>
                 </el-col>
@@ -837,6 +956,7 @@ export default {
             },
 
             ifShow:true,
+            activeName_first:'editGoods',
             activeName_one: 'goodsPrice',
             activeName_two: "goodsSize",
             activeName_three: "SKU",
@@ -865,11 +985,11 @@ export default {
                 "multiUnitEnabled": false,//启用多单位 ,
                 "isSuite": false,//是否套件
                 "purchasePrice": 0,//进货价 
-                "purchaseUnit": '',//进货默认单位 
+                "purchaseUnit": 0,//进货默认单位 
                 "wholePrice": 0,//批发价
-                "wholeUnit": '',//批发默认单位
+                "wholeUnit": 0,//批发默认单位
                 "discount": 1,//折扣
-                "vipPrice": '',//会员价 
+                "vipPrice": 0,//会员价 
                 "retailPrice": 0,//零售价
                 "retailUnit": 0,//零售默认单位
                 "remark": "",//备注
@@ -886,22 +1006,22 @@ export default {
                 }
             ],
             "productSpec_ChildTable": [//规格从表
-                {
-                "id": 0,
-                "groupId": 1,
-                "productId": '',//商品ID 
-                "basSpecgroupId": '',//规格组ID
-                "specId": '',//规格ID
-                }
+                // {
+                // "id": 0,
+                // "groupId": 1,
+                // "productId": '',//商品ID 
+                // "basSpecgroupId": '',//规格组ID
+                // "specId": '',//规格ID
+                // }
             ],
             "productSpecValue_GrandTable": [//规格值孙表 
-                {
-                "id": 0,
-                "groupId": 1,
-                "productSpecId": '',//商品规格ID 
-                "specId": '',//规格ID
-                "specValueId": '',//属性ID
-                }
+                // {
+                // "id": 0,
+                // "groupId": 1,
+                // "productSpecId": '',//商品规格ID 
+                // "specId": '',//规格ID
+                // "specValueId": '',//属性ID
+                // }
             ],
             "productUnit_ChildTable": [// 多单位从表
                 {
@@ -1000,6 +1120,16 @@ export default {
         },//dialog选择尺码所有对应id规格组数据
         showSizeDialogData:[],//dialog左侧渲染数据
         innerVisible:false,//内层表格
+        witchSpecgroup:{},//纪录选中规格组
+        witchDialog:0,//纪录当前点击的规格编码id
+        //商品规格dialog,规格分页
+        sizeTableData:[],
+        pageIndex:1,//分页的当前页码
+        totalPage:1,//当前分页总数
+        oneItem:30,//每页有多少条信息
+        page:1,//当前页
+        leftDownBtn:false,//分页按钮是否显示
+        leftAddBtn:false,//分页按钮是否显示
 //---------------SKU------------------
        
 //---------------属性------------------
@@ -1007,6 +1137,31 @@ export default {
         files:{//传入图片上传组件数据
             src:''
         },
+//----------------使用组织---------------
+        dialogOu:false,
+        expand:{
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+            },
+         ouTreeDataRight:[],//
+            ouDefaultPropsRight:{
+                children: 'children',
+                label: 'ouName',
+                id:'ouId'
+            },
+            showCheck:false,//查看已选
+            checkAllOu:false,//全选
+            filterTextOu:'',//搜索
+            addOu:'default',
+//-------------table--------------    
+            searchTableOu:'',//搜索框值       
+            ouCheckAll:[],//分配组织数据
+            showPageTableOu:[],//展示分页后表格数据
+            ouPageIndex:1,//分页的当前页码
+            ouTotalPage:0,//当前分页总数
+            ouOneItem:10,//每页有多少条信息
+            ouPage:1,//当前页
+            ouTotalItem:0,//总共有多少条消息
+            ouTableLoading:false,
     }
 },
     validators: {
@@ -1082,16 +1237,22 @@ export default {
     },
     created:function(){
         let _this=this;
-          _this.loadTree_categoryId();//类目树形
-          _this.loadTree_unitId();//单位树形
-         _this.getSelectData();
-         _this.getDefault();
+        _this.loadTree_categoryId();//类目树形
+        _this.loadTree_unitId();//单位树形
+        _this.getSelectData();
+        _this.getDefault();
+
+        _this.getAllOulength();//获取所有数据长度判断是否全选
+        _this.loadOuTreeAll();//关联组织树形所有数据
     },  
      watch: {
       search_categoryId(val) {
         this.$refs.tree.filter(val);
       },
       search_unitId(val) {
+        this.$refs.tree.filter(val);
+      },
+      filterTextOu(val) {
         this.$refs.tree.filter(val);
       },
       'product_MainTable.categoryId'(val){//类目值
@@ -1267,8 +1428,8 @@ export default {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
                     _this.$axios.posts('/api/services/app/ProductManagement/Create',_this.product_MainTable).then(function(res){
-                        // _this.$store.state.url='/OuManage/OuManageModify/'+res.result.id
-                        // _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        _this.$store.state.url='/goodsFiles/goodsFilesModify/'+res.result.id
+                        _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -1347,7 +1508,6 @@ export default {
                     // console.log(res.result)
                     _this.CategoryData=res.result
                 },function(res){
-
                 })
                  _this.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{categoryID:_this.product_MainTable.categoryId,ItemType:2})
                 .then(function(res){//获取规格
@@ -1374,18 +1534,21 @@ export default {
 //----------------------商品规格------------------
         showGoodsDialog(data){//选中编辑规格组，显示dialog
             let _this=this;
+            _this.witchDialog=data.itemSourceId;//纪录当前点击的规格编码id
             if(typeof(_this.chooseSizeData[data.itemSourceId])=='undefined'){
              _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:1})
                 .then(function(resp){
                     if(resp.result.totalCount>0){
-                        _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:1})
+                        _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:resp.result.totalCount})
                         .then(function(res){
                             _this.chooseSizeData[data.itemSourceId]=res.result.items;
+                            _this.showSizeDialogData=_this.chooseSizeData[data.itemSourceId]
                             _this.chooseSize=true;
                             // _this.productUnit_ChildTable=res.result
                         })
                     }else{
                         _this.chooseSizeData[data.itemSourceId]=[];
+                        _this.showSizeDialogData=_this.chooseSizeData[data.itemSourceId]
                         _this.chooseSize=true;
                     }
                     
@@ -1393,18 +1556,310 @@ export default {
 
                 })
             }else{
+                _this.showSizeDialogData=_this.chooseSizeData[data.itemSourceId]
                 _this.chooseSize=true;
             }
-            _this.showSizeDialogData=_this.chooseSizeData[data.itemSourceId]
+            _this.page=1;
+            _this.witchSpecgroup={spec:'all',id:_this.witchDialog};
+            _this.getSpecAllSize({SpecId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+            
+        },
+        btnIsShow(){
+            let _this=this;
+            if(_this.page>1){
+                _this.leftDownBtn=false;
+            }else{
+                _this.leftDownBtn=true;
+            }
+            if(_this.totalPage>_this.page){
+                _this.leftAddBtn=false;
+            }else{
+                _this.leftAddBtn=true;
+            }
+        },
+        pageLeft(){
+            let _this=this;
+             if(_this.page>1){
+                _this.page--
+                if(_this.witchSpecgroup.spec=='all'){
+                   _this.getSpecAllSize({SpecId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                }else if(_this.witchSpecgroup.spec=='one'){
+                   _this.getSpecGroupSize({SpecgroupId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                }
+            }else{
+                return false
+            }
+        },
+        pageRight(){
+            let _this=this;
+            if(_this.page<=_this.totalPage){
+                _this.page++
+                if(_this.witchSpecgroup.spec=='all'){
+                   _this.getSpecAllSize({SpecId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                }else if(_this.witchSpecgroup.spec=='one'){
+                   _this.getSpecGroupSize({SpecgroupId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                }
+            }else{
+                return false
+            }
+        },
+        getSpecGroupSize(data){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',data)
+            .then(function(res){//点击全部,获取所有规格
+                _this.sizeTableData=res.result.items;
+                _this.totalItem=res.result.totalCount
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                if(_this.totalPage==0){
+                    _this.page=0
+                }
+                _this.btnIsShow()
+                console.log(res)
+            },function(res){
+
+            })
+        },
+        getSpecAllSize(data){
+            let _this=this;
+            _this.sizeTableData=[];
+            _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',data)
+            .then(function(res){//点击规格组,获取规格组的所有规格
+                _this.sizeTableData=res.result.items;
+                _this.totalItem=res.result.totalCount;
+                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+                if(_this.totalPage==0){
+                    _this.page=0
+                }
+                _this.btnIsShow()
+                console.log(res)
+            },function(res){
+
+            })
         },
         getDetailSize(data){//dialog点击左侧规格组获取详细规格
             let _this=this;
-            console.log(data)
-            // if(data==0){//点击全部
-            //     // /api/services/app/SpecValueManagement/GetSpecId
-            // }else{//非全部
-            //     // /api/services/app/SpecgroupContentManagement/GetListByCondition
-            // }
+            _this.page=1;
+            // console.log(data.itemSourceId)
+            if(data==0){//点击全部
+                // if(_this.witchDialog!=_this.witchSpecgroup.id){
+                    _this.witchSpecgroup={spec:'all',id:_this.witchDialog};
+                    _this.getSpecAllSize({SpecId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                // }
+            }else{//非全部
+                // if(data.itemSourceId!=_this.witchSpecgroup.id){
+                    _this.witchSpecgroup={spec:'one',id:data.itemSourceId};
+                    _this.getSpecGroupSize({SpecgroupId:_this.witchSpecgroup.id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                // }
+            }
+        },
+//----------------------使用组织------------------
+        searchOuTable(){
+            let _this=this;
+            // _this.searchLeftUser
+            let newJson=[];
+            let patt1 = new RegExp(_this.searchTableOu);
+            $.each(_this.ouCheckAll,function(index,val){
+                let str=val.ouName;
+                
+                let result = patt1.test(str)
+                if(result){
+                    newJson.push(val)
+                }
+            })
+            let x=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage)
+            _this.showPageTableOu=x.nowData
+            _this.ouTotalItem=x.TotalItem
+            _this.ouTotalPage=x.TotalPage
+        },
+        getAllOulength(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:1})
+            .then(function(res){
+                _this.allOuLength=res.result.totalCount
+                // console.log(res)
+            })
+        },
+        filterNode(value, data) {
+            if (!value) return true;
+            return data.ouName.indexOf(value) !== -1;
+        },
+        addRouterButton(name,url){//添加router页签
+            let _this=this;
+            var flag=false;
+                if(_this.$store.state.slidbarData){
+                    _this.$store.state.temporary=_this.$store.state.slidbarData;
+                }
+                var temporary=_this.$store.state.temporary;
+                var name=name;
+                var menuUrl=url;
+                if(temporary.length==0){//temporary为空
+                    flag=true;
+                }else{//temporary不为空
+                    for(var i=0;i<temporary.length;i++){
+                        if(temporary[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }   
+                    }
+                }
+                var pushItem={'name':name,'url':menuUrl};
+                
+                _this.$store.state.url=menuUrl;//储存当前url在router里的name
+                // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+                
+                if(flag){
+                    temporary.push(pushItem);
+                }
+                window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                _this.$router.push({name:this.$store.state.url})
+        },
+        addNewOu(){//新增组织
+            let _this=this;
+            // let data=_this.$refs.tree.getCheckedNodes();
+                _this.$store.state.OuManage.url='/OuManage/OuManageDetail/'+_this.addOu;//路由重定向
+                _this.addRouterButton('组织管理','OuManage')
+                _this.dialogOu=false;
+                _this.activeName_first='useOu'
+        },
+        dialogOuIsShow(){
+            let _this=this;
+            _this.dialogOu=true;
+            setTimeout(function(){
+                // console.log(_this.storeCheckOu)
+               _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+               _this.isCheckAllOu()
+            },200)
+            
+        },
+        ouNodeClickRight(data){//右侧树形节点点击
+            let _this=this;
+            _this.addOu=data.ouId;
+        },
+        loadOuTreeAll(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
+            .then(function(res){
+                console.log(res)
+                _this.ouTreeDataRight=res.result;
+                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
+            },function(res){
+            })
+        },
+        ouDialogSure(){//dialog点击确认
+            let _this=this;
+            _this.dialogOu=false;
+            // console.log(_this.$refs.tree.getCheckedKeys())
+            _this.ouCheckAll=_this.$refs.tree.getCheckedNodes();
+            _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+            // console.log(_this.ouCheckAll)
+        },
+        delCheckOu(row){//删除表格数据
+            let _this=this;
+            let indexs=null
+            $.each(_this.ouCheckAll,function(index,val){
+                if(val.ouId==row.ouId){
+                    indexs=index
+                }
+            })
+            if(indexs!=null){
+                _this.ouCheckAll.splice(indexs,1)
+            }
+             _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+        },
+        CheckAllTree(){//全选
+            let _this=this;
+            let topNode=[]
+            if(_this.checkAllOu){
+                // $.each(_this.ouTreeDataRight,function(index,val){
+                //     topNode.push(val)
+                // })
+                _this.$refs.tree.setCheckedNodes(_this.ouTreeDataRight);
+                 $('.el-tree-node__content').each(function(){
+                    $(this).css('display','block')
+                })
+            }else{
+                // _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+                _this.$refs.tree.setCheckedNodes([])
+                setTimeout(function(){
+                    if(_this.showCheck){
+                        $('.el-checkbox__input').each(function(){
+                            if(!$(this).hasClass('is-indeterminate') && !$(this).hasClass('is-checked')){
+                                $(this).parents('.el-tree-node__content').css('display','none')
+                            }
+                        })
+                    }
+                },100)
+            }
+            
+        },
+        isCheckAllOu(){//是否全选
+            let _this=this;
+            if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
+                _this.checkAllOu=true
+            }else{
+                _this.checkAllOu=false
+            }
+        },
+        paginationOu(checkAllata,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+            let _this=this;
+            let nowData=[];
+            // console.log(checkAllata)
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(checkAllata.length>0){
+                    if(endIndex>checkAllata.length){
+                        endIndex=checkAllata.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        // console.log(checkAllata[startIndex])
+                        nowData.push(checkAllata[startIndex])
+                    }
+                }
+            _this.ouTotalItem=checkAllata.length;//总共多少条数据
+            _this.ouTotalPage=Math.ceil(checkAllata.length/oneItem);//有多少页
+            return nowData
+        },
+        showCheckTree(){//查看已选
+            let _this=this;
+            if(_this.showCheck){
+                $('.el-checkbox__input').each(function(){
+                    if(!$(this).hasClass('is-indeterminate') && !$(this).hasClass('is-checked')){
+                        $(this).parents('.el-tree-node__content').css('display','none')
+                    }
+                })
+            }else{
+                $('.el-tree-node__content').each(function(){
+                    $(this).css('display','block')
+                })
+            }
+            
+        },
+        ouHandleCurrentChange(val){//页码改变
+            let _this=this;
+            _this.ouPage=val;
+            _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+        },
+        renderContent_ouTreeDataRight(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
         },
 //----------------------图片------------------
         fileChange(data){//上传图片
@@ -1487,7 +1942,7 @@ export default {
     width: calc(100% - 94px);
     font-size: 12px;
  } 
- .bgcolor.longWidth>label{
+ .bgcolor.longWidth>label:first-child{
     width:84px;
     height: 35px;
  }
@@ -1666,6 +2121,24 @@ export default {
 .goodsFilesDetail ._body_right ._right_footer ._footer_page{
     float: right;
 }
-
+/* .goodsFilesDetail .el-tabs__header{
+    margin: 0;
+} */
+.goodsFilesDetail .add{
+    position: absolute;
+    top: 6px;
+    left: 18%;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+    background-color: #c7c7c7;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    text-decoration: none;
+    font-size: 23px;
+    font-weight: bold;
+}
 </style>
   
