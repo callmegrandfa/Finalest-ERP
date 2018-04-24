@@ -286,7 +286,7 @@
     methods: {
         filterNode_ou(value, data) {
             if (!value) return true;
-            return data.ouFullName.indexOf(value) !== -1;
+            return data.ouName.indexOf(value) !== -1;
         },
         getDefault(){
             let _this=this;

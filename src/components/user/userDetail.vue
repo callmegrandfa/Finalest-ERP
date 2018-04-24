@@ -794,9 +794,16 @@
             // 所属组织
             _this.selectData.OUType=res.result;
             })
-            _this.$axios.gets('/api/services/app/UserGroup/GetAll').then(function(res){ 
+            _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(resp){ 
             // 所属用户组
-                _this.selectData.userGroupId=res.result.items;
+            if(resp.result.totalCount>1){
+                _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:resp.result.totalCount}).then(function(res){
+                    _this.selectData.userGroupId=res.result.items;
+                })
+            }else{
+                _this.selectData.userGroupId=[];
+            }
+                
             })
             ///api/services/app/Language/GetLanguages
             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 

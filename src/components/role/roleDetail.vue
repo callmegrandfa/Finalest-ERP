@@ -1015,7 +1015,6 @@ export default({
                         })
                     });
                     _this.addData.permissions=permissions;
-                   
                     let userCodes=[];//关联用户
                     $.each(_this.showCheckedUserTable,function(index,val){
                         userCodes.push(val.userCode)
@@ -1025,13 +1024,12 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
                     _this.$axios.posts('/api/services/app/Role/Create',_this.addData)
                     .then(function(res){
-                        _this.add();
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.Cancel();
                     },function(res){

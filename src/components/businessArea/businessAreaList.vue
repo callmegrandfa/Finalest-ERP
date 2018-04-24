@@ -358,7 +358,7 @@
             },
             getHeight(){
                 $(".tree-container").css({
-                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                    height:parseInt($('.border-left').css('height'))-48+'px'
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')
