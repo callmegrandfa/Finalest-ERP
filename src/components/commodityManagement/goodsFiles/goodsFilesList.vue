@@ -68,7 +68,20 @@
                         </el-option>
                     </el-select>
                 </div>
-                
+                <div class="bgcolor smallBgcolor">
+                    <label>材质</label>
+                    <el-select clearable filterable placeholder="">
+                        <!-- <el-option v-for="item in selectData.brand" :key="item.id" :label="item.brandName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
+                <div class="bgcolor smallBgcolor">
+                    <label>款式</label>
+                    <el-select clearable filterable  placeholder="">
+                        <!-- <el-option v-for="item in selectData.brand" :key="item.id" :label="item.brandName" :value="item.id">
+                        </el-option> -->
+                    </el-select>
+                </div>
                 <div class="bgcolor smallBgcolor">
                     <label></label>
                     <span class="search-btn" @click="SimpleSearchClick">查询</span>
@@ -592,7 +605,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 400px;
+    min-height: 438px;
 }
 .btn{
     display: inline-block;

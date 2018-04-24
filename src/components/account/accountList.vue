@@ -368,7 +368,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             loadSelect(){//获取select
                 let _this=this;
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountSystem'}).then(function(res){
+                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){
                     _this.value=res.result[0].itemName;
                     _this.options=res.result;
                     //console.log(_this.list)
@@ -774,7 +774,8 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.addData.accperiodContents[j].KjModifiedTime=_this.nowTime();
                         }
                         _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
-                        _this.periodNum=diffMonth
+                        _this.periodNum=diffMonth;
+                        _this.tableData=_this.addData.accperiodContents
                         console.log(_this.addData.accperiodContents)
 
                     }else{
@@ -802,7 +803,8 @@ import dialogBox from '../../base/dialog/dialog'
                         }
                         _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
                         diffMonth=_this.periodNum;
-                        //console.log(_this.addData.accperiodContents)
+                        _this.tableData=_this.addData.accperiodContents
+                        console.log(_this.addData.accperiodContents)
                     }
                 }
 

@@ -89,14 +89,6 @@
                             </el-col>
                             <el-col :span="ifWidth?24:22" class="pt5"> 
                             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
-                            <!-- <button class="erp_bt bt_add" @click="addCol"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>                           
-                            <button :disabled="isCancel" @click="cancel" class="erp_bt bt_auxiliary"><div class="btImg" style="top:14px"><img src="../../../static/image/common/u470.png"></div><span class="btDetail">取消</span></button>
-                            <button class="erp_bt bt_save" @click="save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
-                            <button class="erp_bt bt_del" @click="delBatch"><i class="iconfont icon-shanchu"></i><span>删除</span></button>
-                            <button class="erp_bt bt_out"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导出</span></button>                    
-                            <button class="erp_bt bt_version" @click="handleStatus(1)"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">启用</span></button>
-                            <button class="erp_bt bt_auxiliary" @click="handleStatus(0)"><div class="btImg"><img src="../../../static/image/common/bt_stop.png"></div><span class="btDetail">停用</span></button> 
-                            <button id="refer" @click="refer" class="erp_bt bt_version" style="display:none"><div class="btImg"><img src="../../../static/image/common/bt_start.png"></div><span class="btDetail">查询</span></button> -->
                             </el-col>                   
                     </el-row>
                      <el-row class="">
@@ -106,7 +98,7 @@
                     </el-row>
                 </el-col>
             </el-row>
-            <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>     
+            <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>     
         </div>
     </div>
 </template>
@@ -189,11 +181,9 @@ import dialogBox from '../../base/dialog/dialog'
                 cancelClick:false,//是否点击取消按钮
                 turnPage:-1,//是否允许翻页
                 pageFlag:true,
-                //dialogModel:'',//对话框具体名称
-                //dialogType:'',//对话框表现形态
                 dialogCommand:[],//底部按钮组控制组
-                //dialogMessage:'',//对话框提示信息
-                dialogVisible:false,//对话框是否显示
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
                 errorTips:{//对话框 错误提示
                     message:'',
                     details:'',
@@ -209,10 +199,8 @@ import dialogBox from '../../base/dialog/dialog'
                     isDisable:false,
                 },
                 httpUrl:{
-                    //Initial:'/api/services/app/BrandManagement/GetAll',//数据初始化
                     delete:'/api/services/app/BrandManagement/Delete',//行内删除
                     query:'/api/services/app/BrandManagement/GetListByCondition',//条件查询
-                    treeQuery:'',//树节点查询
                 },
                 column: [{
                     prop: 'brandCode',
@@ -358,7 +346,7 @@ import dialogBox from '../../base/dialog/dialog'
                 }else{
                     return true
                 }
-            }
+            },
         },
         watch:{
             isUpdate:function(val,oldVal){
@@ -366,13 +354,13 @@ import dialogBox from '../../base/dialog/dialog'
                     this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
                 }
             },
-            isCancel:function(val,oldVal){
+            isCancel:function(val,oldVal){//监听是否修改或新增数据
                 if(!val){
                     this.buttonGroup[3].disabled=false
                 }else{
                     this.buttonGroup[3].disabled=true
                 }
-            }
+            },
         },
         methods:{
             closeLeft:function(){
@@ -405,15 +393,15 @@ import dialogBox from '../../base/dialog/dialog'
                     })
                 }
             },
-            Init(){//数据初始化
-                this.isUpdate=false;
-                this.isAdd=false;
-                this.isSave=false;
-                this.pageFlag=true;
-                this.updateArray=[];
-                this.addArray=[];
-                this.updateId="";
-            },
+            // Init(){//数据初始化
+            //     this.isUpdate=false;
+            //     this.isAdd=false;
+            //     this.isSave=false;
+            //     this.pageFlag=true;
+            //     this.updateArray=[];
+            //     this.addArray=[];
+            //     this.updateId="";
+            // },
             InitStatus(){//获取状态枚举表
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
@@ -496,7 +484,7 @@ import dialogBox from '../../base/dialog/dialog'
                         message: '请先编辑保存新增项'
                     });
                 }else{
-                    //this.$store.commit('setIfDel',false)//重置修改参数
+                    this.isSave=false;
                     this.$store.dispatch('addCol',newcol);//表格行内新增
                 }                              
             },
@@ -512,10 +500,11 @@ import dialogBox from '../../base/dialog/dialog'
                 })
             },
             cancel(){//数据恢复到初始化状态 取消
-                this.isSave=false;
-                this.$store.dispatch('InitTable');
-                this.$store.commit('setAddColArray',[])//置空新增集合
-                this.$store.commit('setUpdateColArray',[])//置空修改增集合
+                this.dialogSetting.dialogName='cancelDialog'
+                this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                this.dialogSetting.dialogType="confirm";
+                this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                this.dialogVisible=true;
             },
             handleStatus(statu){//批量启用/禁用
                 let handleArray=[];
@@ -558,7 +547,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             dialogClick(parmas){
                 if(parmas.dialogButton=="确定"){
-                    if(parmas.dialogName=="delDialog"){
+                    if(parmas.dialogName=="delDialog"){//删除对话框
                         this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
                         for(var i in this.SelectionChange){
                             this.idArray.ids.push(this.SelectionChange[i].id)
@@ -582,10 +571,19 @@ import dialogBox from '../../base/dialog/dialog'
                                 _this.open('删除成功','el-icon-circle-check','successERP');    
                             })
                         }
-                    }else if(parmas.dialogName=="saveDialog"){
+                    }else if(parmas.dialogName=="saveDialog"){//保存提交对话框
                         this.dialogVisible=false;
+                    }else if(parmas.dialogName=="cancelDialog"){//取消对话框
+                        this.isSave=false;
+                        this.dialogVisible=false;//关闭对话框
+                        this.$store.dispatch('InitTable');
+                        this.$store.commit('setAddColArray',[])//置空新增集合
+                        this.$store.commit('setUpdateColArray',[])//置空修改增集合
                     }
                 }else if(parmas.dialogButton=="取消"){
+                    if(parmas.dialogName=="delDialog"){//多选删除取消操作
+                        this.$store.commit('setTableSelection',[])//置空多选
+                    }
                     this.dialogVisible=false;
                 }
 
@@ -616,10 +614,10 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.$store.commit('get_RowId',"")//置空修改行id
                             _this.$store.commit('setUpdateColArray',[])//置空修改集合
                             _this.$store.dispatch('InitTable');
-                            //_this.$store.commit('setIfDel',true)
                             _this.isSave=false;
                             _this.open('保存商品品牌成功','el-icon-circle-check','successERP');  
                         }).catch(function(err){
+                                    //err.status;
                             _this.dialogSetting.dialogType="submit";
                             _this.dialogSetting.dialogName='saveDialog'
                             _this.dialogSetting.message="信息提报有误";
@@ -630,7 +628,10 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.isSave=false;
                         })   
                 }                                           
-            },                          
+            }, 
+            dialogColse(){//对话框关闭回调事件
+                this.dialogVisible=false;
+            },                         
             packUp(){
                 let oleftBox=document.getElementById('left-box');
                 let Re=document.getElementById('refer');
@@ -803,9 +804,5 @@ import dialogBox from '../../base/dialog/dialog'
     transition: transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms,-webkit-transform .15s cubic-bezier(.71,-.46,.88,.6) 50ms;
     -webkit-transform-origin: center;
     transform-origin: center;
-}
-button.erp_bt[disabled] {
-    cursor: not-allowed;
-    background: #ccc;
 }
 </style>

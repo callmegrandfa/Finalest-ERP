@@ -11,7 +11,7 @@
             <el-col :span="24" style="position: relative;">
                 <el-col :span="24">
                     <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">信息提报有误!</p>
+                    <p class="dialog_font dialog_body_message">{{submitData.response.message}}!</p>
                 </el-col>
                 <el-collapse-transition>
                     
@@ -40,7 +40,7 @@
         props:['submitData'],
         data(){
             return{
-                 option: {
+                option: {
                     vRail: {
                     width: "5px",
                     pos: "right",
@@ -55,13 +55,9 @@
                     height: "0"
                     }
                 },
-
-
-
             }
         },
         methods:{
-
         },
         
     }

@@ -1,4 +1,3 @@
-
 <template>
 	<div>
     <el-row class="h48 pt5">
@@ -30,4 +29,8 @@
 </script>
 <style>
 @import"//at.alicdn.com/t/font_561828_maf6xgd190be29.css";
+button.erp_bt[disabled] {
+    cursor: not-allowed;
+    background: #ccc;
+}
 </style>

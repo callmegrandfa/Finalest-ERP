@@ -393,7 +393,7 @@ const routes = [
             },
 
             {
-                path: '/currency',
+                path: '/currency', 
                 component: currency,
                 name: 'currency',
                 redirect: function() { //币种资料
@@ -773,7 +773,7 @@ router.beforeEach((to, from, next) => {
         // store.state[store.state[to.name].parent].url=to.fullPath
         if(typeof(store.state[to.name])!='undefined'){
             document.title = to.name
-            // console.log(to.name);
+            console.log(to.name);
             
             if(typeof(store.state[to.name].url)!='undefined' && typeof(store.state[store.state[to.name].parent].url)!='undefined'){
 

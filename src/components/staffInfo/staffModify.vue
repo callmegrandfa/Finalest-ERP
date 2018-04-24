@@ -377,23 +377,37 @@
                     let _this = this;
                     _this.$axios.gets("/api/services/app/EmployeeManagement/Get",
                     {id: this.$route.params.id}).then(rsp => {
-                        // console.log(rsp.result);
+                        console.log(rsp.result);
                         for (let val of rsp.result.employeeTypes) {
                             // console.log(val.employeeTypeid,val.employeeTypeidTValue);
                             _this.addData.employeeTypeIds.push(val.employeeTypeid);
                             // console.log(_this.addData.employeeTypeIds);
                         }
-                        _this.addData.employeeCode=rsp.result.employeeCode,
-                        _this.addData.employeeName=rsp.result.employeeName,
-                        _this.addData.ouId=rsp.result.ouId,
-                        _this.addData.mobile=rsp.result.mobile,
-                        _this.addData.deptId=rsp.result.deptId,
-                        _this.addData.sex=rsp.result.sex,
-                        _this.addData.birthday=rsp.result.birthday,
-                        _this.addData.shopId=rsp.result.shopId,
-                        _this.addData.status=rsp.result.status,
-                        _this.addData.remark=rsp.result.remark,
-                        _this.addData.id=rsp.result.id,
+                        _this.addData.employeeCode=rsp.result.employeeCode;
+                        _this.addData.employeeName=rsp.result.employeeName;
+                        _this.addData.ouId=rsp.result.ouId;
+                        _this.addData.mobile=rsp.result.mobile;
+                        if (rsp.result.deptId!=0) {
+                            _this.addData.deptId=rsp.result.deptId
+                        }
+                        if (rsp.result.sex==0) {
+                           _this.addData.sex=null;
+                        }else{
+                            _this.addData.sex=rsp.result.sex;
+                        }
+                        
+                        if (rsp.result.birthday.indexOf('3000'==0)) {
+                            _this.addData.birthday=null;
+                        }else{
+                            _this.addData.birthday=rsp.result.birthday;
+                        }
+
+                        if (rsp.result.shopId!=0) {
+                           _this.addData.shopId=rsp.result.shopId;
+                        }
+                        _this.addData.status=rsp.result.status;
+                        _this.addData.remark=rsp.result.remark;
+                        _this.addData.id=rsp.result.id;
                         // ------审计信息数据
                         _this.timeData.createdBy=rsp.result.createdBy;
                         _this.timeData.createdTime=rsp.result.createdTime;
@@ -459,22 +473,25 @@
                         })
             },
             filterNode_ou(value, data) {//根据关键字过滤节点
-                        if (!value) return true;
-                        return data.ouFullname.indexOf(value) !== -1;
+                if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
             },
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
-                        let _this=this;
-                        // console.log(data);
-                        // console.log(data.id);
-                        _this.ouId=data.id;
-                        // console.log(_this.ouId);
-                        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                            if($(this).attr('date')==data.id){
-                                $(this).click()
-                            }
-                        });
-                        _this.getSelectDepart();
-                        _this.loadDepartTree();
+                let _this=this;
+                // console.log(data);
+                // console.log(data.id);
+                if (data.id!=_this.addData.ouId) {
+                    _this.addData.deptId=null
+                }
+                _this.ouId=data.id;
+                // console.log(_this.ouId);
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                });
+                _this.getSelectDepart();
+                _this.loadDepartTree();
             },
             // --------------------------------------
             loadDepartTree(){// 加载所属部门树形控件
@@ -488,8 +505,8 @@
                         })
             },
             filterNode_Depart(value, data) {//根据关键字过滤节点
-                        if (!value) return true;
-                        return data.deptName.indexOf(value) !== -1;
+                if (!value) return true;
+                return data.deptName.indexOf(value) !== -1;
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
                         let _this=this;
@@ -510,13 +527,13 @@
                 this.$router.push({ path: this.$store.state.url });
             },
             isBack(){//判断是返回还是取消
-                        let _this=this;
-                        _this.btnValue='toBack';
-                        if(_this.update){
-                            _this.dialogUpdateConfirm=true;
-                        }else{
-                            _this.goBack()
-                        }
+                let _this=this;
+                _this.btnValue='toBack';
+                if(_this.update){
+                    _this.dialogUpdateConfirm=true;
+                }else{
+                    _this.goBack()
+                }
             },
             sureDoing(){
                         let _this=this;
@@ -597,13 +614,13 @@
                         }
                 });
             },
-            saveAdd() {// 保存修改的数据
+            saveAdd() {// 保存修改的数据---保存并新增
                 let _this = this;
                 $('.tipsWrapper').css({display:'block'})
                     _this.$validate().then(function(success) {
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
-                        if (_this.update) {_this.$axios.puts( "/api/services/app/EmployeeManagement/Update",_this.updateList)
+                        if (_this.update) {_this.$axios.puts( "/api/services/app/EmployeeManagement/Update",_this.addData)
                         .then(
                             rsp => {
                                 _this.open("修改成功", "el-icon-circle-check", "successERP");

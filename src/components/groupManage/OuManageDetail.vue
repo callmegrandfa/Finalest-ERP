@@ -251,11 +251,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_ouParentid"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTree"
                         :highlight-current="true"
                         :props="selectProps"
                         node-key="id"
-                        default-expand-all
                         ref="tree"
                         :filter-node-method="filterNode"
                         :expand-on-click-node="false"
@@ -319,7 +319,6 @@
                         :value="item.id" 
                         >
                         </el-option>
-                        <el-option v-show="false" :label="item_area_2.currencyName" :value="item_area_2.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
@@ -340,11 +339,11 @@
                         </el-input>
                         <el-tree
                          :render-content="renderContent_companyOuId"
+                        :default-expanded-keys="expand_Ou"
                         :data="selectTreeCompany"
                         :highlight-current="true"
                         :props="selectPropsCompany"
                         node-key="id"
-                        default-expand-all
                         ref="trees"
                         :filter-node-method="filterNode1"
                         :expand-on-click-node="false"
@@ -769,16 +768,39 @@
                                     v-model="basBusiness.stmOuId"
                                     :class="{redBorder : validation.hasError('basBusiness.stmOuId')}"
                                     @focus="showErrprTips"
-                                    
                                     placeholder=""
                                     >
-                                        <!-- <el-option 
-                                        v-for="item in selectData.ouParentid" 
-                                        :key="item.id" 
-                                        :label="item.ouName" 
-                                        :value="item.id">
-                                        </el-option> -->
+                                   <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="search">
+                                    </el-input>
+                                    <el-tree
+                                    :render-content="renderContent_ouParentid"
+                                    :default-expanded-keys="expand_Ou"
+                                    :data="selectTreeFinance"
+                                    :highlight-current="true"
+                                    :props="selectFinanceProps"
+                                    node-key="id"
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeClick_ou"
+                                    >
+                                    </el-tree> 
+                                    <el-option v-show="false" v-for="item in selectData.ouParentid" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
+                                    </el-option>
+                                    <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+
+
+                                    <!-- <el-option 
+                                    v-for="item in selectData.ouParentid" 
+                                    :key="item.id" 
+                                    :label="item.ouName" 
+                                    :value="item.id">
+                                    </el-option> -->
                                     </el-select>
+                                    
                                 </div>
                                 <div class="bgcolor">
                                     <label>启用状态</label>
@@ -1001,6 +1023,7 @@ export default({
              selectTree:[
             ],
             selectTreeCompany:[],
+            selectTreeFinance:[],
             item_ou:{
                 id:'',
                 ouName:''
@@ -1009,22 +1032,24 @@ export default({
                 id:0,
                 ouName:' '
                 },
-            item_area_2:{
-                id:2,
-                currencyName:' '
-                },
             selectProps: {
                 children: 'children',
                 label: 'ouName',
                 id:'id'
             },
             selectPropsCompany:{
-                 children: 'children',
+                children: 'children',
                 label: 'ouName',
                 id:'id'
             },
-             test:'',   
+            selectFinanceProps:{
+                children: 'children',
+                label: 'ouName',
+                id:'id'
+            },
+            test:'',   
             companys:1,
+            expand_Ou:[],
             show:true,
             ifShow:true,
             activeName: 'Company',
@@ -1496,7 +1521,8 @@ export default({
     created:function(){
         let _this=this;
          _this.loadTree();
-          _this.loadTreeCompany();
+         _this.loadTreeCompany();
+         _this.loadTreeFinance();
          _this.getSelectData();
          _this.getDefault();
     },  
@@ -1591,6 +1617,7 @@ export default({
                         _this.addData.accStartMonth=resp.result.accStartMonth;//启用年月
                         _this.firstModify=false;
                         _this.ifModify=false;
+                        // console.log(res);
                     // }
                 })
                
@@ -1694,7 +1721,7 @@ export default({
             _this.$axios.gets('/api/services/app/OuManagement/GetAllTree')
             .then(function(res){
                 _this.selectTree=res.result;
-                _this.loadIcon();
+                _this.expand_Ou=_this.defauleExpandTree(res.result,'id')
             },function(res){
             })
         },
@@ -1705,21 +1732,18 @@ export default({
         .then(function(res){
             // console.log(res);
             _this.selectTreeCompany=res.result;
-            _this.loadIcon();
         },function(res){
         })
     },
-    loadIcon(){
+      loadTreeFinance(){
         let _this=this;
-        _this.$nextTick(function () {
-            $('.preNode').remove();   
-            $('.el-tree-node__label').each(function(){
-                if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                    $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                }else{
-                    $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                }
-            })
+        _this.treeLoading=true;
+        _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:3})
+        .then(function(res){
+            console.log(res);
+            _this.selectTreeFinance=res.result;
+            _this.expand_Ou=_this.defauleExpandTree(res.result,'id');
+        },function(res){
         })
     },
          nodeClick_ou(data,node,self){
@@ -1990,6 +2014,15 @@ export default({
                 }
             });    
         },
+          defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
         renderContent_companyOuId(h, { node, data, store }){
                 
             if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){

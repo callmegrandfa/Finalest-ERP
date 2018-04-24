@@ -648,11 +648,11 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="contactPerson" label="联系电话" width="180">
+                            <el-table-column prop="phone" label="联系电话" width="180">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                         :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                        v-model="scope.row.contactPerson" 
+                                        v-model="scope.row.phone" 
                                         type="text"/> 
                                 </template>
                             </el-table-column>
@@ -1441,17 +1441,17 @@ export default({
                 self.y++;
                 let newCol = 'newCol'+self.y;
                 self.yrows.newCol ={
-                    id: 0,
-                    contactId: 0,
-                    completeAddress: "",
-                    addressType: 0,
-                    addressId: 0,
-                    contactPerson: "",
-                    phone: "",
-                    isDefault: false,
-                    proId:'',
-                    cityId:'',
-                    quId:''
+                    "groupId": 1,
+                    "contactId": self.createAddressParams.contactId,
+                    "addressType": '2',
+                    "addressId": '3',
+                    "completeAddress": "",
+                    "contactPerson": "",
+                    "phone": "",
+                    "isDefault": false,
+                    "adAreaLevel1":'',
+                    "adAreaLevel2":'',
+                    "adAreaLevel3":''
                 };               
                 self.addressData.unshift(self.yrows.newCol);
                 self.addAddressList.unshift(self.yrows.newCol)

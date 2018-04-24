@@ -27,15 +27,15 @@ export default {
   },
   mounted:function(){
     let _this=this;
-    $('body').on('mousedown','.el-tree-node__expand-icon',function(e){
-        $('.TreeMenu').css({
-                display:'none'
-            })
-    }).on('click',function(){
-        $('.TreeMenu').css({
-              display:'none'
-          })
-    })
+    // $('body').on('mousedown','.el-tree-node__expand-icon',function(e){
+    //     $('.TreeMenu').css({
+    //             display:'none'
+    //         })
+    // }).on('click',function(){
+    //     $('.TreeMenu').css({
+    //           display:'none'
+    //       })
+    // })
 
       _this.go=document.getElementById('window').offsetWidth;//页签每次移动的长度
       let content=document.getElementById('contents');//设置高度为全屏

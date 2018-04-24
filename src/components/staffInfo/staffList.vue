@@ -387,7 +387,7 @@
                 {SkipCount: (_this.pageIndex - 1) * _this.page_size,
                     MaxResultCount: _this.page_size})
                     .then(rsp => {
-                        console.log(rsp.result.items);
+                        // console.log(rsp.result.items);
                         _this.allList = rsp.result.items;
                         // _this.allList.employeeTypes = rsp.result.items;
                         // for (let val of rsp.result.items) {

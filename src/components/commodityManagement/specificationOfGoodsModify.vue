@@ -584,7 +584,8 @@ import Textbox from '../../base/textbox/textbox'
                 secondnoModify:false,
                 eachPage:10,//每页有多少条信息
                 page:1,//当前页
-                array3:[]
+                array3:[],
+                array4:[]
             }
         },
         validators: {
@@ -740,12 +741,18 @@ import Textbox from '../../base/textbox/textbox'
                 _this.$axios.gets('/api/services/app/CategoryManagement/GetAll?SkipCount=0&MaxResultCount=100').then(function(res){
                     _this.category = res.result.items
                 })
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll').then(function(res){
-                    for(let i=0;i<res.result.items.length;i++){
-                        if(res.result.items[i].specgroupEnable == true){
-                            _this.tableTree.push(res.result.items[i]);
-                        }
+                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+                    let concat1 = res.result.totalCount;
+                    if(concat1 > 0){
+                        _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:concat1}).then(function(res){
+                            for(let i=0;i<res.result.items.length;i++){
+                                if(res.result.items[i].specgroupEnable == true){
+                                    _this.tableTree.push(res.result.items[i]);
+                                }
+                            }
+                        })
                     }
+                    
                 })  
             },
             modifyTableData(){
@@ -930,6 +937,7 @@ import Textbox from '../../base/textbox/textbox'
                 let _this=this;
                 _this.LeftWitchPage="pagination";
                 _this.RightWitchPage="pagination";
+                _this.array4 =_this.selection_nochecked
                 _this.showChecked = _this.pagination(_this.selection_nochecked,[],_this.oneItemLeft,_this.pageLeft,'left')
                 _this.showNoChecked=_this.pagination([],_this.selection_nochecked,_this.oneItemRight,_this.pageRight,'right')
                 
@@ -979,8 +987,12 @@ import Textbox from '../../base/textbox/textbox'
             },
             CancelTree(){
                 let _this=this;
+                _this.LeftWitchPage="pagination";
+                _this.RightWitchPage="pagination";
+                _this.checkedTable=_this.uniqueArray(_this.checkedTable,_this.array4);
+                _this.showNoChecked=_this.pagination(_this.array4,[],_this.oneItemRight,_this.pageRight,'right')
+                _this.showChecked=_this.pagination([],_this.array4,_this.oneItemLeft,_this.pageLeft,'left')
                 _this.dialogTableVisible=false;
-                _this.getAllRoleData();
             },
             choose(){
                 let _this =this;

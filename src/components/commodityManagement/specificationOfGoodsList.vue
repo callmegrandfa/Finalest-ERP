@@ -18,7 +18,7 @@
                     >
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-autocomplete> -->
-                    <div class="transfer_search" style="width:100%;" @keyup.enter="searchLeftTable">
+                    <div class="transfer_search" style="width:100%;" >
                         <el-input
                             placeholder="搜索..."
                             v-model="searchTableLeft"
@@ -31,7 +31,7 @@
                 <el-col :span='24' class="tree-container pl10 pt10">
                     <template>
                       <el-tabs v-model="activeName" @tab-click="handleClick">
-                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()">
+                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()" :key="items.id">
                             <el-tree
                                 :data="items.classTree1" 
                                 :props="defaultProps" 
@@ -160,7 +160,6 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm1/btm'
-import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -259,6 +258,27 @@ import Tree from '../../base/tree/tree'
             let height1=window.innerHeight-123;
             content1.style.minHeight=height1+'px';
         },
+        watch:{
+            searchTableLeft:function(){
+                 let _this = this;
+                _this.tableData = _this.arrbiaoge;
+                let newJson=[];
+                let patt1 = new RegExp(_this.searchTableLeft);
+                $.each(_this.tableData,function(index,val){
+                    let str=val.specgroupName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val);
+                        console.log(newJson)
+                    }
+                })
+                _this.tableData = newJson;
+                for(let i=0;i<_this.tableTree.length;i++){
+                    _this.tableTree[i].classTree1 = newJson;
+                }
+                _this.loadIcon();
+            }
+        },
         methods:{
             btmlog:function(data){
                 let _this = this;
@@ -304,25 +324,25 @@ import Tree from '../../base/tree/tree'
                     _this.open('修改规格组状态成功','el-icon-circle-check','successERP');
                 })
             },
-            searchLeftTable(){
-                let _this = this;
-              _this.tableData = _this.arrbiaoge;
-                let newJson=[];
-                let patt1 = new RegExp(_this.searchTableLeft);
-                $.each(_this.tableData,function(index,val){
-                    let str=val.specgroupName;
-                    let result = patt1.test(str);
-                    if(result){
-                        newJson.push(val);
-                        console.log(newJson)
-                    }
-                })
-                _this.tableData = newJson;
-                for(let i=0;i<_this.tableTree.length;i++){
-                    _this.tableTree[i].classTree1 = newJson;
-                }
-                _this.loadIcon();
-            },
+            // searchLeftTable(){
+            //     let _this = this;
+            //   _this.tableData = _this.arrbiaoge;
+            //     let newJson=[];
+            //     let patt1 = new RegExp(_this.searchTableLeft);
+            //     $.each(_this.tableData,function(index,val){
+            //         let str=val.specgroupName;
+            //         let result = patt1.test(str);
+            //         if(result){
+            //             newJson.push(val);
+            //             console.log(newJson)
+            //         }
+            //     })
+            //     _this.tableData = newJson;
+            //     for(let i=0;i<_this.tableTree.length;i++){
+            //         _this.tableTree[i].classTree1 = newJson;
+            //     }
+            //     _this.loadIcon();
+            // },
             loadTree(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
@@ -433,6 +453,7 @@ import Tree from '../../base/tree/tree'
                 this.SelectionChange=val;
             },
             handleCurrentChange:function(val){//获取当前页码,分页
+                let _this = this;
                 this.currentPage=val;
                 this.loadTableData(_this.activeid);
             },

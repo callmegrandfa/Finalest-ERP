@@ -27,6 +27,7 @@ axios.interceptors.request.use((config) => {
   }, (error) => {
     //404等问题可以在这里处理
     if (error.response) {
+      console.log(error.response);
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
       return Promise.reject(error.response.data);
