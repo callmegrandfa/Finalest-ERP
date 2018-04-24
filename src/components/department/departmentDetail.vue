@@ -1,7 +1,7 @@
 <template>
     <div class="departmentDetail">
-        <el-row>
-            <el-col :span="24">
+        <el-row class="fixed">
+            <el-col :span="24" >
                 <button class="erp_bt bt_back" @click="isBack">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
@@ -342,7 +342,7 @@
     created:function(){
             let self = this;
             self.loadOuTree();
-            self.loadParentTree();
+            // self.loadParentTree();
             self.loadStatus();
         },
     computed:{
@@ -371,20 +371,21 @@
             self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
                 // console.log(res);
                 self.defaultOuId = res.result.id;
+                console.log(self.defaultOuId)
                 self.addData.ouId = self.defaultOuId;
                 //加载完成拿回下拉的默认值
                 self.ouItem.ouFullname = res.result.ouFullname;
                 self.ouItem.id =  res.result.id;
 
-
+                self.loadParentTree(self.defaultOuId)
             },function(res){
                 console.log('err'+res)
             });
         },
-        loadParentTree(){
+        loadParentTree(id){
             let self=this;
             self.treeLoading=true;
-            self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
+            self.$axios.gets('api/services/app/DeptManagement/GetAllTree',{OuId:id}).then(function(res){
                 console.log(res)
                 self.selectParentTree=res.result;
                 self.loadIcon();
@@ -509,6 +510,7 @@
             let self = this;
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
+            self.loadParentTree(data.id)
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })

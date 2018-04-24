@@ -10,18 +10,20 @@
                     </el-input>
                 </el-col>
 
-                <el-col :span='24' class="tree-container" >
-                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                             v-loading="treeLoading" 
-                             :data="componyTree"
-                             :props="defaultProps"
-                             node-key="id"
-                             default-expand-all
-                             ref="tree"
-                             :expand-on-click-node="false"
-                             :filter-node-method="filterNode"
-                             @node-click="nodeClick">
-                    </el-tree>
+                <el-col :span='24' class="tree-container transfer_fixed">
+                    <vue-scroll :ops='$store.state.option'>
+                        <el-tree v-loading="treeLoading" 
+                                :data="componyTree"
+                                :default-expanded-keys="expandId"
+                                :props="defaultProps"
+                                node-key="id"
+                                :render-content="renderContent"
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                :filter-node-method="filterNode"
+                                @node-click="nodeClick">
+                        </el-tree>
+                    </vue-scroll>
                 </el-col>   
             </el-col>
             
@@ -56,9 +58,19 @@
                         <span class="btDetail">导出</span>
                     </button>
 
-                    <div class="formSearch">
-                        <input type="text" class="inputForm">
-                        <button>搜索</button>
+                    <div class="search_input_group">
+                        <div class="search_input_wapper" @keyup.enter="submitSearch">
+                            <el-input v-model="searchKey"
+                                        placeholder="搜索..."
+                                        class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
+                        </div>
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
+                        </div>
                     </div>
                 </el-row>
 
@@ -183,17 +195,15 @@
                 }],
                 // statusC:[],//状态
                 tableData:[],
-                componyTree:  [{
-                    name:'部门管理',
-                    children:[],
-                }],
+                //---左侧树形------
+                componyTree:  [],
                 defaultProps: {
                     children: 'children',
                     label: 'name',
                     id:'id'
                 },
-                // TreeContextMenu:[//点击鼠标右键生成菜单
-                // ],
+                expandId:[],
+                //----------------
                 pageIndex:0,//分页的当前页码
                 totalPage:0,//当前分页总数
                 oneItem:10,//每页有多少条信息
@@ -244,7 +254,8 @@
                 who:'',//删除的是谁以及是否是多项删除
                 whoId:'',//单项删除的id
                 whoIndex:'',//单项删除的index
-
+                //---------------------------
+                searchKey:'',
                 selfAr:[],//根据id获得树形节点本身
 
             }
@@ -307,12 +318,14 @@
                 self.treeLoading=true;
                 self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
                     console.log(res)
-                    for(let i in res.result){
-                        self.componyTree[0].children=res.result
-                    }
-                    console.log(self.componyTree)
                     self.treeLoading=false;
-                    self.loadIcon();
+                    // for(let i in res.result){
+                    self.componyTree=res.result
+                    self.expandId = self.defauleExpandTree(res.result,'id')
+                    // }
+                    console.log(self.componyTree)
+                    
+                    // self.loadIcon();
                },function(res){
                    self.treeLoading=false;
                })
@@ -542,27 +555,63 @@
             //         self.tableLoading=false;
             //     })
             // },
-            
+            //------------------------
+            renderContent(h, { node, data, store }){//
+                // console.log(data)s
+                if(typeof(data.children)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.name}
+                        </span>
+                    );
+                }
+            },
+            //------------------------
             //---树形操作-----------------------------------------------
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             nodeClick:function(data){
                 let self = this;
                 self.tableData = [];
                 console.log(data)
 
                 if(data.id){
-
+                    let flag = false;
                     self.$axios.gets('/api/services/app/DeptManagement/Get',{id:data.id}).then(function(res){
                         console.log(res)
                         self.selfAr = res.result
+                        flag = true;
                         console.log(self.selfAr)
                     },function(res){
-                        
+                        self.selfAr = [];
+                        flag = false
+                        console.log(1)
                     })
 
                     self.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptParentid:data.id,SkipCount:0,MaxResultCount:100}).then(function(res){
                         console.log(res)
                         self.tableData=res.result.items
-                        self.tableData.unshift(self.selfAr);
+                        if(flag){
+                            self.tableData.unshift(self.selfAr);
+                        }
+                        
+                        self.totalPage=Math.ceil(res.result.totalCount/self.oneItem);
+                        
                     },function(res){
                         self.treeLoading=false;
                     })
@@ -576,7 +625,30 @@
                 if (!value) return true;
                  return data.deptName.indexOf(value) !== -1;
             },
-            //-------------------------------------------------------------------       
+            //------------------------------------------------------------------- 
+            
+            //---表格查询------------------------------------------
+            submitSearch(){
+                let self=this;
+                if(self.searchKey!=''){
+                    self.searchTable();
+                }else{
+                    self.loadTableData();
+                }
+            },
+            searchTable:function(){
+                let self = this;
+                self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopCode:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
+                    console.log(res);
+
+                    self.allList = res.result.items;
+                    self.total = res.result.items.length;
+                    self.totalPage = Math.ceil(self.total/self.eachPage)
+                },function(res){
+                    console.log('err'+res)
+                })
+            },
+            //----------------------------------------------------
         },
     }
 </script>
