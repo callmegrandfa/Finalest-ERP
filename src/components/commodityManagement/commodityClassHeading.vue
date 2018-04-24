@@ -120,7 +120,7 @@
 import Btm from '../../base/btm/btm'
 import Table from '../../base/Table/Table'
 import dialogBox from '../../base/dialog/dialog'
-import Tree from '../../base/Tree/Tree'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
