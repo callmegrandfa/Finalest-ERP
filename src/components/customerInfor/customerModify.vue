@@ -23,7 +23,7 @@
                     <span class="btDetail">取消</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}">
+                <button class="erp_bt bt_saveAdd" @click="saveAdd" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -902,6 +902,7 @@ export default({
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
                 }else{
+                    console.log(self.ifModify)
                     self.ifModify = true;
                 }
             },
@@ -912,8 +913,8 @@ export default({
                 let self = this;
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
-                }else{
-                    self.ifModify = true;
+                }else{                    
+                    //self.ifModify = true;
                 }
                 self.redBankAr = [];
                 for(let i in val){
@@ -951,7 +952,8 @@ export default({
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
                 }else{
-                    self.ifModify = true;
+                    //console.log(self.ifModify)
+                    //self.ifModify = true;
                 }
                 self.redAddAr = [];
                 for(let i in val){
@@ -989,7 +991,8 @@ export default({
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
                 }else{
-                    self.ifModify = true;
+                    console.log(self.ifModify)
+                    //self.ifModify = true;
                 }
                 self.redOuAr = [];
                 for(let i in val){
@@ -1415,8 +1418,6 @@ export default({
                         console.log('err'+res)
                     });
                      
-                    
-
                     //加载完成拿回的下拉框的默认值
                     self.ouItem.ouFullname = self.customerData.ouId_OuName;
                     self.ouItem.id =  self.customerData.ouId;
@@ -1432,15 +1433,10 @@ export default({
 
                     self.fiItem.fiFullname = self.customerData.ficaOuId_OuName;
                     self.fiItem.id = self.customerData.ficaOuId;
-                })
-                       
-                
-                
+                })        
                 // self.loadBankData();//加载银行数据
                 // self.loadAddData();//加载地址数据
                 // self.loadOuData();//加载使用组织数据
-                
-
             }
         },
         querySearch(queryString,cb) {
@@ -1475,9 +1471,6 @@ export default({
         handleSelectDis(item) {
             //console.log(item.id);
         },            
-
-
-
 
         resdatetime:function(resdatetime){
             return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
@@ -1528,7 +1521,6 @@ export default({
         //     })
         // },
         //------------------------------------------------------
-
 
         //---下拉的数据------------------------------------------
         loadSelect:function(){
@@ -1850,6 +1842,35 @@ export default({
                 }
             });
             
+        },
+        saveAdd(){//保存并新增
+            let self = this;
+            $('.tipsWrapper').css({display:'block'});
+            //console.log(self.customerData)
+            self.$validate().then(function(success){
+                if(success){
+                    $('.tipsWrapper').css({display:'none'});
+                    let submitData = {};
+                    submitData = {
+                        contact_MainTable:self.customerData,
+                        contactBanks_ChildTable:self.bankData,
+                        contactAddress_ChildTable:self.addressData,
+                        contactOu_ChildTable:self.ouData,
+                    }
+                    self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
+                        self.open('修改成功','el-icon-circle-check','successERP');
+                        self.$store.state.url='/customer/customerDetail/default'
+                        self.$router.push({path:self.$store.state.url})//点击切换路由
+                        self.ifModify = false;
+                    },function(res){
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
+                    self.sureDel();
+                }
+            });
+
+
         },
         //-------------------------------------------------------
 
