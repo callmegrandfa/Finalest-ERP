@@ -93,8 +93,7 @@
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="selectParentTree"
+                            <el-tree :data="selectParentTree"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
@@ -105,7 +104,7 @@
 
                             <el-option v-show="false"
                                        :key="count.id" 
-                                       :label="count.deptName" 
+                                       :label="count.name" 
                                        :value="count.id"
                                        id="businessDetail_confirmSelect"></el-option>
                         </el-select>
@@ -268,12 +267,12 @@
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
                     children: 'children',
-                    label: 'ouName',
+                    label: 'name',
                     id:'id'
                 },
                 parentItem:{
                     id:'',
-                    deptName:'',
+                    name:'',
                 },
                 //--------------------
 
@@ -285,7 +284,7 @@
                     "manager": "",
                     "deptParentid": '',
                     "remark": "",
-                    "status": ''
+                    "status": 1
                 },
 
                 //---信息修改提示框------------
@@ -397,9 +396,7 @@
             let self = this;
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                 console.log(res)
-                
-            self.status = res.result;      
-                
+                self.status = res.result;   
             },function(res){
                 
             })
@@ -520,7 +517,7 @@
             let self = this;
             console.log(data)
             self.parentItem.id = data.id;
-            self.parentItem.deptName = data.ouName;
+            self.parentItem.name = data.name;
             self.$nextTick(function(){
                 $('#businessDetail_confirmSelect').click()
             })
