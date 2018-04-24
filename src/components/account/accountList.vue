@@ -72,7 +72,7 @@
 
 
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5">
+                <el-row class="h48 pt5 fixed">
                     <button class="erp_bt bt_add" @click="add">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
@@ -107,7 +107,7 @@
                         <span class="btDetail">导出</span>
                     </button>
 
-                    <div class="toggle-btn">
+                    <div class="t-btn">
                         <span @click='ifShow = !ifShow'>收起</span>
                         <i class="el-icon-arrow-up"></i>
                     </div>
@@ -115,7 +115,7 @@
 
                 <el-collapse-transition>
                     <div v-show="ifShow" class="mt10 bb1">
-                        <el-row>
+                        <el-row style="padding-top:48px;">
                             <div class="bgcolor">
                                 <label><small>*</small>会计年份</label>
                                 <el-input placeholder=""
@@ -208,14 +208,14 @@
                                         <el-input  class="noEdit" v-model="scope.row.remark"></el-input>
                                     </template>                                    
                                 </el-table-column>
-                                <el-table-column prop="KjModifiedBy" label="修改人">
+                                <el-table-column prop="modifiedBy" label="修改人">
                                     <template slot-scope="scope" >
-                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedBy"></el-input>
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.modifiedBy"></el-input>
                                     </template>                                        
                                 </el-table-column>
-                                <el-table-column prop="KjModifiedTime" label="修改时间">
+                                <el-table-column prop="modifiedTime" label="修改时间">
                                     <template slot-scope="scope" >
-                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.KjModifiedTime"></el-input>
+                                        <el-input  class="noEdit" :disabled="true" v-model="scope.row.modifiedTime"></el-input>
                                     </template>                                    
                                 </el-table-column>
                             </el-table>
@@ -321,6 +321,7 @@ import dialogBox from '../../base/dialog/dialog'
                 dialogUserConfirm:false,//是否删除弹框提示
                 modifyflag:true,          
                 dialogResetBeginDate:false,
+                createFlag:false,
                 tableData:[]          
             }
         },
@@ -472,8 +473,8 @@ import dialogBox from '../../base/dialog/dialog'
                     $.each( _this.tableData,function(index,value){
                         _this.tableData[index].effectiveEnd=_this.resdate(new Date(value.effectiveEnd))
                         _this.tableData[index].effectiveStart=_this.resdate(new Date(value.effectiveStart))
-                        _this.tableData[index].KjModifiedBy=_this.modifyBy;
-                        _this.tableData[index].KjModifiedTime=_this.modifyTime;  
+                        _this.tableData[index].modifiedBy=_this.modifyBy;
+                        _this.tableData[index].modifiedTime=_this.modifyTime;  
                     })
                     //console.log(res.result.accperiodContents)
                 })  
@@ -522,6 +523,7 @@ import dialogBox from '../../base/dialog/dialog'
                     _this.$validate().then(function (success) {
                         $.each(_this.componyTreeData,function(index,value){
                             if(_this.periodYear==value.periodYear){
+                                _this.saveflag=false;
                                 _this.$alert('已有该年份', {
                                         confirmButtonText: '确定'
                                     }
@@ -529,7 +531,8 @@ import dialogBox from '../../base/dialog/dialog'
                             }
                         })
                         _this.createMonth();                   
-                        if (success&&_this.saveflag) {
+                        if (success&&_this.saveflag&&_this.createFlag) {
+                            _this.createFlag=false;
                             _this.addData.periodYear=_this.periodYear;
                             _this.addData.periodNum=_this.periodNum;
                             _this.addData.beginDate=_this.chooseDate[0];
@@ -558,8 +561,9 @@ import dialogBox from '../../base/dialog/dialog'
             },
             modify(){//修改保存
                 let _this=this;
+                _this.createMonth();  
                 _this.$validate().then(function (success) {                  
-                    if (success&&_this.saveflag) {
+                    if (success&&_this.saveflag&&_this.createFlag) {
                         _this.addData.periodYear=_this.periodYear;
                         _this.addData.periodNum=_this.periodNum;
                         _this.addData.beginDate=_this.chooseDate[0];
@@ -572,6 +576,7 @@ import dialogBox from '../../base/dialog/dialog'
                         _this.addData.modifiedTime=nowtime;
                         console.log(_this.addData)
                         _this.$axios.puts('/api/services/app/Accperiod/Update',_this.addData).then(function(res){
+                            _this.createFlag=false;
                             _this.seletChange();
                             _this.open('保存成功','el-icon-circle-check','successERP');
                         }).catch(function(err){
@@ -614,7 +619,7 @@ import dialogBox from '../../base/dialog/dialog'
                             }
                         })
                         _this.createMonth();                   
-                        if (success&&_this.saveflag) {
+                        if (success&&_this.saveflag&&_this.createFlag) {
                             _this.addData.periodYear=_this.periodYear;
                             _this.addData.periodNum=_this.periodNum;
                             _this.addData.beginDate=_this.chooseDate[0];
@@ -625,6 +630,7 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.addData.createdTime=nowtime;
                             _this.addData.modifiedTime=nowtime;
                             _this.$axios.posts('/api/services/app/Accperiod/Create',_this.addData).then(function(res){
+                                _this.createFlag=false;
                                 _this.add();
                                 _this.seletChange();
                                 _this.open('保存成功','el-icon-circle-check','successERP');
@@ -732,6 +738,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             createMonth(){
                 let _this=this;
+                _this.createFlag=true;
                 _this.$validate().then(function (success) {
                 var startdate = new Date(_this.chooseDate[0]);  
                 var enddate = new Date(_this.chooseDate[1]);
@@ -757,8 +764,8 @@ import dialogBox from '../../base/dialog/dialog'
                                 effectiveStart: '',
                                 effectiveEnd: '',
                                 remark:'',
-                                KjModifiedBy:'',
-                                KjModifiedTime:'',
+                                modifiedBy:'',
+                                modifiedTime:'',
                                 groupID: 0,
                                 ouID: 0,
                                 accperiodId: 0,
@@ -770,8 +777,8 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.addData.accperiodContents[j].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+j);
                             _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
                             _this.addData.accperiodContents[j].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+j);
-                            _this.addData.accperiodContents[j].KjModifiedBy=_this.modifyBy;
-                            _this.addData.accperiodContents[j].KjModifiedTime=_this.nowTime();
+                            _this.addData.accperiodContents[j].modifiedBy=_this.modifyBy;
+                            _this.addData.accperiodContents[j].modifiedTime=_this.nowTime();
                         }
                         _this.addData.accperiodContents[diffMonth-1].effectiveEnd=_this.resdate(enddate);
                         _this.periodNum=diffMonth;
@@ -785,8 +792,8 @@ import dialogBox from '../../base/dialog/dialog'
                                 effectiveStart: '',
                                 effectiveEnd: '',
                                 remark:'',
-                                KjModifiedBy:'',
-                                KjModifiedTime:'',
+                                modifiedBy:'',
+                                modifiedTime:'',
                                 groupID: 0,
                                 ouID: 0,
                                 accperiodId: 0,
@@ -798,8 +805,8 @@ import dialogBox from '../../base/dialog/dialog'
                             _this.addData.accperiodContents[i].effectiveStart=startyear+'-'+_this.switchStartTime(startmonth+i);
                             _this.addData.accperiodContents[0].effectiveStart=_this.resdate(startdate);
                             _this.addData.accperiodContents[i].effectiveEnd=startyear+'-'+_this.switchEndTime(startyear,startmonth+i);
-                            _this.addData.accperiodContents[i].KjModifiedBy=_this.modifyBy;
-                            _this.addData.accperiodContents[i].KjModifiedTime=_this.nowTime();
+                            _this.addData.accperiodContents[i].modifiedBy=_this.modifyBy;
+                            _this.addData.accperiodContents[i].modifiedTime=_this.nowTime();
                         }
                         _this.addData.accperiodContents[_this.periodNum-1].effectiveEnd=_this.resdate(enddate);
                         diffMonth=_this.periodNum;
@@ -853,6 +860,40 @@ import dialogBox from '../../base/dialog/dialog'
             }
         }
     },
+    mounted:function(){
+        let _this=this;
+        $(window).scroll(function(){
+            if($(window).scrollTop()>61){
+            if(!_this.$store.state.show){
+                let w=$('.fixed').parent().width();
+                $('.fixed').width(w);
+                $('.fixed').css({
+                "position":'fixed',
+                "top":'93px',
+                "z-index":'998'
+                }).next('div').css({marginTop:'47px'})
+            }else{
+                let w=$('.fixed').parent().width();
+                $('.fixed').width(w);
+                $('.fixed').css({
+                position:'fixed',
+                top:'93px',
+                zIndex:'998',
+                transition: 'width 0s'
+                }).next('div').css({marginTop:'47px'})
+            }
+            _this.$store.commit('go1');
+            }else{
+            $('.fixed').css({
+                position:'relative',
+                top:'0',
+                transition: 'width 0s'
+            }).next('div').css({marginTop:0})
+            _this.$store.commit('go2');
+            }
+        })
+
+    }, 
     components:{
         dialogBox    
     }
@@ -860,6 +901,16 @@ import dialogBox from '../../base/dialog/dialog'
 </script>
 
 <style scoped>
+    .fixed{
+        background-color: white;
+    }
+    .t-btn{
+        cursor: pointer;
+        font-size: 12px;
+        height: 36px;
+        line-height: 36px;
+        margin-left: 94%;
+    }
 	.noEdit .el-input__inner {
         border: none;
         height: 28px;
