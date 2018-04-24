@@ -321,7 +321,7 @@
                                 </template>
                             </el-table-column>
 
-                            <el-table-column prop="factor" label="系数"></el-table-column>
+                            <el-table-column prop="unitId_Factor" label="系数"></el-table-column>
 
                             <el-table-column prop="purchasePrice" label="进货价">
                                 <template slot-scope="scope">
@@ -1559,8 +1559,11 @@ export default {
                 },function(res){
                 })
                  _this.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{categoryID:_this.product_MainTable.categoryId,ItemType:2})
-                .then(function(res){//获取规格
+                .then(function(res){//获取规
                     _this.productSpec_ChildTable=res.result
+                    $.each(res.result,function(index,value){
+                        // let item={"id":_this.$route.params.id,'groupId':1,}
+                    })
                 },function(res){
 
                 })
