@@ -120,7 +120,7 @@
 import Btm from '../../base/btm/btm'
 import Table from '../../base/Table/Table'
 import dialogBox from '../../base/dialog/dialog'
-import Tree from '../../base/Tree/Tree'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -259,10 +259,6 @@ import Tree from '../../base/Tree/Tree'
                     }],
                 enableEdit:true,
                 tableModel:'commodityClassHeading',
-                // HttpParams:{//数据初始化参数
-                //     SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
-                //     MaxResultCount:this.$store.state.commodityClassHeadingEachPage
-                // },
                 SystemOptions: [{
                     value: null,
                     label: '全部'
@@ -376,11 +372,6 @@ import Tree from '../../base/Tree/Tree'
                 _this.queryParams.CategoryId=data.id;
                 _this.tableLoading=true;
                     _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){                     
-                        //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
-                        // _this.queryParams.CategoryCode="";
-                        // _this.queryParams.CategoryName="";
-                        // _this.queryParams.IsService="";
-                        // _this.queryParams.Status="";
                         _this.$store.commit('Init_Table',res.result.items);
                         let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                         _this.$store.commit('Init_pagination',totalPage);
@@ -406,7 +397,6 @@ import Tree from '../../base/Tree/Tree'
                 }).then(function(res){
                     _this.$store.commit('Init_Tree',res.result);
                 }).catch(function(err){
-
                 });;
             },
             open(tittle,iconClass,className) {//提示框

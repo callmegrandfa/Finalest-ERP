@@ -11,28 +11,6 @@
   font-size: 12px;
   margin-left: 4px;
 }
-/* 搜索 */
-/* <el-input
-    placeholder="搜索..."
-    v-model="" class="search_input">
-    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-</el-input> */
-
-/* 搜索组 */
-/* <div class="search_input_group">
-    <div class="search_input_wapper">
-        <el-input
-            placeholder="搜索..."
-            class="search_input">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-        </el-input>
-    </div>
-    <div class="search_button_wrapper">
-        <button class="userDefined">
-            <i class="fa fa-cogs" aria-hidden="true"></i>自定义
-        </button>
-    </div>
-</div>     */
 .search_input_group{
   width: calc(30% + 10px);
   margin-top: -6px;
@@ -72,6 +50,10 @@
 }
 .search_input{
   width: 100%;
+  margin: 10px 0;
+}
+.search_input .el-input__prefix{
+  top:-4px;
 }
 /* 表单验证 */
 .tipsWrapper{
@@ -133,8 +115,7 @@
 {
   font-size: 12px;
 }
-/* elementUI分页 */
-/* <el-pagination style="margin-top:20px;" class="text-right" background layout="total, prev, pager, next"  :page-count="totalPage"></el-pagination> */
+/* 分页 */
 .el-pagination .btn-next, 
 .el-pagination .btn-prev, 
 .el-pagination .el-pager li{
@@ -149,17 +130,6 @@
   display: inline-block;
 }
 /* elementUI表单控件 */
-/* input输入框 */
-/* <div class="bgcolor"><label><small>*</small>单号</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  
- <div class="bgcolor smallBgcolor"><label class="longLabel"><small>*</small>营业或有效期限终止日期</label><el-input :disabled="true" v-model="" placeholder=""></el-input></div>  */
-
- /* <div class="bgcolor smallBgcolor">
-    <label></label>
-    <span class="search-btn">查询</span>
-</div> */
-
-
-/* <label class="longLabel"><small>*</small>营业或有效期限终止日期</label> */
 .smallBgcolor .search-btn{
     text-align: center;
     font-size: 12px;

@@ -159,6 +159,9 @@
                 },
                 deep:true
             },
+            ifSave(val){
+                this.ifSave=val;
+            },
             tableData:{
                 handler: function (val, oldVal) {
                     if(oldVal.length>0&&!this.isDisable){
