@@ -1,5 +1,6 @@
  <template>
     <div class="count-wrapper" style="float:left;background:#fff;width:100%;height:100%;">
+      <el-row class="bg-white">
         <!-- 左边树形控件 -->
         <el-col :span="5">
             <el-col class="h48 pl15 pr15" :span="24">
@@ -7,24 +8,26 @@
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-col>
             <el-col :span='24' class="tree-container" >
-                <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
-                :data="countTree"
-                :highlight-current="true"
-                :props="defaultProps"
-                node-key="id"
-                default-expand-all
-                ref="tree"
-                :expand-on-click-node="false"
-                :filter-node-method="filterNode"
-                @node-click="nodeClick">
-                </el-tree>
+                <vue-scroll :ops="$store.state.option">
+                    <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"
+                    :data="countTree"
+                    :highlight-current="true"
+                    :props="defaultProps"
+                    node-key="id"
+                    default-expand-all
+                    ref="tree"
+                    :expand-on-click-node="false"
+                    :filter-node-method="filterNode"
+                    @node-click="nodeClick">
+                    </el-tree>
+                </vue-scroll>
             </el-col>
             
         </el-col>
         <!-- 右边列表部分 -->
         <el-col :span="19" class="borderLeft">
             <!-- 按钮组 -->
-            <el-row class="h48">
+            <el-row class="h48 fixed colorWhite">
                 <el-col class="pt5">
                     <button @click="add" class="erp_bt bt_add" :class="{erp_fb_bt:IsAdd}"      :disabled="IsAdd">
                         <div class="btImg">
@@ -254,6 +257,8 @@
         </el-dialog>
         <!-- dialog -->
         
+    
+      </el-row>
     </div>
 </template>
  <script>
@@ -402,6 +407,14 @@
                 let date=new Date();
                 return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
             },
+            getHeight(){
+                 $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                })
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
+                })
+            },
             // -----------------------提示信息
             open(tittle, iconClass, className) { // 成功提示框
                 this.$notify({
@@ -459,7 +472,10 @@
                             _this.nodeClick(_this.countTree[0].children[0].id)
                             _this.loadIcon();
                        }
-                      
+                       _this.getHeight();
+                    },
+                    rsp=>{
+                       _this.getHeight();
                     })
             },
             filterNode(value, data) {// 输入框过滤节点
@@ -544,18 +560,28 @@
                             if (success) {
                                 $('.tipsWrapper').css({display:'none'});
                                 // console.log("保存按钮点击了");
-                                console.log(_this.formData.unitConvert_ChildTable);
-                                
+                                // console.log(_this.formData.unitConvert_ChildTable);
                                 if (_this.formData.unitConvert_ChildTable.length>1) {
                                         for(let i=0;i<_this.formData.unitConvert_ChildTable.length; i++){
+                                            // console.log("i="+i);
                                             // alert('1')
                                             if (_this.formData.unitConvert_ChildTable[i].destUnitId=='' || _this.formData.unitConvert_ChildTable[i].factor=='') {
                                                 alert('多单位或系数必填');
                                                 return;
                                             }
+                                            for (let j = 0; j < i; j++) {
+                                               if (_this.formData.unitConvert_ChildTable[i].destUnitId==_this.formData.unitConvert_ChildTable[j].destUnitId && i!=j) {
+                                                    alert('多单位不能重复');
+                                                    // alert('多单位必须唯一');
+                                                    // alert(`多单位${_this.formData.unitConvert_ChildTable[i].destUnitId}必须唯一`);
+                                                    return;
+                                                }
+                                            }
+                                            
                                             _this.addList=_this.formData;
                                             // console.log(_this.addList);
                                             if (i==_this.formData.unitConvert_ChildTable.length-1) {
+                                                // console.log('i='+i);
                                                 _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                                 _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                                 _this.doSave(_this.addList)
@@ -563,12 +589,14 @@
                                     };
                                 }else if(_this.formData.unitConvert_ChildTable.length==1){
                                    if (_this.formData.unitConvert_ChildTable[0].destUnitId!='' && _this.formData.unitConvert_ChildTable[0].factor!='') {
-                                       console.log(_this.formData.unitConvert_ChildTable);
+                                    //    console.log(_this.formData.unitConvert_ChildTable);
                                     //    alert('2.1')
-                                       _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
-                                       _this.addList.unit_MainTable=_this.formData.unit_MainTable;
-                                       console.log(_this.addList);
-                                       _this.doSave(_this.addList);
+                                        if(_this.formData.unitConvert_ChildTable[0].destUnitId!==_this.formData.unitConvert_ChildTable[1].destUnitId){
+                                            _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
+                                        _this.addList.unit_MainTable=_this.formData.unit_MainTable;
+                                        console.log(_this.addList);
+                                        _this.doSave(_this.addList);
+                                        }
                                    }else{
                                     //    alert('2')
                                        alert('多单位或系数必填');
@@ -587,6 +615,7 @@
             },
             doSave(dataVal){
                 let _this=this;
+                console.log('xkk');
                 // console.log(dataVal);
                 _this.$axios.posts('/api/services/app/UnitManagement/AggregateCreateOrUpdate',dataVal).then(
                     rsp=>{//success
@@ -842,6 +871,9 @@
 </script>
 
  <style scope>
+    .colorWhite{
+        background-color: #fff;
+    }
     .count-wrapper{
         width: 100%;
         height: 100%;
@@ -853,6 +885,10 @@
         background-color: #fff;
         height: 100%;
         
+    }
+    .bg-white{
+        background: white;
+        border-radius: 3px;
     }
     .topSearch {
         font-size: 18px;
