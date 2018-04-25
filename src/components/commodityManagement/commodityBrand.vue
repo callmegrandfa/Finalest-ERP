@@ -91,9 +91,11 @@
                             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
                             </el-col>                   
                     </el-row>
-                     <el-row class="">
-                        <el-col :span="24" class="">
+                     <el-row>
+                        <el-col :span="24" class="mt10">
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
+                            <!-- 穿梭框 -->
+                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols'></Transfer> -->
                         </el-col> 
                     </el-row>
                 </el-col>
@@ -108,22 +110,20 @@ import Table from '../../base/Table/Table'
 import Query from '../../base/query/query'
 import buttonGroup from '../../base/buttonGroup/buttonGroup'
 import dialogBox from '../../base/dialog/dialog'
+import Transfer from '../../base/Transfer/Transfer'
     export default{
         name:'customerInfor',
         data(){
             return {
-                try:{
-                "groupId": 2,
-                "stockId": 1,
-                "addressId": 8,
-                "completeAddress": "str33ing",
-                "transportMethodId": 1,
-                "contactPerson": "stri55ng",
-                "phone": "18200326666",
-                "logisticsCompany": "str55ing",
-                "isDefault": true,
-                "remark": "st54ring"
+                transferHttpSetting:{
+                    transferName:'ceshi',
+                    transferApi:'/api/services/app/SpecManagement/GetAll',
+                    transferParams:{
+                        MaxResultCount:'1000',
+                        SkipCount:'0',
+                    }
                 },
+                OptionalCols:[{ prop: 'name',label: '测试'},{prop: 'id',label: 'id'}],
                 queryParams:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
@@ -652,7 +652,8 @@ import dialogBox from '../../base/dialog/dialog'
         components:{
             Table,
             dialogBox,
-            buttonGroup
+            buttonGroup,
+            Transfer
         }
     }
 </script>

@@ -1557,3 +1557,7 @@ color:#f66;
   height: 178px;
   display: block;
 }
+.btnGroup-box{
+  height: 47px;
+  border-bottom: 1px solid #e4e4e4;
+}
