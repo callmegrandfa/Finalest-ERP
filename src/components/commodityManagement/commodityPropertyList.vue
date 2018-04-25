@@ -44,7 +44,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="search.ControlType" >
+                            <el-select  v-model="search.ControlType" clearable filterable>
                             <el-option  v-for="item in ControlTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
@@ -60,7 +60,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="search.Required" >
+                            <el-select  v-model="search.Required" clearable filterable>
                             <el-option  v-for="item in RequiredOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
@@ -76,7 +76,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="search.Status" >
+                            <el-select  v-model="search.Status" clearable filterable>
                             <el-option  v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
@@ -111,13 +111,19 @@
                 
                 <div style="min-width:200px;width:200px;float:left;">
                     <el-col :span='24' class="tree-container pl10 pt10">
-                        <el-tree :data="classTree"  
-                        oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                        <el-tree 
+                        :data="classTree"  
+                        
                         :props="defaultProps"
-                        default-expand-all
                         ref="tree"
                         :expand-on-click-node="false"
                         @node-click="TreeNodeClick"
+                        :render-content="renderContent_componyTree"
+                        v-loading="treeLoading" 
+                        :highlight-current="true"
+                        node-key="id"
+                        :default-expanded-keys="expandId"
+                        :filter-node-method="filterNode"
                         ></el-tree>
                     </el-col>
                 </div>
@@ -127,6 +133,9 @@
                             <el-table-column fixed type="selection" label="" width="50">
                             </el-table-column>
                             <el-table-column fixed prop="propertyCode" label="属性编码">
+                                <template slot-scope="scope">
+                                    <el-button type="text"   @click="modify(scope.row)" >{{tableData[scope.$index].propertyCode}}</el-button>
+                                </template>
                             </el-table-column>
                             <el-table-column fixed prop="propertyName" label="属性名称">
                                 <template slot-scope="scope">
@@ -134,6 +143,10 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="status" label="状态" width="">
+                                <template slot-scope="scope">
+                                    <el-button type="text" class="startusing" v-if="tableData[scope.$index].status == 0" >启用</el-button>
+                                    <el-button type="text" class="blockup" v-else >停用</el-button>
+                                </template>
                             </el-table-column>
                             <el-table-column prop="controlType" label="控件类型">
                             </el-table-column>
@@ -182,6 +195,23 @@
             </span>
         </el-dialog>
         <!-- dialog错误信息提示 -->
+        <!-- dialog是否删除提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm1" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">该属性树，暂只需支持2级属性</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" style="width:100%;" @click="dialogUserConfirm1 = false">确 认</button>
+            </span>
+        </el-dialog>
+        <!-- dialog错误信息提示 -->
         <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
@@ -218,6 +248,7 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -234,11 +265,14 @@ import Btm from '../../base/btm/btm'
                 "isDefault": true,
                 "remark": "st54ring"
                 },
+                expandId:[],//默认展开
+                dialogUserConfirm1:false,
+                treeLoading:false,
                 bottonbox:{
                     url: '/commodityProperty/commodityPropertyDetails',
                     Add:true,
                    botton:[{
-                    class: 'erp_bt bt_add',
+                    class: 'erp_bt bt_add cacc',
                     imgsrc: '../../../static/image/common/bt_add.png',
                     show:true,
                     detailParentId:'',//tree节点点击获取前往detail新增页上级菜单ID
@@ -276,9 +310,6 @@ import Btm from '../../base/btm/btm'
                     }, {
                     value: false,
                     label: '不必填'
-                }, {
-                    value: '',
-                    label: ''
                 }],
                 ControlTypeOptions:[{
                     value: 0,
@@ -292,9 +323,6 @@ import Btm from '../../base/btm/btm'
                     }, {
                     value: 3,
                     label: '关联档案'
-                }, {
-                    value: '',
-                    label: ''
                 }],
                 StatusOptions:[{
                     value: 0,
@@ -302,10 +330,7 @@ import Btm from '../../base/btm/btm'
                     }, {
                     value: 1,
                     label: '未启用'
-                    }, {
-                    value: '',
-                    label: ''
-                }],
+                    }],
                 search:{
                     PropertyCode:'',
                     PropertyName:'',
@@ -319,7 +344,8 @@ import Btm from '../../base/btm/btm'
                 ],
                 defaultProps: {
                     children:'childNodes',
-                    label:'propertyName'
+                    label:'propertyName',
+                    id:'id'
                 },
                 idArray:{
                     ids:[]
@@ -334,7 +360,7 @@ import Btm from '../../base/btm/btm'
                 },
                 // 错误信息提示结束
                 choseAjax:'',//存储点击单个删除还是多天删除按钮判断信息
-                
+                delarray:[],
                 dialogUserConfirm:false,//用户删除保存提示信息
                 tableData: [],
                 currentPage:1,//分页的当前页码
@@ -344,7 +370,11 @@ import Btm from '../../base/btm/btm'
                 ifWidth:true,
                 tableLoading:true,
                 treeLoading:true,
+                pageTurning:true,
+                pageQuery:false,
+                dataId:'',
                 rowid: '',
+                adddefeated:true,
                 Add:true
             }
         },
@@ -359,6 +389,10 @@ import Btm from '../../base/btm/btm'
             content1.style.minHeight=height1+'px';
         },
         methods:{
+            filterNode(value, data) {
+                if (!value) return true;
+                 return data.moduleName.indexOf(value) !== -1;
+            },
             closeLeft:function(){
                 let self = this;
                 self.ifWidth = false;
@@ -419,9 +453,22 @@ import Btm from '../../base/btm/btm'
                 });
             },
             btmlog:function(data){
+                let _this = this;
                 if(data == '删除'){
-                    this.choseAjax = 'rows';
-                    this.dialogUserConfirm=true;
+                    _this.choseAjax = 'rows';
+                    _this.dialogUserConfirm=true;
+                }else if(data == '新增'){
+                    if(_this.adddefeated){
+                        if(typeof(_this.bottonbox.botton[0].detailParentId)=='number'){
+                            _this.$store.state.url=_this.bottonbox.url +'/'+ _this.bottonbox.botton[0].detailParentId;
+                            _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        }else{
+                            _this.$store.state.url=`${_this.bottonbox.url}/default`
+                            _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                        }
+                    }else{
+                        _this.dialogUserConfirm1 = true;
+                    }
                 }
             },
             loadTableData(){
@@ -442,10 +489,9 @@ import Btm from '../../base/btm/btm'
                     console.log(_this.tableData)
                     let countPage=res.result.totalCount;
                     // _this.tableLoading=false;
-                    _this.totalPage = Math.ceil(countPage/_this.eachPage);
-
-                  
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage); 
                 })
+                
             },
             delThis(){
                 let _this=this;
@@ -462,6 +508,15 @@ import Btm from '../../base/btm/btm'
                     _this.open('删除失败','el-icon-error','faildERP');
                 })
             },
+            defauleExpandTree(data,key){
+                if(typeof(data[0])!='undefined'
+                && data[0]!=null 
+                && typeof(data[0][key])!='undefined'
+                && data[0][key]!=null
+                && data[0][key]!=''){
+                    return [data[0][key]]
+                }
+            },
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
@@ -470,7 +525,8 @@ import Btm from '../../base/btm/btm'
                         _this.classTree=res;
                         console.log(res)
                         _this.treeLoading=false;
-                        _this.loadIcon();
+                        _this.expandId=_this.defauleExpandTree(res,'id')
+                        // _this.loadIcon();
                 },function(res){
                     _this.treeLoading=false;
                 })
@@ -478,28 +534,30 @@ import Btm from '../../base/btm/btm'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.tableLoading=true;
-                _this.bottonbox.botton[0].detailParentId=data.id;//
-                _this.bottonbox.botton[0].detailParentName=data.propertyName;
-                console.log(data.propertyName)
-                    _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyList',{Id:data.id}).then(function(res){    
-                        console.log(res)   
-                        // console.log(_this.tableData );                
-                        _this.tableData = res.result.items;
-                        _this.modifyText();
-                        _this.totalCount=res.result.items.length
-                        _this.tableLoading=false;
-                        // console.log(1)
-                        // console.log(_this.tableData[0].levelNo)
-                        // if(_this.tableData[0].levelNo == 3){
-                        //     _this.bottonbox.Add = false;
-                        //     // alert(1)
-                        // }else{
-                        //    _this.bottonbox.Add = true; 
-                        // }
-                        
-                    },function(res){
-                        console.log(res)
-                    })
+                _this.dataId = data;
+                _this.bottonbox.botton[0].detailParentId=_this.dataId.id;//
+                _this.bottonbox.botton[0].detailParentName=_this.dataId.propertyName;
+                _this.$axios.gets('/api/services/app/PropertyManagement/GetListByCondition',{PropertyId:_this.dataId.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){                  
+                    _this.tableData = res.result.items;
+                    _this.modifyText();
+                    _this.totalCount=res.result.items.length
+                    _this.tableLoading=false;
+                    _this.pageQuery = false;
+                    _this.pageTurning = false;
+                    let arr = '';
+                    for(let i=0;i<_this.tableData.length;i++){
+                   
+                       arr = _this.tableData[i].propertyFullpathId.split('>').length;
+                        if(arr > 2 &&  _this.tableData.length == 1){
+                            _this.adddefeated = false;
+                        }
+                    }
+                    let countPage=res.result.totalCount;
+                    // _this.tableLoading=false;
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage); 
+                },function(res){
+                    console.log(res)
+                })
             },
             getErrorMessage(message,details,validationErrors){
                 let _this=this;
@@ -516,19 +574,6 @@ import Btm from '../../base/btm/btm'
                     _this.response.validationErrors=validationErrors;
                 }
             },
-            loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
-                    })
-                })
-            },
             handleDel(row,index){//行内删除
                 let _this=this;
                 _this.choseAjax = 'row';
@@ -537,8 +582,17 @@ import Btm from '../../base/btm/btm'
 
             },
             handleCurrentChange:function(val){//获取当前页码,分页
-                this.currentPage=val;
-                this.loadTableData();
+                let _this=this;
+                _this.currentPage=val;
+                
+                if(_this.pageTurning){
+                    _this.loadTableData();
+                }else if(_this.pageQuery){
+                    _this.query()
+                }else{
+                    _this.TreeNodeClick(_this.dataId);   
+                }
+                
             },
             handleSelectionChange(val){//多选操作
                 this.SelectionChange=val;
@@ -561,25 +615,42 @@ import Btm from '../../base/btm/btm'
                     }else{
                        _this.tableData[i].controlType='关联档案'  
                     }
-                    if(_this.tableData[i].status == 0){
-                       _this.tableData[i].status='启用' 
-                    }else{
-                       _this.tableData[i].status='未启用'  
-                    }
 
                 }
             },
             query(){//按条件查询
                 let _this=this;
-                _this.$axios.gets('/api/services/app/PropertyManagement/GetSearch',_this.search).then(function(res){
-                    console.log(res)
-                    _this.tableData=res.result.items; 
-                    _this.modifyText();                  
+                _this.search.SkipCount = (_this.currentPage-1)*_this.eachPage; 
+                _this.search.MaxResultCount = _this.eachPage; 
+                _this.$axios.gets('/api/services/app/PropertyManagement/GetListByCondition',_this.search).then(function(res){
+                    _this.pageQuery = true;
+                    _this.pageTurning = false;
+                    _this.tableData = res.result.items; 
+                    _this.modifyText();
+                    let countPage=res.result.totalCount;
+                    // _this.tableLoading=false;
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage);                   
                 },function(res){
                     console.log(res)
                 })
             },
-            
+            renderContent_componyTree(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.propertyName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.propertyName}
+                        </span>
+                    );
+                }
+            },
                 
                 
 
@@ -596,6 +667,12 @@ import Btm from '../../base/btm/btm'
 </script>
 
 <style scoped>
+.blockup{
+    color: rgb(255, 102, 102);
+}
+.startusing{
+    color: rgb(57, 202, 119);
+}
 .search-block{
     border-bottom: 1px solid #E4E4E4;
     box-sizing: border-box;
