@@ -42,7 +42,7 @@
 			this.$store.dispatch('InitTree');//初始化树型数据
 			setTimeout(() => {
 				this.treeLoading=false;
-			}, 1000);
+			}, 800);
 		},
 		computed:{
 			treeData(){
