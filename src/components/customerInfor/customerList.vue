@@ -17,6 +17,7 @@
                         <label>客户分类</label>
                         <el-select class="queryCu"
                                    placeholder=""
+                                   clearable
                                    v-model="queryCu">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -32,12 +33,11 @@
                                      @node-click="cuNodeClick"     
                                      :render-content="renderContentKh"
                                      :expand-on-click-node="false"                              
-                                     highlight-current
-                                     ></el-tree>
+                                     highlight-current></el-tree>
 
                             <el-option v-show="false"
                                        :key="countCu.id" 
-                                       :label="countCu.cuFullname" 
+                                       :label="countCu.className" 
                                        :value="countCu.id"
                                        id="cu_confirmSelect"></el-option>
                             
@@ -50,6 +50,7 @@
                         <label>所属组织</label>
                         <el-select class="queryOu"
                                    placeholder=""
+                                   clearable
                                    v-model="queryOu">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -80,6 +81,7 @@
                         <label>行政地区</label>
                         <el-select class="queryAd"
                                    placeholder=""
+                                   clearable
                                    v-model="queryAd">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -108,6 +110,7 @@
                         <label>业务地区</label>
                         <el-select class="queryOp"
                                    placeholder=""
+                                   clearable
                                    v-model="queryOp">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -347,7 +350,7 @@
                 },                
                 cuItem:{
                     id:'',
-                    cuFullname:'',
+                    className:'',
                 },
                 cuAr:[],//客户分类下拉框
                 expandId:[],//默认打开第一个树形节点
@@ -557,10 +560,10 @@
         //---左侧查询-------------------------------------------------------
         doSearch:function(){
             let self = this;
-            if(self.queryClass == ''&&self.queryOu == ''&&self.queryAd==''&&self.queryOp==''&&self.queryCode==''&&self.queryName==''&&self.queryProperty==''){
+            if(self.queryCu == ''&&self.queryOu == ''&&self.queryAd==''&&self.queryOp==''&&self.queryCode==''&&self.queryName==''&&self.queryProperty==''){
                 self.loadAllList()
             }else{
-                this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryClass,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:0,MaxResultCount:100}).then(function(res){
+                this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryCu,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:'0',MaxResultCount:'100'}).then(function(res){
                     console.log(res);
                     if(res.result&&res.result.length>0){
                         self.allList = res.result;
@@ -574,6 +577,9 @@
                     
                 },function(res){
                     console.log('err'+res)
+                    self.allList = [];
+                    self.totalPage = 0;
+                    self.total = 0;
                 })
             }
         },
@@ -769,9 +775,10 @@
                 return data.ouFullname.indexOf(value) !== -1;
         },        
         cuNodeClick:function(data){
+            console.log(data)
             let self = this;
             self.cuItem.id = data.id;
-            self.cuItem.cuFullname = data.classFullname;
+            self.cuItem.className = data.className;
             self.$nextTick(function(){
                 $('#cu_confirmSelect').click()
             })

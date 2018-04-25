@@ -679,20 +679,57 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- <el-table :data="productOu_ChildTable" border style="width: 100%" stripe>
-                            <el-table-column prop="ouId" label="业务组织">
-                            </el-table-column>
-
-                            <el-table-column prop="ouId" label="上市日期" ></el-table-column>
-
-                            
-                            <el-table-column prop="ouId" label="备注"></el-table-column>
-                            <el-table-column prop="ouId" label="状态">
-                                <template slot-scope="scope">
-                                    <el-checkbox></el-checkbox>
-                                </template>
-                            </el-table-column>
-                        </el-table>  -->
+                                                 <!-- 分配组织 -->
+<el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
+        <span slot="title">
+            <span>分配组织</span>
+            <a  href="javascript:;" class="add" @click="addNewOu">+</a>
+            <div class="search_input_group">
+                <div class="search_input_wapper">
+                    <el-input
+                        placeholder="搜索..."
+                        v-model="filterTextOu"
+                        class="search_input"
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </div>
+            </div>
+        </span>
+        <el-col :span="24" class="transfer_warapper">
+            <el-col :span="24" class="checkBoxOuUser">
+                <el-checkbox @change="CheckAllTree" v-model="checkAllOu" class="square_el"></el-checkbox><span>全选</span>
+                <el-checkbox @change="showCheckTree" v-model="showCheck" class="square_el"></el-checkbox><span>查看已选</span>
+            </el-col>
+            <el-col :span="24" class="transfer_table">
+                <vue-scroll :ops="$store.state.option">
+                    <el-tree
+                    :render-content="renderContent_ouTreeDataRight"
+                    :default-expanded-keys="expandId_dialogOu"
+                    :data="ouTreeDataRight"
+                    show-checkbox
+                    :highlight-current="true"
+                    node-key="ouId"
+                    ref="tree"
+                    :filter-node-method="filterNode"
+                    @node-click="ouNodeClickRight"
+                    @check-change="isCheckAllOu"
+                    :expand-on-click-node="false"
+                    :props="ouDefaultPropsRight">
+                    </el-tree>
+                </vue-scroll>
+            </el-col>
+            <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+            <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
+            <!-- <el-button @click="setCheckedNodes">通过 node 设置</el-button>
+            <el-button @click="setCheckedKey">通过 key 设置</el-button> -->
+        </el-col>
+    <span slot="footer">
+        <button class="transfer_footer_btn transfer_confirm" @click="ouDialogSure">确 认</button>
+        <button class="transfer_footer_btn" @click="dialogOu = false">取 消</button>
+    </span>
+</el-dialog>
+<!--dialog结束  -->   
                         <el-table 
                         v-loading="ouTableLoading"
                         :data="showPageTableOu" 
@@ -737,57 +774,6 @@
 </el-tabs>   
     </div>
 </el-row> 
-                           <!-- 分配组织 -->
-<el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
-        <span slot="title">
-            <span>分配组织</span>
-            <a  href="javascript:;" class="add" @click="addNewOu">+</a>
-            <div class="search_input_group">
-                <div class="search_input_wapper">
-                    <el-input
-                        placeholder="搜索..."
-                        v-model="filterTextOu"
-                        class="search_input"
-                        >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                </div>
-            </div>
-        </span>
-        <el-col :span="24" class="transfer_warapper">
-            <el-col :span="24" class="checkBoxOuUser">
-                <el-checkbox @change="CheckAllTree" v-model="checkAllOu" class="square_el"></el-checkbox><span>全选</span>
-                <el-checkbox @change="showCheckTree" v-model="showCheck" class="square_el"></el-checkbox><span>查看已选</span>
-            </el-col>
-            <el-col :span="24" class="transfer_table">
-                <vue-scroll :ops="$store.state.option">
-                    <el-tree
-                    :render-content="renderContent_ouTreeDataRight"
-                    :default-expanded-keys="expand.expandId_dialogOu"
-                    :data="ouTreeDataRight"
-                    show-checkbox
-                    :highlight-current="true"
-                    node-key="ouId"
-                    ref="tree"
-                    :filter-node-method="filterNode"
-                    @node-click="ouNodeClickRight"
-                    @check-change="isCheckAllOu"
-                    :expand-on-click-node="false"
-                    :props="ouDefaultPropsRight">
-                    </el-tree>
-                </vue-scroll>
-            </el-col>
-            <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
-            <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
-            <!-- <el-button @click="setCheckedNodes">通过 node 设置</el-button>
-            <el-button @click="setCheckedKey">通过 key 设置</el-button> -->
-        </el-col>
-    <span slot="footer">
-        <button class="transfer_footer_btn transfer_confirm" @click="ouDialogSure">确 认</button>
-        <button class="transfer_footer_btn" @click="dialogOu = false">取 消</button>
-    </span>
-</el-dialog>
-<!--dialog结束  -->   
 <!-- dialog尺码选择 -->
         <el-dialog :visible.sync="chooseSize" class="choose_size">
             <el-dialog
@@ -1021,6 +1007,8 @@ export default {
                 // "productSpecId": '',//商品规格ID 
                 // "specId": '',//规格ID
                 // "specValueId": '',//属性ID
+                //  "specValueCode": "",//规格值编码 ,
+                //  "specValueName": ""//规格值名称
                 // }
             ],
             "productUnit_ChildTable": [// 多单位从表
@@ -1037,7 +1025,7 @@ export default {
                 "isDefaultPurchase": true,//默认采购单位
                 "isDefaultWhole": true,// 默认批发单位 
                 "isDefaultRetail": true,//默认零售单位 
-                "status": 1
+                "status": 1,
                 }
             ],
             "productOu_ChildTable": [//组织应用关系从表 
@@ -1046,6 +1034,8 @@ export default {
                 "groupId": 1,
                 "productId": 0,//商品ID 
                 "ouId": 0,//组织单元ID
+                "remark": "",
+                "status": 1
                 }
             ],
             "productPicture_ChildTable": [//图片从表
@@ -1139,29 +1129,27 @@ export default {
         },
 //----------------使用组织---------------
         dialogOu:false,
-        expand:{
-                expandId_dialogOu:[],//默认dialog组织树形展开id
-            },
-         ouTreeDataRight:[],//
-            ouDefaultPropsRight:{
-                children: 'children',
-                label: 'ouName',
-                id:'ouId'
-            },
-            showCheck:false,//查看已选
-            checkAllOu:false,//全选
-            filterTextOu:'',//搜索
-            addOu:'default',
+        expandId_dialogOu:[],//默认dialog组织树形展开id
+        ouTreeDataRight:[],//
+        ouDefaultPropsRight:{
+            children: 'children',
+            label: 'ouName',
+            id:'ouId'
+        },
+        showCheck:false,//查看已选
+        checkAllOu:false,//全选
+        filterTextOu:'',//搜索
+        addOu:'default',
 //-------------table--------------    
-            searchTableOu:'',//搜索框值       
-            ouCheckAll:[],//分配组织数据
-            showPageTableOu:[],//展示分页后表格数据
-            ouPageIndex:1,//分页的当前页码
-            ouTotalPage:0,//当前分页总数
-            ouOneItem:10,//每页有多少条信息
-            ouPage:1,//当前页
-            ouTotalItem:0,//总共有多少条消息
-            ouTableLoading:false,
+        searchTableOu:'',//搜索框值       
+        // productOu_ChildTable:[],//分配组织数据
+        showPageTableOu:[],//展示分页后表格数据
+        ouPageIndex:1,//分页的当前页码
+        ouTotalPage:0,//当前分页总数
+        ouOneItem:10,//每页有多少条信息
+        ouPage:1,//当前页
+        ouTotalItem:0,//总共有多少条消息
+        ouTableLoading:false,
     }
 },
     validators: {
@@ -1422,7 +1410,7 @@ export default {
         },
         getModifyData(){
             let _this=this;
-            //获取主表数数据
+//-----------------------获取主表数数据----------------------
             _this.$axios.gets('/api/services/app/ProductManagement/Get',{id:_this.$route.params.id})
             .then(function(res){
                 // console.log(res)
@@ -1464,28 +1452,42 @@ export default {
                     modifiedTime:res.result.modifiedTime,//修改人
                     modifiedBy:res.result.modifiedBy//修改时间
                 }
+                //商品价格，多单位
+                 _this.$axios.gets('/api/services/app/ProductUnitManagement/GetProductUnitList',{productID:_this.$route.params.id,unitID:_this.product_MainTable.categoryId})
+                 .then(function(res){
+                     _this.productUnit_ChildTable=res.result;
+                    //  console.log(res)
+                 },function(res){
+                 })
+                 _this.changeCategoryId()//获取商品规格
             },function(res){
             })
-            // //获取商品属性数据
-            //  _this.$axios.gets('/api/services/app/ProductSpecManagement/Get',{id:_this.$route.params.id})
-            // .then(function(res){
-            //     console.log(res)
-            // },function(res){
-            // })
-            // //获取图片数据
-            //  _this.$axios.gets('/api/services/app/ProductPictureManagement/Get',{id:_this.$route.params.id})
-            // .then(function(res){
-            //     console.log(res)
-            // },function(res){
-            // })  
-            //获取使用组织数据
+            
+//-----------------------获取商品属性数据----------------------
+             _this.$axios.gets('/api/services/app/ProductSpecManagement/Get',{id:_this.$route.params.id})
+            .then(function(res){
+                _this.productProperty_ChildTable=res.result;
+                // console.log(res)
+            },function(res){
+            })
+//-----------------------获取图片数据----------------------
+             _this.$axios.gets('/api/services/app/ProductPictureManagement/Get',{id:_this.$route.params.id})
+            .then(function(res){
+                // console.log(res)
+                _this.productPicture_ChildTable=res.result;
+            },function(res){
+            })  
+//-----------------------获取使用组织数据----------------------
              _this.$axios.gets('/api/services/app/ProductOuManagement/GetProductOuList',{productID:_this.$route.params.id})
             .then(function(res){
-                console.log(res)
+                // console.log(res)
+                _this.productOu_ChildTable=res.result;
+                _this.showPageTableOu=_this.paginationOu(_this.productOu_ChildTable,_this.ouOneItem,_this.ouPage)
+                _this.ouTableLoading=false;
             },function(res){
             })
         },
-        //-------------按钮操作-----------
+//-------------按钮操作-----------
         isBack(){
             let _this=this;
             if(_this.update){
@@ -1703,7 +1705,7 @@ export default {
             // _this.searchLeftUser
             let newJson=[];
             let patt1 = new RegExp(_this.searchTableOu);
-            $.each(_this.ouCheckAll,function(index,val){
+            $.each(_this.productOu_ChildTable,function(index,val){
                 let str=val.ouName;
                 
                 let result = patt1.test(str)
@@ -1768,12 +1770,12 @@ export default {
                 _this.dialogOu=false;
                 _this.activeName_first='useOu'
         },
-        dialogOuIsShow(){
+        dialogOuIsShow(){//点击选取按钮
             let _this=this;
             _this.dialogOu=true;
             setTimeout(function(){
                 // console.log(_this.storeCheckOu)
-               _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+               _this.$refs.tree.setCheckedNodes(_this.productOu_ChildTable);
                _this.isCheckAllOu()
             },200)
             
@@ -1782,12 +1784,13 @@ export default {
             let _this=this;
             _this.addOu=data.ouId;
         },
-        loadOuTreeAll(){
+        loadOuTreeAll(){//获取组织树形数据
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
             .then(function(res){
                 _this.ouTreeDataRight=res.result;
-                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
+                //默认展开第一个子节点
+                _this.expandId_dialogOu=_this.defauleExpandTree(res.result,'ouId')
             },function(res){
             })
         },
@@ -1795,22 +1798,22 @@ export default {
             let _this=this;
             _this.dialogOu=false;
             // console.log(_this.$refs.tree.getCheckedKeys())
-            _this.ouCheckAll=_this.$refs.tree.getCheckedNodes();
-            _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
-            // console.log(_this.ouCheckAll)
+            _this.productOu_ChildTable=_this.$refs.tree.getCheckedNodes();
+            _this.showPageTableOu=_this.paginationOu(_this.productOu_ChildTable,_this.ouOneItem,_this.ouPage)
+            console.log(_this.productOu_ChildTable)
         },
         delCheckOu(row){//删除表格数据
             let _this=this;
             let indexs=null
-            $.each(_this.ouCheckAll,function(index,val){
+            $.each(_this.productOu_ChildTable,function(index,val){
                 if(val.ouId==row.ouId){
                     indexs=index
                 }
             })
             if(indexs!=null){
-                _this.ouCheckAll.splice(indexs,1)
+                _this.productOu_ChildTable.splice(indexs,1)
             }
-             _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+             _this.showPageTableOu=_this.paginationOu(_this.productOu_ChildTable,_this.ouOneItem,_this.ouPage)
         },
         CheckAllTree(){//全选
             let _this=this;
@@ -1824,7 +1827,7 @@ export default {
                     $(this).css('display','block')
                 })
             }else{
-                // _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+                // _this.$refs.tree.setCheckedNodes(_this.productOu_ChildTable);
                 _this.$refs.tree.setCheckedNodes([])
                 setTimeout(function(){
                     if(_this.showCheck){
@@ -1886,7 +1889,7 @@ export default {
         ouHandleCurrentChange(val){//页码改变
             let _this=this;
             _this.ouPage=val;
-            _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+            _this.showPageTableOu=_this.paginationOu(_this.productOu_ChildTable,_this.ouOneItem,_this.ouPage)
         },
         renderContent_ouTreeDataRight(h, { node, data, store }){
              if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
@@ -2184,5 +2187,13 @@ export default {
     font-size: 23px;
     font-weight: bold;
 }
+.goodsFilesModify .checkBoxOuUser{
+     height: 50px;
+     background-color: #f2f2f2;
+     line-height: 50px;
+ }
+ /* .goodsFilesModify .transfer_dialog .el-dialog__body{
+     overflow: inherit;
+ } */
 </style>
   

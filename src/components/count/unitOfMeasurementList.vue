@@ -39,7 +39,7 @@
                         </div>
                         <span class="btDetail">删除</span>
                     </button>
-                    <button @click="delSave" class="erp_bt bt_save" :class="{erp_fb_bt:IsSave}"  :disabled="IsSave">
+                    <button @click="save" class="erp_bt bt_save" :class="{erp_fb_bt:IsSave}"  :disabled="IsSave">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_save.png">
                         </div>
@@ -205,7 +205,7 @@
                 </span>
         </el-dialog>
         <!-- dialog数据提交有误的详细提示信息 -->
-        <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
+        <!-- <el-dialog :visible.sync="submitErrorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
@@ -230,9 +230,11 @@
             
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">确 认</button>
-                <!-- <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button> -->
+                <button class="dialog_footer_bt dialog_font" @click="submitErrorMessage = false">取 消</button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
+        <!-- 数据提交有误 -->
+        <submitError :submitData="submitData"></submitError>
         <!-- dialog -->
         <!-- dialog数据变动提示(是否忽略更改) -->
         <el-dialog :visible.sync="dialogUpdateConfirm" class="dialog_confirm_message" width="25%">
@@ -256,6 +258,7 @@
 </template>
  <script>
     import auditInfo from '../Common/auditInfo';
+    import submitError from '../Common/submitError';
     export default {
         name:'unitOfMeasurementList',
         data(){
@@ -267,16 +270,18 @@
                     "modifiedBy": this.$store.state.name,
                     "modifiedTime": this.GetDateTime(),
                 },
+                submitData:{//数据提交有误提示框参数
+                    submitErrorMessage:false,//数据提交有误提示框
+                    detail_message_ifShow: false,//数据提交有误提示框详细信息
+                    response: {
+                        details: "",
+                        message: "",
+                        validationErrors: []
+                    },
+                }, 
                 // -----------------提示框数据
                 dialogUserConfirm:false,//确认是否删除提示框
-                submitErrorMessage:false,//数据提交有误提示框
-                detail_message_ifShow:false,//数据提交有误提示框详细信息
                 dialogUpdateConfirm:false,//是否忽略更改
-                response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
-                },
                 choseAjax:'',//存储点击单个删除还是多项删除按钮判断信息
                 activeNames:['1'],//折叠面板的默认激活状态
                 // -------------------------------------树形控件数据
@@ -384,7 +389,8 @@
                         _this.IsSave=false;//保存
                         _this.IsCancel=false;//取消
                         _this.isEdit=true;//数据修改了
-                        // console.log(2);
+                        let i=0;
+                        console.log(++i);
                     }
                 },
                 deep: true,
@@ -409,17 +415,17 @@
             },
             getErrorMessage(message,details,validationErrors){//获取提交错误的详细信息
                 let _this=this;
-                _this.response.message='';
-                _this.response.details='';
-                _this.response.validationErrors=[];
+                _this.submitData.response.message='';
+                _this.submitData.response.details='';
+                _this.submitData.response.validationErrors=[];
                 if(details!=null && details){
-                    _this.response.details=details;
+                    _this.submitData.response.details=details;
                 }
                 if(message!=null && message){
-                    _this.response.message=message;
+                    _this.submitData.response.message=message;
                 }
                 if(message!=null && message){
-                    _this.response.validationErrors=validationErrors;
+                    _this.submitData.response.validationErrors=validationErrors;
                 }
             },
             showErrTips(e){// 表单验证错误提示信息
@@ -441,6 +447,7 @@
             },
             loadTree(){//获取计量单位树形控件数据
                 let _this=this;
+                _this.firstModify=false;
                 _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree').then(
                     rsp=>{
                         // console.log(rsp.result);
@@ -460,20 +467,24 @@
                 return data.unitName.indexOf(value) !== -1;
             },
             nodeClick(data) {//树形控件节点被点击时的回调
+                let _this=this;
+                // console.log('data');
+                // console.log(_this.isEdit);
                 // console.log(data);
                 // console.log('1313');
-                let _this=this;
-                if (!_this.isEdit) {
+                if (!_this.isEdit) {//没有编辑更改数据
                     _this.isAdd=false;
                     if(data.id){
                         _this.nodeId=data.id;
                     }else{
-                        _this.nodeId = data
+                        _this.nodeId = data;
                     }
                     // console.log(_this.nodeId);
                     _this.getNodeMsg(_this.nodeId);
                     _this.getNodeDetail(_this.nodeId);
                     _this.getTableSelectData(_this.nodeId);
+                }else if(_this.isAdd){
+                        
                 }else{
                     _this.nodeId=data.id;
                     _this.dialogUpdateConfirm=true;
@@ -498,7 +509,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:id}).then(
                     rsp=>{
-                    console.log(rsp);
+                    // console.log(rsp);
                     // _this.editList.unitConvert_ChildTable=rsp.result;
                     // _this.tableList=_this.editList.unitConvert_ChildTable;
                     _this.firstModify=false;
@@ -518,29 +529,32 @@
             add(){//新增
                 let _this=this;
                 _this.isAdd=true;
+                _this.isEdit=false;
+                _this.firstModify=false;
                 _this.initData();
             },
             save(){//主表按钮保存------从表的操作对主表来说都是修改（传入id与新增区分）
                 let _this=this;
-                // console.log(_this.isAdd);
-                // console.log(_this.isEdit);
+                console.log(_this.isAdd);
+                console.log(_this.isEdit);
                 if (_this.isAdd || _this.isEdit) {//新增保存
                     $('.tipsWrapper').css({display:'block'});
                     _this.$validate().then(
                         function (success) { 
                             if (success) {
                                 $('.tipsWrapper').css({display:'none'});
-                                console.log("保存按钮点击了");
+                                // console.log("保存按钮点击了");
                                 console.log(_this.formData.unitConvert_ChildTable);
                                 
                                 if (_this.formData.unitConvert_ChildTable.length>1) {
-                                        for(let i=0;i<_this.formData.unitConvert_ChildTable.length-1; i++){
-                                            alert('1')
+                                        for(let i=0;i<_this.formData.unitConvert_ChildTable.length; i++){
+                                            // alert('1')
                                             if (_this.formData.unitConvert_ChildTable[i].destUnitId=='' || _this.formData.unitConvert_ChildTable[i].factor=='') {
                                                 alert('多单位或系数必填');
                                                 return;
                                             }
                                             _this.addList=_this.formData;
+                                            // console.log(_this.addList);
                                             if (i==_this.formData.unitConvert_ChildTable.length-1) {
                                                 _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                                 _this.addList.unit_MainTable=_this.formData.unit_MainTable;
@@ -550,18 +564,18 @@
                                 }else if(_this.formData.unitConvert_ChildTable.length==1){
                                    if (_this.formData.unitConvert_ChildTable[0].destUnitId!='' && _this.formData.unitConvert_ChildTable[0].factor!='') {
                                        console.log(_this.formData.unitConvert_ChildTable);
-                                       alert('2.1')
+                                    //    alert('2.1')
                                        _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                        _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                        console.log(_this.addList);
                                        _this.doSave(_this.addList);
                                    }else{
-                                       alert('2')
+                                    //    alert('2')
                                        alert('多单位或系数必填');
                                        return;
                                    }
                                 }else{
-                                    alert('3')
+                                    // alert('3')
                                     _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                     _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                     _this.doSave(_this.addList)
@@ -573,11 +587,11 @@
             },
             doSave(dataVal){
                 let _this=this;
-                console.log(dataVal);
+                // console.log(dataVal);
                 _this.$axios.posts('/api/services/app/UnitManagement/AggregateCreateOrUpdate',dataVal).then(
                     rsp=>{//success
-                        console.log(dataVal);
-                        console.log('1212');
+                        // console.log(dataVal);
+                        // console.log('1212');
                         // console.log(rsp);
                         _this.addList.unit_MainTable.id=rsp.result;
                         _this.nodeId=rsp.result;
@@ -601,7 +615,7 @@
                         if(rsp && rsp!=''){ 
                             _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
                         };
-                        _this.submitErrorMessage=true;
+                        _this.submitData.submitErrorMessage=true;
                     }
                 )
             },
@@ -615,7 +629,7 @@
             delSave(){//判断从表数据是否有删除，有删除则先删除，成功后再保存
                     let _this=this;   
                     if (_this.delIds.ids.length>0) {
-                        console.log('looklook1');
+                        // console.log('looklook1');
                         // console.log('先删除后保存');
                         _this.$axios.posts('/api/services/app/UnitConvertManagement/BatchDelete',_this.delIds).then(
                                 rsp=>{//success
@@ -628,7 +642,7 @@
                                     if(rsp && rsp!=''){ 
                                         _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors)
                                     };
-                                    _this.submitErrorMessage=true;
+                                     _this.submitData.submitErrorMessage=true;
                                             }
                                         )
                     }else{
@@ -638,12 +652,13 @@
             },
             delNode(){//删除节点
                 let _this=this;
-                console.log('确认1');
+                // console.log('确认1');
                 _this.$axios.deletes('/api/services/app/UnitManagement/Delete',{Id:_this.nodeId})
                 .then(
                     rsp=>{
                         // console.log(rsp.success);
                         _this.dialogUserConfirm=false;
+                        _this.nodeId=0
                         _this.loadTree();
                         // _this.editList={},
                         // _this.formData= {id:0, unitCode: "",unitName: "",isBase: false,status: 1,};
@@ -653,7 +668,7 @@
                     rsp=>{
                         _this.getErrorMessage(rsp.error.message,rsp.error.details,rsp.error.validationErrors);
                         _this.dialogUserConfirm=false;
-                        _this.submitErrorMessage=true;
+                        _this.submitData.submitErrorMessage=true;
                     }
                 )
             },
@@ -820,6 +835,8 @@
         },
         components:{
             auditInfo,
+            submitError,
+
         },
     }
 </script>

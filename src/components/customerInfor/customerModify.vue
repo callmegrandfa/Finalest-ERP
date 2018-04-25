@@ -23,7 +23,7 @@
                     <span class="btDetail">取消</span>
                 </button>
 
-                <button class="erp_bt bt_saveAdd" :class="{erp_fb_bt:!ifModify}">
+                <button class="erp_bt bt_saveAdd" @click="saveAdd" :class="{erp_fb_bt:!ifModify}">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_saveAdd.png">
                     </div>
@@ -896,8 +896,8 @@ export default({
         self.loadSelect();
     },
     watch:{
-        customerData:{
-            handler: function (val, oldVal) {
+        allData:{
+            handler:function(val,oldVal){
                 let self = this;
                 if(!self.firstModify){
                     self.firstModify = !self.firstModify;
@@ -905,16 +905,28 @@ export default({
                     self.ifModify = true;
                 }
             },
-            deep: true,
+            deep:true,
         },
+        // customerData:{
+        //     handler: function (val, oldVal) {
+        //         let self = this;
+        //         if(!self.firstModify){
+        //             self.firstModify = !self.firstModify;
+        //         }else{
+        //             console.log(self.ifModify)
+        //             self.ifModify = true;
+        //         }
+        //     },
+        //     deep: true,
+        // },
         bankData:{
             handler: function (val, oldVal) {
                 let self = this;
-                if(!self.firstModify){
-                    self.firstModify = !self.firstModify;
-                }else{
-                    self.ifModify = true;
-                }
+                // if(!self.firstModify){
+                //     self.firstModify = !self.firstModify;
+                // }else{                    
+                //     self.ifModify = true;
+                // }
                 self.redBankAr = [];
                 for(let i in val){
                     let flag = true;
@@ -948,11 +960,12 @@ export default({
         addressData:{
             handler: function (val, oldVal) {
                 let self = this;
-                if(!self.firstModify){
-                    self.firstModify = !self.firstModify;
-                }else{
-                    self.ifModify = true;
-                }
+                // if(!self.firstModify){
+                //     self.firstModify = !self.firstModify;
+                // }else{
+                //     console.log(self.ifModify)
+                //     self.ifModify = true;
+                // }
                 self.redAddAr = [];
                 for(let i in val){
                     let flag = true;
@@ -983,41 +996,42 @@ export default({
             },
             deep: true,
         },
-        ouData:{
-            handler: function (val, oldVal) {
-                let self = this;
-                if(!self.firstModify){
-                    self.firstModify = !self.firstModify;
-                }else{
-                    self.ifModify = true;
-                }
-                self.redOuAr = [];
-                for(let i in val){
-                    let flag = true;
-                    for(let j in self.InitOuData){
-                        if(val[i].groupId == self.InitOuData[j].groupId&&
-                           val[i].contactId == self.InitOuData[j].contactId&&
-                           val[i].ouId == self.InitOuData[j].ouId&&
-                           val[i].transportMethodId == self.InitOuData[j].transportMethodId&&
-                           val[i].isDefault == self.InitOuData[j].isDefault&&
-                           val[i].isDeleted == self.InitOuData[j].isDeleted&&
-                           val[i].deletedBy == self.InitOuData[j].deletedBy&&
-                           val[i].deletedTime == self.InitOuData[j].deletedTime&&
-                           val[i].modifiedBy == self.InitOuData[j].modifiedBy&&
-                           val[i].modifiedTime == self.InitOuData[j].modifiedTime&&
-                           val[i].createdBy == self.InitOuData[j].createdBy&&
-                           val[i].createdTime == self.InitOuData[j].createdTime&&
-                           val[i].id == self.InitOuData[j].id){
-                               flag = false;
-                           }
-                    }
-                    if(flag){
-                        self.redAddAr.push(val[i])
-                    }
-                }
-            },
-            deep: true,
-        },
+        // ouData:{
+        //     handler: function (val, oldVal) {
+        //         let self = this;
+        //         if(!self.firstModify){
+        //             self.firstModify = !self.firstModify;
+        //         }else{
+        //             console.log(self.ifModify)
+                    //self.ifModify = true;
+        //         }
+        //         self.redOuAr = [];
+        //         for(let i in val){
+        //             let flag = true;
+        //             for(let j in self.InitOuData){
+        //                 if(val[i].groupId == self.InitOuData[j].groupId&&
+        //                    val[i].contactId == self.InitOuData[j].contactId&&
+        //                    val[i].ouId == self.InitOuData[j].ouId&&
+        //                    val[i].transportMethodId == self.InitOuData[j].transportMethodId&&
+        //                    val[i].isDefault == self.InitOuData[j].isDefault&&
+        //                    val[i].isDeleted == self.InitOuData[j].isDeleted&&
+        //                    val[i].deletedBy == self.InitOuData[j].deletedBy&&
+        //                    val[i].deletedTime == self.InitOuData[j].deletedTime&&
+        //                    val[i].modifiedBy == self.InitOuData[j].modifiedBy&&
+        //                    val[i].modifiedTime == self.InitOuData[j].modifiedTime&&
+        //                    val[i].createdBy == self.InitOuData[j].createdBy&&
+        //                    val[i].createdTime == self.InitOuData[j].createdTime&&
+        //                    val[i].id == self.InitOuData[j].id){
+        //                        flag = false;
+        //                    }
+        //             }
+        //             if(flag){
+        //                 self.redAddAr.push(val[i])
+        //             }
+        //         }
+        //     },
+        //     deep: true,
+        // },
         cuSearch(val){
             this.$refs.cutree.filter(val)
         },
@@ -1027,6 +1041,7 @@ export default({
     },
     data() {
         return{
+            allData:'',//保存所有的数据
             getOuId:'',//保存获取的ouid
             ifShow:true,
             radio:'',
@@ -1352,6 +1367,7 @@ export default({
                 //根据id获得的客户信息
                 this.$axios.gets('/api/services/app/ContactManagement/GetContactDetail',{id:self.$route.params.id}).then(function(res){
                     console.log(res)
+                    self.allData = res.result;
                     self.customerData = res.result.contact_MainTable;
                     //console.log(self.customerData)
                     self.getOuId = res.result.ouId;
@@ -1366,7 +1382,7 @@ export default({
                     self.customerData.modifiedTime=self.resdatetime(new Date(self.customerData.modifiedTime));
                     //银行数据
                     self.bankData = res.result.contactBanks_ChildTable;
-                    self.InitBankData = self.deepCopy(res.result);
+                    self.InitBankData = self.deepCopy(res.result.contactBanks_ChildTable);
                     for(let i in self.bankData){
                         if(self.bankData[i].isDefault == true){
                             self.checkedAr = self.bankData[i]
@@ -1374,7 +1390,7 @@ export default({
                     }
                     //地址数据
                     self.addressData = res.result.contactAddresses_ChildTable;
-                    self.InitAddData = self.deepCopy(res.result);
+                    self.InitAddData = self.deepCopy(res.result.contactAddresses_ChildTable);
                     for(let i in self.addressData){
                         if(self.addressData[i].isDefault == true){
                             self.checkedAdd = self.addressData[i]
@@ -1415,8 +1431,6 @@ export default({
                         console.log('err'+res)
                     });
                      
-                    
-
                     //加载完成拿回的下拉框的默认值
                     self.ouItem.ouFullname = self.customerData.ouId_OuName;
                     self.ouItem.id =  self.customerData.ouId;
@@ -1432,15 +1446,10 @@ export default({
 
                     self.fiItem.fiFullname = self.customerData.ficaOuId_OuName;
                     self.fiItem.id = self.customerData.ficaOuId;
-                })
-                       
-                
-                
+                })        
                 // self.loadBankData();//加载银行数据
                 // self.loadAddData();//加载地址数据
                 // self.loadOuData();//加载使用组织数据
-                
-
             }
         },
         querySearch(queryString,cb) {
@@ -1475,9 +1484,6 @@ export default({
         handleSelectDis(item) {
             //console.log(item.id);
         },            
-
-
-
 
         resdatetime:function(resdatetime){
             return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
@@ -1528,7 +1534,6 @@ export default({
         //     })
         // },
         //------------------------------------------------------
-
 
         //---下拉的数据------------------------------------------
         loadSelect:function(){
@@ -1842,6 +1847,9 @@ export default({
                     self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
                         self.open('修改成功','el-icon-circle-check','successERP');
                         self.ifModify = false;
+                        self.redBankAr = [];
+                        self.redOuAr = [];
+                        self.redAddAr = [];
                     },function(res){
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                         self.errorMessage=true;
@@ -1850,6 +1858,35 @@ export default({
                 }
             });
             
+        },
+        saveAdd(){//保存并新增
+            let self = this;
+            $('.tipsWrapper').css({display:'block'});
+            //console.log(self.customerData)
+            self.$validate().then(function(success){
+                if(success){
+                    $('.tipsWrapper').css({display:'none'});
+                    let submitData = {};
+                    submitData = {
+                        contact_MainTable:self.customerData,
+                        contactBanks_ChildTable:self.bankData,
+                        contactAddress_ChildTable:self.addressData,
+                        contactOu_ChildTable:self.ouData,
+                    }
+                    self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
+                        self.open('修改成功','el-icon-circle-check','successERP');
+                        self.$store.state.url='/customer/customerDetail/default'
+                        self.$router.push({path:self.$store.state.url})//点击切换路由
+                        self.ifModify = false;
+                    },function(res){
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
+                    self.sureDel();
+                }
+            });
+
+
         },
         //-------------------------------------------------------
 
@@ -2659,8 +2696,12 @@ export default({
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;
 }
+.customerBasicForm .area{
+    width:510px;
+    margin-right:0px;
+}
 .el-select.areaDrop,.el-input.areaEntry{
-    width: 100px;
+    width: 136px;
 }
 .areaDrop input,.areaEntry input{
     border: none!important;

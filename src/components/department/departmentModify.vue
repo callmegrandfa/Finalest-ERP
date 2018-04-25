@@ -82,10 +82,12 @@
                                      :data="ouTree"
                                      :props="ouProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     ref="ouTree"
+                                     :filter-node-method="ouFilterNode"
+                                     :default-expanded-keys="ouExpandId"
                                      :expand-on-click-node="false"
+                                     :render-content="ouRenderContent"
+                                     highlight-current
                                      @node-click="ouNodeClick"></el-tree>            
 
                             <el-option v-show="false"
@@ -112,18 +114,19 @@
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="selectParentTree"
+                            <el-tree :data="selectParentTree"
                                      :props="selectParentProps"
                                      node-key="id"
-                                     default-expand-all
-                                     ref="tree"
-                                     :filter-node-method="filterNode"
+                                     ref="dpTree"
+                                     :filter-node-method="dpFilterNode"
+                                     highlight-current
+                                     :render-content="dpRenderContent"
+                                     :default-expanded-keys="dpExpandId"
                                      :expand-on-click-node="false"
                                      @node-click="nodeClick"></el-tree>
                             <el-option v-show="false"
                                        :key="count.id" 
-                                       :label="count.deptName" 
+                                       :label="count.name" 
                                        :value="count.id"
                                        id="businessDetail_confirmSelect"></el-option>
                         </el-select>
@@ -299,6 +302,12 @@
                 },
         },
         watch:{
+            ouSearch(val){
+                this.$refs.ouTree.filter(val)
+            },
+            parentSearch(val){
+                this.$refs.dpTree.filter(val)
+            },
             departmentData:{
                 handler: function (val, oldVal) {
                     let self = this;
@@ -336,19 +345,21 @@
                     id:'',
                     ouName:'',
                 },
+                ouExpandId:[],
                 //--------------------
                 //---上级部门树--------
                 selectParentTree:[],//选择上级部门
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
                     children: 'children',
-                    label: 'deptName',
+                    label: 'name',
                     id:'id'
                 },
                 parentItem:{
                     id:'',
-                    deptName:'',
+                    name:'',
                 },
+                dpExpandId:[],
                 //--------------------
                 status: [],
                 departmentData:{
@@ -433,7 +444,7 @@
                     self.ouItem.id = self.departmentData.ouId;
                     self.ouItem.ouName = self.departmentData.ouFullname;
                     self.parentItem.id = self.departmentData.deptParentid;
-                    self.parentItem.deptName = self.departmentData.deptParentName;
+                    self.parentItem.name = self.departmentData.deptParentName;
 
                     self.firstModify = false;
                     
@@ -447,6 +458,7 @@
             self.$axios.gets('/api/services/app/OuManagement/GetAllTree').then(function(res){
                 console.log(res)
                 self.ouTree=res.result;
+                self.ouExpandId=self.defauleExpandTree(res.result,'id')
                 self.loadIcon();
             },function(res){
                 self.treeLoading=false;
@@ -458,6 +470,7 @@
             self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
                 console.log(res)
                 self.selectParentTree=res.result;
+                self.dpExpandId=self.defauleExpandTree(res.result,'id')          
                 self.loadIcon();
             },function(res){
                 self.treeLoading=false;
@@ -490,10 +503,61 @@
         //-------------------------------------------------------
 
         //---树--------------------------------------------------
-        filterNode(value, data) {
+        ouFilterNode(value, data) {
             console.log(data)
             if (!value) return true;
-                return data.deptName.indexOf(value) !== -1;
+                return data.ouFullname.indexOf(value) !== -1;
+        },
+        dpFilterNode(value, data) {
+            console.log(data)
+            if (!value) return true;
+                return data.name.indexOf(value) !== -1;
+        },
+        //---树render-content----------------------------------
+        ouRenderContent(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.ouFullname}
+                    </span>
+                );
+            }
+        },
+        dpRenderContent(h, { node, data, store }){//所属组织
+            if(typeof(data.children)!='undefined' && data.children!=null && data.children.length>0){
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.name}
+                    </span>
+                );
+            }else{
+                return (
+                    <span class="el-tree-node__label" data-id={data.id}>
+                    <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                        {data.name}
+                    </span>
+                );
+            }
+        },
+
+        //---树通用----------------------------------------------
+        defauleExpandTree(data,key){
+            if(typeof(data[0])!='undefined'
+            && data[0]!=null 
+            && typeof(data[0][key])!='undefined'
+            && data[0][key]!=null
+            && data[0][key]!=''){
+                return [data[0][key]]
+            }
         },
         ouNodeClick:function(data){
             let self = this;
@@ -504,9 +568,10 @@
             })
         },
         nodeClick:function(data){
+            console.log(data)
             let self = this;
             self.parentItem.id = data.id;
-            self.parentItem.deptName = data.deptName;
+            self.parentItem.name = data.name;
             self.$nextTick(function(){
                 $('#businessDetail_confirmSelect').click()
             })

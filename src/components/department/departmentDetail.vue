@@ -1,7 +1,7 @@
 <template>
     <div class="departmentDetail">
-        <el-row>
-            <el-col :span="24">
+        <el-row class="fixed">
+            <el-col :span="24" >
                 <button class="erp_bt bt_back" @click="isBack">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
@@ -60,8 +60,7 @@
                                       class="selectSearch"
                                       v-model="ouSearch"></el-input>
 
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="ouAr"
+                            <el-tree :data="ouAr"
                                      :props="selectOuProps"
                                      node-key="id"
                                      default-expand-all
@@ -93,8 +92,7 @@
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
-                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                     :data="selectParentTree"
+                            <el-tree :data="selectParentTree"
                                      :props="selectParentProps"
                                      node-key="id"
                                      default-expand-all
@@ -105,7 +103,7 @@
 
                             <el-option v-show="false"
                                        :key="count.id" 
-                                       :label="count.deptName" 
+                                       :label="count.name" 
                                        :value="count.id"
                                        id="businessDetail_confirmSelect"></el-option>
                         </el-select>
@@ -268,12 +266,12 @@
                 parentSearch:'',//搜索上级部门
                 selectParentProps:{
                     children: 'children',
-                    label: 'ouName',
+                    label: 'name',
                     id:'id'
                 },
                 parentItem:{
                     id:'',
-                    deptName:'',
+                    name:'',
                 },
                 //--------------------
 
@@ -285,7 +283,7 @@
                     "manager": "",
                     "deptParentid": '',
                     "remark": "",
-                    "status": ''
+                    "status": 1
                 },
 
                 //---信息修改提示框------------
@@ -343,7 +341,7 @@
     created:function(){
             let self = this;
             self.loadOuTree();
-            self.loadParentTree();
+            // self.loadParentTree();
             self.loadStatus();
         },
     computed:{
@@ -372,20 +370,21 @@
             self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
                 // console.log(res);
                 self.defaultOuId = res.result.id;
+                console.log(self.defaultOuId)
                 self.addData.ouId = self.defaultOuId;
                 //加载完成拿回下拉的默认值
                 self.ouItem.ouFullname = res.result.ouFullname;
                 self.ouItem.id =  res.result.id;
 
-
+                self.loadParentTree(self.defaultOuId)
             },function(res){
                 console.log('err'+res)
             });
         },
-        loadParentTree(){
+        loadParentTree(id){
             let self=this;
             self.treeLoading=true;
-            self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
+            self.$axios.gets('api/services/app/DeptManagement/GetAllTree',{OuId:id}).then(function(res){
                 console.log(res)
                 self.selectParentTree=res.result;
                 self.loadIcon();
@@ -397,9 +396,7 @@
             let self = this;
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
                 console.log(res)
-                
-            self.status = res.result;      
-                
+                self.status = res.result;   
             },function(res){
                 
             })
@@ -512,6 +509,7 @@
             let self = this;
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;
+            self.loadParentTree(data.id)
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
@@ -520,7 +518,7 @@
             let self = this;
             console.log(data)
             self.parentItem.id = data.id;
-            self.parentItem.deptName = data.ouName;
+            self.parentItem.name = data.name;
             self.$nextTick(function(){
                 $('#businessDetail_confirmSelect').click()
             })

@@ -679,65 +679,7 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- <el-table :data="productOu_ChildTable" border style="width: 100%" stripe>
-                            <el-table-column prop="ouId" label="业务组织">
-                            </el-table-column>
-
-                            <el-table-column prop="ouId" label="上市日期" ></el-table-column>
-
-                            
-                            <el-table-column prop="ouId" label="备注"></el-table-column>
-                            <el-table-column prop="ouId" label="状态">
-                                <template slot-scope="scope">
-                                    <el-checkbox></el-checkbox>
-                                </template>
-                            </el-table-column>
-                        </el-table>  -->
-                        <el-table 
-                        v-loading="ouTableLoading"
-                        :data="showPageTableOu" 
-                        border 
-                        style="width: 100%" 
-                        stripe>
-
-                            <el-table-column prop="ouName" label="业务组织"></el-table-column>
-                            <el-table-column label="上市日期">
-                                <template slot-scope="scope">
-                                    <el-date-picker
-                                    v-model="scope.row.regtime"
-                                    format="yyyy.MM.dd"
-                                    type="datetime" 
-                                    readonly
-                                    align="center"></el-date-picker>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="remark" label="备注"></el-table-column>
-                            <el-table-column prop="status" label="状态">
-                                <!-- <template slot-scope="scope">
-                                    <el-checkbox v-model="scope.row.status"></el-checkbox>
-                                </template> -->
-                            </el-table-column>
-                            <el-table-column label="操作">
-                                 <template slot-scope="scope">
-                                     <el-button type="text" @click="delCheckOu(scope.row)">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-pagination
-                        style="margin-top:20px;" 
-                        class="text-right" 
-                        background layout="total,prev, pager, next,jumper" 
-                        @current-change="ouHandleCurrentChange"
-                        :current-page="ouPageIndex"
-                        :page-size="ouOneItem"
-                        :total="ouTotalItem">
-                        </el-pagination>   
-                    </el-row>
-                </el-tab-pane>
-</el-tabs>   
-    </div>
-</el-row> 
-                           <!-- 分配组织 -->
+                                                   <!-- 分配组织 -->
 <el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
         <span slot="title">
             <span>分配组织</span>
@@ -788,6 +730,51 @@
     </span>
 </el-dialog>
 <!--dialog结束  -->   
+                        <el-table 
+                        v-loading="ouTableLoading"
+                        :data="showPageTableOu" 
+                        border 
+                        style="width: 100%" 
+                        stripe>
+
+                            <el-table-column prop="ouName" label="业务组织"></el-table-column>
+                            <el-table-column label="上市日期">
+                                <template slot-scope="scope">
+                                    <el-date-picker
+                                    v-model="scope.row.regtime"
+                                    format="yyyy.MM.dd"
+                                    type="datetime" 
+                                    readonly
+                                    align="center"></el-date-picker>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="remark" label="备注"></el-table-column>
+                            <el-table-column prop="status" label="状态">
+                                <!-- <template slot-scope="scope">
+                                    <el-checkbox v-model="scope.row.status"></el-checkbox>
+                                </template> -->
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                 <template slot-scope="scope">
+                                     <el-button type="text" @click="delCheckOu(scope.row)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-pagination
+                        style="margin-top:20px;" 
+                        class="text-right" 
+                        background layout="total,prev, pager, next,jumper" 
+                        @current-change="ouHandleCurrentChange"
+                        :current-page="ouPageIndex"
+                        :page-size="ouOneItem"
+                        :total="ouTotalItem">
+                        </el-pagination>   
+                    </el-row>
+                </el-tab-pane>
+</el-tabs>   
+    </div>
+</el-row> 
+
 <!-- dialog尺码选择 -->
         <el-dialog :visible.sync="chooseSize" class="choose_size">
             <el-dialog
@@ -1006,22 +993,22 @@ export default {
                 }
             ],
             "productSpec_ChildTable": [//规格从表
-                // {
-                // "id": 0,
-                // "groupId": 1,
-                // "productId": '',//商品ID 
-                // "basSpecgroupId": '',//规格组ID
-                // "specId": '',//规格ID
-                // }
+                {
+                "id": 0,
+                "groupId": 1,
+                "productId": '',//商品ID 
+                "basSpecgroupId": '',//规格组ID
+                "specId": '',//规格ID
+                }
             ],
             "productSpecValue_GrandTable": [//规格值孙表 
-                // {
-                // "id": 0,
-                // "groupId": 1,
-                // "productSpecId": '',//商品规格ID 
-                // "specId": '',//规格ID
-                // "specValueId": '',//属性ID
-                // }
+                {
+                "id": 0,
+                "groupId": 1,
+                "productSpecId": '',//商品规格ID 
+                "specId": '',//规格ID
+                "specValueId": '',//属性ID
+                }
             ],
             "productUnit_ChildTable": [// 多单位从表
                 {
@@ -1090,6 +1077,132 @@ export default {
                 "specValueName": "string",//规格值名称
                 }
             ],
+//              "product_MainTable": {
+//     "id": 0,
+//     "groupId": 1,
+//     "categoryId": 29,
+//     "brandId":44,
+//     "productCode": "xxad2",
+//     "productName": "123s",
+//     "mnemonic": "string",
+//     "barcode": "string",
+//     "saleDate": "2018-04-24T02:19:58.264Z",
+//     "unitId": 0,
+//     "uniqueMgt": true,
+//     "lotMgt": true,
+//     "validityMgt": true,
+//     "validDays": 0,
+//     "multiUnitEnabled": true,
+//     "isSuite": true,
+//     "purchasePrice": 0,
+//     "purchaseUnit": 0,
+//     "wholePrice": 0,
+//     "wholeUnit": 0,
+//     "discount": 0,
+//     "vipPrice": 0,
+//     "retailPrice": 0,
+//     "retailUnit": 0,
+//     "remark": "string",
+//     "status": 0
+//   },
+//   "productProperty_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "propertyId": 0,
+//       "propertyValueCode": "string",
+//       "propertyValueName": "string"
+//     }
+//   ],
+//   "productSpec_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "basSpecgroupId": 0,
+//       "specId": 0
+//     }
+//   ],
+//   "productSpecValue_GrandTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productSpecId": 0,
+//       "specId": 0,
+//       "specValueId": 0,
+//       "specValueCode": "string",
+//       "specValueName": "string"
+//     }
+//   ],
+//   "productUnit_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "unitId": 0,
+//       "purchasePrice": 0,
+//       "wholePrice": 0,
+//       "discount": 0,
+//       "vipPrice": 0,
+//       "retailPrice": 0,
+//       "isDefaultPurchase": true,
+//       "isDefaultWhole": true,
+//       "isDefaultRetail": true,
+//       "status": 0
+//     }
+//   ],
+//   "productOu_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "ouId": 0,
+//       "remark": "string",
+//       "status": 0
+//     }
+//   ],
+//   "productPicture_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "specId": 0,
+//       "pictureUrl": "string",
+//       "pictureCode": "string",
+//       "pictureName": "string",
+//       "isMain": true,
+//       "seq": true
+//     }
+//   ],
+//   "sku_ChildTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "productId": 0,
+//       "skuCode": "string",
+//       "skuName": "string",
+//       "barcode": "string",
+//       "unitId": 0,
+//       "purchasePrice": 0,
+//       "wholePrice": 0,
+//       "discount": 0,
+//       "vipPrice": 0,
+//       "retailPrice": 0,
+//       "status": 0
+//     }
+//   ],
+//   "skuSpecValue_GrandTable": [
+//     {
+//       "id": 0,
+//       "groupId": 1,
+//       "skuId": 0,
+//       "productId": 0,
+//       "specId": 0,
+//       "specValueCode": "string",
+//       "specValueName": "string"
+//     }
+//   ],
             group:true,//集团公司复选框初始选种状态
             isUse:false,//是否启用复选框初始选种状态
             
@@ -1427,7 +1540,18 @@ export default {
             .then(function (success) {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
-                    _this.$axios.posts('/api/services/app/ProductManagement/Create',_this.product_MainTable).then(function(res){
+                    let data={
+                        'product_MainTable':_this.product_MainTable,
+                        'productProperty_ChildTable':_this.productProperty_ChildTable,
+                        'productSpec_ChildTable':_this.productSpec_ChildTable,
+                        'productSpecValue_GrandTable':_this.productSpecValue_GrandTable,
+                        'productUnit_ChildTable':_this.productUnit_ChildTable,
+                        'productOu_ChildTable':_this.productOu_ChildTable,
+                        'productPicture_ChildTable':_this.productPicture_ChildTable,
+                        'sku_ChildTable':_this.sku_ChildTable,
+                        'skuSpecValue_GrandTable':_this.skuSpecValue_GrandTable,
+                        }
+                    _this.$axios.posts('/api/services/app/ProductManagement/AggregateCreateOrUpdate',data).then(function(res){
                         _this.$store.state.url='/goodsFiles/goodsFilesModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
@@ -2140,5 +2264,13 @@ export default {
     font-size: 23px;
     font-weight: bold;
 }
+.goodsFilesDetail .checkBoxOuUser{
+     height: 50px;
+     background-color: #f2f2f2;
+     line-height: 50px;
+ }
+ /* .goodsFilesDetail .transfer_dialog .el-dialog__body{
+     overflow: inherit;
+ } */
 </style>
   

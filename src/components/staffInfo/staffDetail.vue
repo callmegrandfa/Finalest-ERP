@@ -94,7 +94,7 @@
                             <el-input placeholder="输入关键字进行过滤" v-model="filterOu" class="selectSearch">
                                 </el-input>
                                 <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
-                                                node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
+                                                node-key="id" default-expand-all ref="tree" :filter-node-method="filterNode_ou"
                                                 :expand-on-click-node="false" @node-click="nodeClick_ou"
                                                 class="filter-tree">
                                 </el-tree>
@@ -214,8 +214,6 @@
                 </span>
             </el-dialog>
             <!-- dialog -->
-          
-            
             <!-- 数据提交有误的数据提示框 -->
             <submitError :submitData="submitData"></submitError> 
         </div>
@@ -317,11 +315,13 @@
             // 获取默认数据
             this.getDefault();
         },
-        // watch:{
-        //    filterOu(val) {
-        //         this.$refs.tree.filter(val);
-        //     },
-        // },
+        watch:{
+           filterOu(val) {
+                this.$refs.tree.filter(val);
+                // console.log(val);
+                
+            },
+        },
         methods: {
             // -------------------默认值
             getDefault(){// ------默认用户所属组织
@@ -424,6 +424,10 @@
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
                 // console.log(data);
+                 if (data.id!=_this.addData.ouId) {
+                    _this.addData.deptId=null
+                }
+                _this.ouId=data.id;
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -438,7 +442,7 @@
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                 .then(
                     function(res){//部门
-                        // console.log(res);
+                        console.log(res);
                         _this.selectTree_depart=res.result;
                         _this.loadIcon();
                     },
@@ -545,16 +549,17 @@
             },
             // -----------------按钮组功能
             reset(){// 重置表单值与表单验证
-                    this.form.employeeCode='';
-                    this.form.employeeName='';
-                    this.form.ouId='';
-                    this.form.mobile='';
-                    this.form.department='';
-                    this.form.sex='';
-                    this.form.birthday='';
-                    this.form.shopName='';
-                    this.form.remark=''; 
-                    this.validation.reset();               
+                    this.addData.employeeCode='';
+                    this.addData.employeeName='';
+                    this.addData.ouId='';
+                    this.addData.mobile='';
+                    this.addData.department='';
+                    this.addData.sex='';
+                    this.addData.birthday='';
+                    this.addData.shopName='';
+                    this.addData.remark=''; 
+                    this.validation.reset();
+                    this.getDefault();               
             },
         },
         components:{

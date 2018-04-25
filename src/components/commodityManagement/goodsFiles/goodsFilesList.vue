@@ -605,7 +605,7 @@
 }
 .border-left{
     border-left: 1px solid #E4E4E4;
-    min-height: 400px;
+    min-height: 438px;
 }
 .btn{
     display: inline-block;

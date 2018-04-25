@@ -34,19 +34,21 @@
                             @node-click="nodeClick"
                             class="filter-tree"
                             > -->
-                            <el-tree
-                            :render-content="renderContent_componyTree"
-                            :highlight-current="true"
-                            :data="supplierClasTree"
-                            :props="defaultProps"
-                            node-key="id"
-                            :default-expanded-keys="expandId"
-                            ref="tree"
-                            :expand-on-click-node="false"
-                            :filter-node-method="filterNode"
-                            @node-click="nodeClick"
-                            >
-                        </el-tree>
+                            <vue-scroll :ops="$store.state.option">
+                                <el-tree
+                                :render-content="renderContent_componyTree"
+                                :highlight-current="true"
+                                :data="supplierClasTree"
+                                :props="defaultProps"
+                                node-key="id"
+                                :default-expanded-keys="expandId"
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                :filter-node-method="filterNode"
+                                @node-click="nodeClick"
+                                >
+                            </el-tree>
+                        </vue-scroll>
                     </el-col>  
             </el-col>
             <!-- 右边数据列表 -->

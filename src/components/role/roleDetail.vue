@@ -1015,7 +1015,6 @@ export default({
                         })
                     });
                     _this.addData.permissions=permissions;
-                   
                     let userCodes=[];//关联用户
                     $.each(_this.showCheckedUserTable,function(index,val){
                         userCodes.push(val.userCode)
@@ -1025,13 +1024,12 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
                     _this.$axios.posts('/api/services/app/Role/Create',_this.addData)
                     .then(function(res){
-                        _this.add();
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.Cancel();
                     },function(res){
@@ -2040,12 +2038,12 @@ export default({
 .roleDetail{
     font-family: 'microsoft yahei';
 }
-  .chooseFn{
+.roleDetail  .chooseFn{
     height: 30px;
     line-height: 30px;
     padding-left: 10px;
   }
-  .chooseFn .fa-cog{
+ .roleDetail .chooseFn .fa-cog{
     cursor: pointer;
     color: #c9d1d1;
     float: right;
@@ -2069,7 +2067,7 @@ export default({
     font-weight: bold;
 }
  /*收起*/
- .checkBoxOuUser{
+ .roleDetail .checkBoxOuUser{
      height: 50px;
      background-color: #f2f2f2;
      line-height: 50px;
@@ -2166,9 +2164,6 @@ export default({
   margin-bottom: 5px;
   margin-top: 5px;
 }
-  </style>
-  
-  <style>
   .roleDetail .el-tab-pane .bt_add{
       margin-bottom:15px;
   }

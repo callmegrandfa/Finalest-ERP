@@ -12,7 +12,7 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-col>
                     <!-- 树形控件 -->
-                    <el-col :span='24' class="tree-container" >
+                    <el-col :span='24' class="tree-container" id="adminTree">
                         <!-- <el-tree
                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
                         :highlight-current="true"
@@ -26,6 +26,7 @@
                         @node-click="nodeClick"
                         class="filter-tree"
                         > -->
+                        <vue-scroll :ops="$store.state.option">
                         <el-tree
                         :render-content="renderContent_componyTree"
                         :highlight-current="true"
@@ -39,11 +40,12 @@
                         @node-click="nodeClick"
                         >
                         </el-tree>
+                        </vue-scroll>
                     </el-col>   
             </el-col>
             
             <!-- 右边数据列表 -->
-            <el-col :span='19' class="border-left">
+            <el-col :span='19' class="border-left" id="adminTable">
                 <!-- 按钮组 -->
                 <el-row class="h48 pt5">
                     <button @click="goAdd" class="erp_bt bt_add">
@@ -228,6 +230,7 @@
                 pageIndex:1,//分页的当前页码
                 tableData:[],
                 // --------------------------树形控件数据
+                height:'0px',
                 adminAreaTree:[],
                 defaultProps: {
                     children: 'childItems',
@@ -303,10 +306,27 @@
                         // console.log(rsp.result);
                         _this.totalCount=rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
-                    }
+                        _this.$nextTick(function(){
+                            console.log('1314');
+                            
+                            _this.getHeight()
+                        })
+                    },
+                    rsp=>{
+                        _this.getHeight()
+                    },
+
                 )
                
                 
+            },
+            getHeight(){
+                 $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                })
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
+                })
             },
             // ----------树形控件的处理函数开始----------
             defauleExpandTree(data,key){
@@ -456,6 +476,7 @@
                             _this.dialogUserConfirm=false;
                             _this.open('删除成功','el-icon-circle-check','successERP');
                             _this.getDataList();
+                            _this.loadTree();
                         },rsp=>{
                             _this.dialogUserConfirm=false;
                             // console.log(rsp);
@@ -494,6 +515,7 @@
                     _this.dialogUserConfirm=false;
                     _this.open('删除成功','el-icon-circle-check','successERP');
                     _this.getDataList();
+                    _this.loadTree();
                 },rsp=>{
                     _this.dialogUserConfirm=false;
                     // console.log(rsp);
