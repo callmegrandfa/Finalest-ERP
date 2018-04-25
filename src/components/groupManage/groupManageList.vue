@@ -1,6 +1,6 @@
 <template>
     <div class="groupList">
-        <el-row class="h48 pt5 bg-white">
+        <el-row class="h48 pt5 bg-white fixed" >
             <!-- <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>            -->
             <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
@@ -219,7 +219,18 @@
                    }
                 },
                 deep:true
-        }
+        },
+         accSchemeIdItem:{
+                  handler(val, oldVal){
+                   this.entryChangeTimes++
+                   if(this.entryChangeTimes>=2){
+                       this.isCancel=false;
+                   }else{
+                       this.isCancel=true;
+                   }
+                },
+                deep:true
+        },
         },
         mounted () {
             this.loadList();
@@ -241,40 +252,24 @@
                 //  console.log(_this.accSchemeIdItem.accSchemeId)
                 _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
                     if(res.result.totalCount>1){
-                        _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount}).then(function(response){
-                            console.log(_this.list)
+                        _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount}).then(function(response){         
                             _this.list = response.result.items;
                             for(let j in _this.list){
                                 if(_this.list[j].itemCode==_this.accSchemeIdItem.accSchemeId){
                                     _this.updateAccSchemeId=_this.list[j].id
                                     _this.loadbeginDate(_this.updateAccSchemeId);
                                     _this.AccSchemeIdChange=true;
+                                   
                                 }
                             }
                         })
-                    }else{
-
                     }
-                    console.log(_this.list)
                 }).catch(function(err){
                     // _this.$message({
                     //     type: 'warning',
                     //     message: err.error.message
                     // });
                 })   
-            },
-            queryAccScheme(){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount}).then(function(response){
-                    _this.list = response.result.items;
-                    for(let j in _this.list){
-                        if(_this.list[j].id==_this.accSchemeIdItem.accSchemeId){
-                            _this.updateAccSchemeId=_this.list[j].id
-                            _this.loadbeginDate(_this.updateAccSchemeId);
-                            _this.AccSchemeIdChange=true;
-                        }
-                    }
-                })
             },
             loadOuId(){//获取ouId
                 let _this=this;               
@@ -335,14 +330,10 @@
                                 if(_this.list[j].id==res.result.accSchemeId){
                                     console.log(_this.accSchemeIdItem.accSchemeId)
                                     _this.accSchemeIdItem.accSchemeId=_this.list[j].itemCode
-                                    // _this.loadbeginDate(_this.updateAccSchemeId);
-                                    // _this.AccSchemeIdChange=true;
+                                    _this.AccSchemeIdChange=true;
                                 }
                             }
                     });
-                    //_this.accSchemeIdItem.accSchemeId=res.result.accSchemeId;
-                    // console.log(_this.accSchemeIdItem.accSchemeId)
-                    // _this.accountYearItem.beginDate=res.result.basAccperiodContentId.substring(0,10);
                     console.log(res.result.accSchemeId);
                     _this.accountYearItem.accountYear=res.result.basAccperiodContentId;
                     _this.entryItem.areaId=res.result.areaId;
@@ -472,7 +463,8 @@
                     fax: _this.entryItem.fax,
                     remark:_this.entryItem.remark,
                     status: _this.entryItem.status,
-                    basAccperiodContentId:_this.accountYearItem.accountYear
+                    basAccperiodContentId:_this.accountYearItem.accountYear,
+                    timeZoneId:this.entryItem.timeZoneId,
                 }
                 if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
                     updateItem.areaId=_this.entryItem.areaDisId
