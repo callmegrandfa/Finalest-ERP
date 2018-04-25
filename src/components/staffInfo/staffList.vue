@@ -90,71 +90,76 @@
         </el-col>
         <el-col :span="ifWidth?19:24">
             <div id="bgc">
-                <el-row class="h48">
-                     <el-col :span='2' class="search-block"  v-show="!ifWidth">
-                        <div @click="openLeft">
-                            <img src="../../../static/image/common/search_btn.png">
-                            <span>查询</span>
-                             <span @click="openLeft">+</span>
-                        </div>
-                        <!-- <div  style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
-                            <span>查询</span>
-                        </div>
-                        <div style="display:inline-block" class="out-img" @click="openLeft">
-                            <span>+</span>
-                        </div> -->
-                    </el-col>
-                    
-                    <el-col :span="22" class="border-left">
-                        <el-row class="h48">
-                            <!-- 按钮组 -->
-                            <el-col :span="18" class="pt5">
-                                <button class="erp_bt bt_add" @click="addStaff">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_add.png">
-                                    </div>
-                                    <span class="btDetail">新增</span>
-                                </button>                                
-                                <button class="erp_bt bt_del" @click="confirmDelSelected" :disabled="isTrue">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_del.png">
-                                    </div>
-                                    <span class="btDetail">删除</span>
-                                </button>
-                                        
-                                <button class="erp_bt bt_auxiliary">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_auxiliary.png">
-                                    </div>
-                                    <span class="btDetail">辅助功能</span>
-                                </button>
+                <el-row class="h48" >
+                    <div>
+                        <el-col :span='2' class="search-block"  v-show="!ifWidth">
+                            <div @click="openLeft">
+                                <img src="../../../static/image/common/search_btn.png">
+                                <span>查询</span>
+                                <span @click="openLeft">+</span>
+                            </div>
+                            <!-- <div  style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                                <span>查询</span>
+                            </div>
+                            <div style="display:inline-block" class="out-img" @click="openLeft">
+                                <span>+</span>
+                            </div> -->
+                        </el-col>
+                        
+                        <el-col :span="22" class="border-left">
+                            <!-- <el-row> -->
+                                <!-- 按钮组 -->
+                            <div>
+                                <el-col :span="17" class="pt5">
+                                    <button class="erp_bt bt_add" @click="addStaff">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_add.png">
+                                        </div>
+                                        <span class="btDetail">新增</span>
+                                    </button>                                
+                                    <button class="erp_bt bt_del" @click="confirmDelSelected" :disabled="isTrue">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_del.png">
+                                        </div>
+                                        <span class="btDetail">删除</span>
+                                    </button>
+                                            
+                                    <button class="erp_bt bt_auxiliary">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_auxiliary.png">
+                                        </div>
+                                        <span class="btDetail">辅助功能</span>
+                                    </button>
 
-                                <button class="erp_bt bt_excel">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_excel.png">
-                                    </div>
-                                    <span class="btDetail">Excel</span>
-                                </button>
+                                    <button class="erp_bt bt_excel">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_excel.png">
+                                        </div>
+                                        <span class="btDetail">Excel</span>
+                                    </button>
 
-                                <button class="erp_bt bt_print">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_print.png">
+                                    <button class="erp_bt bt_print">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_print.png">
+                                        </div>
+                                            <span class="btDetail">打印</span>
+                                    </button>
+                                </el-col>
+                                <el-col :span="5">
+                                    <div class="search-input">
+                                        <el-input placeholder="搜索..." prefix-icon="el-icon-search"
+                                        v-model="searchContent" @change="searchTable">
+                                        </el-input>
                                     </div>
-                                        <span class="btDetail">打印</span>
-                                 </button>
-                            </el-col>
-                            <el-col :span="5">
-                                <div class="search-input">
-                                    <el-input placeholder="搜索..." prefix-icon="el-icon-search"
-                                    v-model="searchContent" @change="searchTable">
-                                    </el-input>
-                                </div>
-                            </el-col>
-                            <el-col :span="1" class="defineBtn">
-                                <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
-                            </el-col>
-                        </el-row>
-                    </el-col>
+                                </el-col>
+                                <el-col :span="1" class="defineBtn">
+                                    <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
+                                </el-col>
+                            </div>
+                                
+                            <!-- </el-row> -->
+                        </el-col>
+                    </div>
                 </el-row> 
                 <!-- 列表 -->
                 <el-row class="pb10 tableWrapper">

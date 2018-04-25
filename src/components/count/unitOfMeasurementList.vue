@@ -39,7 +39,7 @@
                         </div>
                         <span class="btDetail">删除</span>
                     </button>
-                    <button @click="delSave" class="erp_bt bt_save" :class="{erp_fb_bt:IsSave}"  :disabled="IsSave">
+                    <button @click="save" class="erp_bt bt_save" :class="{erp_fb_bt:IsSave}"  :disabled="IsSave">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_save.png">
                         </div>
@@ -389,7 +389,8 @@
                         _this.IsSave=false;//保存
                         _this.IsCancel=false;//取消
                         _this.isEdit=true;//数据修改了
-                        // console.log(2);
+                        let i=0;
+                        console.log(++i);
                     }
                 },
                 deep: true,
@@ -446,6 +447,7 @@
             },
             loadTree(){//获取计量单位树形控件数据
                 let _this=this;
+                _this.firstModify=false;
                 _this.$axios.gets('/api/services/app/UnitManagement/GetUnitTree').then(
                     rsp=>{
                         // console.log(rsp.result);
@@ -465,20 +467,24 @@
                 return data.unitName.indexOf(value) !== -1;
             },
             nodeClick(data) {//树形控件节点被点击时的回调
+                let _this=this;
+                // console.log('data');
+                // console.log(_this.isEdit);
                 // console.log(data);
                 // console.log('1313');
-                let _this=this;
-                if (!_this.isEdit) {
+                if (!_this.isEdit) {//没有编辑更改数据
                     _this.isAdd=false;
                     if(data.id){
                         _this.nodeId=data.id;
                     }else{
-                        _this.nodeId = data
+                        _this.nodeId = data;
                     }
                     // console.log(_this.nodeId);
                     _this.getNodeMsg(_this.nodeId);
                     _this.getNodeDetail(_this.nodeId);
                     _this.getTableSelectData(_this.nodeId);
+                }else if(_this.isAdd){
+                        
                 }else{
                     _this.nodeId=data.id;
                     _this.dialogUpdateConfirm=true;
@@ -503,7 +509,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:id}).then(
                     rsp=>{
-                    console.log(rsp);
+                    // console.log(rsp);
                     // _this.editList.unitConvert_ChildTable=rsp.result;
                     // _this.tableList=_this.editList.unitConvert_ChildTable;
                     _this.firstModify=false;
@@ -523,12 +529,14 @@
             add(){//新增
                 let _this=this;
                 _this.isAdd=true;
+                _this.isEdit=false;
+                _this.firstModify=false;
                 _this.initData();
             },
             save(){//主表按钮保存------从表的操作对主表来说都是修改（传入id与新增区分）
                 let _this=this;
-                // console.log(_this.isAdd);
-                // console.log(_this.isEdit);
+                console.log(_this.isAdd);
+                console.log(_this.isEdit);
                 if (_this.isAdd || _this.isEdit) {//新增保存
                     $('.tipsWrapper').css({display:'block'});
                     _this.$validate().then(
@@ -644,12 +652,13 @@
             },
             delNode(){//删除节点
                 let _this=this;
-                console.log('确认1');
+                // console.log('确认1');
                 _this.$axios.deletes('/api/services/app/UnitManagement/Delete',{Id:_this.nodeId})
                 .then(
                     rsp=>{
                         // console.log(rsp.success);
                         _this.dialogUserConfirm=false;
+                        _this.nodeId=0
                         _this.loadTree();
                         // _this.editList={},
                         // _this.formData= {id:0, unitCode: "",unitName: "",isBase: false,status: 1,};

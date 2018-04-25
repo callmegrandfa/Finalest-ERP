@@ -424,6 +424,10 @@
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
                 // console.log(data);
+                 if (data.id!=_this.addData.ouId) {
+                    _this.addData.deptId=null
+                }
+                _this.ouId=data.id;
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -438,7 +442,7 @@
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                 .then(
                     function(res){//部门
-                        // console.log(res);
+                        console.log(res);
                         _this.selectTree_depart=res.result;
                         _this.loadIcon();
                     },
