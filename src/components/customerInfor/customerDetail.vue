@@ -1351,10 +1351,10 @@ export default({
                             if(self.bankData[i].settlementCurrencyId!=''){
                                 self.A = true
                             }else{
-                                self.$message({
-                                    type: 'info',
-                                    message: '结算币种必选'
-                                });
+                                // self.$message({
+                                //     type: 'info',
+                                //     message: '结算币种必选'
+                                // });
                                 $('.tipsWrapper').css({display:'none'})
                             }
                         }
