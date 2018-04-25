@@ -478,6 +478,7 @@
             },
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
+                // console.log('12212');
                 // console.log(data);
                 // console.log(data.id);
                 if (data.id!=_this.addData.ouId) {
@@ -498,7 +499,7 @@
                         let _this=this;
                         _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                         .then(function(res){//部门
-                            // console.log(res);
+                            console.log(res);
                             _this.selectTree_depart=res.result;
                             _this.loadIcon();
                         },function(res){
