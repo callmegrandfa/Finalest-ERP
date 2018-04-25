@@ -56,6 +56,7 @@
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
+                        <div class="fixed pt5">
                         <!-- <button class="erp_bt bt_back"><div class="btImg"><img src="../../../static/image/common/bt_back.png"></div><span class="btDetail">返回</span></button> -->
                         <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
                         <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
@@ -86,6 +87,9 @@
                                 </button>
                             </div>
                         </div>
+
+                        </div>
+
                     </el-col>   
                 </el-row>
                 <!-- dialog -->
@@ -322,7 +326,41 @@
             search(val) {
                 this.$refs.tree.filter(val);
             }
-        },     
+        },  
+        mounted:function(){
+            let _this=this;
+            $(window).scroll(function(){
+                if($(window).scrollTop()>61){
+                if(!_this.$store.state.show){
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    "position":'fixed',
+                    "top":'93px',
+                    "z-index":'998'
+                    }).next('div').css({marginTop:'47px'})
+                }else{
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    position:'fixed',
+                    top:'93px',
+                    zIndex:'998',
+                    transition: 'width 0s'
+                    }).next('div').css({marginTop:'47px'})
+                }
+                _this.$store.commit('go1');
+                }else{
+                $('.fixed').css({
+                    position:'relative',
+                    top:'0',
+                    transition: 'width 0s'
+                }).next('div').css({marginTop:0})
+                _this.$store.commit('go2');
+                }
+            })
+
+        }, 
         methods:{
             getSelectData(){
                 let _this=this;
@@ -590,6 +628,9 @@
 </script>
 
 <style scoped>
+.fixed{
+    background-color: white;
+}
 .halfWidth{
     display: inline-block;
     width: calc(50% - 10px)

@@ -709,10 +709,10 @@
                 },function(res){
                     console.log('err'+res)
                 });
-                
-                //行政地区
-                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
-                    console.log(res);
+
+                //行政地区所有省
+                self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
+                    // console.log(res);
                     self.areaProArray = res.result;
                     // self.loadIcon();
                 },function(res){
@@ -978,6 +978,8 @@
                 // console.log(id)
                 self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
                     // console.log(res);
+                    self.cityId = '';
+                    createRepositoryParams.stock_MainTable.adAreaId = ''
                     self.areaCityArray = res.result;
                     // self.loadIcon();
                 },function(res){
@@ -989,6 +991,7 @@
                 let self = this;
                 self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
                     // console.log(res);
+                    createRepositoryParams.stock_MainTable.adAreaId = ''
                     self.areaDisArray = res.result;
                     // self.loadIcon();
                 },function(res){

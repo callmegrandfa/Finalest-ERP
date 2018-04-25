@@ -568,7 +568,8 @@
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker v-model="shopData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-input v-model="shopData.createdTime" :disabled="true"></el-input>                             
+                        <!-- <el-date-picker v-model="shopData.createdTime" type="date" placeholder="" disabled="disabled"></el-date-picker> -->
                     </div>
 
                     <div class="bgcolor">
@@ -578,7 +579,8 @@
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker v-model="shopData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker>
+                        <el-input v-model="shopData.modifiedTime" :disabled="true"></el-input>                                                     
+                        <!-- <el-date-picker v-model="shopData.modifiedTime" type="date" placeholder="" disabled="disabled"></el-date-picker> -->
                     </div>
                 </div>                                  
             </el-col>
@@ -922,6 +924,10 @@ export default({
                     //     }
                     // }
                     //-------------------------------
+                    self.shopData.createdTime=self.resdatetime(new Date(self.shopData.createdTime));
+                    self.shopData.modifiedTime=self.resdatetime(new Date(self.shopData.modifiedTime));                        
+
+
 
                     //---处理经纬度返回为0-------
                     if(self.shopData.longitude==0){
@@ -1065,6 +1071,9 @@ export default({
         },
         
         //------------------------------------------------------
+        resdatetime:function(resdatetime){
+            return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
+        },   
         //---下拉的数据------------------------------------------------------
         loadSelect:function(){
             let self = this;
@@ -1242,6 +1251,26 @@ export default({
             
         },
         saveAdd:function(){
+            let self = this;
+            if(self.ifModify){
+                self.shopData.shopContacts = self.contactData;
+                $('.tipsWrapper').css({display:'block'});
+                self.$validate().then(function(success){
+                    if(success){
+                        self.sureDel();
+                        $('.tipsWrapper').css({display:'none'});
+                        self.$axios.puts('/api/services/app/ShopManagement/Update',self.shopData).then(function(res){
+                            self.$store.state.url='/shop/shopDetail/default'
+                            self.$router.push({path:self.$store.state.url})//点击切换路由
+                            self.open('修改店铺信息成功','el-icon-circle-check','successERP');
+                        },function(res){
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            self.errorMessage=true;
+                        })
+                    }
+                });
+            }
+
 
         },
         

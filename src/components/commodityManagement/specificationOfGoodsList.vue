@@ -31,7 +31,7 @@
                 <el-col :span='24' class="tree-container pl10 pt10">
                     <template>
                       <el-tabs v-model="activeName" @tab-click="handleClick">
-                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()" :key="items.id">
+                        <el-tab-pane v-for="(items) in tableTree" :label="items.specName" :name="items.id.toString()">
                             <el-tree
                                 :data="items.classTree1" 
                                 :props="defaultProps" 
@@ -160,6 +160,7 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm1/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -285,15 +286,23 @@ import Btm from '../../base/btm1/btm'
                 if(data == '新增'){
 
                 }else if(data == '删除'){
-                    _this.dialogUserConfirm = true;
-                    // console.log(_this.SelectionChange);
-                    for(let i=0;i<_this.SelectionChange.length;i++){
-                        for(let j=0;j<_this.delarray.length;j++){
-                            if(_this.SelectionChange[i].id == _this.delarray[j].specgroupId){
-                                _this.delAarrycontent.ids.push(_this.delarray[j].id);  
+                    if(_this.SelectionChange.length > 0){
+                        _this.dialogUserConfirm = true;
+                        // console.log(_this.SelectionChange);
+                        for(let i=0;i<_this.SelectionChange.length;i++){
+                            for(let j=0;j<_this.delarray.length;j++){
+                                if(_this.SelectionChange[i].id == _this.delarray[j].specgroupId){
+                                    _this.delAarrycontent.ids.push(_this.delarray[j].id);  
+                                }
                             }
                         }
+                    }else{
+                       _this.$message({
+                            type: 'info',
+                            message: '请勾选需要删除的数据！'
+                        }); 
                     }
+                    
                 }else if(data == '启用'){
                     if(_this.SelectionChange.length > 0){
                         _this.revisestuate(1);
@@ -762,15 +771,16 @@ import Btm from '../../base/btm1/btm'
 .pr15{
     padding-right: 15px;
 } 
-</style>
-
-<style>
-.startusing{
-    color: rgb(57, 202, 119);
-}
 .blockup{
     color: rgb(255, 102, 102);
 }
+.startusing{
+    color: rgb(57, 202, 119);
+}
+</style>
+
+<style>
+
 .specifcationOfGoodsList .el-input--suffix .el-input__inner{
     text-align: center;
     border: none;
