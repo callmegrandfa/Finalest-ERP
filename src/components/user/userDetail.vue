@@ -95,7 +95,20 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.displayName') }}</div>
                 </div>
             </el-col>
-
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>密码</label>
+                    <el-input 
+                    @change="isUpdate"
+                    class="password" 
+                    :class="{redBorder : validation.hasError('addData.password')}" 
+                    v-model="addData.password"  
+                    placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.password') }}</div>
+                </div>
+            </el-col>
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
@@ -577,6 +590,7 @@
           "phoneNumber": "",
           "email": "",
           "userGroupId": "",
+          'password':'',
           "ouId": "",
           "status": 1,
           "userType": 0,
@@ -662,6 +676,9 @@
       },
       'addData.displayName': function (value) {//用户名称
          return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.password': function (value) {//密码
+         return this.Validator.value(value).required();
       },
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
@@ -755,6 +772,7 @@
                 //     "userCode": "",
                 //     "displayName": "",
                 //     "phoneNumber": "",
+                //       'password':"",
                 //     "email": "",
                 //     "userGroupId": "",
                 //     "ouId": res.result.id,
@@ -1225,6 +1243,7 @@
             let _this=this;
               _this.addData={
                 userCode: "",
+                password: '',
                 displayName: "",
                 phoneNumber: "",
                 email: "",

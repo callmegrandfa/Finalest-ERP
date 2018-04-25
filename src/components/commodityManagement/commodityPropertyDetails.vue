@@ -6,6 +6,7 @@
                 <el-row class="fixed bg-white" >
                     <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
                 </el-row>
+                
                 <el-row class="pl10 pr10">
                     <el-col :span="24" style="margin-top:20px">
                         <el-row>
@@ -31,11 +32,15 @@
                                         :data="classTree"
                                         :props="defaultProps"
                                         node-key="id"
-                                        default-expand-all
+                                        v-loading="treeLoading"
+                                        :highlight-current="true" 
                                         ref="tree"
                                         :filter-node-method="filterNode"
                                         :expand-on-click-node="false"
                                          @node-click="nodeClick"
+                                         :default-expanded-keys="expand.expandId_addDataOu"
+                                         :render-content="renderContent_moduleParentId"
+                                         
                                         >
                                         </el-tree>
 
@@ -152,7 +157,7 @@
                                     class="propertyParentid"
                                     @change="isUpdate" 
                                     v-model="addData.relPropertyId"
-                                    placeholder="" >
+                                    placeholder="" :class="{redBorder : validation.hasError('addData.propertyParentid')}">
                                     <el-input
                                         placeholder="搜索..."
                                         class="selectSearch"
@@ -160,18 +165,23 @@
                                     </el-input>
                                         <el-tree
                                         oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none"  
-                                        :data="classTree"
+                                        :data="classTree1"
                                         :props="defaultProps"
                                         node-key="id"
-                                        default-expand-all
                                         ref="tree"
                                         :filter-node-method="filterNode"
                                         :expand-on-click-node="false"
                                          @node-click="nodeClick"
+                                         v-loading="treeLoading" 
+                                         :highlight-current="true"
+                                         :render-content="renderContent_moduleParentId"
+                                         :default-expanded-keys="expand.expandId_addDataOu"
+
+
                                         >
                                         </el-tree>
 
-                                        <el-option v-show="false" v-for="item in selectData" :key="item.id" :label="item.propertyName" :value="item.id" :date="item.id"  id="businessDetail_confirmSelect">
+                                        <el-option v-show="false" v-for="item in selectData" :key="item.id" :label="item.propertyName" :value="item.id" :date="item.id"  >
                                         </el-option>
                                         
                                     </el-select>
@@ -330,13 +340,20 @@ import Textbox from '../../base/textbox/textbox'
                 // 错误信息提示结束
                 dialogUserConfirm:false,//用户删除保存提示信息
                 classTree:[],
+                classTree1:[],
+                expand:{
+                    expandId_addDataOu:[],//默认下拉树形展开id
+                    isHere_addDataOu:false,//是否存在id于树形
+                    expandId_dialogOu:[],//默认dialog组织树形展开id
+                    expandId_mmenu:[],//默认分配功能树形展开id
+                },
                 ifWidth:true,
+                treeLoading:false,
                 treeNode:{
                     id:'',
                     propertyName:'',
                 },
                 defaultProps: {
-
                     children:'childNodes',
                     label:'propertyName',
                     id:"id"
@@ -344,7 +361,6 @@ import Textbox from '../../base/textbox/textbox'
                 treeQuery:"",
                 radio:'1',
                 addData:{//键子对
-                      levelNo: '',
                       propertyParentid:'',
                       relPropertyId: '',
                       isBottom: true,
@@ -511,44 +527,109 @@ import Textbox from '../../base/textbox/textbox'
                     _this.selectData=res.result.items;
                 })
             },
+            defauleExpandTree(model,expandName,response,responseKey,children){
+               let _this=this;
+                // console.log(model!='');
+                if(model!=''){//model为树形下拉默认值，即渲染数据。如果存在，递归tree
+                    $.each(response,function(index,val){
+                        if(val[responseKey]!==_this.addData[model]){
+                            _this.expand[expandName]=[_this.addData[model]]
+                        }else{
+                            $.each(val[children],function(index1,val1){
+                                if(val1[responseKey]==_this.addData[model]){
+                                    _this.expand[expandName]=[_this.addData[model]]
+                                }else{
+                                    _this.defauleExpandTree(model,expandName,val1[children],responseKey,children)
+                                }
+                            })
+                        }
+                    })
+                }else{
+                     $.each(response,function(index,value){
+                        if(index==0){
+                            if(typeof(value)!='undefined'&&value!=null&&value[responseKey]!=null&&value[responseKey]!=''&&typeof(value[responseKey])!='undefined'){
+                                _this.expand[expandName]=[value[responseKey]]
+                            }
+                            
+                        }
+                    })
+       
+                }
+            },
+            loadCheckSelect(selectName,key){
+                let _this=this;
+                _this.$nextTick(function () {
+                console.log($('.'+selectName+' .el-tree-node__label').length) 
+                    $('.'+selectName+' .el-tree-node__label').each(function(){
+                         if($(this).attr('data-id')==key){
+                            $(this).click()
+                        }
+                    })
+                })
+            },
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
                     _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyTree')
                     .then(function(res){
-                        _this.classTree=res
-                        _this.loadIcon();
+                        _this.classTree =res;
+                        
+                        console.log(res)
+                        for(let i=0;i<_this.classTree[0].childNodes.length;i++){
+                            _this.classTree[0].childNodes[i].childNodes = []
+                        }
                         _this.treeLoading=false;
+                        // _this.defauleExpandTree('propertyParentid','expandId_addDataOu',res,'id','children')
+                        if(_this.expand.expandId_addDataOu<1){
+                            _this.expand.expandId_addDataOu=[_this.classTree[0].id]
+                        
+                        }
+                        _this.loadCheckSelect('propertyParentid',_this.addData.propertyParentid)
                 },function(res){
                     _this.treeLoading=false;
                 })
-            },
-            loadIcon(){
-                let _this=this;
-                _this.$nextTick(function () {
-                    $('.preNode').remove();   
-                    $('.el-tree-node__label').each(function(){
-                        if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
-                            $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
-                        }else{
-                            $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
-                        }
+                    _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyTree')
+                    .then(function(res){
+                        _this.classTree1 = res;
                     })
-                })
             },
+            // loadIcon(){
+            //     let _this=this;
+            //     _this.$nextTick(function () {
+            //         $('.preNode').remove();   
+            //         $('.el-tree-node__label').each(function(){
+            //             if($(this).parent('.el-tree-node__content').next('.el-tree-node__children').text()==''){
+            //                 $(this).prepend('<i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }else{
+            //                 $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
+            //             }
+            //         })
+            //     })
+            // },
             GetDateTime: function () {
                 var date = new Date();
                 var seperator1 = "-";
                 var seperator2 = ":";
                 var month = date.getMonth() + 1;
                 var strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
+                var Hours = date.getHours();
+                var Seconds = date.getSeconds();
+                var Minutes = date.getMinutes();
+                function dataTime(a){
+                   if (a >= 1 && a <= 9) {
+                        a = "0" + a;
+                        return a
+                    } 
+                    return a
                 }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
+                function datahous(a){
+                   if (a < 10) {
+                        a = "0" + a;
+                        return a;
+                    } 
+                    return a ;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+                var currentdate = date.getFullYear() + seperator1 + dataTime(month) + seperator1 + dataTime(strDate) + ' ' + datahous(Hours) + seperator2 + datahous(Minutes) + seperator2 +  datahous(Seconds);
                 return currentdate;
             },
             filterNode(value, data) {
@@ -569,9 +650,6 @@ import Textbox from '../../base/textbox/textbox'
                 let _this=this;
                 _this.treeNode.id=data.id;
                 _this.treeNode.propertyName=data.propertyName;
-                // _this.$nextTick(function(){
-                //     $('#businessDetail_confirmSelect').click()
-                // })
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -586,26 +664,7 @@ import Textbox from '../../base/textbox/textbox'
                 // _this.addData.dataSource = '';
                 _this.addData.seq = '';
                 _this.addData.relPropertyId = '';
-                _this.addData.propertyParentid = '';
-
-                  // levelNo: '',
-                  // propertyParentid:'',
-                  // relPropertyId: '',
-                  // isBottom: true,
-                  // propertyFullpathId: "0",
-                  // propertyFullpathName: "默认",
-                  // controlType: '',
-                  // required: false,
-                  // isSystem: false,
-                  // seq:'',
-                  // dataSource: '',
-                  // status: '',
-                  //   createdTime:_this.GetDateTime(),//创建时间
-                  //   createdBy:_this.$store.state.name,//创建人
-                  //   modifiedTime:_this.GetDateTime(),//修改人
-                  //   modifiedBy:_this.$store.state.name//修改时间
-                    
-                
+                _this.addData.propertyParentid = '';             
             },
             btmlog:function(data){
                 let _this=this;
@@ -614,16 +673,17 @@ import Textbox from '../../base/textbox/textbox'
                     _this.$validate()
                     .then(function (success) {
                         if(success){
-                            if(_this.addData.levelNo != '' && _this.addData.propertyParentid !='' ){
-                                _this.addData.levelNo=parseInt(_this.addData.levelNo);
-                                _this.addData.propertyParentid=parseInt(_this.addData.propertyParentid);    
-                            }
+                           
                             if(_this.addData.seq != ''){
                                 _this.addData.seq=parseInt(_this.addData.seq);
+                            }else{
+                               _this.addData.seq = 0
                             }
-                            if(_this.addData.seq == ''){
-                               _this.addData.seq = 0;
+                            if(isNaN(_this.addData.seq) ){
+                                _this.addData.seq = 0
+                                // alert(1)
                             }
+                            // console.log(_this.addData.seq == NaN)
                             if(_this.addData.status == ''){
                                 _this.addData.status = 0;
                             }
@@ -633,7 +693,6 @@ import Textbox from '../../base/textbox/textbox'
                             if(_this.addData.relPropertyId ==''){
                                _this.addData.relPropertyId = 0; 
                             }
-                            console.log(_this.addData);
                             _this.$axios.posts('/api/services/app/PropertyManagement/Create',_this.addData).then(function(res){
                                 // _this.InitModify();
                                 _this.open('创建商品属性成功','el-icon-circle-check','successERP'); 
@@ -754,6 +813,23 @@ import Textbox from '../../base/textbox/textbox'
                 }
                 if(message!=null && message){
                     _this.response.validationErrors=validationErrors;
+                }
+            },
+            renderContent_moduleParentId(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.propertyName}
+                        </span>
+                    );
+                }else{
+                     return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.propertyName}
+                        </span>
+                    );
                 }
             },           
         },
