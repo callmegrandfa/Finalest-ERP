@@ -64,7 +64,7 @@
             </el-col>
         </el-row>
 
-        <el-row>
+        <el-row class="pb10">
             <el-col :span="24" class="pt15">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
@@ -104,12 +104,11 @@
             <el-col :span="24">
                <div class="marginAuto">
                     <div class="bgcolor longWidth">
-                        <label><small>*</small>上级部门</label>
+                        <label>上级部门</label>
                         <el-select class="deptParentid" 
-                                   :class="{redBorder : validation.hasError('departmentData.deptParentid')}" 
                                    placeholder=""
                                    @change='Modify()'
-                                   v-model="departmentData.deptParentid">
+                                   v-model="deptParent">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
                                       v-model="parentSearch"></el-input>
@@ -131,7 +130,6 @@
                                        id="businessDetail_confirmSelect"></el-option>
                         </el-select>
                     </div>
-                    <div class="error_tips">{{ validation.firstError('departmentData.deptParentid') }}</div>
                 </div>
             </el-col>
 
@@ -210,6 +208,37 @@
                 </div>    
             </el-col>
         </el-row>
+    
+        <el-row class="ft12 pr10 pt10 br3 bt1">
+            <el-col :span='24' class="pl10 pt10 pb10">
+                <span style="color:black;font-size:16px;">审计信息</span>
+            </el-col>
+
+            <el-col :span="24" class="pb10">   
+                <div>
+                    <div class="bgcolor">
+                        <label>创建人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="departmentData.createdBy"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>创建时间</label>
+                        <el-input v-model="departmentData.createdTime" :disabled="true"></el-input>                      
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>修改人</label>
+                        <el-input placeholder="" disabled="disabled" v-model="departmentData.modifiedBy"></el-input>
+                    </div>
+
+                    <div class="bgcolor">
+                        <label>修改时间</label>
+                        <el-input v-model="departmentData.modifiedTime" :disabled="true"></el-input>                                              
+                    </div>
+                </div> 
+            </el-col>
+        </el-row> 
+
 
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -291,7 +320,7 @@
             self.loadData();
             self.loadOuTree();
             self.loadStatus();
-            self.loadParentTree();      
+            //self.loadParentTree();      
         },
         computed:{
             countOu () {
@@ -332,7 +361,7 @@
                 firstModify:false,
                 ifModify:false,//判断是否修改过
                 // isEdit:true,//判断是否要修改
-                
+                defaultOuId:'',
                 //---组织单元树--------
                 ouTree:[],
                 ouSearch:'',
@@ -350,6 +379,7 @@
                 //---上级部门树--------
                 selectParentTree:[],//选择上级部门
                 parentSearch:'',//搜索上级部门
+                deptParent:'',
                 selectParentProps:{
                     children: 'children',
                     label: 'name',
@@ -371,7 +401,11 @@
                     "manager": "",
                     "deptParentid": '',
                     "remark": "",
-                    "status": ''
+                    "status": '',
+                    "modifiedBy":'',
+                    "modifiedTime":'',
+                    "createdBy":'',
+                    "createdTime":''
                 },
 
                 
@@ -412,9 +446,9 @@
       'departmentData.ouId': function (value) {//所属组织
          return this.Validator.value(value).required().integer();
       },
-      'departmentData.deptParentid': function (value) {//上级部门
-         return this.Validator.value(value).required().integer();
-      },
+    //   'departmentData.deptParentid': function (value) {//上级部门
+    //      return this.Validator.value(value).required().integer();
+    //   },
       'departmentData.deptCode': function (value) {//部门编码
          return this.Validator.value(value).required().maxLength(20);
       },
@@ -437,21 +471,28 @@
             let self = this;
             if(self.$route.params.id!='default'){
                 self.$axios.gets('/api/services/app/DeptManagement/Get',{id:self.$route.params.id}).then(function(res){  
-                    console.log(res)               
+                    console.log(res)      
+                    if(res.result.deptParentid==0){
+                        self.deptParent='';
+                    }else{
+                        self.deptParent=res.result.deptParentid;
+                    }         
                     self.departmentData = res.result;
-
-
                     self.ouItem.id = self.departmentData.ouId;
                     self.ouItem.ouName = self.departmentData.ouFullname;
                     self.parentItem.id = self.departmentData.deptParentid;
                     self.parentItem.name = self.departmentData.deptParentName;
-
+                    self.departmentData.createdTime=self.resdatetime(new Date(self.departmentData.createdTime));
+                    self.departmentData.modifiedTime=self.resdatetime(new Date(self.departmentData.modifiedTime));
                     self.firstModify = false;
                     
                 });
             }
 
         },
+        resdatetime:function(resdatetime){
+            return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
+        },  
         loadOuTree:function(){
             let self=this;
             self.treeLoading=true;
@@ -463,12 +504,22 @@
             },function(res){
                 self.treeLoading=false;
             })
+            //获取当前默认ouid
+            self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
+                // console.log(res);
+                self.defaultOuId = res.result.id;
+                //console.log(self.defaultOuId)
+                self.loadParentTree(self.defaultOuId)
+            },function(res){
+                console.log('err'+res)
+            });
+
         },
-        loadParentTree(){
+        loadParentTree(id){
             let self=this;
             self.treeLoading=true;
-            self.$axios.gets('api/services/app/DeptManagement/GetAllTree').then(function(res){
-                console.log(res)
+            self.$axios.gets('api/services/app/DeptManagement/GetAllTree',{ouId:id}).then(function(res){
+                //console.log(res)
                 self.selectParentTree=res.result;
                 self.dpExpandId=self.defauleExpandTree(res.result,'id')          
                 self.loadIcon();
@@ -563,6 +614,7 @@
             let self = this;
             self.ouItem.id = data.id;
             self.ouItem.ouName = data.ouFullname;
+            self.loadParentTree(data.id)
             self.$nextTick(function(){
                 $('#ou_confirmSelect').click()
             })
@@ -587,12 +639,18 @@
             let self=this;
             if(self.ifModify){
                 self.departmentData.id = self.$route.params.id;
+                    if(self.deptParent==''){
+                        self.departmentData.deptParentid=0;
+                    }else{
+                        self.departmentData.deptParentid=self.deptParent;
+                    }     
                     self.$validate().then(function (success) {
                         if (success) {
                             self.$axios.puts('/api/services/app/DeptManagement/Update',self.departmentData).then(function(res){
                                 // console.log(res)
                                 self.ifModify = false;
                                 self.open('修改成功','el-icon-circle-check','successERP');
+                                 self.departmentData.deptParentid='';
                             },function(res){    
                                 self.errorMessage=true;
                                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -603,6 +661,11 @@
         },
         saveAdd:function(){//保存修改并新增
             let self=this;
+            if(self.deptParent==''){
+                self.departmentData.deptParentid=0;
+            }else{
+                self.departmentData.deptParentid=self.deptParent;
+            }   
             if(self.ifModify){
                 self.departmentData.id = self.$route.params.id;
                     self.$validate().then(function (success) {
@@ -612,6 +675,7 @@
                                 self.ifModify = false;
                                 self.goDetail();
                                 self.open('修改成功','el-icon-circle-check','successERP');
+                                self.departmentData.deptParentid='';
                             },function(res){    
                                 self.errorMessage=true;
                                 self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
@@ -753,8 +817,6 @@
 })
 </script>
 
-
-
 <style scoped>
 .pt15{
     padding-top: 15px;
@@ -856,6 +918,58 @@
 .departmentModify .el-input__inner{
     height:35px !important;
 }
+
+.h48{
+    height: 48px;
+    line-height: 48px;
+    border-bottom: 1px solid #E4E4E4;
+}
+.mt5{
+    margin-top: 5px;
+}
+.mb10{
+    margin-bottom: 10px;
+}
+.mt10{
+    margin-top: 10px;
+}
+.mt20{
+    margin-top: 20px;
+}
+
+.ml20{
+    margin-left: 20px;
+}
+.pl10{
+    padding-left: 10px;
+}
+.pl15{
+    padding-left: 15px;
+}
+.pt10{
+    padding-top: 10px;
+}
+.pt5{
+    padding-top: 5px;
+}
+.pt20{
+    padding-top: 20px;
+}
+.pb10{
+    padding-bottom: 10px;
+}
+.pr10{
+    padding-right: 10px;
+}
+.h30{
+    height: 30px;
+    line-height: 30px;
+}
+.bt1{
+    border-top:1px solid #e4e4e4;
+}
 </style>
+
+
 
 
