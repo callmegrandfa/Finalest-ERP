@@ -102,6 +102,21 @@
                                 </template>
                             </el-table-column>
 
+                            <el-table-column prop="itemValue" label="值">
+                                <template slot-scope="scope">
+                                    <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemValue"
+                                            type="text"/>     
+                                    <!-- <input class="input-need" 
+                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
+                                            v-model="scope.row.itemValue"
+                                            v-else
+                                            @change='handleChange(scope.$index,scope.row)'
+                                            type="text"/> -->
+                                </template>
+                            </el-table-column>
+
                             <el-table-column prop="dictId_DictName" label="类型">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
@@ -513,7 +528,7 @@
                             dictId: self.dictId,
                             itemName: "",
                             itemCode: "",
-                            itemValue: 1,
+                            itemValue: '',
                             dictId_DictName:self.dictId_DictName,
                             seq: 0,
                             remark: "",
