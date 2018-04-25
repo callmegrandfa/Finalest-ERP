@@ -456,7 +456,7 @@
                         </template>
                     </el-table-column>
                 </el-table> 
-            </el-col>
+          
         </el-row>
 
         <el-row class="ft12 pr10 pt10 br3">
@@ -473,7 +473,8 @@
 
                     <div class="bgcolor">
                         <label>创建时间</label>
-                        <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker>
+                        <el-input v-model="repositoryData.createdTime" :disabled="true"></el-input>                      
+                        <!-- <el-date-picker  type="date" placeholder="" disabled="disabled" v-model="repositoryData.createdTime"></el-date-picker> -->
                     </div>
 
                     <div class="bgcolor">
@@ -483,7 +484,8 @@
 
                     <div class="bgcolor">
                         <label>修改时间</label>
-                        <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker>
+                        <el-input v-model="repositoryData.modifiedTime" :disabled="true"></el-input>                                              
+                        <!-- <el-date-picker type="date" placeholder="" disabled="disabled" v-model="repositoryData.modifiedTime"></el-date-picker> -->
                     </div>
                 </div> 
             </el-col>
@@ -852,6 +854,8 @@
                         self.repositoryData = res.result;
                         self.extraData = res.result;
                         self.getOuId = self.repositoryData.ouId;
+                        self.repositoryData.createdTime=self.resdatetime(new Date(self.repositoryData.createdTime));
+                        self.repositoryData.modifiedTime=self.resdatetime(new Date(self.repositoryData.modifiedTime));                        
 
                         //行政地区所有省
                         self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
@@ -928,6 +932,9 @@
                     self.loadAddData();
                 }
             },
+            resdatetime:function(resdatetime){
+                return resdatetime.getFullYear()+'-'+(resdatetime.getMonth()+1)+'-'+resdatetime.getDate()+' '+resdatetime.getHours()+':'+resdatetime.getMinutes()+':'+resdatetime.getSeconds()
+            },    
             getType(obj){
                 //tostring会返回对应不同的标签的构造函数
                 var toString = Object.prototype.toString;
@@ -1371,6 +1378,8 @@
                 // console.log(id)
                 self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
                     // console.log(res);
+                    self.cityId = '';
+                    self.repositoryData.adAreaId = '';
                     self.areaCityArray = res.result;
                     // self.loadIcon();
                 },function(res){

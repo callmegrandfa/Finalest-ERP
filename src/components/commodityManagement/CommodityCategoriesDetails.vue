@@ -3,144 +3,139 @@
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
                <!-- <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm> -->
-               <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
+               <div class="btnGroup-box">
+                    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
+               </div>
                <el-row class="pl10 pr10" style="margin-top:20px">
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor" >
-                                    <label ><small>*</small>上级商品类目</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor">
-                                    <el-select 
-                                    class="areaParentId" 
-                                    :class="{redBorder : validation.hasError('addItem.categoryParentid')}" 
-                                    v-model="addItem.categoryParentid"
-                                    placeholder="">
-                                    <!-- <input type="text" class="selectTree"> -->
-                                    <el-input
-                                        placeholder="搜索..."
-                                        class="selectSearch"
-                                        v-model="treeQuery">
-                                    </el-input>
-                                        <el-tree
-                                        oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
-                                        :data="classTree"
-                                        :props="defaultProps"
-                                        node-key="id"
-                                        default-expand-all
-                                        ref="tree"
-                                        :filter-node-method="filterNode"
-                                        :expand-on-click-node="false"
-                                         @node-click="nodeClick"
-                                        >
-                                        </el-tree>
-                                        <el-option v-show="false" :key="count.categoryParentid" :label="count.categoryName" :value="count.categoryParentid"   id="businessDetail_confirmSelect">
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="error_tips">{{ validation.firstError('addItem.categoryParentid') }}</div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor" >
-                                    <label ><small>*</small>商品类目编码</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor" >
-                                    <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}"  placeholder="" v-model="addItem.categoryCode"></el-input>
-                                </div>
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="error_tips">{{ validation.firstError('addItem.categoryCode') }}</div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>商品类目名称</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor" >
-                                <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" v-model="addItem.categoryName"></el-input>
-                                </div>
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="error_tips">{{ validation.firstError('addItem.categoryName') }}</div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor">
-                                        <label>助记码</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor">
-                                    <el-input  v-model="addItem.mnemonic" > </el-input>
-                                </div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                </el-row>
-                <el-row class="pl10  pr10">
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor">
-                                        <label >状态</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor" >
-                                <el-select :class="{redBorder : validation.hasError('addItem.status')}"   v-model="addItem.status" >
-                                    <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                </el-select>
-                                </div>
-                            </el-col>
-                            <el-col :span="2">
-                                <div class="error_tips">{{ validation.firstError('addItem.status') }}</div>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-row>
-                            <el-col :span="2">
-                                <div class="bgcolor smallBgcolor">
-                                        <label >备注</label>
-                               </div>
-                            </el-col>
-                            <el-col :span="3">
-                                <div class="bgcolor smallBgcolor" >
-                                <el-input placeholder="" v-model="addItem.remark">
+                    <el-row type="flex" justify="center">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor" >
+                                <label ><small>*</small>上级商品类目</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor">
+                                <el-select 
+                                class="areaParentId" 
+                                v-model="addItem.categoryParentid"
+                                placeholder="">
+                                <!-- <input type="text" class="selectTree"> -->
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="selectSearch"
+                                    v-model="treeQuery">
                                 </el-input>
-                                </div>
-                            </el-col>
-                        </el-row> 
-                    </el-col>
-                </el-row>
-                <el-row class="pl10 pr10">
-                    <el-col :span="2" style="">
-                        &nbsp;
-                    </el-col>
-                    <el-col :span="2" style="margin-left:0">
-                        <div class="bgcolor smallBgcolor">
-                            <el-checkbox v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
-                        </div>
-                    </el-col> 
+                                    <el-tree
+                                    oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                    :data="classTree"
+                                    :props="defaultProps"
+                                    node-key="id"
+                                    default-expand-all
+                                    ref="tree"
+                                    :filter-node-method="filterNode"
+                                    :expand-on-click-node="false"
+                                        @node-click="nodeClick"
+                                    >
+                                    </el-tree>
+                                    <el-option v-show="false" :key="count.categoryParentid" :label="count.categoryName" :value="count.categoryParentid"   id="businessDetail_confirmSelect">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                            <!-- <div class="error_tips">{{ validation.firstError('addItem.categoryParentid') }}</div> -->
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center" class="mt10">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor" >
+                                <label ><small>*</small>商品类目编码</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor" >
+                                <el-input :class="{redBorder : validation.hasError('addItem.categoryCode')}"  placeholder="" v-model="addItem.categoryCode"></el-input>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                            <div class="error_tips">{{ validation.firstError('addItem.categoryCode') }}</div>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center" class="mt10">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor">
+                                    <label ><small>*</small>商品类目名称</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor" >
+                            <el-input placeholder="" :class="{redBorder : validation.hasError('addItem.categoryName')}" v-model="addItem.categoryName"></el-input>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                            <div class="error_tips">{{ validation.firstError('addItem.categoryName') }}</div>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center" class="mt10">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor">
+                                    <label>助记码</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor">
+                                <el-input  v-model="addItem.mnemonic" > </el-input>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center" class="mt10">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor">
+                                    <label >状态</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor" >
+                            <el-select :class="{redBorder : validation.hasError('addItem.status')}"   v-model="addItem.status" >
+                                <el-option v-for="item in StatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                            <div class="error_tips">{{ validation.firstError('addItem.status') }}</div>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center" class="mt10">
+                        <el-col :span="2">
+                            <div class="bgcolor smallBgcolor">
+                                    <label >备注</label>
+                            </div>
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor" >
+                            <el-input placeholder="" v-model="addItem.remark">
+                            </el-input>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                        </el-col>
+                    </el-row> 
+                    <el-row type="flex" justify="center" class="mt10">
+                        <!-- <el-col :span="2" style="">
+                            &nbsp;
+                        </el-col> -->
+                        <el-col :span="2">
+                        </el-col>
+                        <el-col :span="3">
+                            <div class="bgcolor smallBgcolor">
+                                <el-checkbox class="tl" v-model="addItem.isService" >服务类（虚拟）</el-checkbox>
+                            </div>
+                        </el-col>
+                        <el-col :span="2">
+                        </el-col> 
+                    </el-row>
                 </el-row>
                 <el-row class="pl10 pr10 pt10" style="border-top:1px solid #e4e4e4;   ">
                     <el-col :span="24" style="margin-bottom:30px">
@@ -150,7 +145,7 @@
                         <el-row>
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>创建人</label>
+                                    <label ><small>*</small>创建人</label>
                                </div>
                             </el-col>
                             <el-col :span="13">
@@ -170,11 +165,18 @@
                             <el-col :span="13">
                                 <div class="bgcolor smallBgcolor">
                                     <el-date-picker
-                                    :disabled="isDisabled"
                                     v-model="addItem.createdTime"
                                     type="date"
-                                    placeholder="选择日期时间">
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    disabled
+                                    placeholder="">
                                     </el-date-picker>
+                                    <!-- <el-input
+                                    :disabled="isDisabled"
+                                    v-model="addItem.createdTime"
+                                    placeholder="选择日期时间">
+                                    </el-input> -->
                                 </div>
                             </el-col>
                         </el-row> 
@@ -203,10 +205,17 @@
                             <el-col :span="13">
                                 <div class="bgcolor smallBgcolor" >
                                     <el-date-picker
-                                    :disabled="isDisabled"
                                     v-model="addItem.modifiedTime"
-                                    type="date">
+                                    type="date"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    disabled
+                                    placeholder="">
                                     </el-date-picker>
+                                    <!-- <el-input
+                                    :disabled="isDisabled"
+                                    v-model="addItem.modifiedTime">
+                                    </el-input> -->
                                 </div>
                             </el-col>
                         </el-row> 
@@ -317,19 +326,19 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
             }
         },
         created(){
-            this.loadTree();
-            this.InitModify();
-            // if(this.$route.params.id=="default"){
-            //     this.isAdd=true;
-            //     this.buttonGroup[3].disabled=false;
-            // }else{
-            //     this.buttonGroup[3].disabled=true;
-            // }
+            if(this.$route.params.id=="default"){
+                this.isAdd=true;
+                this.loadTree();
+                //this.buttonGroup[3].disabled=false;
+            }else{
+                this.InitModify();
+                //this.buttonGroup[3].disabled=true;
+            }
         },
         validators: {
-            'addItem.categoryParentid': function (value) {//上级商品类目
-                return this.Validator.value(value).required().maxLength(50);
-            },
+            // 'addItem.categoryParentid': function (value) {//上级商品类目
+            //     return this.Validator.value(value).required().maxLength(50);
+            // },
             'addItem.categoryCode': function (value) {//商品类目编码
                 return this.Validator.value(value).required().maxLength(50);
             },
@@ -388,7 +397,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                 return currentdate;
             },
             btnClick(btn){             
-                if(btn=="取消"){
+                if(btn=="取消"){//取消确认对话框
                     this.dialogSetting.dialogName='cancelDialog'
                     this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
                     this.dialogSetting.dialogType="confirm";
@@ -396,7 +405,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                     this.dialogVisible=true;
                 }else if(btn=="保存"){
                     this.save();
-                }else if(btn=="删除"){
+                }else if(btn=="删除"){//删除确认对话框
                     this.dialogSetting.dialogName='delDialog'
                     this.dialogSetting.message="确定删除？";
                     this.dialogSetting.dialogType="confirm";
@@ -412,7 +421,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                 if(_this.$route.params.id=="default"){
                     return;
                 }else{
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                    _this.$axios.gets('/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.changeTimes=0;
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
@@ -434,9 +443,18 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                  
             },
             InitCategoryid(){//设置默认商品类目
-                this.treeNode.categoryParentid=this.classTree[0].id;
-                this.treeNode.categoryName=this.classTree[0].categoryName;
-                this.addItem.categoryParentid=this.classTree[0].id;
+                if(this.$route.query.CategoryId==""){
+                    this.treeNode.categoryParentid=this.classTree[0].id;
+                    this.treeNode.categoryName=this.classTree[0].categoryName;
+                    this.addItem.categoryParentid=this.classTree[0].id;
+                }else if(this.$route.query.CategoryId!=""){
+                    this.treeNode.categoryParentid=this.$route.query.CategoryId;
+                    this.treeNode.categoryName=this.$route.query.CategoryName;
+                    this.addItem.categoryParentid=this.$route.query.CategoryId;
+                }else if(this.$route.params.id=="default"){
+                    return
+                }
+                
             },
             loadTree(){//获取tree data
                     let _this=this;
@@ -501,7 +519,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                     _this.$set(updateData, 'id', _this.updateId);
                     _this.$axios.puts('/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         //_this.InitModify();
-                        _this.InitCategoryid();
+                        //_this.InitCategoryid();
                         _this.validation.reset();
                         _this.isEdit=true;
                         _this.changeTimes=0;
@@ -542,6 +560,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                         }else{
                             this.InitModify();
                         }
+                        this.changeTimes=0;
                         this.buttonGroup[2].disabled=true;
                         this.buttonGroup[3].disabled=true;
                         this.dialogVisible=false; 
@@ -551,8 +570,9 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                             _this.$store.state.url='/commodityleimu/commodityClassHeading/default'
                             _this.$router.push({path:_this.$store.state.url})//点击切换路由
                             _this.open('删除成功','el-icon-circle-check','successERP'); 
-                            _this.delDialog=false;  
+                            _this.dialogVisible=false; 
                         }).catch(function(err){
+                            _this.dialogVisible=false;  
                             _this.$message({
                                 type: 'warning',
                                 message: err.error.message

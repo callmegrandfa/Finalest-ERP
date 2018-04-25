@@ -468,7 +468,7 @@
                                     <el-table-column prop="moduleName" label="名称" fixed="left" width="200"></el-table-column>
                                     <el-table-column label="功能" max-height="2500">
                                         <template slot-scope="scope">
-                                            <el-checkbox class="fnCheckBox" v-for="(item,index) in showCheckedFnTable[scope.$index].children" :key="index" v-model="item.check" @change="selectChangeFn(item.check,item.permissionName)">{{item.displayName}}</el-checkbox>
+                                            <el-checkbox class="fnCheckBox" v-for="(item,index) in showCheckedFnTable[scope.$index].children" :key="index" v-model="item.check" @change="selectChangeFn(item.check,item.permissionName)">{{item.moduleName}}{{item.displayName}}</el-checkbox>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -1015,7 +1015,6 @@ export default({
                         })
                     });
                     _this.addData.permissions=permissions;
-                   
                     let userCodes=[];//关联用户
                     $.each(_this.showCheckedUserTable,function(index,val){
                         userCodes.push(val.userCode)
@@ -1025,13 +1024,12 @@ export default({
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
                     //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     //ajax
                     _this.$axios.posts('/api/services/app/Role/Create',_this.addData)
                     .then(function(res){
-                        _this.add();
                         _this.open('保存成功','el-icon-circle-check','successERP');
                         _this.Cancel();
                     },function(res){
@@ -1391,6 +1389,7 @@ export default({
                 _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')
                  _this.clickFnTreeData=[];
                  $.each(_this.fnTreeData,function(index1,value1){
+                     
                     let item1={moduleName:value1.moduleName,children:[]}
                     // let head1=[];
                     if(typeof(value1.permissionDtos)!='undefined' && value1.permissionDtos!=null && value1.permissionDtos.length>0){
@@ -1406,9 +1405,9 @@ export default({
                             // if(!repeat1){
                             //     _this.headerFn.push({displayName:value2.displayName,check:false})
                             // }
-                            let x1={check:false,permissionName:value2.permissionName}
-                            x1.check=false;
-                            x1.displayName=value2.displayName
+                            let x1={check:false,permissionName:value2.permissionName,displayName:value2.displayName,moduleName:value2.moduleName}
+                            // x1.check=false;
+                            // x1.displayName=value2.displayName
                             item1.children.push(x1)
                         })
                     }
@@ -1429,9 +1428,9 @@ export default({
                                     // if(!repeat2){
                                     //     _this.headerFn.push({displayName:value3.displayName,check:false})
                                     // }
-                                    let x2={check:false,permissionName:value3.permissionName}
-                                    x2.check=false;
-                                    x2.displayName=value3.displayName
+                                    let x2={check:false,permissionName:value3.permissionName,displayName:value3.displayName,moduleName:value3.moduleName}
+                                    // x2.check=false;
+                                    // x2.displayName=value3.displayName
                                     item2.children.push(x2)
                                 })
                             }
@@ -1452,9 +1451,9 @@ export default({
                                             // if(!repeat3){
                                             //     _this.headerFn.push({displayName:value4.displayName,check:false})
                                             // }
-                                            let x3={check:false,permissionName:value4.permissionName}
-                                            x3.check=false;
-                                            x3.displayName=value4.displayName
+                                            let x3={check:false,permissionName:value4.permissionName,displayName:value4.displayName,moduleName:value4.moduleName}
+                                            // x3.check=false;
+                                            // x3.displayName=value4.displayName
                                             item3.children.push(x3)
                                         })
                                     }
@@ -2040,12 +2039,12 @@ export default({
 .roleDetail{
     font-family: 'microsoft yahei';
 }
-  .chooseFn{
+.roleDetail  .chooseFn{
     height: 30px;
     line-height: 30px;
     padding-left: 10px;
   }
-  .chooseFn .fa-cog{
+ .roleDetail .chooseFn .fa-cog{
     cursor: pointer;
     color: #c9d1d1;
     float: right;
@@ -2069,7 +2068,7 @@ export default({
     font-weight: bold;
 }
  /*收起*/
- .checkBoxOuUser{
+ .roleDetail .checkBoxOuUser{
      height: 50px;
      background-color: #f2f2f2;
      line-height: 50px;
@@ -2166,9 +2165,6 @@ export default({
   margin-bottom: 5px;
   margin-top: 5px;
 }
-  </style>
-  
-  <style>
   .roleDetail .el-tab-pane .bt_add{
       margin-bottom:15px;
   }

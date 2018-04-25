@@ -471,7 +471,7 @@
                                     <el-table-column prop="moduleName" label="名称" fixed="left" width="200"></el-table-column>
                                     <el-table-column label="功能" max-height="2500">
                                         <template slot-scope="scope">
-                                            <el-checkbox class="fnCheckBox" v-for="(item,index) in showCheckedFnTable[scope.$index].children" :key="index" v-model="item.check" @change="selectChangeFn(item.check,item.permissionName)">{{item.displayName}}</el-checkbox>
+                                            <el-checkbox class="fnCheckBox" v-for="(item,index) in showCheckedFnTable[scope.$index].children" :key="index" v-model="item.check" @change="selectChangeFn(item.check,item.permissionName)">{{item.moduleName}}{{item.displayName}}</el-checkbox>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -1054,8 +1054,7 @@ export default({
 
                     let ouAssigns=[];//关联组织
                     $.each(_this.ouCheckAll,function(index,val){
-                    //    console.log(val)
-                        ouAssigns.push(val.ouCode)
+                        ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
                     
@@ -1249,25 +1248,25 @@ export default({
             let _this=this;
             _this.addOu=data.ouId;
         },
-        loadOuTable(){//获取分配组织数据
-            let _this=this;
-            _this.ouTableLoading=true
+        // loadOuTable(){//获取分配组织数据
+        //     let _this=this;
+        //     _this.ouTableLoading=true
 
-            _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
-            .then(function(res){
-                _this.ouCheckAll=res.result.items;
-                _this.ouTotalItem=res.result.totalCount
-                _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
-                _this.ouTableLoading=false;
-                // _this.storeCheckOu=[];
-                // $.each(res.result.items,function(index,val){
-                //     _this.storeCheckOu.push(val.ouId)
-                // })           
-                _this.loadOuTreeAll();
-                },function(res){
-                _this.ouTableLoading=false;
-            })
-        },
+        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
+        //     .then(function(res){
+        //         _this.ouCheckAll=res.result.items;
+        //         _this.ouTotalItem=res.result.totalCount
+        //         _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
+        //         _this.ouTableLoading=false;
+        //         // _this.storeCheckOu=[];
+        //         // $.each(res.result.items,function(index,val){
+        //         //     _this.storeCheckOu.push(val.ouId)
+        //         // })           
+        //         _this.loadOuTreeAll();
+        //         },function(res){
+        //         _this.ouTableLoading=false;
+        //     })
+        // },
         getAllCheckOu(){//获取所有关联权限
              let _this=this;
              _this.ouTableLoading=true
@@ -1494,9 +1493,9 @@ export default({
                         $.each(value1.permissionDtos,function(index2,value2){
                             // console.log(value2)
                             // head1.push({displayName:value2.displayName,permissionName:value2.permissionName})
-                            let x1={check:false,permissionName:value2.permissionName}
-                            x1.check=false;
-                            x1.displayName=value2.displayName
+                            let x1={check:false,permissionName:value2.permissionName,displayName:value2.displayName,moduleName:value2.moduleName}
+                            // x1.check=false;
+                            // x1.displayName=value2.displayName
                             item1.children.push(x1)
                             $.each(_this.checked,function(y1,val1){
                                 if(value2.permissionName==val1.displayName){
@@ -1512,9 +1511,9 @@ export default({
                             if(typeof(value2.permissionDtos)!='undefined' && value2.permissionDtos!=null && value2.permissionDtos.length>0){
                                 $.each(value2.permissionDtos,function(index3,value3){
                                     // head2.push({displayName:value3.displayName,permissionName:value3.permissionName})
-                                    let x2={check:false,permissionName:value3.permissionName}
-                                    x2.check=false;
-                                    x2.displayName=value3.displayName
+                                    let x2={check:false,permissionName:value3.permissionName,displayName:value3.displayName,moduleName:value3.moduleName}
+                                    // x2.check=false;
+                                    // x2.displayName=value3.displayName
                                     item2.children.push(x2)
                                     $.each(_this.checked,function(y2,val2){
                                         if(value3.permissionName==val2.displayName){
@@ -1530,9 +1529,9 @@ export default({
                                     if(typeof(value3.permissionDtos)!='undefined' && value3.permissionDtos!=null && value3.permissionDtos.length>0){
                                         $.each(value3.permissionDtos,function(index4,value4){
                                             // head3.push({displayName:value4.displayName,permissionName:value4.permissionName})
-                                            let x3={check:false,permissionName:value4.permissionName}
-                                            x3.check=false;
-                                            x3.displayName=value4.displayName
+                                            let x3={check:false,permissionName:value4.permissionName,displayName:value4.displayName,moduleName:value4.moduleName}
+                                            // x3.check=false;
+                                            // x3.displayName=value4.displayName
                                             item3.children.push(x3)
                                              $.each(_this.checked,function(y3,val3){
                                                 if(value4.permissionName==val3.displayName){
@@ -1720,6 +1719,7 @@ export default({
             // })
             if(flag){
                 _this.showCheckedFnTable=showCheckedFnTable
+                _this.loadHeadCheckbox();
                 $('#FnPagination').css('display','none')
             }
         },

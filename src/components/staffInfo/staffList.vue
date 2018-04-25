@@ -68,8 +68,14 @@
                                         @node-click="nodeClick_depart"
                                         >
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
+                                        <!-- <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option> -->
+                                        <!-- 用计算属性 -->
+                                        <el-option v-show="false"
+                                       :key="countDepart.id" 
+                                       :label="countDepart.name" 
+                                       :value="countDepart.id"
+                                       id="staff_confirmSelect"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="所属店铺">
@@ -90,71 +96,78 @@
         </el-col>
         <el-col :span="ifWidth?19:24">
             <div id="bgc">
-                <el-row class="h48">
-                     <el-col :span='2' class="search-block"  v-show="!ifWidth">
-                        <div @click="openLeft">
-                            <img src="../../../static/image/common/search_btn.png">
-                            <span>查询</span>
-                             <span @click="openLeft">+</span>
-                        </div>
-                        <!-- <div  style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
-                            <span>查询</span>
-                        </div>
-                        <div style="display:inline-block" class="out-img" @click="openLeft">
-                            <span>+</span>
-                        </div> -->
-                    </el-col>
-                    
-                    <el-col :span="22" class="border-left">
-                        <el-row class="h48">
-                            <!-- 按钮组 -->
-                            <el-col :span="18" class="pt5">
-                                <button class="erp_bt bt_add" @click="addStaff">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_add.png">
-                                    </div>
-                                    <span class="btDetail">新增</span>
-                                </button>                                
-                                <button class="erp_bt bt_del" @click="confirmDelSelected" :disabled="isTrue">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_del.png">
-                                    </div>
-                                    <span class="btDetail">删除</span>
-                                </button>
-                                        
-                                <button class="erp_bt bt_auxiliary">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_auxiliary.png">
-                                    </div>
-                                    <span class="btDetail">辅助功能</span>
-                                </button>
+                <el-row class="h48" >
+                    <div>
+                        <el-col :span='2' class="search-block"  v-show="!ifWidth">
+                            <div @click="openLeft">
+                                <img src="../../../static/image/common/search_btn.png">
+                                <span>查询</span>
+                                <span @click="openLeft">+</span>
+                            </div>
+                            <!-- <div  style="display:inline-block;margin-left:2px;font-size:16px;" @click="openLeft">
+                                <span>查询</span>
+                            </div>
+                            <div style="display:inline-block" class="out-img" @click="openLeft">
+                                <span>+</span>
+                            </div> -->
+                        </el-col>
+                        
+                        <el-col :span="22" class="border-left">
+                            <el-row>
+                                <!-- 按钮组 -->
+                            <div>
+                                <el-col :span="17" class="pt5">
+                                    <button class="erp_bt bt_add" @click="addStaff">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_add.png">
+                                        </div>
+                                        <span class="btDetail">新增</span>
+                                    </button>                                
+                                    <button class="erp_bt bt_del" @click="confirmDelSelected" :disabled="isTrue">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_del.png">
+                                        </div>
+                                        <span class="btDetail">删除</span>
+                                    </button>
+                                            
+                                    <button class="erp_bt bt_auxiliary">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_auxiliary.png">
+                                        </div>
+                                        <span class="btDetail">辅助功能</span>
+                                    </button>
 
-                                <button class="erp_bt bt_excel">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_excel.png">
-                                    </div>
-                                    <span class="btDetail">Excel</span>
-                                </button>
+                                    <button class="erp_bt bt_excel">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_excel.png">
+                                        </div>
+                                        <span class="btDetail">Excel</span>
+                                    </button>
 
-                                <button class="erp_bt bt_print">
-                                    <div class="btImg">
-                                        <img src="../../../static/image/common/bt_print.png">
-                                    </div>
-                                        <span class="btDetail">打印</span>
-                                 </button>
-                            </el-col>
-                            <el-col :span="5">
-                                <div class="search-input">
-                                    <el-input placeholder="搜索..." prefix-icon="el-icon-search"
-                                    v-model="searchContent" @change="searchTable">
-                                    </el-input>
+                                    <button class="erp_bt bt_print">
+                                        <div class="btImg">
+                                            <img src="../../../static/image/common/bt_print.png">
+                                        </div>
+                                            <span class="btDetail">打印</span>
+                                    </button>
+                                </el-col>
+                                <div>
+                                    <el-col :span="5">
+                                        <div class="search-input">
+                                            <el-input placeholder="搜索..." prefix-icon="el-icon-search"
+                                            v-model="searchContent" @change="searchTable">
+                                            </el-input>
+                                        </div>
+                                    </el-col>
+                                    <el-col :span="1" class="defineBtn">
+                                        <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
+                                    </el-col>
                                 </div>
-                            </el-col>
-                            <el-col :span="1" class="defineBtn">
-                                <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
-                            </el-col>
-                        </el-row>
-                    </el-col>
+                            </div>
+                                
+                            </el-row>
+                        </el-col>
+                    </div>
                 </el-row> 
                 <!-- 列表 -->
                 <el-row class="pb10 tableWrapper">
@@ -286,6 +299,10 @@
                     label: 'name',
                     id:'id'
                 },
+                departItem:{
+                    id:'',
+                    name:'',
+                },
                 allList: [], //所有数据
                 //--------------确认删除开始-----------------               
                 dialogUserConfirm:false,//用户删除保存提示信息
@@ -380,6 +397,11 @@
                 this.$refs.tree.filter(val);
             },
         },
+        computed:{
+            countDepart () {
+                return this.departItem;
+                },
+        },
         methods: {
             getAllList() {// 获取所有数据
                 let _this = this;
@@ -387,7 +409,7 @@
                 {SkipCount: (_this.pageIndex - 1) * _this.page_size,
                     MaxResultCount: _this.page_size})
                     .then(rsp => {
-                        console.log(rsp.result.items);
+                        // console.log(rsp.result.items);
                         _this.allList = rsp.result.items;
                         // _this.allList.employeeTypes = rsp.result.items;
                         // for (let val of rsp.result.items) {
@@ -527,15 +549,18 @@
                 let _this=this;
                 // console.log(data);
                 // console.log(data.id);
-                _this.ouId=data.id;
-                // console.log(_this.ouId);
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
-                });
-                // _this.getSelectDepart();
-                // _this.loadDepartTree();
+
+                _this.departItem.id=data.id;
+                _this.departItem.name=data.name;
+                self.$nextTick(function(){
+                    $('#staff_confirmSelect').click()
+                })
+
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // });
             },
             // 左侧搜索展开--------------------------------
             closeLeft: function() {
@@ -666,6 +691,9 @@
 </script>
 
  <style scoped>
+    .colorWhite{
+        background-color: #fff;
+    }
     .bg_White {
         background: white;
         border-radius: 3px;

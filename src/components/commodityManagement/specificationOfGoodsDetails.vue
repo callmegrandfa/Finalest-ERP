@@ -3,7 +3,10 @@
         <el-row >
             <el-col :span='24'>
                 <div class="bg-white">
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                    <div class="fixed">
+                       <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm> 
+                    </div>
+                    
                     <el-row class="pl10 pr10">
                         <el-col :span="24" style="margin-top:20px">
                             <el-col :span="9">
@@ -837,9 +840,6 @@ import Textbox from '../../base/textbox/textbox'
                             addDatacontent.specValueId = _this.showChecked[i].id;//存入属性值的id
                            _this.addData.specgroupContent_ChildTable.push(addDatacontent);
                         }
-                        if(_this.addData.specgroup_MainTable.remark == ''){
-                            _this.addData.specgroup_MainTable.remark = '无'; 
-                        }
                         _this.$axios.posts('/api/services/app/SpecgroupManagement/AggregateCreateOrUpdate',_this.addData).then(function(res){
                             _this.open('创建商品规格组成功','el-icon-circle-check','successERP');
                             _this.validation.reset(); 
@@ -1037,13 +1037,24 @@ import Textbox from '../../base/textbox/textbox'
                 var seperator2 = ":";
                 var month = date.getMonth() + 1;
                 var strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
+                var Hours = date.getHours();
+                var Seconds = date.getSeconds();
+                var Minutes = date.getMinutes();
+                function dataTime(a){
+                   if (a >= 1 && a <= 9) {
+                        a = "0" + a;
+                        return a
+                    } 
+                    return a
                 }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
+                function datahous(a){
+                   if (a < 10) {
+                        a = "0" + a;
+                        return a;
+                    } 
+                    return a ;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+                var currentdate = date.getFullYear() + seperator1 + dataTime(month) + seperator1 + dataTime(strDate) + ' ' + datahous(Hours) + seperator2 + datahous(Minutes) + seperator2 +  datahous(Seconds);
                 return currentdate;
             },
             getErrorMessage(message,details,validationErrors){

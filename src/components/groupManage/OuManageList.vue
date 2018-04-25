@@ -113,6 +113,7 @@
             </el-col>
              <el-col :span="ifWidth ? 15:20" class="border-left" id="ouListTable">
                 <el-row class="h48">
+                    <div class="fixed pt5">
                     <el-col :span="ifWidth?0:2" class="search-block">
                         <div @click="openLeft">
                             <img src="../../../static/image/common/search_btn.png">
@@ -121,35 +122,38 @@
                         </div>
                     </el-col>
                     <el-col :span="ifWidth?24:22" class="pt5">
-                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                        <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
-                        <button class="erp_bt bt_out bt_width">
-                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
-                            <span class="btDetail">导出</span>
-                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                        </button>
-                        <button class="erp_bt bt_auxiliary bt_width">
-                            <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
-                            <span class="btDetail">辅助功能</span>
-                            <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
-                        </button>
-                        <div class="search_input_group">
-                            <div class="search_input_wapper" @keyup.enter="submitSearch">
-                                <el-input
-                                    placeholder="搜索..."
-                                    v-model="Name"
-                                    class="search_input">
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                </el-input>
-                            </div>
-                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
-                                <button class="userDefined">
-                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
-                                </button>
-                            </div>
-                        </div>    
+                        
+                            <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                            <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+                            <button class="erp_bt bt_out bt_width">
+                                <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                                <span class="btDetail">导出</span>
+                                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                            </button>
+                            <button class="erp_bt bt_auxiliary bt_width">
+                                <div class="btImg"><img src="../../../static/image/common/bt_auxiliary.png"></div>
+                                <span class="btDetail">辅助功能</span>
+                                <div class="btRightImg"><img src="../../../static/image/common/bt_down_right.png"></div>
+                            </button>
+                            <div class="search_input_group">
+                                <div class="search_input_wapper" @keyup.enter="submitSearch">
+                                    <el-input
+                                        placeholder="搜索..."
+                                        v-model="Name"
+                                        class="search_input">
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
+                                </div>
+                                <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                    <button class="userDefined">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                    </button>
+                                </div>
+                            </div>    
+                        
                     </el-col>    
+                    </div>
                 </el-row>
                 <!-- dialog -->
                 <el-dialog :visible.sync="dialogUserDefined" class="dialogUserDefined">
@@ -420,6 +424,41 @@
             
             },
         },
+        mounted:function(){
+            let _this=this;
+            $(window).scroll(function(){
+                if($(window).scrollTop()>61){
+                if(!_this.$store.state.show){
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    "position":'fixed',
+                    "top":'93px',
+                    "z-index":'998'
+                    }).next('div').css({marginTop:'47px'})
+                }else{
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    position:'fixed',
+                    top:'93px',
+                    zIndex:'998',
+                    transition: 'width 0s'
+                    }).next('div').css({marginTop:'47px'})
+                }
+                _this.$store.commit('go1');
+                }else{
+                $('.fixed').css({
+                    position:'relative',
+                    top:'0',
+                    transition: 'width 0s'
+                }).next('div').css({marginTop:0})
+                _this.$store.commit('go2');
+                }
+            })
+
+        }, 
+            
         methods:{
             getSelectData(){
                 let _this=this;
@@ -794,6 +833,9 @@
 </script>
 
 <style scoped>
+.fixed{
+    background-color: white;
+}
 .bg-white{
     background: white;
     border-radius: 3px;

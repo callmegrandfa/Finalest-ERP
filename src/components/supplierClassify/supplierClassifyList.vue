@@ -34,25 +34,27 @@
                             @node-click="nodeClick"
                             class="filter-tree"
                             > -->
-                            <el-tree
-                            :render-content="renderContent_componyTree"
-                            :highlight-current="true"
-                            :data="supplierClasTree"
-                            :props="defaultProps"
-                            node-key="id"
-                            :default-expanded-keys="expandId"
-                            ref="tree"
-                            :expand-on-click-node="false"
-                            :filter-node-method="filterNode"
-                            @node-click="nodeClick"
-                            >
-                        </el-tree>
+                            <vue-scroll :ops="$store.state.option">
+                                <el-tree
+                                :render-content="renderContent_componyTree"
+                                :highlight-current="true"
+                                :data="supplierClasTree"
+                                :props="defaultProps"
+                                node-key="id"
+                                :default-expanded-keys="expandId"
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                :filter-node-method="filterNode"
+                                @node-click="nodeClick"
+                                >
+                            </el-tree>
+                        </vue-scroll>
                     </el-col>  
             </el-col>
             <!-- 右边数据列表 -->
             <el-col :span='19' class="border-left">
                 <!-- 按钮组 -->
-                <el-row class="h48 pt5">
+                <el-row class="h48 pt5 fixed colorWhite">
                     <button @click="goAdd" class="erp_bt bt_add">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
@@ -266,10 +268,22 @@
                         // console.log(rsp.result);
                         _this.totalCount=rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
+                        _this.getHeight();
+                    },
+                    rsp=>{
+                        _this.getHeight();
                     }
                 )
                
                 
+            },
+            getHeight(){
+                 $(".tree-container").css({
+                    height:parseInt($('.border-left').css('height'))-48+'px'
+                })
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
+                })
             },
            //-----------按钮组功能---------------
             goAdd(){ //增加去详情页(detail)
@@ -475,6 +489,12 @@
 </script>
 
  <style scoped>
+    .supplierClassifyList-wrapper .tree-container{
+        background-color: #fff;
+    }
+    .colorWhite{
+        background-color: #fff;
+    }
     .error_tips{
         height: 15px;
         line-height: 15px;
@@ -540,6 +560,6 @@
     }
     .border-left{
         border-left: 1px solid #E4E4E4;
-        min-height: 380px;
+        min-height: 600px;
     }
 </style>

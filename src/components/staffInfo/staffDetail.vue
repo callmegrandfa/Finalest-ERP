@@ -94,7 +94,7 @@
                             <el-input placeholder="输入关键字进行过滤" v-model="filterOu" class="selectSearch">
                                 </el-input>
                                 <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" :data="selectTree_ou" :props="selectProps_ou"
-                                                node-key="id" default-expand-all ref="tree2" :filter-node-method="filterNode_ou"
+                                                node-key="id" default-expand-all ref="tree" :filter-node-method="filterNode_ou"
                                                 :expand-on-click-node="false" @node-click="nodeClick_ou"
                                                 class="filter-tree">
                                 </el-tree>
@@ -122,8 +122,14 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
+                                        <!-- <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option> -->
+                                        <!-- 用计算属性 -->
+                                        <el-option v-show="false"
+                                       :key="countDepart.id" 
+                                       :label="countDepart.name" 
+                                       :value="countDepart.id"
+                                       id="staff_confirmSelect"></el-option>
                             </el-select>
                         </div>
                     </div>    
@@ -214,8 +220,6 @@
                 </span>
             </el-dialog>
             <!-- dialog -->
-          
-            
             <!-- 数据提交有误的数据提示框 -->
             <submitError :submitData="submitData"></submitError> 
         </div>
@@ -284,6 +288,10 @@
                     label: 'name',
                     id:'id'
                 },
+                departItem:{
+                    id:'',
+                    name:'',
+                },
                 // -----------------------------
                
                 employeeIdoptions:[//------职员类型--------
@@ -310,24 +318,34 @@
                     },
         },
         created(){
-            // 所属组织下拉选项框
-            this.getSelectData();
             this.loadTree();
             this.loadDepartTree();
             // 获取默认数据
             this.getDefault();
+            this.getSelectData();// 所属组织下拉选项框
         },
-        // watch:{
-        //    filterOu(val) {
-        //         this.$refs.tree.filter(val);
-        //     },
-        // },
+        watch:{
+           filterOu(val) {
+                this.$refs.tree.filter(val);
+                // console.log(val);
+                
+            },
+        },
+        computed:{
+            countDepart () {
+                return this.departItem;
+                },
+        }, 
         methods: {
             // -------------------默认值
             getDefault(){// ------默认用户所属组织
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(rsp=>{ 
+                    // console.log(rsp);
                     _this.addData.ouId=rsp.result.id;
+                    _this.ouId=rsp.result.id;
+                    _this.getSelectDepart();
+                    _this.loadDepartTree();
                 });
                 this.GetDateTime();//获取当前时间
             },
@@ -368,7 +386,7 @@
             getSelectData(){//获取下拉选项数据
                 let _this=this;
                 _this.$axios.gets('/api/services/app/OuManagement/GetCompanyOuList').then(function(res){  // 所属组织
-                    _this.selectData.ou=res.result;
+                    _this.selectData.ou=res.result;                    
                 });
                 _this.$axios.gets('/api/services/app/ShopManagement/GetAll').then
                 (function(res){  // 店铺
@@ -388,7 +406,7 @@
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId}).then
                 (
                     rsp=>{  
-                        // console.log(rsp.result);
+                        console.log(rsp.result);
                         _this.selectData.depart=rsp.result;
                     }
                 );
@@ -424,6 +442,10 @@
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
                 let _this=this;
                 // console.log(data);
+                 if (data.id!=_this.addData.ouId) {
+                    _this.addData.deptId=null
+                }
+                _this.ouId=data.id;
                 $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
                     if($(this).attr('date')==data.id){
                         $(this).click()
@@ -438,7 +460,7 @@
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                 .then(
                     function(res){//部门
-                        // console.log(res);
+                        console.log(res);
                         _this.selectTree_depart=res.result;
                         _this.loadIcon();
                     },
@@ -452,15 +474,20 @@
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
                 let _this=this;
-                // console.log(data);
+                console.log(data);
                 // console.log(data.id);
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
-                });
-                _this.getSelectDepart();
-                _this.loadDepartTree();
+                _this.departItem.id=data.id;
+                _this.departItem.name=data.name;
+                self.$nextTick(function(){
+                    $('#staff_confirmSelect').click()
+                })
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // });
+                // _this.getSelectDepart();
+                // _this.loadDepartTree();
             },
             // -----------------按钮组功能
             isChanged (){//判断是否修改过信息
@@ -545,16 +572,17 @@
             },
             // -----------------按钮组功能
             reset(){// 重置表单值与表单验证
-                    this.form.employeeCode='';
-                    this.form.employeeName='';
-                    this.form.ouId='';
-                    this.form.mobile='';
-                    this.form.department='';
-                    this.form.sex='';
-                    this.form.birthday='';
-                    this.form.shopName='';
-                    this.form.remark=''; 
-                    this.validation.reset();               
+                    this.addData.employeeCode='';
+                    this.addData.employeeName='';
+                    this.addData.ouId='';
+                    this.addData.mobile='';
+                    this.addData.department='';
+                    this.addData.sex='';
+                    this.addData.birthday='';
+                    this.addData.shopName='';
+                    this.addData.remark=''; 
+                    this.validation.reset();
+                    this.getDefault();               
             },
         },
         components:{

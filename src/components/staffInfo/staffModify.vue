@@ -121,8 +121,14 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
+                                        <!-- <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option> -->
+                                         <!-- 用计算属性 -->
+                                        <el-option v-show="false"
+                                       :key="countDepart.id" 
+                                       :label="countDepart.name" 
+                                       :value="countDepart.id"
+                                       id="staff_confirmSelect"></el-option>
                             </el-select>
                         </div>
                     </div>    
@@ -294,6 +300,10 @@
                     label: 'name',
                     id:'id'
                 },
+                departItem:{
+                    id:'',
+                    name:'',
+                },
                 // ------------------提示框数据
                 dialogUpdateConfirm:false,//信息更改提示控制
                 dialogDeleteConfirm:false,//删除信息提示控制
@@ -327,7 +337,7 @@
             this.getDataList();
             this.getSelectData();
             this.loadTree();
-            this.loadDepartTree();
+            // this.loadDepartTree();
         },
         watch: {
             addData:{
@@ -343,6 +353,11 @@
             }
 
         },
+        computed:{
+            countDepart () {
+                return this.departItem;
+            },
+        }, 
         methods: {
             // -------------------------提示信息
             showErrTips(e) {// 表单错误提示信息
@@ -413,6 +428,12 @@
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
                         _this.timeData.modifiedTime=rsp.result.modifiedTime;
+                        // -------组织（公司）的默认部门
+                        _this.ouId=rsp.result.ouId;
+                        console.log(rsp.result.ouId);
+                        
+                        _this.loadDepartTree();
+                        _this.getSelectDepart();
                     });
             },
             //---------------------------获取下拉框选项数据
@@ -473,49 +494,57 @@
                         })
             },
             filterNode_ou(value, data) {//根据关键字过滤节点
-                        if (!value) return true;
-                        return data.ouFullname.indexOf(value) !== -1;
+                if (!value) return true;
+                return data.ouFullname.indexOf(value) !== -1;
             },
             nodeClick_ou(data,node,self){//所属组织树形控件的回调
-                        let _this=this;
-                        // console.log(data);
-                        // console.log(data.id);
-                        _this.ouId=data.id;
-                        // console.log(_this.ouId);
-                        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                            if($(this).attr('date')==data.id){
-                                $(this).click()
-                            }
-                        });
-                        _this.getSelectDepart();
-                        _this.loadDepartTree();
+                let _this=this;
+                // console.log('12212');
+                // console.log(data);
+                // console.log(data.id);
+                if (data.id!=_this.addData.ouId) {
+                    _this.addData.deptId=null
+                }
+                _this.ouId=data.id;
+                // console.log(_this.ouId);
+                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                    if($(this).attr('date')==data.id){
+                        $(this).click()
+                    }
+                });
+                _this.getSelectDepart();
+                _this.loadDepartTree();
             },
             // --------------------------------------
             loadDepartTree(){// 加载所属部门树形控件
                         let _this=this;
                         _this.$axios.gets('/api/services/app/DeptManagement/GetAllTree',{OuId:_this.ouId})
                         .then(function(res){//部门
-                            // console.log(res);
+                            console.log(res);
                             _this.selectTree_depart=res.result;
                             _this.loadIcon();
                         },function(res){
                         })
             },
             filterNode_Depart(value, data) {//根据关键字过滤节点
-                        if (!value) return true;
-                        return data.deptName.indexOf(value) !== -1;
+                if (!value) return true;
+                return data.deptName.indexOf(value) !== -1;
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
-                        let _this=this;
-                        // console.log(data);
-                        console.log(data.id);
-                        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                            if($(this).attr('date')==data.id){
-                                $(this).click()
-                            }
-                        });
-                        _this.getSelectDepart();
-                        _this.loadDepartTree();
+                let _this=this;
+                // console.log(data);
+                // console.log(data.id);
+                _this.departItem.id=data.id;
+                _this.departItem.name=data.name;
+                self.$nextTick(function(){
+                    $('#staff_confirmSelect').click()
+                })
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //          $(this).click()
+                //     }
+                // });
+                       
             },
             // --------------------------------按钮组功能
             // --------------返回功能
@@ -524,13 +553,13 @@
                 this.$router.push({ path: this.$store.state.url });
             },
             isBack(){//判断是返回还是取消
-                        let _this=this;
-                        _this.btnValue='toBack';
-                        if(_this.update){
-                            _this.dialogUpdateConfirm=true;
-                        }else{
-                            _this.goBack()
-                        }
+                let _this=this;
+                _this.btnValue='toBack';
+                if(_this.update){
+                    _this.dialogUpdateConfirm=true;
+                }else{
+                    _this.goBack()
+                }
             },
             sureDoing(){
                         let _this=this;
@@ -611,13 +640,13 @@
                         }
                 });
             },
-            saveAdd() {// 保存修改的数据
+            saveAdd() {// 保存修改的数据---保存并新增
                 let _this = this;
                 $('.tipsWrapper').css({display:'block'})
                     _this.$validate().then(function(success) {
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
-                        if (_this.update) {_this.$axios.puts( "/api/services/app/EmployeeManagement/Update",_this.updateList)
+                        if (_this.update) {_this.$axios.puts( "/api/services/app/EmployeeManagement/Update",_this.addData)
                         .then(
                             rsp => {
                                 _this.open("修改成功", "el-icon-circle-check", "successERP");

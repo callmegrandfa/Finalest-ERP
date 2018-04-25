@@ -42,7 +42,20 @@
                     <div class="error_tips_info">{{ validation.firstError('addData.displayName') }}</div>
                 </div>
             </el-col>
-
+            <el-col :span="24">
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                    <label><small>*</small>密码</label>
+                    <el-input 
+                    
+                    class="password" 
+                    :class="{redBorder : validation.hasError('addData.password')}" 
+                    v-model="addData.password"  
+                    placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.password') }}</div>
+                </div>
+            </el-col>
             <el-col :span="24">
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
@@ -519,6 +532,7 @@
           "email": "",
           "userGroupId": "",
           "ouId": "",
+          "password":'',
           "status": "",
           "userType": "",
           "languageId": "",
@@ -585,6 +599,9 @@
       },
       'addData.displayName': function (value) {//用户名称
          return this.Validator.value(value).required().maxLength(50);
+      },
+      'addData.password': function (value) {//密码
+         return this.Validator.value(value).required();
       },
       'addData.phoneNumber': function (value) {//手机号码
          return this.Validator.value(value).required().maxLength(20);
@@ -671,9 +688,16 @@
             // 所属组织
             _this.selectData.OUType=res.result;
             })
-            _this.$axios.gets('/api/services/app/UserGroup/GetAll').then(function(res){ 
+            _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(resp){ 
             // 所属用户组
-                _this.selectData.userGroupId=res.result.items;
+            if(resp.result.totalCount>1){
+                _this.$axios.gets('/api/services/app/UserGroup/GetAll',{SkipCount:0,MaxResultCount:resp.result.totalCount}).then(function(res){
+                    _this.selectData.userGroupId=res.result.items;
+                })
+            }else{
+                _this.selectData.userGroupId=[];
+            }
+                
             })
             ///api/services/app/Language/GetLanguages
             _this.$axios.gets('/api/services/app/Language/GetLanguages').then(function(res){ 
@@ -695,6 +719,7 @@
                     "userType": res.result.userType,
                     "languageId": res.result.languageId,
                     "userGroupId": res.result.userGroupId,
+                    'password': res.result.password,
                     "isReg": res.result.isReg,
                     "remark": res.result.remark,
                     "roleCodes": res.result.roleCodes,

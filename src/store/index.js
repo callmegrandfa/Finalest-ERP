@@ -751,34 +751,26 @@ export default new vuex.Store({
         ],
         OuId:'',//组织单元ID
         tableName:'',//表格名称
+        transferName:'',//穿梭框名称
         // 商品类目
-        commodityClassHeadingHttpApi:'',//初始化接口
         commodityClassHeadingQueryApi:'',//查询接口
-        commodityClassHeadingTreeQueryApi:'',//树节点查询接口
-        commdityClassHeadingParams:'',
         commodityClassHeadingTable:[],//商品类目表格数据
-        commodityClassHeadingQuery:false,//条件查询
         commodityClassHeadingTreeApi:'',//初始化树型接口
         commodityClassHeadingTreeData:[],//树型数据集合
-        commodityClassHeadingTreeQuery:false,//树节点查询
         commodityClassHeadingQueryParams:"",//条件查询参数
-        commodityClassHeadingTreeQueryParams:"",//树节点查询参数
         commodityClassHeadingTotalCount:0,//总条数
         commodityClassHeadingSelection:[],//选中数据集合
         commodityClassHeadingCurrentPage:1,//当前分页
         commodityClassHeadingTotalPagination:10,//总页数
         commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
-        commodityBrandHttpApi:'',
+        ceshiTable:[],
+        ceshiTransferApi:'',
+        ceshiTransferParams:'',
         commodityBrandQueryApi:'',//查询接口
-        commodityBrandTreeQueryApi:'',//树节点查询接口
-        commodityBrandParams:'',
         commodityBrandTable:[],//品牌表格数据
         commodityBrandTableClone:[],//品牌表格数据clone
-        commodityBrandQuery:false,//条件查询
-        commodityBrandTreeQuery:false,//树节点查询
         commodityBrandQueryParams:"",//条件查询参数
-        commodityBrandTreeQueryParams:"",//树节点查询参数
         commodityBrandNewCol:'',
         commodityBrandNewColArray:[],//表格内新增数据集合
         commodityBrandUpdateColArray:[],//表格内修改数据集合
@@ -837,18 +829,25 @@ export default new vuex.Store({
         go2(state) {
             state.fixed = false;
         },
+        // 穿梭框模块
+        setTransferName(state,data){//设置穿梭框特定名称
+            state.transferName=data;
+        },
+        setTransferApi(state,api){//设置穿梭框接口地址
+            state[state.transferName+'TransferApi']=api;
+        },
+        setTransferParams(state,obj){//设置穿梭框接口地址
+            state[state.transferName+'TransferParams']=obj;
+        },
+        Init_Transfer(state,array){//设置穿梭框表格数据
+            state[state.transferName+'Table']=array;
+        },
+        // 表格模块
         Init_Table(state,data){//表格数据模型
             state[state.tableName+'Table']=data;
         },
         Init_Tree(state,data){//树型数据
             state[state.tableName+'TreeData']=data;
-        },
-        Init_dataSource(state,dictName){//表头配置下拉
-            axios.get('/api/services/app/DataDictionary/GetDictItem',{
-                params:{dictName:dictName}
-            }).then(function(res){
-                return res.result
-            })
         },
         Init_TableClone(state,data){
             state[state.tableName+'TableClone']=data;
@@ -862,15 +861,6 @@ export default new vuex.Store({
         Init_OuId(state,data){
             state.OuId=data;
         },
-        Init_ifQuery(state,data){//是否输入查询条件
-            state[state.tableName+'Query']=data
-        },
-        Init_ifTreeQuery(state,data){//是否点击树节点查询
-            state[state.tableName+'TreeQuery']=data
-        },
-        setHttpApi(state,api){//初始化api地址
-            state[state.tableName+'HttpApi']=api;
-        },
         setQueryApi(state,api){//查询api地址
             state[state.tableName+'QueryApi']=api;
         },
@@ -879,9 +869,6 @@ export default new vuex.Store({
         },
         setTreeQueryApi(state,api){//查询树节点api地址
             state[state.tableName+'TreeQueryApi']=api;
-        },
-        setHttpParams(state,params){//api请求参数
-            state[state.tableName+'Params']=params;
         },
         setQueryParams(state,params){//查询请求参数
             state[state.tableName+'QueryParams']=params;
@@ -937,6 +924,16 @@ export default new vuex.Store({
         InitTree(context){//树型初始化
             axios.get(context.state[context.state.tableName+'TreeApi']).then(function(res){
                 context.commit('Init_Tree',res.data);
+                }).catch(function(err){
+                    console.log(err)
+                })
+        },
+        InitTransfer(context){//穿梭框数据初始化
+            axios.get(context.state[context.state.transferName+'TransferApi'],{
+                params:context.state[context.state.transferName+'TransferParams']
+            }).then(function(res){
+                console.log(res.result.items);
+                context.commit('Init_Transfer',res.result.items);
                 }).catch(function(err){
                     console.log(err)
                 })

@@ -90,25 +90,18 @@
                         </div>
                     </el-col>
 	                <el-col :span="ifWidth?24:22">
-	                	<btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
+                        <div class="btnGroup-box">
+	                	    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
+                        </div>
 	                </el-col>
-                     <el-row style="float:left;width:100%;">
+                    <el-row style="float:left;width:100%;">
                         <el-col :span="5" class="tree-container">
                             <Tree :defaultProps='defaultProps' :expandParams='expandParams' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
-                            <!-- <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
-                                :data="classTree"
-                                :props="defaultProps"
-                                default-expand-all
-                                ref="tree"
-                                node-key="id"
-                                :expand-on-click-node="false"
-                                @node-click="TreeNodeClick">
-                            </el-tree> -->
                         </el-col>
                         <el-col :span="19">
                             <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :tableName="tableModel"  :command="command"></Table>
                         </el-col>
-                </el-row>
+                    </el-row>
                 </el-col>
             </el-row>
             <dialogBox :errorTips='errorTips' :dialogSetting='dialogSetting' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick"></dialogBox>     
@@ -117,10 +110,10 @@
 </template>
 
 <script>
-import Btm from '../../base/btm/btm'
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
 import Table from '../../base/Table/Table'
 import dialogBox from '../../base/dialog/dialog'
-import Tree from '../../base/Tree/Tree'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -150,34 +143,32 @@ import Tree from '../../base/Tree/Tree'
                     message:'',
                     details:'',
                 },
-                bottonbox:{
-                    url: '/commodityleimu/CommodityCategoriesDetails',
-                   botton:[{
-                    class: 'erp_bt bt_add',
-                    imgsrc: '../../../static/image/common/bt_add.png',
-                    text: '新增',
-                    disabled:false
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_del',
-                    imgsrc: '../../../static/image/common/bt_del.png',
-                    text: '删除',
-                    disabled:false
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_audit',
-                    imgsrc: '../../../static/image/common/bt_audit.png',
-                    text: '审核',
-                    disabled:false 
+                    text:'审核',
+                    class:'bt_audit',
+                    icon:'icon-shenhe',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_in',
-                    imgsrc: '../../../static/image/common/bt_in.png',
-                    text: '导入',
-                    disabled:false
+                    text:'导入',
+                    class:'bt_in',
+                    icon:'icon-daoru',
+                    disabled:false,
                 },{
-                    class: 'erp_bt bt_out',
-                    imgsrc: '../../../static/image/common/bt_inOut.png',
-                    text: '导出',
-                    disabled:false
-                }]},
+                    text:'导出',
+                    class:'bt_out',
+                    icon:'icon-daochu',
+                    disabled:false,
+                }],
                 httpUrl:{
                    //Initial:'/api/services/app/CategoryManagement/GetAll',//数据初始化
                    view:'/commodityleimu/CommodityCategoriesDetails/',//查看详情
@@ -259,10 +250,6 @@ import Tree from '../../base/Tree/Tree'
                     }],
                 enableEdit:true,
                 tableModel:'commodityClassHeading',
-                // HttpParams:{//数据初始化参数
-                //     SkipCount:(this.$store.state.commodityClassHeadingCurrentPage-1)*this.$store.state.commodityClassHeadingEachPage,
-                //     MaxResultCount:this.$store.state.commodityClassHeadingEachPage
-                // },
                 SystemOptions: [{
                     value: null,
                     label: '全部'
@@ -299,6 +286,7 @@ import Tree from '../../base/Tree/Tree'
                 eachPage:10,//每页有多少条信息
                 totalPage:100,//当前分页总数
                 SelectionChange:[],//多选集合
+                routerCategoryName:'',
             }
         },
         mounted:function(){   
@@ -330,9 +318,9 @@ import Tree from '../../base/Tree/Tree'
                let obgh=document.getElementById('bgj');
                 obgh.style.width="calc(100% - 340px)";
             },
-            btmlog:function(data){
-                if(data=="启用"){
-                   
+            btnClick:function(data){
+                if(data=="新增"){
+                   this.add();
                 }else if(data=="删除"){
                     this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
                     if(this.SelectionChange.length==0){
@@ -352,6 +340,10 @@ import Tree from '../../base/Tree/Tree'
                 oleftBox.style.display="block";
                 let ocate= document.getElementById('bgj')
                 ocate.style.width="calc(100% - 340px)";
+            },
+            add(){//新增页面跳转
+                this.$store.state.url='/commodityleimu/CommodityCategoriesDetails/default'
+           		this.$router.push({path:this.$store.state.url,query:{CategoryId:this.queryParams.CategoryId,CategoryName:this.routerCategoryName}})//点击切换路由
             },
             querylog:function(data){
                 let _this=this;
@@ -374,13 +366,9 @@ import Tree from '../../base/Tree/Tree'
             TreeNodeClick(data){//树节点点击回调             
                 let _this=this;
                 _this.queryParams.CategoryId=data.id;
+                _this.routerCategoryName=data.categoryName
                 _this.tableLoading=true;
                     _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){                     
-                        //_this.$store.state[_this.tableModel+'Table'] = res.result.items;
-                        // _this.queryParams.CategoryCode="";
-                        // _this.queryParams.CategoryName="";
-                        // _this.queryParams.IsService="";
-                        // _this.queryParams.Status="";
                         _this.$store.commit('Init_Table',res.result.items);
                         let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                         _this.$store.commit('Init_pagination',totalPage);
@@ -391,7 +379,8 @@ import Tree from '../../base/Tree/Tree'
             query(){//条件查询
                 let _this=this;
                 _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){//查询表格数据
-                    //_this.$store.commit('Init_ifQuery',true)
+                    _this.queryParams.CategoryId="";
+                    _this.$store.commit('setQueryParams',_this.queryParams)
                     _this.$store.commit('Init_Table',res.result.items); 
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                     _this.$store.commit('Init_pagination',totalPage) 
@@ -406,7 +395,6 @@ import Tree from '../../base/Tree/Tree'
                 }).then(function(res){
                     _this.$store.commit('Init_Tree',res.result);
                 }).catch(function(err){
-
                 });;
             },
             open(tittle,iconClass,className) {//提示框
@@ -423,6 +411,7 @@ import Tree from '../../base/Tree/Tree'
                 if(parmas.dialogButton=="确定"){
                     if(parmas.dialogName=="delDialog"){
                         this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                        console.log(this.SelectionChange);
                         for(var i in this.SelectionChange){
                             this.delAarry.ids.push(this.SelectionChange[i].id)
                         }
@@ -430,6 +419,8 @@ import Tree from '../../base/Tree/Tree'
                        
                        //批量删除
                         _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',_this.delAarry).then(function(res){
+                                _this.queryParams.CategoryId="";
+                                _this.$store.commit('setQueryParams',_this.queryParams)
                                 _this.$store.dispatch('InitTable');
                                 _this.$store.commit('setTableSelection',[])
                                 _this.dialogVisible=false;
@@ -438,6 +429,7 @@ import Tree from '../../base/Tree/Tree'
                                 _this.open('删除成功','el-icon-circle-check','successERP');    
                         }).catch(function(err){
                             _this.dialogVisible=false;
+                            _this.delAarry.ids=[];
                             _this.$message({
                                 type: 'warning',
                                 message: err.error.message
@@ -453,7 +445,7 @@ import Tree from '../../base/Tree/Tree'
             
         },
         components:{
-            Btm,
+            buttonGroup,
             Table,
             dialogBox,
             Tree

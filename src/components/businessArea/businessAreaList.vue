@@ -33,28 +33,30 @@
             </el-col>
             <el-col :span='19' class="border-left">
                 <el-row class="h48 pt5">
-                    <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
-                    <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
-                    <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
-                    <button class="erp_bt bt_out">
-                        <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
-                        <span class="btDetail">导出</span>
-                    </button>
-                    <!-- <input @keyup.enter="submitSearch" type="text"> -->
-                    <div class="search_input_group">
-                        <div class="search_input_wapper" @keyup.enter="submitSearch">
-                            <el-input
-                                placeholder="搜索..."
-                                class="search_input"
-                                v-model="SearchKey"
-                                >
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
-                        </div>
-                        <div class="search_button_wrapper" @click="dialogUserDefined = true">
-                            <button class="userDefined">
-                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
-                            </button>
+                    <div class="fixed pt5">
+                        <button @click="goDetail" class="erp_bt bt_add"><div class="btImg"><img src="../../../static/image/common/bt_add.png"></div><span class="btDetail">新增</span></button>
+                        <button @click="confirm" class="erp_bt bt_del"><div class="btImg"><img src="../../../static/image/common/bt_del.png"></div><span class="btDetail">删除</span></button>
+                        <button class="erp_bt bt_in"><div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div><span class="btDetail">导入</span></button>
+                        <button class="erp_bt bt_out">
+                            <div class="btImg"><img src="../../../static/image/common/bt_inOut.png"></div>
+                            <span class="btDetail">导出</span>
+                        </button>
+                        <!-- <input @keyup.enter="submitSearch" type="text"> -->
+                        <div class="search_input_group">
+                            <div class="search_input_wapper" @keyup.enter="submitSearch">
+                                <el-input
+                                    placeholder="搜索..."
+                                    class="search_input"
+                                    v-model="SearchKey"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </div>
+                            <div class="search_button_wrapper" @click="dialogUserDefined = true">
+                                <button class="userDefined">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </el-row>
@@ -273,8 +275,38 @@
         },
         mounted:function(){
             let _this=this;
-            
-        },  
+            $(window).scroll(function(){
+                if($(window).scrollTop()>61){
+                if(!_this.$store.state.show){
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    "position":'fixed',
+                    "top":'93px',
+                    "z-index":'998'
+                    }).next('div').css({marginTop:'47px'})
+                }else{
+                    let w=$('.fixed').parent().width();
+                    $('.fixed').width(w);
+                    $('.fixed').css({
+                    position:'fixed',
+                    top:'93px',
+                    zIndex:'998',
+                    transition: 'width 0s'
+                    }).next('div').css({marginTop:'47px'})
+                }
+                _this.$store.commit('go1');
+                }else{
+                $('.fixed').css({
+                    position:'relative',
+                    top:'0',
+                    transition: 'width 0s'
+                }).next('div').css({marginTop:0})
+                _this.$store.commit('go2');
+                }
+            })
+
+        }, 
         watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
@@ -314,7 +346,13 @@
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     _this.tableLoading=false;
                 })
             },
@@ -334,15 +372,15 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                    // _this.$nextTick(function(){
+                    //     _this.getHeight()
+                    // })
                     _this.expandId=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
-                   _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                //    _this.$nextTick(function(){
+                //         _this.getHeight()
+                //     })
                })
             },
             handleCurrentChange(val) {//页码改变
@@ -358,7 +396,7 @@
             },
             getHeight(){
                 $(".tree-container").css({
-                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                    height:parseInt($('.border-left').css('height'))-48+'px'
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')
@@ -529,6 +567,9 @@
 </script>
 
 <style scoped>
+.fixed{
+    background-color: white;
+}
 .error_tips{
     height: 15px;
     line-height: 15px;

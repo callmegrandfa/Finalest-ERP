@@ -292,7 +292,6 @@
 <script>
     import auditInfo from '../Common/auditInfo';
     import submitError from '../Common/submitError';
-    import delectConfirm from '../../base/dialog/dialog';
     export default {
         name: "supplierClassifyModify",
         data(){
@@ -732,8 +731,6 @@
         components:{
             auditInfo,
             submitError,
-            delectConfirm,
-
         },
         
     }

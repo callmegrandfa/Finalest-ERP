@@ -2,9 +2,9 @@
     <div class="commercialSpecificationDetails commodity">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
-                <el-row class="fixed bg-white" >
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                </el-row>
+                <div class="fixed bg-white">
+                    <btm :date="bottonbox" v-on:listbtm="btmlog"></btm>
+                </div>
                     <el-row class="pl10 pr10">
                         <el-col :span="24" style="margin-top:20px">
                             <el-col :span="9">
@@ -210,6 +210,7 @@
             </span>
         </el-dialog>
         <!-- dialog -->
+        
     </div>
 </template>
 
@@ -230,7 +231,7 @@ import Textbox from '../../base/textbox/textbox'
                 }],
                 statusOptions:[{
                     value: 0,
-                    label: '未启用'},
+                    label: '停用'},
                     {value: 1,
                     label: '启用'
                 }],
@@ -301,7 +302,7 @@ import Textbox from '../../base/textbox/textbox'
                     controlType: '',
                     specgroupEnable: false,
                     seq: '',
-                    status: 0,
+                    status: 1,
                     createdTime:this.GetDateTime(),//创建时间
                     createdBy:this.$store.state.name,//创建人
                     modifiedTime:this.GetDateTime(),//修改人
@@ -366,9 +367,9 @@ import Textbox from '../../base/textbox/textbox'
                         _this.addData.status = res.result.status;
                         _this.addData.specgroupEnable = res.result.specgroupEnable;
                         _this.addData.createdBy = res.result.createdBy;//创建人
-                        _this.addData.createdTime = res.result.createdTime.substring(0,19);//创建时间
+                        _this.addData.createdTime = res.result.createdTime.substring(0,19).replace('T', ' ');//创建时间
                         _this.addData.modifiedBy = res.result.modifiedBy;//修改人
-                        _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19);//修改时间
+                        _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19).replace('T', ' ');//修改时间
                     })
                 }
                  
@@ -389,7 +390,7 @@ import Textbox from '../../base/textbox/textbox'
                                     _this.statusBotton(false,false,false,true,true);
                                     _this.statusBottontwo(false,false,false,false,true,true);
                                     _this.bottonbox.botton[0].update = false;
-                                    _this.$store.state.url=`/commercial/commercialSpecificationDetails/${res.result.id}`;
+                                    _this.$store.state.url=`/commercial/commercialSpecificationModify/${res.result.id}`;
                                     _this.$router.push({path:_this.$store.state.url});
                                     _this.open('创建商品类目成功','el-icon-circle-check','successERP');    
                                 },function(res){
@@ -515,13 +516,24 @@ import Textbox from '../../base/textbox/textbox'
                 var seperator2 = ":";
                 var month = date.getMonth() + 1;
                 var strDate = date.getDate();
-                if (month >= 1 && month <= 9) {
-                    month = "0" + month;
+                var Hours = date.getHours();
+                var Seconds = date.getSeconds();
+                var Minutes = date.getMinutes();
+                function dataTime(a){
+                   if (a >= 1 && a <= 9) {
+                        a = "0" + a;
+                        return a
+                    } 
+                    return a
                 }
-                if (strDate >= 0 && strDate <= 9) {
-                    strDate = "0" + strDate;
+                function datahous(a){
+                   if (a < 10) {
+                        a = "0" + a;
+                        return a;
+                    } 
+                    return a ;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+                var currentdate = date.getFullYear() + seperator1 + dataTime(month) + seperator1 + dataTime(strDate) + ' ' + datahous(Hours) + seperator2 + datahous(Minutes) + seperator2 +  datahous(Seconds);
                 return currentdate;
             },
             isUpdate(){
