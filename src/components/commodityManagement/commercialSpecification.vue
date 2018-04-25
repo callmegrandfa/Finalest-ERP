@@ -44,7 +44,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="searchItem.controlType" >
+                            <el-select  v-model="searchItem.controlType" clearable filterable>
                             <el-option  v-for="item in controlTypeoptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
@@ -60,7 +60,7 @@
                     </el-col>
                     <el-col :span="12">
                         <div class="bgcolor smallBgcolor">
-                            <el-select  v-model="searchItem.status" >
+                            <el-select  v-model="searchItem.status" clearable filterable>
                             <el-option  v-for="item in statusoptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
 
@@ -96,13 +96,20 @@
                                 <el-table-column prop="name" type="selection" label="" >
                                 </el-table-column>
                                 <el-table-column prop="specCode" label="属性编码">
+                                    <template slot-scope="scope">
+                                        <el-button type="text" @click="modify(scope.row)"   >{{tableData[scope.$index].specCode}}</el-button>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column prop="specName" label="属性名称">
                                     <template slot-scope="scope">
-                                        <el-button type="text"    >{{tableData[scope.$index].specName}}</el-button>
+                                        <el-button type="text"  @click="modify(scope.row)"  >{{tableData[scope.$index].specName}}</el-button>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="status" label="状态" >
+                                    <template slot-scope="scope">
+                                        <el-button type="text" class="startusing" v-if="tableData[scope.$index].status == 1" >启用</el-button>
+                                        <el-button type="text" class="blockup" v-else >停用</el-button>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column prop="controlType" label="控件类型">
                                 </el-table-column>
@@ -128,6 +135,7 @@
                          style="margin-top:20px;" 
                          class="text-right" 
                          background layout="total, prev, pager, next" 
+                         @current-change="handleCurrentChange" :current-page.sync="currentPage"
                          :page-count="totalPage"
                           >
                          </el-pagination> 
@@ -179,6 +187,7 @@
                 "remark": "st54ring"
                 },
                 ifWidth:true,
+                currentPage:1,
                 dialogUserConfirm:false,//用户删除保存提示信息
                 searchItem:{
                     specCode:'',//规格编码
@@ -227,19 +236,13 @@
                 },{
                     value: 1,
                     label: '手工录入'
-                }, {
-                    value: '',
-                    label: ''
                 }],
                 statusoptions:[{
                     value: 0,
-                    label: '已审'
+                    label: '启用'
                 },{
                     value: 1,
-                    label: '未审'
-                }, {
-                    value: '',
-                    label: ''
+                    label: '停用'
                 }],
                 isSystemoptions:[{
                     value: true,
@@ -257,6 +260,7 @@
                 eachPage:10,//每页有多少条信息
                 page:1,//当前页
                 updateId:'',
+                isData: true,
                 hangid:''
             }
         },
@@ -300,31 +304,30 @@
             
             loadTableData(){
                 let _this=this;
-                // _this.tableLoading=true;
-                // console.log(_this.eachPage)
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.page-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
-                    
-                    console.log(res.result.items)
+                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
                     for(let i=0;i<_this.tableData.length;i++){
-                        if(_this.tableData[i].status == 0){
-                           _this.tableData[i].status = '未审' 
-                        }else{
-                           _this.tableData[i].status = '已审'  
-                        }
                         if(_this.tableData[i].controlType == 0){
                            _this.tableData[i].controlType = '手工录入' 
                         }else{
                             _this.tableData[i].controlType = '下拉'
                         }
                     }
-                    
-                    // console.log(res.result.items)
                     let countPage=res.result.totalCount;
-                    // _this.Init();
                     _this.totalPage = Math.ceil(countPage/_this.eachPage);
-                  
                 })
+            },
+            handleCurrentChange:function(val){//获取当前页码,分页
+
+                let _this = this;
+                this.currentPage=val;
+                if(_this.isData){
+                    this.loadTableData();
+                }else{
+                    this.search(true);
+                }
+                
+                
             },
             sureAjax(){
                 let _this=this;
@@ -343,7 +346,7 @@
                         _this.open('删除成功','el-icon-circle-check','successERP');    
                     },function(res){
                                     console.log(res) 
-                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.open('删除失败','el-icon-error','faildERP');
                                     _this.errorMessage=true;
                                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
                                     console.log(res) 
@@ -356,7 +359,7 @@
                         _this.open('删除成功','el-icon-circle-check','successERP');    
                     },function(res){
                                     console.log(res) 
-                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.open('删除失败','el-icon-error','faildERP');
                                     _this.errorMessage=true;
                                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
                                     console.log(res) 
@@ -368,7 +371,7 @@
                         _this.open('删除成功','el-icon-circle-check','successERP');              
                     },function(res){
                                     console.log(res) 
-                                    _this.open('保存商品类目失败','el-icon-error','faildERP');
+                                    _this.open('删除失败','el-icon-error','faildERP');
                                     _this.errorMessage=true;
                                     _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
                                     console.log(res) 
@@ -378,29 +381,24 @@
             handleDel(row,index){//行内删除
                 this.dialogUserConfirm=true;
                 this.hangid=row.id
-                
-                
             },
-            search(){
+            search(bue){
                 let _this=this;
-                // alert(1)
+                _this.isData =false;
                 _this.searchItem.SkipCount= (_this.currentPage-1)*_this.eachPage;
                 _this.searchItem.MaxResultCount = _this.eachPage;
-                _this.$axios.gets('/api/services/app/SpecManagement/GetSearch',_this.searchItem).then(function(res){
-                    // console.log(res)
+                _this.$axios.gets('/api/services/app/SpecManagement/GetListByCondition',_this.searchItem).then(function(res){
                     _this.tableData=res.result.items; 
                     for(let i=0;i<_this.tableData.length;i++){
-                        if(_this.tableData[i].status == 0){
-                           _this.tableData[i].status = '未审' 
-                        }else{
-                           _this.tableData[i].status = '已审'  
-                        }
+                        
                         if(_this.tableData[i].controlType == 0){
                            _this.tableData[i].controlType = '手工录入' 
                         }else{
                             _this.tableData[i].controlType = '下拉'
                         }
-                    }                  
+                    }
+                    let countPage=res.result.totalCount;
+                    _this.totalPage = Math.ceil(countPage/_this.eachPage);                  
                 })
             },
             modify(row){//查看编辑
@@ -431,7 +429,13 @@
     }
 </script>
 
-<style scoped> 
+<style scoped>
+.blockup{
+    color: rgb(255, 102, 102);
+}
+.startusing{
+    color: rgb(57, 202, 119);
+} 
 .commercialSpecification .fs14{
     font-size: 14px;
     color: rgba(0, 0, 0, 0.349019607843137);

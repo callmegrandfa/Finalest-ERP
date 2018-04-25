@@ -20,6 +20,7 @@ export default {
 /* @import"../static/css/assets/layouts/layout2/css/custom.min.css"; */
 @import"//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 @import"../static/css/common.css";
+@import"../static/css/base.css"
 /* .page-header.navbar{
   height: 50px;
   min-height: 50px;

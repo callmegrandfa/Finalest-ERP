@@ -2,22 +2,47 @@
     <div class="specifcationOfGoods commodity" >
         
         <div id="bgl">
-            <el-row >
+            <el-row class="bg-white">
                 <el-col :span="24" class="border-left" id="bg-white">
 
-                        <el-col :span="5">
-                            <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
-                                :data="componyTree"
-                                v-loading="treeLoading" 
-                                :filter-node-method="filterNode"
-                                :highlight-current="true"
-                                node-key="id"
-                                :props="defaultProps"
-                                default-expand-all
-                                ref="tree"
-                                :expand-on-click-node="false"
-                                @node-click="TreeNodeClick">
-                            </el-tree>
+                        <el-col :span="5" >
+                            <!-- <div class="transfer_search" style="width:100%;" >
+                                
+                            </div> -->
+                            <el-col class="h48 pl15 pr15" :span="24">
+                                <!-- <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchLeft" class="search_input">
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input> -->
+                                <el-input
+                                    placeholder="搜索..."
+                                    v-model="searchLeft"
+                                    class="search_input"
+                                    >
+                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                </el-input>
+                            </el-col>
+                            <el-col :span='24' class="tree-container">
+                                <vue-scroll :ops="$store.state.option">
+                                    <div class="propertyParentid">
+                                        <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                                            :data="componyTree"
+                                            v-loading="treeLoading" 
+                                            :filter-node-method="filterNode"
+                                            :highlight-current="true"
+                                            node-key="id"
+                                            :props="defaultProps"
+                                            default-expand-all
+                                            ref="tree"
+                                            :expand-on-click-node="false"
+                                            :render-content="renderContent_moduleParentId"
+                                            @node-click="TreeNodeClick">
+                                            
+                                        </el-tree>
+                                    </div>
+                                </vue-scroll>
+                            </el-col>
                         </el-col>
                         
                             <el-col :span="19" >
@@ -44,21 +69,21 @@
                                         <template slot-scope="scope">
                                             <img :id="scope.row.id"  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.specValueCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>
 
-                                            <input class="input-need bluecolor" :class="{errorclass:scope.row.specValueCode==''&&isSave==true}" 
+                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.specValueCode==''&&isSave==true}" 
                                                     v-model="scope.row.specValueCode" 
                                                     type="text"/>
                                         </template>
                                     </el-table-column>
                                     <el-table-column prop="specValueName" label="规格值名称">
                                         <template slot-scope="scope">
-                                            <input class="input-need bluecolor" :class="{errorclass:scope.row.specValueName==''&&isSave==true}" 
+                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.specValueName==''&&isSave==true}" 
                                                     v-model="scope.row.specValueName" 
                                                     type="text"/>
                                         </template>
                                     </el-table-column>
                                     <el-table-column prop="remark" label="备注" width="100">
                                         <template slot-scope="scope">
-                                            <input class="input-need"  
+                                            <input @change="propertychange(scope.row)" class="input-need"  
                                                     v-model="scope.row.remark" 
                                                     type="text"/>
                                         </template>
@@ -68,7 +93,7 @@
                                            <el-select clearable filterable  
                                             class="specId"
                                             placeholder=""
-                                             
+                                            @change="propertychange(scope.row)" 
                                             v-model="scope.row.status" :class="'specId'+scope.row.status">
                                                 <el-option v-for="item in statusoptions" :key="item.value" :label="item.label" :value="item.value">
                                                 </el-option>
@@ -89,10 +114,6 @@
                                         </template>
                                     </el-table-column>
                                 </el-table>
-                                <!-- @current-change="handleCurrentChange"
-                                        :current-page="pageIndex"
-                                        :page-size="oneItem"
-                                        :total="totalItem" -->
                             <el-pagination style="margin-top:20px;"  class="text-right"  background layout="total, prev, pager, next,jumper" :current-page="pageIndex"  @current-change="handleCurrentChange" :page-size="eachPage"
                                         :total="totalItem" >
                              </el-pagination>   
@@ -116,6 +137,24 @@
             <span slot="footer">
                 <button class="dialog_footer_bt dialog_font" @click="sureAjax">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
+            </span>
+        </el-dialog>
+        <!-- dialog -->
+        <!-- dialog数据变动提示 -->
+        <el-dialog :visible.sync="dialogUserConfirm2" class="dialog_confirm_message" width="25%">
+            <template slot="title">
+                <span class="dialog_font">提示</span>
+            </template>
+            <el-col :span="24" style="position: relative;">
+                <el-col :span="24">
+                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
+                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
+                </el-col>
+            </el-col>
+            
+            <span slot="footer">
+                <button class="dialog_footer_bt dialog_font" @click="affirm">确 认</button>
+                <button class="dialog_footer_bt dialog_font" @click="sureDoing">取 消</button>
             </span>
         </el-dialog>
         <!-- dialog -->
@@ -174,6 +213,7 @@
 <script>
 import Query from '../../base/query/query'
 import Btm from '../../base/btm1/btm'
+import Tree from '../../base/tree/tree'
     export default{
         name:'customerInfor',
         data(){
@@ -191,6 +231,7 @@ import Btm from '../../base/btm1/btm'
                 "remark": "st54ring"
                 },
                 value1:'',
+                searchLeft:'',
                 oneItem: 10,
                 totalItem: 0, 
                 response:{
@@ -198,8 +239,15 @@ import Btm from '../../base/btm1/btm'
                     message:'',
                     validationErrors:[],
                 },
+                expand:{
+                    expandId_addDataOu:[],//默认下拉树形展开id
+                    isHere_addDataOu:false,//是否存在id于树形
+                    expandId_dialogOu:[],//默认dialog组织树形展开id
+                    expandId_mmenu:[],//默认分配功能树形展开id
+                },
                  // 错误信息提示开始
                 detail_message_ifShow:false,
+                dialogUserConfirm2:false,
                 errorMessage:false,
                 // 错误信息提示结束
                 dialogUserConfirm: false,
@@ -307,16 +355,24 @@ import Btm from '../../base/btm1/btm'
                 ifTreeNode:false,
                 dialogUserConfirm1:false,
                 isaddac: true,
+                isnewSave: false,
                 eachPage:10,//每页有多少条信息
                 page:1,//当前页
+                amendData:[],
+                value2: '',
+                isaddbutton:false,
+                ispage:false,
+                value3:'',
+                arrbiaoge1:[],
+                arrbiaoge2:[],
                 addbac: [],
                 addabc:''
             }
         },
         created:function(){   
             this.loadTree();   
-            // this.loadTableData();
-            this.TreeNodeClick(0);
+            this.loadTableData();
+            this.TreeNodeClick1(0);
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -324,35 +380,35 @@ import Btm from '../../base/btm1/btm'
             content1.style.minHeight=height1+'px';
         },
         watch:{
-            isUpdate:function(val,oldVal){
-                if(val==true){
-                    this.isCancel=true;
-                    this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
-                }
+            searchLeft:function(){
+                 let _this = this;
+                let newJson=[];
+                let abd = [] 
+                abd = _this.arrbiaoge1;
+                let patt1 = new RegExp(_this.searchLeft);
+                $.each(abd,function(index,val){
+                    let str=val.specName;
+                    let result = patt1.test(str);
+                    if(result){
+                        newJson.push(val);
+
+                    }
+                })
+                _this.arrbiaoge2[0].children = newJson
+                _this.componyTree = [];
+                setTimeout(function(){
+                   _this.componyTree = _this.arrbiaoge2 
+                })
             },
             tableData:{
                 handler: function (val, oldVal) {
-                        if(oldVal.length>0){
-                            // console.log(this.updateArray.length)
-                            if(this.updateArray.length == 0 && this.updateId==""){
-                             
-                                this.isUpdate=false
-                            }else if(this.addData1.createList.length == 0 && this.updateId !=""){
-                                this.statusButton(true,true,false) 
-                                this.isUpdate=true;
+                            let _this = this;
+                            if(!_this.isnewSave){
+                               _this.isnewSave = !_this.isnewSave
                             }else{
-                                this.isUpdate1=false;
+                               _this.statusButton(true,true,false) 
+                               _this.isUpdate = true; 
                             }
-                            if(this.updateArray.length==0){//判断是否为第一行修改的数据
-                                this.updateArray.push(this.updateId)
-                            }else{
-                                if(this.updateArray.indexOf(this.updateId)==-1){
-                                    this.updateArray.push(this.updateId)
-                                }else{
-                                    return
-                                } 
-                            }                           
-                        }  
                     },
                 deep: true
             }
@@ -368,6 +424,12 @@ import Btm from '../../base/btm1/btm'
                 this.addData1.createList=[];
                 this.updateId="";
             },
+            propertychange(row){
+                let _this = this;
+                if(row.id){
+                   _this.amendData.push(row); 
+                } 
+            },
             btmlog:function(data){
                 let _this=this;
                 if(data == '新增' ){
@@ -381,7 +443,7 @@ import Btm from '../../base/btm1/btm'
                         _this.statusButton(true,true,false) 
                         let newcol={
                             "groupId": 1,
-                            "specId": _this.value1,
+                            "specId": _this.value1.id,
                             "specValueCode": "",
                             "specValueName": "",
                             "seq": 0,
@@ -395,97 +457,62 @@ import Btm from '../../base/btm1/btm'
                         this.tableData.unshift(newcol);
                         this.addData1.createList.unshift(newcol); 
                     }
-                    
+                        
                 }else if(data == '新增保存'){
                     this.isSave=true;
                     let _this=this;
-                    if(_this.addData1.createList.length>0 && _this.isUpdate2){//新增保存
-
-                        for(let i in _this.addData1.createList){
-                            if(_this.addData1.createList[i].specValueCode==""||_this.addData1.createList[i].specValueName==""){
-                                this.$message({
-                                    message: '红色框内为必填项！',
-                                    type: 'error'
-                                });
-                                return;
-                            }
-                        }
-                        if(_this.addData1.createList.length==1){//单条新增
-                            _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.TreeNodeClick(_this.value1);
-                                _this.statusButton(false,false,true);
-                                _this.isUpdate=true; 
-                                _this.isUpdate2 = true;
-                                _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
-                                _this.isAdd=false
-                            },function(res){
-                                if(res && res!=''){
-                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
-                                    _this.dialogUserConfirm=false;
-                                    _this.errorMessage=true;
-                                }
-                            }); 
-                        }else{//批量新增 
-                            _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.TreeNodeClick(_this.value1);
-                                _this.statusButton(false,false,true) 
-                                _this.isUpdate=true;
-                                _this.isUpdate2 = true;
-                                _this.open('创建商品规格值成功','el-icon-circle-check','successERP');    
-                                _this.isAdd=false;
-                            },function(res){
-                                if(res && res!=''){
-                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
-                                    _this.dialogUserConfirm=false;
-                                    _this.errorMessage=true;
-                                }
-                            }); 
-                        }                    
-                    }else if( _this.isUpdate ){//修改保存
-                        if(_this.updateArray.length==1){//单条修改
-                            let updataIndex = -1;
-                            for(let i in _this.tableData){
-                                if(_this.updateArray[0]==_this.tableData[i].id){
-                                    updataIndex = i;
-                                    
-                                }
-                            }
-                            _this.tableData[updataIndex].status = 0
-                            _this.$axios.puts('/api/services/app/SpecValueManagement/Update',_this.tableData[updataIndex]).then(function(res){
-                                _this.TreeNodeClick(_this.value1);
-                                _this.isUpdate=false;
-                                _this.isUpdate2 = true;
-                                _this.statusButton(false,false,true) 
-                                _this.open('保存商品规格值成功','el-icon-circle-check','successERP');   
-                            },function(res){
-                                if(res && res!=''){
-                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
-                                    _this.dialogUserConfirm=false;
-                                    _this.errorMessage=true;
-                                }
+                    for(let i=0;i<_this.addData1.createList.length;i++){
+                        if(_this.addData1.createList[i].specValueCode==""||_this.addData1.createList[i].specValueName==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'error'
                             });
-                        }else{//批量修改
-                           _this.addData1.createList.splice(0,_this.addData1.createList.length);
-                            _this.addData1.updateList=_this.tableData;
-                            _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
-                                _this.TreeNodeClick(_this.value1);
-                                _this.isUpdate2 = true;
-                                _this.isUpdate=false;
-                                _this.statusButton(false,false,true) 
-                                _this.open('保存商品规格值成功','el-icon-circle-check','successERP');    
-                                _this.isAdd=false
-                            },function(res){
-                                if(res && res!=''){
-                                    _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
-                                    _this.dialogUserConfirm=false;
-                                    _this.errorMessage=true;
-                                }
-                            }); 
+                            return;
                         }
+                    }
+                    function unique3(add){
+                     var res = [];
+                     var json = {};
+                     for(var i = 0; i < add.length; i++){
+                      if(!json[add[i].id]){
+                       res.push(add[i]);
+                       json[add[i].id] = 1;
+                      }
+                     }
+                     return res;
+                    }
+                    if(_this.isUpdate){
+                        if(_this.isaddbutton ){
+                            for(let j=0;j<_this.SelectionChange.length;j++){
+                                _this.amendData.push(_this.SelectionChange[j])
+                            }
+                            _this.isaddbutton = false;
+                        }
+                        
+                       _this.addData1.updateList= unique3(_this.amendData);
+                        _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
+                            _this.isUpdate=false;
+                            _this.TreeNodeClick(_this.value1,false);
+                            _this.isUpdate2 = true;
+                            
+
+                            _this.amendData = [];
+                            _this.addData1.createList = [];
+                            _this.isnewSave = false;
+                            _this.statusButton(false,false,true) 
+                            _this.open('保存商品规格值成功','el-icon-circle-check','successERP');    
+                        },function(res){
+                            if(res && res!=''){
+                                _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors);
+                                _this.dialogUserConfirm=false;
+                                _this.errorMessage=true;
+                            }
+                        }); 
                     }
                 }else if(data == '取消'){
                     if(_this.bottonbox.botton[2].increased ){
-                        this.TreeNodeClick(_this.value1);
+                        _this.isUpdate = false;
+                        this.TreeNodeClick(_this.value1,false);
                         _this.statusButton(false,false,true) 
                     }   
                 }else if(data == '删除'){
@@ -515,6 +542,7 @@ import Btm from '../../base/btm1/btm'
                     _this.statusButton(true,true,false) 
                     _this.isUpdate2 = false;
                     this.isUpdate=true;
+                    _this.isaddbutton = true;
                     let handleArray=[];
                     if(this.SelectionChange.length>0){
                         this.isUpdate=true;
@@ -538,6 +566,7 @@ import Btm from '../../base/btm1/btm'
                 }else if(data == '停用'){
                     _this.statusButton(true,true,false) 
                     _this.isUpdate2 = false;
+                    _this.isaddbutton = true;
                     this.isUpdate=true;
                     let handleArray=[];
                     if(this.SelectionChange.length>0){
@@ -637,34 +666,29 @@ import Btm from '../../base/btm1/btm'
             },
             handleCurrentChange(val){
                 let _this = this;
-                // _this.pageIndex 
-                _this.currentPage = val;
-                console.log(_this.pageIndex)
-                if(_this.value1 == ''){
-                   _this.loadTableData(); 
-               }else{
-                    _this.TreeNodeClick1(_this.value1)
-               }
+                if(val == _this.currentPage){
+                    return ;
+                }else{
+                   if(_this.isUpdate){
+                        _this.dialogUserConfirm2 = true;
+                        _this.value3 = val;
+                        _this.ispage = true;
+                        
+                    }else{
+                        _this.currentPage = val;
+                        _this.TreeNodeClick(_this.value1,false) 
+                    } 
+                }
+                
+                
             },
             loadTableData(){
                 let _this=this;
-                _this.tableLoading=true;
-                _this.$axios.gets('http://192.168.100.107:8082/api/services/app/SpecValueManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
-                    _this.tableData=res.result.items;
-                    for(let i=0;i<_this.tableData.length;i++){
-                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
-                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
-                    }
-                    _this.tableLoading = false;
-                    _this.totalItem=res.result.totalCount;
-                    _this.Init();
-                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
-                  
-                })
                 _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){ 
                     let totalAll = res.result.totalCount;
                     if(totalAll > 0){
                         _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:totalAll}).then(function(res){
+
                             _this.selectData.userGroupId=res.result.items;
                             // console.log(_this.selectData.userGroupId)
                         })
@@ -677,38 +701,88 @@ import Btm from '../../base/btm1/btm'
                     _this.treeLoading=true;
                     _this.$axios.gets('/api/services/app/SpecManagement/GetSpecTree')
                     .then(function(res){
-                        _this.componyTree=res.result;
+                        _this.componyTree = res.result;
+                        _this.arrbiaoge2 = res.result;
+                        _this.arrbiaoge1 = res.result[0].children;
                         _this.treeLoading=false;
-                        _this.loadIcon();
+                        // _this.loadIcon();
                 },function(res){
                     _this.treeLoading=false;
                 })
             },
-            TreeNodeClick(data){//树节点点击回调
-                let _this=this; 
-                _this.pageIndex = 0
-                _this.tableLoading=true;
-                _this.currentPage = 1;
-                _this.isaddac = false;
-                if(data.id == 0 || data.id){
-                   _this.value1 = data.id; 
+            affirm(){
+                let _this = this;
+                if(_this.ispage){
+                    _this.ispage = false;
+                    _this.isUpdate = false;
+                    _this.currentPage = _this.value3;
+                    _this.statusButton(false,false,true) 
+                    _this.TreeNodeClick(_this.value1,false) 
+                    _this.dialogUserConfirm2 = false;
                 }else{
-                    _this.value1 = data;
+                    _this.dialogUserConfirm2 = false;
+                    _this.isUpdate = false;
+                    _this.statusButton(false,false,true) 
+                    _this.TreeNodeClick(_this.value2,false) 
                 }
-                _this.ifTreeNode = true;
-
-                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
-                    _this.tableData = res.result.items ;
-                    _this.tableLoading = false;
-                    for(let i=0;i<_this.tableData.length;i++){
-                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
-                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
-                    }
-                    _this.Init();
-                    _this.totalItem=res.result.totalCount;
-                    // _this.Init();
-                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
+                
+            },
+            sureDoing(){
+                let _this = this;
+                if(_this.ispage){
+                    _this.ispage = false;
+                    $('.text-right .number').eq(_this.currentPage - 1).click()
+                    _this.dialogUserConfirm2 = false;
+                }else{
+                    _this.dialogUserConfirm2 = false;
+                    _this.loadCheckSelect('propertyParentid',_this.value1.id)  
+                }
+            },
+            loadCheckSelect(selectName,key){
+                let _this=this;
+                _this.$nextTick(function () { 
+                     console.log($('.'+selectName+' .el-tree-node__label').length)
+                    $('.'+selectName+' .el-tree-node__label').each(function(){
+                         if($(this).attr('data-id')==key){
+                            $(this).click()
+                        }
+                    })
                 })
+            },
+            TreeNodeClick(data,val){//树节点点击回调
+                let _this=this; 
+                
+                if(val.key == _this.value1.id && _this.isUpdate){
+                    return ; 
+                }else{
+                   if(_this.isUpdate){
+                        _this.dialogUserConfirm2 = true;
+                        _this.value2 = data
+                    }else{
+                        _this.tableLoading=true;
+                        _this.isaddac = false;
+                        _this.isnewSave = false;
+                        
+                        _this.value1 = data;
+                       
+                        _this.ifTreeNode = true;
+
+                        _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
+                            _this.tableData = res.result.items ;
+                            _this.tableLoading = false;
+                            for(let i=0;i<_this.tableData.length;i++){
+                                _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                                _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                            }
+                            _this.Init();
+                            _this.totalItem=res.result.totalCount;
+                            // _this.Init();
+                            _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
+                        })
+                    } 
+                }
+                
+                
             },
             TreeNodeClick1(data){//树节点点击回调
                 let _this=this; 
@@ -731,6 +805,9 @@ import Btm from '../../base/btm1/btm'
                     _this.totalItem=res.result.totalCount;
                     // _this.Init();
                     _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                 })
             },
             loadIcon(){
@@ -744,6 +821,14 @@ import Btm from '../../base/btm1/btm'
                             $(this).prepend('<i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>')
                         }
                     })
+                })
+            },
+             getHeight(){
+                 $(".tree-container").css({
+                    height:parseInt($('.bg-white').css('height'))-138+'px'
+                })
+                $(".border-left").css({
+                    height:$('.bg-white').css('height')
                 })
             },
             rowClick(row){//获取行id
@@ -789,7 +874,24 @@ import Btm from '../../base/btm1/btm'
                 this.bottonbox.botton[1].increased = a;
                 this.bottonbox.botton[2].increased = b;
                 this.bottonbox.botton[3].increased = c;
-            }
+            },
+            renderContent_moduleParentId(h, { node, data, store }){
+                if(typeof(data.childNodes)!='undefined' && data.childNodes!=null && data.childNodes.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.specName}
+                        </span>
+                    );
+                }else{
+                     return (
+                        <span class="el-tree-node__label" data-id={data.id}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.specName}
+                        </span>
+                    );
+                }
+            }, 
         },
         components:{
             Query,

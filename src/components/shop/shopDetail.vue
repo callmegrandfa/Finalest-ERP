@@ -717,18 +717,24 @@ export default({
                 console.log('err'+res)
             });
 
-            //行政地区
-            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
-                console.log(res);
+            //---获取行政地区省级下拉框--------
+            self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:0}).then(function(res){
+                // console.log(res);
                 self.areaProArray = res.result;
                 // self.loadIcon();
             },function(res){
                 console.log('err'+res)
             });
 
-            
-            
-            
+            // //行政地区
+            // self.$axios.gets('/api/services/app/AdAreaManagement/GetListByLevelNo',{LevelNo:1}).then(function(res){
+            //     console.log(res);
+            //     self.areaProArray = res.result;
+            //     // self.loadIcon();
+            // },function(res){
+            //     console.log('err'+res)
+            // });
+
             //店铺性质
             self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'ShopWorkProperty'}).then(function(res){
                 console.log(res);
@@ -1152,6 +1158,7 @@ export default({
             let self = this;
             self.$axios.gets('/api/services/app/AdAreaManagement/GetListByAdAreaId',{ParentId:id}).then(function(res){
                 // console.log(res);
+                
                 self.areaDisArray = res.result;
                 // self.loadIcon();
             },function(res){
@@ -1160,7 +1167,7 @@ export default({
         },
         chooseDis:function(){
             let self = this;
-            console.log(self.createRepositoryParams.stock_MainTable.adAreaId)
+            console.log(self.createShopParams.adAreaId)
         },
         //-----------------------------------------------------
         //---提示错误-------------------------------------------

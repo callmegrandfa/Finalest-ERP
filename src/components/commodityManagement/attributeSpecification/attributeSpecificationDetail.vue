@@ -39,19 +39,22 @@
         </el-row>   
         <el-row class="bg-white">
             <el-col :span="5">
-                <vue-scroll :ops='$store.state.option'>
-                    <el-tree v-loading="treeLoading" 
-                        :data="componyTree"
-                        :default-expanded-keys="expandId"
-                        :props="defaultProps"
-                        node-key="id"
-                        :render-content="renderContent"
-                        ref="tree"
-                        :expand-on-click-node="false"
-                        @node-click="nodeClick">
-                    </el-tree>
-                </vue-scroll>
+                <el-col :span="24" class="tree-container transfer_fixed">
+                    <vue-scroll :ops='$store.state.option'>
+                        <el-tree v-loading="treeLoading" 
+                                :data="componyTree"
+                                :default-expanded-keys="expandId"
+                                :props="defaultProps"
+                                node-key="id"
+                                :render-content="renderContent"
+                                ref="tree"
+                                :expand-on-click-node="false"
+                                @node-click="nodeClick">
+                        </el-tree>
+                    </vue-scroll>
+                </el-col>
             </el-col>
+
             <el-col :span="19" class="bg-gray">
                 <el-row class="section-style bg-gray-in pl10">
                     <el-row>
@@ -324,8 +327,8 @@ export default({
         let self = this;
         self.loadDefault();
         self.loadTree();
-        self.loadAttribute(self.categoryId);
-        self.loadSpec(self.categoryId);
+        self.loadAttribute();
+        self.loadSpec();
     },
     watch: {
         //-----------属性------------------------------------------------------------------
@@ -350,19 +353,6 @@ export default({
             deep: true,
         },
 
-        attRightOnePageData:{
-            handler:function(val,oldVal){
-                let self = this;
-                if(self.attRightOnePageData.length<=self.onePageShow){
-                    if(self.rightPageIndex == 1){
-
-                    }else if(self.rightPageIndex>1){
-
-                    }
-                }
-            },
-            deep:true,
-        },
         rightPageIndex:{//监听属性右侧列表的下标变化
             handler:function(val,oldVal){
                 let self = this;
@@ -413,8 +403,8 @@ export default({
                     for(let i = (self.leftPageIndex-1)*self.onePageShow;i<self.leftPageIndex*self.onePageShow;i++){
                         self.attLeftOnePageData.push(self.attributeChooseData[i])
                     }
-                    
-                }
+                };
+                // for(let i in self.attributeChooseData)
             },
             deep:true,
         },
@@ -455,6 +445,13 @@ export default({
             },
             deep:true,
         },
+        // attData:{
+        //     handler:function(){
+        //         let self = this;
+        //         self.attributeChooseData = self.attData;
+        //     },
+        //     deep:true,
+        // },
         //-----------规格------------------------------------------------------------------
         specAllData:{//监听规格右侧列表的总数据变化
             handler:function(val,oldVal){
@@ -566,12 +563,20 @@ export default({
             },
             deep:true,
         },
+        // specData:{
+        //     handler:function(){
+        //         let self = this;
+        //         self.specChooseData = self.specData;
+        //     },
+        //     deep:true,
+        // },
     },
     data() {
         return{
             defaultGroupId:'',
             categoryId:'',
             categoryName:'',
+            categoryFeatureId:'',//从表有数据的情况下的类目特征id
             ifInherit:false,//继承规格属性到子类目
             ifOne:false,//唯一码管理
             ifBatch:false,//批次管理
@@ -673,7 +678,7 @@ export default({
             let self=this;
             self.$axios.gets('/api/services/app/OuManagement/GetWithCurrentUser').then(function(res){
                 console.log(res)
-                self.defaultGroupId = res.result.defaultGroupId;
+                self.defaultGroupId = res.result.groupId;
             },function(res){
                 self.treeLoading=false;
             })
@@ -695,23 +700,50 @@ export default({
         //-------------------------
 
         //---加载表格数据-----------
-        loadTableAtt:function(id){//属性表格已有数据
+        loadTableAtt:function(id1,id2){//属性表格已有数据
             let self = this;
-            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id,ItemType:'1'}).then(function(res){
+            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id1,ItemType:'1',CategoryFeatureId:id2}).then(function(res){
                 console.log(res)
                 if(res.result&&res.result.length>0){
-                    self.attData = res.result;
+                    let x = res.result;
+                    for(let i in x){
+                        self.attData.push({
+                            id:x[i].id,
+                            groupId:x[i].groupId,
+                            itemSourceId:x[i].itemSourceId,
+                            itemType:x[i].itemType,
+                            categoryFeatureId:self.categoryFeatureId,
+                            propertyCode:x[i].propertyCode,
+                            propertyName:x[i].propertyName,
+                            statusTValue:x[i].statusTValue
+                            
+                        })
+                    }
+                    // self.attData = res.result;
                 }
             },function(res){
 
             })
         },
-        loadTableSpec:function(id){//规格表格已有数据
+        loadTableSpec:function(id1,id2){//规格表格已有数据
             let self = this;
-            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id,ItemType:'2'}).then(function(res){
+            self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:id1,ItemType:'2',CategoryFeatureId:id2}).then(function(res){
                 console.log(res)
                 if(res.result&&res.result.length>0){
-                    self.specData = res.result;
+                    let x = res.result;
+                    for(let i in x){
+                        self.specData.push({
+                            id:x[i].id,
+                            groupId:x[i].groupId,
+                            itemSourceId:x[i].itemSourceId,
+                            itemType:x[i].itemType,
+                            categoryFeatureId:self.categoryFeatureId,
+                            specCode:x[i].specCode,
+                            specName:x[i].specName,
+                            statusTValue:x[i].statusTValue
+                        })
+                    }
+                    // self.specData = res.result;
                 }
             },function(res){
                 
@@ -720,11 +752,22 @@ export default({
         //-------------------------
 
         //---属性弹窗内右侧表格数据--
-        loadAttribute:function(id){//商品属性
+        loadAttribute:function(){//商品属性
             let self = this;
             self.$axios.gets('/api/services/app/PropertyManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
                 console.log(res);
-                self.attributeAllData = res.result.items;
+                let x = [];
+                x = res.result.items;
+                for(let i in x){
+                    self.attributeAllData.push({
+                        itemSourceId:x[i].id,
+                        groupId:x[i].groupId,
+                        propertyCode:x[i].propertyCode,
+                        propertyName:x[i].propertyName,
+                        statusTValue:x[i].statusTValue
+                    })
+                }
+                // self.attributeAllData = res.result.items;
                 self.totalPageRightAtt = Math.ceil(res.result.totalCount/self.onePageShow);
             },function(res){
                 console.log('err'+res)
@@ -733,10 +776,10 @@ export default({
         //-------------------------
 
         //---规格弹窗内右侧表格数据--
-        loadSpec:function(id){//商品规格
+        loadSpec:function(){//商品规格
             let self = this;
             self.$axios.gets('/api/services/app/SpecManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
-                // console.log(res);
+                console.log(res);
                 self.specAllData = res.result.items;
                 self.totalPageRightSpec = Math.ceil(res.result.totalCount/self.onePageShow);
             },function(res){
@@ -749,6 +792,7 @@ export default({
         save:function(){
             // self.attData.push({propertyName:x[i].propertyName,propertyCode:x[i].propertyCode,itemSourceId:x[i].itemSourceId,itemType:x[i].itemType,statusTValue:x[i].statusTValue,id:x[i].id});
             let self = this;
+            // console.log(self.defaultGroupId)
             self.submitData.categoryFeature_MainTable.groupId = self.defaultGroupId;
             self.submitData.categoryFeature_MainTable.categoryId = self.categoryId;
             self.submitData.categoryFeature_MainTable.uniqueCodeMgt = self.ifOne;
@@ -756,12 +800,21 @@ export default({
             self.submitData.categoryFeature_MainTable.validityMgt = self.ifPeriod;
             self.submitData.categoryFeature_MainTable.attributeInherited = self.ifInherit;
             // console.log(12)
-            for(let i in self.attData){
-                self.submitData.categoryFeatureItem_ChildTable.push(self.attData[i])
-            }
+            self.submitData.categoryFeatureItem_ChildTable = self.attData;
+            // for(let i in self.attData){
+                // self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.attData[i].id,
+                // itemType:'1',
+                // categoryFeatureId:self.submitData.categoryFeature_MainTable.id,
+                // groupId:self.defaultGroupId})
+            // }
+            console.log(self.submitData.categoryFeatureItem_ChildTable)
             // 
             for(let i in self.specData){
-                self.submitData.categoryFeatureItem_ChildTable.push(self.specData[i])
+                self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.specData[i].id,
+                itemType:'2',
+                categoryFeatureId:self.submitData.categoryFeature_MainTable.id,
+                groupId:self.defaultGroupId,
+                id:self.specData[i].id})
             }
             console.log(self.submitData)
             self.$axios.posts('/api/services/app/CategoryFeatureManagement/AggregateCreateOrUpdate',self.submitData).then(function(res){
@@ -1029,7 +1082,29 @@ export default({
         },
         surePushAttr:function(){
             let self = this;
-            self.attData = self.deepCopy(self.attributeChooseData);
+            let x = [];
+            x = self.deepCopy(self.attributeChooseData);
+            let y = [];
+            for(let i in x){
+                // x[i].itemSourceId = x[i].id;
+                y.push({
+                    id:0,
+                    groupId:x[i].groupId,
+                    itemSourceId:x[i].itemSourceId,
+                    itemType:1,
+                    categoryFeatureId:self.categoryFeatureId,
+                    propertyCode:x[i].propertyCode,
+                    propertyName:x[i].propertyName,
+                    statusTValue:x[i].statusTValue
+                })
+            };
+            
+            console.log(y)
+            for(let i in y){
+                self.attData.push(y[i])
+            }
+            console.log(self.attData)
+            
             self.dislogAttribute =false;
             
         },
@@ -1042,7 +1117,27 @@ export default({
         },
         surePushSpec:function(){
             let self = this;
-            self.specData = self.deepCopy(self.specChooseData);
+            let x = [];
+            x = self.deepCopy(self.specChooseData);
+            let y = [];
+            for(let i in x){
+                y.push({
+                    id:0,
+                    groupId:x[i].groupId,
+                    itemSourceId:x[i].itemSourceId,
+                    itemType:1,
+                    categoryFeatureId:self.categoryFeatureId,
+                    specCode:x[i].specCode,
+                    specName:x[i].specName,
+                    statusTValue:x[i].statusTValue
+                })
+            }
+
+            for(let i in y){
+                self.specData.push(y[i])
+            }
+            console.log(self.specData)
+            // self.specData = self.deepCopy(self.specChooseData);
             self.dislogSpec =false;
             
         },
@@ -1052,13 +1147,15 @@ export default({
         handleAttDelete:function(index,row){
             let self = this;
             self.attData.splice(index,1);
-            self.attributeChooseData.splice(index,1);
+            // console.log(123)
+            console.log(self.attData)
+            // self.attributeChooseData.splice(index,1);
             self.attributeAllData.push(row);
         },
         handleSpecDelete:function(index,row){
             let self = this;
             self.specData.splice(index,1);
-            self.specChooseData.splice(index,1);
+            // self.specChooseData.splice(index,1);
             self.specAllData.push(row);
         },
         //-----------------------
@@ -1102,21 +1199,26 @@ export default({
             self.categoryName = data.categoryName;
             //---获取主表数据-------
             self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.id}).then(function(res){
+                // console.log(123)
+                console.log(res)
                 if(res&&res.result){
                     self.ifInherit = res.result.attributeInherited;
                     self.ifOne = res.result.uniqueCodeMgt; 
                     self.ifBatch = res.result.lotMgt;
                     self.ifPeriod = res.result.validityMgt;
                     self.submitData.categoryFeature_MainTable.id = res.result.id;
+                    self.categoryFeatureId = res.result.id;
+                    //---获取从表数据-------
+                    self.loadTableAtt(self.categoryId,res.result.id);
+                    self.loadTableSpec(self.categoryId,res.result.id)
+                    //---------------------
                 }
                 
             },function(res){
                 console.log(self.submitData.categoryFeature_MainTable.id)
+                self.categoryFeatureId = self.submitData.categoryFeature_MainTable.id;
             })
-            //---获取从表数据-------
-            self.loadTableAtt(data.id);
-            self.loadTableSpec(data.id)
-            //---------------------
+            
         },
         //------------------------
 
