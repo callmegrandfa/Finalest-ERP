@@ -456,7 +456,7 @@
                         </template>
                     </el-table-column>
                 </el-table> 
-            </el-col>
+          
         </el-row>
 
         <el-row class="ft12 pr10 pt10 br3">

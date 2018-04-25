@@ -17,7 +17,6 @@
                             <div class="bgcolor smallBgcolor">
                                 <el-select 
                                 class="areaParentId" 
-                                :class="{redBorder : validation.hasError('addItem.categoryParentid')}" 
                                 v-model="addItem.categoryParentid"
                                 placeholder="">
                                 <!-- <input type="text" class="selectTree"> -->
@@ -44,7 +43,7 @@
                             </div>
                         </el-col>
                         <el-col :span="2">
-                            <div class="error_tips">{{ validation.firstError('addItem.categoryParentid') }}</div>
+                            <!-- <div class="error_tips">{{ validation.firstError('addItem.categoryParentid') }}</div> -->
                         </el-col>
                     </el-row>
                     <el-row type="flex" justify="center" class="mt10">
@@ -146,7 +145,7 @@
                         <el-row>
                             <el-col :span="8">
                                 <div class="bgcolor smallBgcolor">
-                                        <label ><small>*</small>创建人</label>
+                                    <label ><small>*</small>创建人</label>
                                </div>
                             </el-col>
                             <el-col :span="13">
@@ -165,11 +164,19 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="bgcolor smallBgcolor">
-                                    <el-input
+                                    <el-date-picker
+                                    v-model="addItem.createdTime"
+                                    type="date"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    disabled
+                                    placeholder="">
+                                    </el-date-picker>
+                                    <!-- <el-input
                                     :disabled="isDisabled"
                                     v-model="addItem.createdTime"
                                     placeholder="选择日期时间">
-                                    </el-input>
+                                    </el-input> -->
                                 </div>
                             </el-col>
                         </el-row> 
@@ -197,10 +204,18 @@
                             </el-col>
                             <el-col :span="13">
                                 <div class="bgcolor smallBgcolor" >
-                                    <el-input
+                                    <el-date-picker
+                                    v-model="addItem.modifiedTime"
+                                    type="date"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    disabled
+                                    placeholder="">
+                                    </el-date-picker>
+                                    <!-- <el-input
                                     :disabled="isDisabled"
                                     v-model="addItem.modifiedTime">
-                                    </el-input>
+                                    </el-input> -->
                                 </div>
                             </el-col>
                         </el-row> 
@@ -311,19 +326,19 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
             }
         },
         created(){
-            this.loadTree();
-            this.InitModify();
             if(this.$route.params.id=="default"){
                 this.isAdd=true;
+                this.loadTree();
                 //this.buttonGroup[3].disabled=false;
             }else{
+                this.InitModify();
                 //this.buttonGroup[3].disabled=true;
             }
         },
         validators: {
-            'addItem.categoryParentid': function (value) {//上级商品类目
-                return this.Validator.value(value).required().maxLength(50);
-            },
+            // 'addItem.categoryParentid': function (value) {//上级商品类目
+            //     return this.Validator.value(value).required().maxLength(50);
+            // },
             'addItem.categoryCode': function (value) {//商品类目编码
                 return this.Validator.value(value).required().maxLength(50);
             },
@@ -406,7 +421,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                 if(_this.$route.params.id=="default"){
                     return;
                 }else{
-                    _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
+                    _this.$axios.gets('/api/services/app/CategoryManagement/Get',{Id:_this.$route.params.id}).then(function(res){
                         _this.changeTimes=0;
                         _this.updateId=res.result.id;
                         _this.treeNode.categoryParentid=res.result.categoryParentid;
@@ -428,9 +443,18 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                  
             },
             InitCategoryid(){//设置默认商品类目
-                this.treeNode.categoryParentid=this.classTree[0].id;
-                this.treeNode.categoryName=this.classTree[0].categoryName;
-                this.addItem.categoryParentid=this.classTree[0].id;
+                if(this.$route.query.CategoryId==""){
+                    this.treeNode.categoryParentid=this.classTree[0].id;
+                    this.treeNode.categoryName=this.classTree[0].categoryName;
+                    this.addItem.categoryParentid=this.classTree[0].id;
+                }else if(this.$route.query.CategoryId!=""){
+                    this.treeNode.categoryParentid=this.$route.query.CategoryId;
+                    this.treeNode.categoryName=this.$route.query.CategoryName;
+                    this.addItem.categoryParentid=this.$route.query.CategoryId;
+                }else if(this.$route.params.id=="default"){
+                    return
+                }
+                
             },
             loadTree(){//获取tree data
                     let _this=this;
@@ -438,13 +462,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                     _this.$axios.gets('http://192.168.100.107:8082/api/services/app/CategoryManagement/GetCategoryTree')
                     .then(function(res){
                         _this.classTree=res;
-                        if(_this.$route.query.CategoryId==""){
-                            _this.InitCategoryid();
-                        }else{
-                            _this.treeNode.categoryParentid=_this.$route.query.CategoryId;
-                            _this.treeNode.categoryName=_this.$route.query.CategoryName;
-                            _this.addItem.categoryParentid=_this.$route.query.CategoryId;
-                        }
+                        _this.InitCategoryid();
                         _this.loadIcon();
                         _this.treeLoading=false;
                 },function(res){
@@ -501,7 +519,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                     _this.$set(updateData, 'id', _this.updateId);
                     _this.$axios.puts('/api/services/app/CategoryManagement/Update',updateData).then(function(res){
                         //_this.InitModify();
-                        _this.InitCategoryid();
+                        //_this.InitCategoryid();
                         _this.validation.reset();
                         _this.isEdit=true;
                         _this.changeTimes=0;
@@ -542,6 +560,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                         }else{
                             this.InitModify();
                         }
+                        this.changeTimes=0;
                         this.buttonGroup[2].disabled=true;
                         this.buttonGroup[3].disabled=true;
                         this.dialogVisible=false; 
@@ -551,8 +570,9 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                             _this.$store.state.url='/commodityleimu/commodityClassHeading/default'
                             _this.$router.push({path:_this.$store.state.url})//点击切换路由
                             _this.open('删除成功','el-icon-circle-check','successERP'); 
-                            _this.delDialog=false;  
+                            _this.dialogVisible=false; 
                         }).catch(function(err){
+                            _this.dialogVisible=false;  
                             _this.$message({
                                 type: 'warning',
                                 message: err.error.message

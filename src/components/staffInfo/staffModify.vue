@@ -121,8 +121,14 @@
                                         :expand-on-click-node="false" @node-click="nodeClick_depart"
                                         class="filter-tree">
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
+                                        <!-- <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option> -->
+                                         <!-- 用计算属性 -->
+                                        <el-option v-show="false"
+                                       :key="countDepart.id" 
+                                       :label="countDepart.name" 
+                                       :value="countDepart.id"
+                                       id="staff_confirmSelect"></el-option>
                             </el-select>
                         </div>
                     </div>    
@@ -294,6 +300,10 @@
                     label: 'name',
                     id:'id'
                 },
+                departItem:{
+                    id:'',
+                    name:'',
+                },
                 // ------------------提示框数据
                 dialogUpdateConfirm:false,//信息更改提示控制
                 dialogDeleteConfirm:false,//删除信息提示控制
@@ -327,7 +337,7 @@
             this.getDataList();
             this.getSelectData();
             this.loadTree();
-            this.loadDepartTree();
+            // this.loadDepartTree();
         },
         watch: {
             addData:{
@@ -343,6 +353,11 @@
             }
 
         },
+        computed:{
+            countDepart () {
+                return this.departItem;
+            },
+        }, 
         methods: {
             // -------------------------提示信息
             showErrTips(e) {// 表单错误提示信息
@@ -413,6 +428,12 @@
                         _this.timeData.createdTime=rsp.result.createdTime;
                         _this.timeData.modifiedBy=rsp.result.modifiedBy;
                         _this.timeData.modifiedTime=rsp.result.modifiedTime;
+                        // -------组织（公司）的默认部门
+                        _this.ouId=rsp.result.ouId;
+                        console.log(rsp.result.ouId);
+                        
+                        _this.loadDepartTree();
+                        _this.getSelectDepart();
                     });
             },
             //---------------------------获取下拉框选项数据
@@ -510,16 +531,20 @@
                 return data.deptName.indexOf(value) !== -1;
             },
             nodeClick_depart(data,node,self){//所属部门树形控件的回调
-                        let _this=this;
-                        // console.log(data);
-                        console.log(data.id);
-                        $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                            if($(this).attr('date')==data.id){
-                                $(this).click()
-                            }
-                        });
-                        _this.getSelectDepart();
-                        _this.loadDepartTree();
+                let _this=this;
+                // console.log(data);
+                // console.log(data.id);
+                _this.departItem.id=data.id;
+                _this.departItem.name=data.name;
+                self.$nextTick(function(){
+                    $('#staff_confirmSelect').click()
+                })
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //          $(this).click()
+                //     }
+                // });
+                       
             },
             // --------------------------------按钮组功能
             // --------------返回功能

@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="adstrArea-wrapper">
         <el-row class="bg-white">
             <!-- 左侧输入框与树形控件 -->
@@ -47,7 +47,7 @@
             <!-- 右边数据列表 -->
             <el-col :span='19' class="border-left" id="adminTable">
                 <!-- 按钮组 -->
-                <el-row class="h48 pt5">
+                <el-row class="h48 pt5 fixed colorWhite" >
                     <button @click="goAdd" class="erp_bt bt_add">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_add.png">
@@ -307,8 +307,7 @@
                         _this.totalCount=rsp.result.totalCount;
                         _this.totalPage=Math.ceil(rsp.result.totalCount/_this.pageSize);
                         _this.$nextTick(function(){
-                            console.log('1314');
-                            
+                            // console.log('1314');
                             _this.getHeight()
                         })
                     },
@@ -322,7 +321,7 @@
             },
             getHeight(){
                  $(".tree-container").css({
-                    height:parseInt($('.bg-white').css('height'))-48+'px'
+                    height:parseInt($('.border-left').css('height'))-48+'px'
                 })
                 $(".border-left").css({
                     height:$('.bg-white').css('height')
@@ -536,6 +535,9 @@
 </script>
 
  <style scoped>
+    .colorWhite{
+        background-color: #fff;
+    }
     .error_tips{
         height: 15px;
         line-height: 15px;

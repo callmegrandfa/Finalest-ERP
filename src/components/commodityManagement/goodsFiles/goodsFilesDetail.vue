@@ -1865,7 +1865,7 @@ export default {
             let _this=this;
             _this.$axios.gets('/api/services/app/Role/GetOuAssignTree',{Id:0})
             .then(function(res){
-                console.log(res)
+                // console.log(res)
                 _this.ouTreeDataRight=res.result;
                 _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
             },function(res){

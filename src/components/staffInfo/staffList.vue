@@ -68,8 +68,14 @@
                                         @node-click="nodeClick_depart"
                                         >
                                         </el-tree>
-                                        <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
-                                        </el-option>
+                                        <!-- <el-option v-show="false" v-for="item in selectData.depart" :key="item.id" :label="item.name" :value="item.id" :date="item.id">
+                                        </el-option> -->
+                                        <!-- 用计算属性 -->
+                                        <el-option v-show="false"
+                                       :key="countDepart.id" 
+                                       :label="countDepart.name" 
+                                       :value="countDepart.id"
+                                       id="staff_confirmSelect"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="所属店铺">
@@ -107,7 +113,7 @@
                         </el-col>
                         
                         <el-col :span="22" class="border-left">
-                            <!-- <el-row> -->
+                            <el-row>
                                 <!-- 按钮组 -->
                             <div>
                                 <el-col :span="17" class="pt5">
@@ -145,19 +151,21 @@
                                             <span class="btDetail">打印</span>
                                     </button>
                                 </el-col>
-                                <el-col :span="5">
-                                    <div class="search-input">
-                                        <el-input placeholder="搜索..." prefix-icon="el-icon-search"
-                                        v-model="searchContent" @change="searchTable">
-                                        </el-input>
-                                    </div>
-                                </el-col>
-                                <el-col :span="1" class="defineBtn">
-                                    <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
-                                </el-col>
+                                <div>
+                                    <el-col :span="5">
+                                        <div class="search-input">
+                                            <el-input placeholder="搜索..." prefix-icon="el-icon-search"
+                                            v-model="searchContent" @change="searchTable">
+                                            </el-input>
+                                        </div>
+                                    </el-col>
+                                    <el-col :span="1" class="defineBtn">
+                                        <el-button round size="mini" icon="el-icon-setting" disabled>自定义</el-button>
+                                    </el-col>
+                                </div>
                             </div>
                                 
-                            <!-- </el-row> -->
+                            </el-row>
                         </el-col>
                     </div>
                 </el-row> 
@@ -291,6 +299,10 @@
                     label: 'name',
                     id:'id'
                 },
+                departItem:{
+                    id:'',
+                    name:'',
+                },
                 allList: [], //所有数据
                 //--------------确认删除开始-----------------               
                 dialogUserConfirm:false,//用户删除保存提示信息
@@ -384,6 +396,11 @@
             filterDepart(val) {
                 this.$refs.tree.filter(val);
             },
+        },
+        computed:{
+            countDepart () {
+                return this.departItem;
+                },
         },
         methods: {
             getAllList() {// 获取所有数据
@@ -532,15 +549,18 @@
                 let _this=this;
                 // console.log(data);
                 // console.log(data.id);
-                _this.ouId=data.id;
-                // console.log(_this.ouId);
-                $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
-                    if($(this).attr('date')==data.id){
-                        $(this).click()
-                    }
-                });
-                // _this.getSelectDepart();
-                // _this.loadDepartTree();
+
+                _this.departItem.id=data.id;
+                _this.departItem.name=data.name;
+                self.$nextTick(function(){
+                    $('#staff_confirmSelect').click()
+                })
+
+                // $(self.$el).parents('.el-select-dropdown__list').children('.el-select-dropdown__item').each(function(index){
+                //     if($(this).attr('date')==data.id){
+                //         $(this).click()
+                //     }
+                // });
             },
             // 左侧搜索展开--------------------------------
             closeLeft: function() {
@@ -671,6 +691,9 @@
 </script>
 
  <style scoped>
+    .colorWhite{
+        background-color: #fff;
+    }
     .bg_White {
         background: white;
         border-radius: 3px;
