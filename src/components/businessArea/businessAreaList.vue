@@ -314,7 +314,13 @@
                         let item={'value':value.areaName,'id':value.id};
                         _this.restaurants.push(item)
                     })
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     },function(res){
+                    _this.$nextTick(function(){
+                        _this.getHeight()
+                    })
                     _this.tableLoading=false;
                 })
             },
@@ -334,15 +340,15 @@
                 .then(function(res){
                     _this.componyTree=res.result
                     _this.treeLoading=false;
-                    _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                    // _this.$nextTick(function(){
+                    //     _this.getHeight()
+                    // })
                     _this.expandId=_this.defauleExpandTree(res.result,'id')
                },function(res){
                    _this.treeLoading=false;
-                   _this.$nextTick(function(){
-                        _this.getHeight()
-                    })
+                //    _this.$nextTick(function(){
+                //         _this.getHeight()
+                //     })
                })
             },
             handleCurrentChange(val) {//页码改变
