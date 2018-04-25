@@ -23,7 +23,7 @@ abbr,acronym{border:0;}
 .unl{text-decoration:underline;}
 .no_unl{text-decoration:none;}
 /*定位*/
-.tl{text-align:left;}
+.tl{text-align:left!important;}
 .tc{text-align:center;}
 .tr{text-align:right;}
 .bc{margin-left:auto;margin-right:auto;}

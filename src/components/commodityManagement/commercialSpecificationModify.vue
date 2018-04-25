@@ -2,9 +2,7 @@
     <div class="group-management-wrapper commodity">
         <el-row class="bg-white">
             <el-col :span='24' class="border-left">
-                <el-row class="fixed bg-white" >
-                    <btm :date="bottonbox" v-on:listbtm="btmlog"> </btm>
-                </el-row>
+                <btm :date="bottonbox" v-on:listbtm="btmlog"></btm>
                     <el-row class="pl10 pr10">
                         <el-col :span="24" style="margin-top:20px">
                             <el-col :span="9">
@@ -364,9 +362,9 @@ import Textbox from '../../base/textbox/textbox'
                         _this.addData.isSystem = res.result.isSystem;
                         _this.addData.seq = res.result.seq;
                         _this.addData.status = res.result.status;
-                        _this.addData.createdTime = res.result.createdTime.substring(0,19);//创建时间
+                        _this.addData.createdTime = res.result.createdTime.substring(0,19).replace('T', ' ');//创建时间
                         _this.addData.modifiedBy = res.result.modifiedBy;//修改人
-                        _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19);//修改时间
+                        _this.addData.modifiedTime = res.result.modifiedTime.substring(0,19).replace('T', ' ');//修改时间
                     })
                 }
                  
