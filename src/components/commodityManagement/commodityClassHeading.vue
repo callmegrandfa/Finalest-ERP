@@ -379,7 +379,8 @@ import Tree from '../../base/tree/tree'
             query(){//条件查询
                 let _this=this;
                 _this.$axios.gets('/api/services/app/CategoryManagement/GetListByCondition',_this.queryParams).then(function(res){//查询表格数据
-                    //_this.$store.commit('Init_ifQuery',true)
+                    _this.queryParams.CategoryId="";
+                    _this.$store.commit('setQueryParams',_this.queryParams)
                     _this.$store.commit('Init_Table',res.result.items); 
                     let totalPage=Math.ceil(res.result.totalCount/_this.$store.state.commodityClassHeadingEachPage);
                     _this.$store.commit('Init_pagination',totalPage) 
@@ -410,6 +411,7 @@ import Tree from '../../base/tree/tree'
                 if(parmas.dialogButton=="确定"){
                     if(parmas.dialogName=="delDialog"){
                         this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                        console.log(this.SelectionChange);
                         for(var i in this.SelectionChange){
                             this.delAarry.ids.push(this.SelectionChange[i].id)
                         }
@@ -417,6 +419,8 @@ import Tree from '../../base/tree/tree'
                        
                        //批量删除
                         _this.$axios.posts('http://192.168.100.107:8082/api/services/app/CategoryManagement/BatchDelete',_this.delAarry).then(function(res){
+                                _this.queryParams.CategoryId="";
+                                _this.$store.commit('setQueryParams',_this.queryParams)
                                 _this.$store.dispatch('InitTable');
                                 _this.$store.commit('setTableSelection',[])
                                 _this.dialogVisible=false;
