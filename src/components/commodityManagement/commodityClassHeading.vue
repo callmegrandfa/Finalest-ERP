@@ -191,6 +191,7 @@ import Tree from '../../base/tree/tree'
                     controls:'text',
                     isDisable:true,
                     sortable:false,
+                    isFix:'',
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
