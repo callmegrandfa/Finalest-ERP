@@ -191,21 +191,18 @@ import Tree from '../../base/tree/tree'
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'categoryName',
                     label: '类目名称',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'status',
                     label: '状态',
@@ -213,21 +210,18 @@ import Tree from '../../base/tree/tree'
                     isDisable:true,
                     sortable:false,
                     dataSource:[],
-                    isFix:"",
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'isService',
                     label: '服务类',
                     controls:'checkbox',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                 }],
                 pluginSetting:{
                     hasPagination:true,
