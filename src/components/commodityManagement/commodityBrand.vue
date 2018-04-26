@@ -93,7 +93,6 @@
                     </el-row>
                      <el-row>
                         <el-col :span="24" class="mt10">
-                            <!-- <el-button :click="transferConfirm">穿梭框</el-button> -->
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
                             <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols' @transferConfirm='transferConfirm'></Transfer> -->
@@ -222,6 +221,7 @@ import Transfer from '../../base/Transfer/Transfer'
                     width:"auto",
                     isDisable:false,
                     sortable:false,
+                    isFix:''
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
@@ -413,7 +413,7 @@ import Transfer from '../../base/Transfer/Transfer'
             //     this.updateId="";
             // },
             transferConfirm(data){
-                console.log(data);
+                //console.log(data);
             },
             InitStatus(){//获取状态枚举表
                 let _this=this;
