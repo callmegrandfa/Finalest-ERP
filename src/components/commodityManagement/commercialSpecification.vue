@@ -95,12 +95,12 @@
                             <el-table :data="tableData" border @row-click="rowClick" class="text-center" @selection-change="handleSelectionChange">
                                 <el-table-column prop="name" type="selection" label="" >
                                 </el-table-column>
-                                <el-table-column prop="specCode" label="属性编码">
+                                <el-table-column prop="specCode" label="规格编码">
                                     <template slot-scope="scope">
                                         <el-button type="text" @click="modify(scope.row)"   >{{tableData[scope.$index].specCode}}</el-button>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="specName" label="属性名称">
+                                <el-table-column prop="specName" label="规格名称">
                                     <template slot-scope="scope">
                                         <el-button type="text"  @click="modify(scope.row)"  >{{tableData[scope.$index].specName}}</el-button>
                                     </template>
