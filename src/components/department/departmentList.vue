@@ -21,6 +21,7 @@
                                 ref="tree"
                                 :expand-on-click-node="false"
                                 :filter-node-method="filterNode"
+                                highlight-current
                                 @node-click="nodeClick">
                         </el-tree>
                     </vue-scroll>
@@ -499,6 +500,7 @@
                             
                             self.tableData.splice(self.whoIndex,1);
                             self.dialogDelConfirm = false;
+                            self.loadTree();
                             self.open('删除成功','el-icon-circle-check','successERP');
                             // self.loadTableData();
                         },function(res){
@@ -519,6 +521,7 @@
                     self.$axios.posts('/api/services/app/DeptManagement/BatchDelete',self.idArray).then(function(res){
                         self.loadTableData();
                         self.dialogDelConfirm = false;
+                        self.loadTree();                        
                         self.open('删除成功','el-icon-circle-check','successERP');    
                     },function(res){
                         self.open('删除失败','el-icon-error','faildERP');

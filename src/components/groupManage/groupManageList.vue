@@ -1,25 +1,13 @@
 <template>
     <div class="groupList">
-        <el-row class="h48 pt5 bg-white">
+        <el-row class="h48 pt5 bg-white fixed" >
             <!-- <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>            -->
             <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>
+            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button> 
+               
+        
         </el-row>
-        <!-- <el-row class="bg-white pt20" :gutter="20">
-            <el-col class="" :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
-                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
-            </el-col>
-            <el-col class="" :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
-                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
-            </el-col>
-            <el-col class=" " :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
-                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
-            </el-col>
-            <el-col class=" " :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
-                <label>集团编码</label><el-input v-model="entryItem.groupCode" disabled ></el-input>
-            </el-col>
-        </el-row> -->
         <el-row class="bg-white pt20">
                 <div class="bgcolor reset">
                     <label>集团编码</label><el-input v-model="entryItem.groupCode"></el-input>
@@ -32,12 +20,10 @@
                 </div>
                 <div class="bgcolor reset">
                     <label>会计方案</label>
-                    
-                    <!-- <el-input v-model="entryItem.accSchemeId"></el-input> -->
-                    <el-select  v-model="accSchemeIdItem.accSchemeId" >
-                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+
+                    <el-select  v-model="accSchemeIdItem.accSchemeId"  @change="seletChange">
+                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemCode">
                         </el-option>
-                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor area">
@@ -59,12 +45,11 @@
                 </div>
                 <div class="bgcolor reset">
                     <label>启用会计月份</label>
-                    <el-select  v-model="beginDateItem.beginDate" >
-                        <el-option v-for="item in beginDateOptions" :key="item.id" :label="item.beginDate" :value="item.beginDate">
+                    <el-select  v-model="accountYearItem.accountYear" >
+                        <el-option v-for="item in accountYearOptions" :key="item.accperiodContentId" :label="item.accountYear" :value="item.accperiodContentId">
                         </el-option>
 
                     </el-select>
-                    <!-- <el-input v-model="entryItem.accStartMonth"></el-input> -->
                 </div>
                 <div class="bgcolor reset">
                     <label>本位币种</label>
@@ -88,11 +73,6 @@
                      </el-select>
                 </div>
         </el-row>
-        <!-- <el-row class="bg-white">
-            <el-col :span="6">
-                <div class="bgcolor lh-28"><el-checkbox class="w-auto" @change="isUpdate()"></el-checkbox>允许使用</div>
-            </el-col>
-        </el-row> -->
         <el-row class="bg-white">
             <el-col :span='24' >
                 <el-row class="pl10 pt10 pr10 pb10 border-bottom">
@@ -128,7 +108,7 @@
     </div>
 </template>
 	
-<script>  
+<script> 
     export default{
         name:'customerInfor',
         data(){
@@ -140,7 +120,8 @@
                     groupName:'',//集团名称,
                     groupFullname:'',//集团全称
                     localCurrencyId:'',//本位币种
-                    accStartMonth:'',//启用月份
+                    accSchemeId :'',
+                    basAccperiodContentId:'',//启用月份
                     areaProId:'',//行政地区(省)
                     areaCityId:'',//行政地区(市)
                     areaDisId:'',//行政地区(区)
@@ -154,15 +135,16 @@
                     areaId:'',
                     timeZoneId:''
                 },
-                beginDateItem:{
-                    beginDate:'',
+                accountYearItem:{
+                    accountYear:'',
                 },
                 accSchemeIdItem:{
                      accSchemeId:''
                 },
-                beginDateOptions: [],
+                accountYearOptions: [],
                 currencyOptions: [],
                 accSchemeIdOptions:[],
+                list:[],//系统字典值表
                 tableData:[],
                 componyTree:  [{
                     treeId: 1,
@@ -209,6 +191,10 @@
                 entryChangeTimes:0,
                 areaFullPathName:'',
                 areaFullPathArray:[],
+                ouid:'',
+                accperiodSchemeID:'',
+                updateAccSchemeId:'',//修改时会计制度id
+                AccSchemeIdChange:false,//判段会计制度是否更改
             }
         },
         watch:{
@@ -223,7 +209,7 @@
                 },
                 deep:true
             },
-             beginDateItem:{
+             accountYearItem:{
                   handler(val, oldVal){
                    this.entryChangeTimes++
                    if(this.entryChangeTimes>=2){
@@ -233,18 +219,70 @@
                    }
                 },
                 deep:true
-        }
+        },
+         accSchemeIdItem:{
+                  handler(val, oldVal){
+                   this.entryChangeTimes++
+                   if(this.entryChangeTimes>=2){
+                       this.isCancel=false;
+                   }else{
+                       this.isCancel=true;
+                   }
+                },
+                deep:true
+        },
+        },
+        mounted () {
+            this.loadList();
         },
         created:function(){       
                 let _this=this;
                 _this.loadTableData();
                 _this.loadArea();
                 _this.loadCurrency();
-                _this.loadbeginDate();
+                _this.loadOuId();
+                // _this.loadbeginDate();
                 _this.loadaccScheme();
                 _this.loadTimeZone()
              },
         methods:{
+           //---获取数据-------------------------------------------------------
+            loadList(){//获取系统字典值表 
+                let _this = this;
+                //  console.log(_this.accSchemeIdItem.accSchemeId)
+                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
+                    if(res.result.totalCount>1){
+                        _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount}).then(function(response){         
+                            _this.list = response.result.items;
+                            for(let j in _this.list){
+                                if(_this.list[j].itemCode==_this.accSchemeIdItem.accSchemeId){
+                                    _this.updateAccSchemeId=_this.list[j].id
+                                    _this.loadbeginDate(_this.updateAccSchemeId);
+                                    _this.AccSchemeIdChange=true;
+                                   
+                                }
+                            }
+                        })
+                    }
+                }).catch(function(err){
+                    // _this.$message({
+                    //     type: 'warning',
+                    //     message: err.error.message
+                    // });
+                })   
+            },
+            loadOuId(){//获取ouId
+                let _this=this;               
+                _this.$axios.gets('/api/services/app/User/GetCurrentUser').then(function(res){
+                    _this.ouid=res.result.ouId;
+                    //console.log(res)
+                }).catch(function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                });
+            },
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -274,8 +312,6 @@
             loadTableData(){//表格
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
-                    console.log(res);
-                    // _this.entryChangeTimes=0; 
                     _this.areaFullPathName=res.result.areaId_AreaFullPathName;
                     _this.areaFullPathArray=_this.areaFullPathName.split(">");
                     _this.entryItem.areaProId=_this.areaFullPathArray[0];
@@ -286,9 +322,20 @@
                     _this.entryItem.groupFullname=res.result.groupFullname;
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.timeZoneId=res.result.timeZoneId;
-                    _this.accSchemeIdItem.accSchemeId=res.result.accSchemeId;
-                    _this.beginDateItem.beginDate=res.result.accStartMonth.substring(0,10);
-                    //  _this.beginDateItem.beginDate=res.result.accStartMonth;
+                    _this.accSchemeIdItem.accSchemeId=res.result.accSchemeId 
+                    console.log(res)
+                    _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(response){
+                        _this.list = response.result.items;
+                            for(let j in _this.list){
+                                if(_this.list[j].id==res.result.accSchemeId){
+                                    console.log(_this.accSchemeIdItem.accSchemeId)
+                                    _this.accSchemeIdItem.accSchemeId=_this.list[j].itemCode
+                                    _this.AccSchemeIdChange=true;
+                                }
+                            }
+                    });
+                    console.log(res.result.accSchemeId);
+                    _this.accountYearItem.accountYear=res.result.basAccperiodContentId;
                     _this.entryItem.areaId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
@@ -298,7 +345,7 @@
                     _this.entryItem.status=res.result.status;
                     _this.entryItemBak=_this.entryItem;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    // console.log( _this.beginDateItem.beginDate)
+                    // console.log( _this.accountYearItem.beginDate)
                     },function(res){
                 })
             },     
@@ -322,16 +369,22 @@
             loadaccScheme(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
+                    // _this.value=res.result[1].itemName;
                     _this.accSchemeIdOptions=res.result;
-                    console.log(res)
+                    console.log(res);
+                    _this.seletChange();
+                    // console.log(res)
                   },function(res){
                 })
+            },
+             seletChange(){
+                 let _this=this;
+                _this.loadList();
             },
             loadTimeZone(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TimeZone'}).then(function(res){ 
                     _this.timeZoneOptions=res.result;
-                    console.log(res);
                   },function(res){
                 })
             },
@@ -359,18 +412,10 @@
                  
                }
             },
-            loadbeginDate(){
+             loadbeginDate(data){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/Accperiod/GetAll',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){ 
-                _this.beginDateOptions=res.result.items;
-                _this.beginDateOptions=_this.JsonDistinct(_this.beginDateOptions,"beginDate");
-               for(var i=0;i<_this.beginDateOptions.length;i++){
-                //  this.beginDateOptions[i].beginDate.substring(0,10);
-                 _this.beginDateOptions[i].beginDate =_this.beginDateOptions[i].beginDate.substring(0,10)
-
-                  }
-                // beginDateOptions
-
+                _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
+                _this.accountYearOptions=res.result;
                 },function(res){
                 })
             },
@@ -410,17 +455,17 @@
                     groupName: _this.entryItem.groupName,
                     groupFullname:_this.entryItem.groupFullname,
                     localCurrencyId: _this.entryItem.localCurrencyId,
-                    accSchemeId:_this.accSchemeIdItem.accSchemeId,
-                    // accStartMonth: _this.entryItem.accStartMonth,
+                    accSchemeId:_this.updateAccSchemeId,
+                    // basAccperiodContentId: _this.entryItem.basAccperiodContentId,
                     areaId: 0,
                     industry: _this.entryItem.industry,
                     phone: _this.entryItem.phone,
                     fax: _this.entryItem.fax,
                     remark:_this.entryItem.remark,
                     status: _this.entryItem.status,
-                    accStartMonth:_this.beginDateItem.beginDate
+                    basAccperiodContentId:_this.accountYearItem.accountYear,
+                    timeZoneId:this.entryItem.timeZoneId,
                 }
-              
                 if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
                     updateItem.areaId=_this.entryItem.areaDisId
                 }else if(_this.entryItem.areaDisId==""&&_this.entryItem.areaCityId!=""&&typeof(_this.entryItem.areaCityId)!="string"){
@@ -432,7 +477,7 @@
                 }
                 // console.log(updateItem);
              
-                if(!_this.isCancel){
+                if(!_this.isCancel||_this.AccSchemeIdChange){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
                         console.log(updateItem)
                         _this.open('修改成功','el-icon-circle-check','successERP');
@@ -441,6 +486,7 @@
                         _this.open('修改失败','el-icon-error','faildERP');
                     });
                     _this.isCancel=true;
+                    _this.AccSchemeIdChange=false;
                 }else{
                     _this.open('没有需要保存的项目','el-icon-warning','noticERP');
                 }
@@ -453,7 +499,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
                 .then(function(res){
-                    console.log(res)
+                    // console.log(res)
                     let children=[];
                     if(res.result.length>0){
                         for(let i=0;i<res.result.length;i++){
@@ -500,12 +546,6 @@
                         .then(function(res){
                             _this.loadTableData();
                             _this.open('删除成功','el-icon-circle-check','successERP');
-                            // for(let x=0;x<_this.tableData.length;x++){
-                            //     if(_this.tableData[x].id==_this.multipleSelection[i].id&&typeof(_this.tableData[x].id)!='undefined'){
-                            //         console.log(_this.tableData[x]);
-                            //         _this.tableData.splice(x, 1);
-                            //     }
-                            // }
                         },function(res){
                             _this.open('删除失败','el-icon-error','faildERP');
                             //console.log('err:'+res)
