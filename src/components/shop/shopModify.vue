@@ -974,8 +974,9 @@ export default({
                     //------------------------------
 
                     //---开店日期扯淡----------------
-                    if(self.shopData.openingDate == '3000-12-31T00:00:00'){
+                    if(self.shopData.openingDate.indexOf('3000')!= -1||self.shopData.openingDate.indexOf('3001')!= -1){
                         self.shopData.openingDate = '';
+                        self.ifModify = false;
                     }
                     //------------------------------
 
