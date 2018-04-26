@@ -189,7 +189,7 @@
                     <div class="bgcolor bgLongWidth" style="overflow: visible;">
                         <label class="h_35"></label>
                         <div class="rolesZoo">
-                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
+                            <a class="addRole"  v-for="(x,index) in checked" :key="index" :permissionName="x.permissionName">{{x.moduleName}}{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
                         </div>
                     </div>
                  </div>

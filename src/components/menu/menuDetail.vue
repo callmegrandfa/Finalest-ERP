@@ -188,7 +188,7 @@
                     <div class="bgcolor bgLongWidth" style="overflow:visible;">
                         <label class="h_35"></label>
                         <div class="rolesZoo">
-                            <a class="addRole" :key="index" v-for="(x,index) in checked" :permissionName="x.permissionName">{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
+                            <a class="addRole" :key="index" v-for="(x,index) in checked" :permissionName="x.permissionName">{{x.moduleName}}{{x.displayName}}<i  @click="check_push_noCheck_FnThis(x)" class="el-icon-error"></i></a>
                         </div>
                     </div>
                  </div>
@@ -680,6 +680,7 @@
                     $.each(_this.checked,function(index,value){
                         permissions.push(value.permissionName)
                     })
+                    console.log(_this.checked)
                     _this.addData.permissions=permissions;
                     // _this.addData.permissionDtos=_this.checked;//权限
                     _this.$axios.posts('/api/services/app/ModuleManagement/Create',_this.addData).then(function(res){
