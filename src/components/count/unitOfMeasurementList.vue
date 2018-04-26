@@ -346,6 +346,7 @@
                         // }
                     ]
                 },
+                detailArr:[],
                 tableSelectData:[],//列表多单位的下拉框数据
                 nodeId:0,
                 // ----------------------------列表数据
@@ -386,6 +387,7 @@
                 handler:function(val,oldVal){
                     // console.log(1);
                     let _this = this;
+                   
                     if(!_this.firstModify){
                         _this.firstModify = !_this.firstModify;
                     }else{
@@ -394,12 +396,28 @@
                         _this.IsSave=false;//保存
                         _this.IsCancel=false;//取消
                         _this.isEdit=true;//数据修改了
-                        let i=0;
-                        console.log(++i);
+                        // let i=0;
+                        // console.log('++i');
                     }
                 },
                 deep: true,
             },
+            detailArr:{
+                handler:function(val,oldVal){
+                    let _this = this;
+                    if(!_this.firstModify){
+                        // console.log('3434');
+                        _this.firstModify = !_this.firstModify;
+                    }else{
+                        console.log('3535'); 
+                        if (val.length>1) {
+                            _this.isRepeat(val)
+                        }                       
+                    }
+                },
+                deep: true,
+            },
+            
 
         },
         methods:{
@@ -525,12 +543,13 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:id}).then(
                     rsp=>{
-                    // console.log(rsp);
-                    // _this.editList.unitConvert_ChildTable=rsp.result;
-                    // _this.tableList=_this.editList.unitConvert_ChildTable;
-                    _this.firstModify=false;
-                    _this.formData.unitConvert_ChildTable=rsp.result;
-                       });
+                        // console.log(rsp);
+                        // _this.editList.unitConvert_ChildTable=rsp.result;
+                        // _this.tableList=_this.editList.unitConvert_ChildTable;
+                        _this.firstModify=false;
+                        _this.formData.unitConvert_ChildTable=rsp.result;
+                        _this.detailArr=_this.formData.unitConvert_ChildTable;
+                    });
 
             },
             getTableSelectData(id){//加载表格中多单位的下拉框选项
@@ -559,8 +578,9 @@
                         function (success) { 
                             if (success) {
                                 $('.tipsWrapper').css({display:'none'});
-                                // console.log("保存按钮点击了");
+                                console.log("保存按钮点击了");
                                 // console.log(_this.formData.unitConvert_ChildTable);
+                                // _this.isRepeat(_this.formData.unitConvert_ChildTable);
                                 if (_this.formData.unitConvert_ChildTable.length>1) {
                                         for(let i=0;i<_this.formData.unitConvert_ChildTable.length; i++){
                                             // console.log("i="+i);
@@ -571,10 +591,11 @@
                                             }
                                             for (let j = 0; j < i; j++) {
                                                if (_this.formData.unitConvert_ChildTable[i].destUnitId==_this.formData.unitConvert_ChildTable[j].destUnitId && i!=j) {
+                                                    return;
                                                     alert('多单位不能重复');
                                                     // alert('多单位必须唯一');
                                                     // alert(`多单位${_this.formData.unitConvert_ChildTable[i].destUnitId}必须唯一`);
-                                                    return;
+                                                    
                                                 }
                                             }
                                             
@@ -591,19 +612,17 @@
                                    if (_this.formData.unitConvert_ChildTable[0].destUnitId!='' && _this.formData.unitConvert_ChildTable[0].factor!='') {
                                     //    console.log(_this.formData.unitConvert_ChildTable);
                                     //    alert('2.1')
-                                        if(_this.formData.unitConvert_ChildTable[0].destUnitId!==_this.formData.unitConvert_ChildTable[1].destUnitId){
                                             _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
-                                        _this.addList.unit_MainTable=_this.formData.unit_MainTable;
-                                        console.log(_this.addList);
-                                        _this.doSave(_this.addList);
-                                        }
+                                            _this.addList.unit_MainTable=_this.formData.unit_MainTable;
+                                            // console.log(_this.addList);
+                                            _this.doSave(_this.addList);
                                    }else{
                                     //    alert('2')
                                        alert('多单位或系数必填');
                                        return;
                                    }
                                 }else{
-                                    // alert('3')
+                                    alert('3')
                                     _this.addList.unitConvert_ChildTable=_this.formData.unitConvert_ChildTable;
                                     _this.addList.unit_MainTable=_this.formData.unit_MainTable;
                                     _this.doSave(_this.addList)
@@ -860,6 +879,28 @@
                 //         }
                 //     }
                 // }
+            },
+            // -------判断从表
+            isRepeat(arr){                               
+                let _this=this;
+                let val=arr;
+                // let arr=_this.formData.unitConvert_ChildTable;
+                // let arr=val;
+                // console.log("3636");
+                // console.log(val);
+                
+                for (let i = 1; i < val.length; i++) {
+                    // console.log(val);
+                    // console.log('循环');
+                    for (let j=0;j<i;j++) {
+                        // console.log(val);
+                        // console.log(val[i].destUnitId);
+                        if (val[i].destUnitId==val[j].destUnitId) {
+                            alert(`多单位不能重复`);
+                            return;
+                        }
+                    }
+                }
             },
         },
         components:{
