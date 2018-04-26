@@ -14,18 +14,25 @@
                 </div>    
             </el-col>    
             <el-col :span="24" class="transfer_table">
-                <el-table ref="multipleTable" :data="selectedTable" @selection-change="handleSelected" border style="width: 100%">
+                <el-table ref="multipleTable" :data="selectedTable" @selection-change="handleSelected" border style="width: 100%" height="250">
                     <el-table-column type="selection" label="" width="50">
                     </el-table-column>
                     <el-table-column v-for="item in OptionalCols" :key="item.prop" :label="item.label" :prop="item.prop" >
                     </el-table-column>
                 </el-table>
+                <el-pagination
+                    v-show='selectedTable.length>0'
+                    class="fr mt10"
+                    small
+                    layout="prev, pager, next"
+                    :total="selectedTable.length">
+                </el-pagination>
             </el-col>
         </el-col>
         <el-col :span="2" class="transfer_btns">
             <el-col :span="24" class="transfer_btn_wrapper">
-                <el-button class="el_transfer" :disabled="toSeletedBtn"  @click="seletedToOptional" type="primary" icon="el-icon-arrow-left" round></el-button>
-                <el-button class="el_transfer" :disabled="toOptionalBtn" @click="optionalToSeleted" type="primary" icon="el-icon-arrow-right" round></el-button>
+                <el-button class="el_transfer" :disabled="toSeletedBtn"  @click="optionalToSeleted" type="primary" icon="el-icon-arrow-left" round></el-button>
+                <el-button class="el_transfer" :disabled="toOptionalBtn" @click="seletedToOptional" type="primary" icon="el-icon-arrow-right" round></el-button>
             </el-col>
         </el-col>
         <el-col :span="11" class="transfer_warapper">
@@ -42,13 +49,19 @@
                 </div>
             </el-col>    
             <el-col :span="24" class="transfer_table">
-                <el-table ref="multipleTable"  :data="OptionalTable" @selection-change="handleOptional" border style="width: 100%">
+                <el-table ref="multipleTable"  :data="OptionalTable" @selection-change="handleOptional" border style="width: 100%" height="250">
                     <el-table-column type="selection" label="" width="50">
                     </el-table-column>
                     <el-table-column v-for="item in OptionalCols" :key="item.prop" :label="item.label" :prop="item.prop" >
                     </el-table-column>
                 </el-table>
-                
+                <el-pagination
+                    v-show='OptionalTable.length>0'
+                    class="fr mt10"
+                    small
+                    layout="prev, pager, next"
+                    :total="OptionalTable.length">
+                </el-pagination>
             </el-col>
         </el-col>
     </el-row>
@@ -60,7 +73,8 @@
 			return{
                 querySelected:'',//已选搜索
                 queryOptional:'',//可选搜索
-                OptionalSelected:[],//已选模型
+                OptionalHandle:[],//可选项勾选数据
+                selectedHanled:[],//已选项勾选数据
                 selectedTable:[],//已选表格数据模型
                 toOptionalBtn:true,
                 toSeletedBtn:true,
@@ -73,36 +87,58 @@
             this.$store.dispatch('InitTransfer');//初始化可选表格数据
         },
         watch:{
+            selectedTable:{
+                handler:function(val,oldVal){
+                    this.$emit('transferConfirm',this.selectedTable);
+                },
+                deep:true
+            }
         },
         computed:{
             OptionalTable(){
-                console.log(this.$store.state[this.transferHttpSetting.transferName+'Table']);
                 return  this.$store.state[this.transferHttpSetting.transferName+'Table'];   
             }
         },
 	    methods:{
-	    	handleSelected(val){//操作已选表格数据
-
+            handleSelected(val){//操作已选表格数据
+                if(val.length>0){
+                    this.selectedHanled=val;
+                    this.toOptionalBtn=false;
+                }else{
+                    this.toOptionalBtn=true;
+                }
             },
             handleOptional(val){//操作可选表格数据
                 if(val.length>0){
-                    this.OptionalSelected=val;
+                    this.OptionalHandle=val;
                     this.toSeletedBtn=false;
                 }else{
                     this.toSeletedBtn=true;
                 }
             },
-            searchUncheckTable(){//过滤未选数据
-                
-            },
             seletedToOptional(){//已选到可选
-                for(let i in this.OptionalSelected){
-                    this.selectedTable.push(this.OptionalSelected[i]);
+                for(let i in this.selectedHanled){//循环添加至已选数据模型
+                     this.$store.state[this.transferHttpSetting.transferName+'Table'].push(this.selectedHanled[i]);
                 }
+                this.selectedTable=this.array_diff(this.selectedHanled, this.selectedTable);
+                this.selectedHanled=[];//置空选中集合
             },
             optionalToSeleted(){//可选到已选
-
+                for(let i in this.OptionalHandle){//循环添加至已选数据模型
+                    this.selectedTable.push(this.OptionalHandle[i]);
+                }
+                this.$store.state[this.transferHttpSetting.transferName+'Table']=this.array_diff(this.OptionalHandle, this.$store.state[this.transferHttpSetting.transferName+'Table']);
+                this.OptionalHandle=[];//置空选中集合
             },
+            array_diff(a, b) {//求两个json数组的并集
+                return diff(a, b).concat( diff(b, a) );
+                function diff(a, b) {
+                    var c = {};
+                    b.forEach(function(o){ c[ JSON.stringify(o) ] = 0 });
+                    a.forEach(function(o){ delete c[ JSON.stringify(o) ]; });
+                    return Object.keys(c).map(JSON.parse);
+                }
+            }
 	    }
 	}
 </script>

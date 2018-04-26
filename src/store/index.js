@@ -932,8 +932,7 @@ export default new vuex.Store({
             axios.get(context.state[context.state.transferName+'TransferApi'],{
                 params:context.state[context.state.transferName+'TransferParams']
             }).then(function(res){
-                console.log(res.result.items);
-                context.commit('Init_Transfer',res.result.items);
+                context.commit('Init_Transfer',res.data.result.items);
                 }).catch(function(err){
                     console.log(err)
                 })

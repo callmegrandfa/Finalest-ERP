@@ -93,9 +93,10 @@
                     </el-row>
                      <el-row>
                         <el-col :span="24" class="mt10">
+                            <!-- <el-button :click="transferConfirm">穿梭框</el-button> -->
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
-                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols'></Transfer> -->
+                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols' @transferConfirm='transferConfirm'></Transfer> -->
                         </el-col> 
                     </el-row>
                 </el-col>
@@ -117,13 +118,23 @@ import Transfer from '../../base/Transfer/Transfer'
             return {
                 transferHttpSetting:{
                     transferName:'ceshi',
-                    transferApi:'/api/services/app/SpecManagement/GetAll',
+                    transferApi:'/api/services/app/BrandManagement/GetListByCondition',
                     transferParams:{
-                        MaxResultCount:'1000',
+                        BrandCode:'',//品牌编码
+                        BrandName:'',//品牌名称
+                        BrandEname:'',//品牌名称(英文)
+                        Status:'',//状态
+                        MaxResultCount:'100',
                         SkipCount:'0',
                     }
                 },
-                OptionalCols:[{ prop: 'name',label: '测试'},{prop: 'id',label: 'id'}],
+                OptionalCols:[{
+                    prop: 'brandCode',
+                    label: '品牌编码'
+                    },{
+                    prop: 'brandName',
+                    label: '品牌名称'
+                    }],
                 queryParams:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
@@ -208,7 +219,6 @@ import Transfer from '../../base/Transfer/Transfer'
                     controls:'text',
                     required:true,
                     flag:true,//更改标识
-                    isFix:"",
                     width:"auto",
                     isDisable:false,
                     sortable:false,
@@ -402,6 +412,9 @@ import Transfer from '../../base/Transfer/Transfer'
             //     this.addArray=[];
             //     this.updateId="";
             // },
+            transferConfirm(data){
+                console.log(data);
+            },
             InitStatus(){//获取状态枚举表
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
