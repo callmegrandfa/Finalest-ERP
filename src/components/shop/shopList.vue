@@ -765,7 +765,7 @@
         },
         searchTable:function(){
             let self = this;
-            self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopCode:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
+            self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopName:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
                 console.log(res);
 
                 self.allList = res.result.items;
