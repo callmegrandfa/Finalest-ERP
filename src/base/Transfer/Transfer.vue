@@ -14,18 +14,19 @@
                 </div>    
             </el-col>    
             <el-col :span="24" class="transfer_table">
-                <el-table ref="multipleTable" :data="selectedTable" @selection-change="handleSelected" border style="width: 100%" height="250">
+                <el-table ref="multipleTable" :data="testSelectd" @selection-change="handleSelected" border style="width: 100%" height="250">
                     <el-table-column type="selection" label="" width="50">
                     </el-table-column>
                     <el-table-column v-for="item in OptionalCols" :key="item.prop" :label="item.label" :prop="item.prop" >
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                    v-show='selectedTable.length>0'
+                    v-show='selectedTableFilter.length>0'
                     class="fr mt10"
                     small
                     layout="prev, pager, next"
-                    :total="selectedTable.length">
+                    :total="selectedTableFilter.length"
+                    @current-change='selectedHandlePagination'>
                 </el-pagination>
             </el-col>
         </el-col>
@@ -76,8 +77,13 @@
                 OptionalHandle:[],//可选项勾选数据
                 selectedHanled:[],//已选项勾选数据
                 selectedTable:[],//已选表格数据模型
+                testSelectd:[],
+                selectedCurrentPage:0,//已选表格当前页
                 toOptionalBtn:true,
                 toSeletedBtn:true,
+                EachPage:10,//表格每页显示多少条数据
+                StartCount:0,//显示多少条
+                EndCount:0,//跳过几条
 			}
 		},
 		created() {
@@ -92,12 +98,31 @@
                     this.$emit('transferConfirm',this.selectedTable);
                 },
                 deep:true
-            }
+            },
+            selectedCurrentPage:function(val){//监听已选表格当前页的变化
+                this.StartCount=(val-1)*this.EachPage;
+                this.EndCount=this.EachPage+this.StartCount;
+                this.testSelectd=this.selectedTable.slice(this.StartCount,this.EndCount);
+            },
+            testSelectd:function(val){
+                this.testSelectd=val;
+            },
         },
         computed:{
             OptionalTable(){
                 return  this.$store.state[this.transferHttpSetting.transferName+'Table'];   
-            }
+            },
+            selectedTableFilter: function () {//已选表格数据过滤
+                var filterKey = this.querySelected && this.querySelected.toLowerCase()
+                if (filterKey) {
+                    return this.selectedTable.filter(function (data) {
+                        return Object.keys(data).some(function (key) {
+                            return String(data[key]).toLowerCase().indexOf(filterKey) > -1
+                        })
+                    })
+                }
+                return this.selectedTable;
+            },
         },
 	    methods:{
             handleSelected(val){//操作已选表格数据
@@ -129,6 +154,9 @@
                 }
                 this.$store.state[this.transferHttpSetting.transferName+'Table']=this.array_diff(this.OptionalHandle, this.$store.state[this.transferHttpSetting.transferName+'Table']);
                 this.OptionalHandle=[];//置空选中集合
+            },
+            selectedHandlePagination(val){//设置已选表格当前页
+                this.selectedCurrentPage=val;
             },
             array_diff(a, b) {//求两个json数组的并集
                 return diff(a, b).concat( diff(b, a) );
