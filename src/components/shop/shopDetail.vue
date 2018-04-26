@@ -764,7 +764,7 @@ export default({
                 console.log('err'+res)
             });
             //商圈
-            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'busCircle'}).then(function(res){
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TradingArea'}).then(function(res){
                 // console.log(res);
                 self.busAr = res.result;
             },function(res){

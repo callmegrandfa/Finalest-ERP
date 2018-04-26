@@ -560,14 +560,49 @@
         //---左侧查询-------------------------------------------------------
         doSearch:function(){
             let self = this;
-            if(self.queryCu == ''&&self.queryOu == ''&&self.queryAd==''&&self.queryOp==''&&self.queryCode==''&&self.queryName==''&&self.queryProperty==''){
+            if(self.queryCu == ''&&self.queryOu == ''&&
+               self.queryAd==''&&self.queryOp==''&&
+               self.queryCode==''&&self.queryName==''&&self.queryProperty==''){
                 self.loadAllList()
-            }else{
+            }else if(self.queryCu!=''||self.queryOu!=''||
+                     self.queryAd!=''||self.queryOp!=''||
+                     self.queryCode!=''||self.queryName!=''||self.queryProperty!=''){
+                    if(self.queryCu == ''){
+                        self.queryCu = 0;
+                    }
+                    if(self.queryOu == ''){
+                        self.queryOu = 0;
+                    }
+                    if(self.queryAd == ''){
+                        self.queryAd = 0;
+                    }
+                    if(self.queryOp == ''){
+                        self.queryOp = 0;
+                    }
+                    if(self.queryProperty == ''){
+                        self.queryProperty = 0;
+                    }
                 this.$axios.gets('/api/services/app/ContactManagement/GetListByCondition',{ContactClassId:self.queryCu,OuId:self.queryOu,AdAreaId:self.queryAd,OpAreaId:self.queryOp,ContactCode:self.queryCode,ContactName:self.queryName,ContactWorkPropertyId:self.queryProperty,SkipCount:'0',MaxResultCount:'100'}).then(function(res){
                     console.log(res);
-                    if(res.result&&res.result.length>0){
-                        self.allList = res.result;
-                        self.total = res.result.length;
+
+                    if(self.queryCu == 0){
+                        self.queryCu = '';
+                    }
+                    if(self.queryOu == 0){
+                        self.queryOu = '';
+                    }
+                    if(self.queryAd == 0){
+                        self.queryAd = '';
+                    }
+                    if(self.queryOp == 0){
+                        self.queryOp = '';
+                    }
+                    if(self.queryProperty == 0){
+                        self.queryProperty = '';
+                    }
+                    if(res.result.items&&res.result.items.length>0){
+                        self.allList = res.result.items;
+                        self.total = res.result.totalCount;
                         self.totalPage = Math.ceil(self.total/self.eachPage)
                     }else{
                         self.allList = res.result;
