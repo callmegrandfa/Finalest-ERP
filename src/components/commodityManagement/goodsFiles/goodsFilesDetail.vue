@@ -980,7 +980,7 @@ export default {
                 "retailPrice": 0,//零售价
                 "retailUnit": 0,//零售默认单位
                 "remark": "",//备注
-                "status": 0,//状态
+                "status": 1,//状态
             },
             "productProperty_ChildTable": [//属性从表
                 {
@@ -1540,18 +1540,20 @@ export default {
             .then(function (success) {
                 if (success) {
                     $('.tipsWrapper').css({display:'none'})
-                    let data={
-                        'product_MainTable':_this.product_MainTable,
-                        'productProperty_ChildTable':_this.productProperty_ChildTable,
-                        'productSpec_ChildTable':_this.productSpec_ChildTable,
-                        'productSpecValue_GrandTable':_this.productSpecValue_GrandTable,
-                        'productUnit_ChildTable':_this.productUnit_ChildTable,
-                        'productOu_ChildTable':_this.productOu_ChildTable,
-                        'productPicture_ChildTable':_this.productPicture_ChildTable,
-                        'sku_ChildTable':_this.sku_ChildTable,
-                        'skuSpecValue_GrandTable':_this.skuSpecValue_GrandTable,
-                        }
-                    _this.$axios.posts('/api/services/app/ProductManagement/AggregateCreateOrUpdate',data).then(function(res){
+                    // let data={
+                    //     'product_MainTable':_this.product_MainTable,
+                    //     'productProperty_ChildTable':_this.productProperty_ChildTable,
+                    //     'productSpec_ChildTable':_this.productSpec_ChildTable,
+                    //     'productSpecValue_GrandTable':_this.productSpecValue_GrandTable,
+                    //     'productUnit_ChildTable':_this.productUnit_ChildTable,
+                    //     'productOu_ChildTable':_this.productOu_ChildTable,
+                    //     'productPicture_ChildTable':_this.productPicture_ChildTable,
+                    //     'sku_ChildTable':_this.sku_ChildTable,
+                    //     'skuSpecValue_GrandTable':_this.skuSpecValue_GrandTable,
+                    //     }
+                    // /api/services/app/ProductManagement/AggregateCreateOrUpdate
+                    
+                    _this.$axios.posts('/api/services/app/ProductManagement/Create',_this.product_MainTable).then(function(res){
                         _this.$store.state.url='/goodsFiles/goodsFilesModify/'+res.result.id
                         _this.$router.push({path:_this.$store.state.url})//点击切换路由
                         _this.open('保存成功','el-icon-circle-check','successERP');
