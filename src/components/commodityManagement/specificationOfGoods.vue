@@ -702,10 +702,17 @@ import Tree from '../../base/tree/tree'
                     _this.$axios.gets('/api/services/app/SpecManagement/GetSpecTree')
                     .then(function(res){
                         _this.componyTree = res.result;
+                        function compare(property){
+                            return function(a,b){
+                                var value1 = a[property];
+                                var value2 = b[property];
+                                return value1 - value2;
+                            }
+                        }
+                        _this.componyTree[0].children.sort(compare('seq'));
                         _this.arrbiaoge2 = res.result;
                         _this.arrbiaoge1 = res.result[0].children;
                         _this.treeLoading=false;
-                        // _this.loadIcon();
                 },function(res){
                     _this.treeLoading=false;
                 })

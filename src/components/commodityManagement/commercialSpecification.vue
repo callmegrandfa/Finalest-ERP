@@ -306,6 +306,14 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){
                     _this.tableData=res.result.items;
+                    function compare(property){
+                            return function(a,b){
+                                var value1 = a[property];
+                                var value2 = b[property];
+                                return value1 - value2;
+                            }
+                        }
+                        _this.tableData.sort(compare('seq'));
                     for(let i=0;i<_this.tableData.length;i++){
                         if(_this.tableData[i].controlType == 0){
                            _this.tableData[i].controlType = '手工录入' 
