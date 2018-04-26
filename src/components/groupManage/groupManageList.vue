@@ -373,6 +373,7 @@
                     _this.accSchemeIdOptions=res.result;
                     console.log(res);
                     _this.seletChange();
+
                     // console.log(res)
                   },function(res){
                 })
@@ -380,6 +381,7 @@
              seletChange(){
                  let _this=this;
                 _this.loadList();
+                _this.accountYearItem.accountYear=''
             },
             loadTimeZone(){
                 let _this=this;
