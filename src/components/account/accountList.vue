@@ -403,8 +403,11 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.treeLoading=true;
                 //console.log(_this.ouid,_this.accperiodSchemeID)
                 _this.$axios.gets('/api/services/app/Accperiod/GetByAccoperiodSchemeID',{OuId:_this.ouid,AccperiodSchemeID:_this.accperiodSchemeID}).then(function(res){
-                    //console.log(res)
+                    console.log(res)
                     _this.componyTreeData=res.result;
+                    if(_this.componyTreeData.length==0){
+                        _this.modifyflag=false;
+                    }
                     _this.treeData=[];
                     _this.componyTree[0].children=[];
                     $.each(_this.componyTreeData,function(index,value){
