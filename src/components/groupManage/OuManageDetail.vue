@@ -1586,6 +1586,8 @@ export default({
                             for(let j in _this.list){
                                 if(_this.list[j].id==resp.result.accSchemeId){
                                    _this.addData.accCchemeId=_this.list[j].itemCode
+                                     _this.firstModify=false;
+                                     _this.ifModify=false;
                                 }
                             }
                     });
@@ -1606,12 +1608,15 @@ export default({
                         _this.list = response.result.items;
                         for(let j in _this.list){
                             if(_this.list[j].itemCode==_this.addData.accCchemeId){
+                                _this.firstModify=false;
+                                   _this.ifModify=false;
                                 // _this.updateAccSchemeId=_this.list[j].id
                                 // _this.AccSchemeIdChange=true;
                                 _this.addData.accCchemeId=_this.list[j].id
                                 _this.item_acc.id=_this.list[j].id
                                 _this.item_acc.name=_this.list[j].itemName
                                 _this.loadbeginDate(_this.item_acc.id);
+                                  
                                 
                             }
                         }
