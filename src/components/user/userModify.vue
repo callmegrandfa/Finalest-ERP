@@ -47,7 +47,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>密码</label>
                     <el-input 
-                    
+                    type="password"
                     class="password" 
                     :class="{redBorder : validation.hasError('addData.password')}" 
                     v-model="addData.password"  
@@ -195,8 +195,6 @@
                         <label>有效时间</label>
                         <div class="rangeDate">
                             <el-date-picker
-                             
-                            
                             v-model="dateRange"
                             class="dateRange"
                             :class="{redBorder : validation.hasError('dateRange')}"
@@ -205,7 +203,6 @@
                             value-format="yyyy-MM-dd" 
                             range-separator="to"
                             align="center"
-                            unlink-panels
                             start-placeholder=""
                             end-placeholder="">
                             </el-date-picker>

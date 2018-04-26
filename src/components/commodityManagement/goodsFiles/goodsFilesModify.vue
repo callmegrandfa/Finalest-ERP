@@ -1153,6 +1153,7 @@ export default {
         innerVisible:false,//内层表格
         witchSpecgroup:[],//纪录选中规格组
         witchDialog:0,//纪录当前点击的规格编码id
+        allSpecGroupSize:[],//纪录规格组下面的规格
         //商品规格dialog,规格分页
         sizeTableData:[],
         pageIndex:1,//分页的当前页码
@@ -1678,6 +1679,44 @@ export default {
             }
         },
 //----------------------商品规格------------------
+        uniqueArrayFn(array1, array2,array1Key,array2Key){//求差集
+            var result = [];
+            for(var i = 0; i < array1.length; i++){
+                var item = array1[i];
+                var repeat = false;
+                for (var j = 0; j < array2.length; j++) {
+                    if (array1[i][array1Key] == array2[j][array2Key]) {//唯一key
+                        repeat = true;
+                        break;
+                    }
+                }
+                if (!repeat) {
+                    result.push(item);
+                }
+            }
+            return result;
+        },
+        paginationData(data,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+        //who点击页码时，判断是哪个数据的分页
+            let _this=this;
+            let x={}
+            let nowData=[];
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(data.length>0){
+                    if(endIndex>data.length){
+                        endIndex=data.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        nowData.push(data[startIndex])
+                    }
+                }
+            x={TotalItem:data.length,TotalPage:Math.ceil(data.length/oneItem),nowData:nowData};
+            return x
+        },
         ifShowInnerDialog(){//点击新增，判断是否是全部，发送不同请求
             let _this=this;
             // _this.innerVisible=true
@@ -1705,11 +1744,11 @@ export default {
             _this.witchSpecgroup[_this.witchDialog]={spec:'all',id:_this.witchDialog,name:'/'}
         }
         if(typeof(_this.chooseSizeData[_this.witchDialog])=='undefined'){
-            _this.page=1;
-            if(typeof(_this.checkSize[_this.witchDialog]['all'])=='undefined'){
-                _this.checkSize[_this.witchDialog]['all']=[];//初始化选中尺码值
-            }
-            _this.getSpecAllSize({SpecId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+            // _this.page=1;
+            // if(typeof(_this.checkSize[_this.witchDialog]['all'])=='undefined'){
+            //     _this.checkSize[_this.witchDialog]['all']=[];//初始化选中尺码值
+            // }
+            // _this.getSpecAllSize({SpecId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
             _this.$axios.gets('/api/services/app/SpecgroupManagement/GetListByCondition',{SpecId:data.itemSourceId ,SkipCount:0,MaxResultCount:1})
             .then(function(resp){
                 if(resp.result.totalCount>0){
@@ -1865,82 +1904,140 @@ export default {
             })
              _this.chooseSize=false;
         },
-        getSpecGroupSize(data){
-        // getSpecAllSize(data){
-            let _this=this;
-            _this.sizeTableData=[]
-            _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',data)
-            .then(function(res){//点击规格组,获取规格组的所有规格
-                $.each(res.result.items,function(index,val){//所有未选中的尺码
-                    val.check=false
-                      $.each(_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id],function(i,v){
-                          if(v.id==val.id){
-                             val.check=true
-                          }
-                      })
-                    // }  
-                })
-                _this.sizeTableData=res.result.items;
-                _this.totalItem=res.result.totalCount
-                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                if(_this.totalPage==0){
-                    _this.page=0
-                }
-                _this.btnIsShow()
-            },function(res){
-
-            })
-        },
-        getSpecAllSize(data){
         // getSpecGroupSize(data){
+        // // getSpecAllSize(data){
+        //     let _this=this;
+        //     _this.sizeTableData=[]
+        //     _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',data)
+        //     .then(function(res){//点击规格组,获取规格组的所有规格
+        //         $.each(res.result.items,function(index,val){//所有未选中的尺码
+        //             val.check=false
+        //               $.each(_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id],function(i,v){
+        //                   if(v.id==val.id){
+        //                      val.check=true
+        //                   }
+        //               })
+        //             // }  
+        //         })
+        //         _this.sizeTableData=res.result.items;
+        //         _this.totalItem=res.result.totalCount
+        //         _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+        //         if(_this.totalPage==0){
+        //             _this.page=0
+        //         }
+        //         _this.btnIsShow()
+        //     },function(res){
+
+        //     })
+        // },
+        getSpecGroupSize(){//点击规格组,获取规格组的所有规格
             let _this=this;
-            _this.sizeTableData=[];
-            _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',data)
-            .then(function(res){//点击全部
-                // console.log(data)
-                $.each(res.result.items,function(index,val){//所有未选中的尺码
-                    val.check=false
-                    $.each(_this.checkSize[_this.witchDialog]['all'],function(i,v){
-                          if(v.id==val.id){
-                             val.check=true
-                          }
-                      })  
-                })
-                _this.sizeTableData=res.result.items;
-                _this.totalItem=res.result.totalCount;
-                _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                if(_this.totalPage==0){
-                    _this.page=0
+            _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',{SpecgroupId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:1})
+            .then(function(resp){//点击规格组,获取规格组的所有规格
+               if(resp.result.totalCount>1){
+                    _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecgroupId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:resp.result.totalCount})
+                    .then(function(res){
+                        let groupId=witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+                        let allData=res.result.items
+                        let page=1
+                        $.each(allData,function(index,value){//初始化数据，都未被用户选中,需要判断初始加载项的选中
+                            value.check=false;
+                        })
+                        let x=_this.paginationData(allData,_this.oneItem,page)
+                        _this.allSpecGroupSize[_this.witchDialog][groupId]={allData:allData,nowData:x.nowData,TotalItem:x.TotalItem,TotalPage:x.TotalPage,page:page};
+                    })
+                }else{
+                    let groupId=witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+                    _this.allSpecGroupSize[_this.witchDialog][groupId]={allData:[],nowData:[],TotalItem:0,TotalPage:0,page:0};
                 }
-                _this.btnIsShow()
             },function(res){
 
             })
         },
+        getSpecAllSize(){//点击全部,获取所有规格
+            let _this=this;
+            _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:1})
+            .then(function(resp){
+                if(resp.result.totalCount>1){
+                    _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:resp.result.totalCount})
+                    .then(function(res){
+                        let allData=res.result.items
+                        let page=1
+                        $.each(allData,function(index,value){//初始化数据，都未被用户选中,需要判断初始加载项的选中
+                            value.check=false;
+                        })
+                        let x=_this.paginationData(allData,_this.oneItem,page)
+                         _this.allSpecGroupSize[_this.witchDialog]['all']={allData:allData,nowData:x.nowData,TotalItem:x.TotalItem,TotalPage:x.TotalPage,page:page};
+                    })
+                }else{
+                     _this.allSpecGroupSize[_this.witchDialog]['all']={allData:[],nowData:[],TotalItem:0,TotalPage:0,page:0};
+                }
+            },function(res){
+
+            })
+        },
+        // getSpecAllSize(data){
+        // // getSpecGroupSize(data){
+        //     let _this=this;
+        //     _this.sizeTableData=[];
+        //     _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',data)
+        //     .then(function(res){//点击全部
+        //         // console.log(data)
+        //         $.each(res.result.items,function(index,val){//所有未选中的尺码
+        //             val.check=false
+        //             $.each(_this.checkSize[_this.witchDialog]['all'],function(i,v){
+        //                   if(v.id==val.id){
+        //                      val.check=true
+        //                   }
+        //               })  
+        //         })
+        //         _this.sizeTableData=res.result.items;
+        //         _this.totalItem=res.result.totalCount;
+        //         _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
+        //         if(_this.totalPage==0){
+        //             _this.page=0
+        //         }
+        //         _this.btnIsShow()
+        //     },function(res){
+
+        //     })
+        // },
         getDetailSize(data){//dialog点击左侧规格组获取详细规格
             let _this=this;
             _this.page=1;
-            $.each(_this.showSizeDialogData,function(index,val){
-                val.check=false;
-            })
+            // $.each(_this.showSizeDialogData,function(index,val){
+            //     val.check=false;
+            // })
             if(data==0){//点击全部
-        
-                    _this.witchSpecgroup[_this.witchDialog]={spec:'all',id:_this.witchDialog,name:'/'};
-                    if(typeof(_this.checkSize[_this.witchDialog]['all'])=='undefined'){
-                        _this.checkSize[_this.witchDialog]['all']=[];//初始化选中尺码值
+                   _this.witchSpecgroup[_this.witchDialog]={spec:'all',id:_this.witchDialog,name:'/'};
+                   let groupId=witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+                    if(typeof(_this.allSpecGroupSize[_this.witchDialog][groupId])=='undefined'){
+                         _this.getSpecAllSize()
+                    }else{
+                        console.log(_this.allSpecGroupSize[_this.witchDialog][groupId])
                     }
-                    _this.getSpecAllSize({SpecId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                    // _this.witchSpecgroup[_this.witchDialog]={spec:'all',id:_this.witchDialog,name:'/'};
+                    // if(typeof(_this.checkSize[_this.witchDialog]['all'])=='undefined'){
+                    //     _this.checkSize[_this.witchDialog]['all']=[];//初始化选中尺码值
+                    // }
+                    // _this.getSpecAllSize({SpecId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
                 
             }else{//非全部
                     _this.witchSpecgroup[_this.witchDialog]={spec:'one',id:data.id,name:data.specgroupName};
-                    if(typeof(_this.checkSize[_this.witchDialog][data.id])=='undefined'){
-                        _this.checkSize[_this.witchDialog][data.id]=[]
+                    if(typeof(_this.allSpecGroupSize[_this.witchDialog]['all'])=='undefined'){
+                         _this.getSpecGroupSize()
+                    }else{
+                        console.log(_this.allSpecGroupSize[_this.witchDialog]['all'])
                     }
-                    if(typeof(_this.checkSize[_this.witchDialog][data.specId])=='undefined'){
-                        _this.checkSize[_this.witchDialog][data.specId]=[];//初始化选中尺码值
-                    }
-                     data.check=true;
-                    _this.getSpecGroupSize({SpecgroupId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
+                    // _this.witchSpecgroup[_this.witchDialog]={spec:'one',id:data.id,name:data.specgroupName};
+                    // if(typeof(_this.checkSize[_this.witchDialog][data.id])=='undefined'){
+                    //     _this.checkSize[_this.witchDialog][data.id]=[]
+                    // }
+                    // if(typeof(_this.checkSize[_this.witchDialog][data.specId])=='undefined'){
+                    //     _this.checkSize[_this.witchDialog][data.specId]=[];//初始化选中尺码值
+                    // }
+                    //  data.check=true;
+                    // _this.getSpecGroupSize({SpecgroupId:_this.witchSpecgroup[_this.witchDialog].id,SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem})
             }
         },
         createdSize(){//创建尺码
