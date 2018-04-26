@@ -394,13 +394,13 @@
                 <el-tab-pane label="商品规格" name="goodsSize">
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 商品规格表格 - - - - - - - - - - - - - - - - - - - - -  -->
                         <el-table :data="productSpec_ChildTable" border style="width: 100%" stripe>
-                            <el-table-column prop="specName" label="规格编码" width="150">
+                            <el-table-column label="规格编码" width="150">
                                 <template slot-scope="scope">
                                     <span>{{scope.row.specName}}</span>
                                     <button class="showGoodsDialog" @click="showGoodsDialog(scope.row)">···</button>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="specName" label="规格组" width="150">
+                            <el-table-column label="规格组" width="150">
                                 <template slot-scope="scope">
                                     <span>{{scope.row.specGroup.name}}</span>
                                 </template>
@@ -409,8 +409,8 @@
                                 <template slot-scope="scope">
                                     <span v-for="(i,index) in scope.row.spec" :key="index" class="sizeNameWrapper">
                                         <span class="delSize" @click="delSize(i,scope.row)">×</span>
-                                        <span class="sizeNameBtn" v-if="scope.row.specGroup.spec=='all'">{{i.specValueName}}</span>
-                                        <span class="sizeNameBtn" v-if="scope.row.specGroup.spec=='one'">{{i.specgroupId_SpecgroupName}}</span>
+                                        <span class="sizeNameBtn">{{i.specValueName}}</span>
+                                        <!-- <span class="sizeNameBtn" v-if="scope.row.specGroup.spec=='one'">{{i.specgroupId_SpecgroupName}}</span> -->
                                     </span>
                                 </template>
                             </el-table-column>
@@ -842,6 +842,101 @@
                     <button class="transfer_footer_btn" @click="innerVisible = false">取 消</button>
                 </el-col>
             </el-dialog>
+<!--                   穿梭框- -尺码选择                   -->
+            <el-dialog
+                class="add_size transfer_dialog"
+                width="40%"
+                title="选择尺码"
+                :visible.sync="innerVisible2"
+                append-to-body>
+                <el-col :span="24">
+
+        <el-col :span="11" class="transfer_warapper">
+            <el-col :span="24" class="transfer_header">
+                <span>已选</span>
+                <!-- <div class="transfer_search" @keyup.enter="searchLeftUserTable">
+                    <el-input
+                        placeholder="搜索..."
+                        v-model="searchLeftUser"
+                        class="search_input"
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </div>     -->
+            </el-col>    
+            <el-col :span="24" class="transfer_table">
+                <el-table 
+                :data="leftTableData" 
+                border 
+                style="width: 100%" 
+                stripe 
+                max-height="400"
+                @selection-change="leftSelect" 
+                ref="roleTableLeft">
+                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column prop="specValueCode" label="规格编码"></el-table-column>
+                    <el-table-column prop="specValueName" label="规格名称"></el-table-column>
+                </el-table>   
+            </el-col>
+            <!-- <el-col :span="24" class="transfer_footer">
+                <div style="float:right">
+                    <span>共{{totalPageLeftUser}}页</span>
+                    <el-button class="el_transfer" :disabled="leftDownBtnUser" @click="pageDownLeftUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="leftAddBtnUser" @click="pageAddLeftUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                </div>
+            </el-col> -->
+        </el-col>
+        <el-col :span="2" class="transfer_btns">
+            <el-col :span="24" class="transfer_btn_wrapper">
+                <el-button class="el_transfer" :disabled="goLeftBtn" @click="goLeft" type="primary" icon="el-icon-arrow-left" round></el-button>
+                <el-button class="el_transfer" :disabled="goRightBtn" @click="goRight" type="primary" icon="el-icon-arrow-right" round></el-button>
+            </el-col>
+        </el-col>
+        <el-col :span="11" class="transfer_warapper">
+            <el-col :span="24" class="transfer_header">
+                <span>可选</span>
+                <!-- <div class="transfer_search"  @keyup.enter="searchRightUserTable">
+                    <el-input
+                        placeholder="搜索..."
+                        v-model="searchRightUser"
+                        class="search_input"
+                        >
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </div> -->
+            </el-col>    
+            <el-col :span="24" class="transfer_table">
+                <el-table 
+                :data="rightTableData" 
+                border 
+                style="width: 100%" 
+                stripe 
+                 max-height="400"
+                @selection-change="rightSelect" 
+                ref="roleTabRight">
+                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column prop="specValueCode" label="规格编码"></el-table-column>
+                    <el-table-column prop="specValueName" label="规格名称"></el-table-column>
+                </el-table>  
+                
+            </el-col>
+            <!-- <el-col :span="24" class="transfer_footer">
+                <div style="float:right">
+                    <span>共{{totalPageRightUser}}页</span>
+                    <el-button class="el_transfer" :disabled="rightDownBtnUser" @click="pageDownRightUser" type="primary" icon="el-icon-arrow-left" round></el-button>
+                    <el-button class="el_transfer" :disabled="rightAddBtnUser" @click="pageAddRightUser" type="primary" icon="el-icon-arrow-right" round></el-button>
+                </div>
+            </el-col> -->
+        </el-col>
+    </el-col>
+
+                <el-col :span="24" slot="footer" class="add_size_footer">
+                    <button class="transfer_footer_btn transfer_confirm" @click="chooseAllSize">确 认</button>
+                    <button class="transfer_footer_btn" @click="innerVisible2 = false">取 消</button>
+                </el-col>
+            </el-dialog>
+
+<!--                   外层dialog                   -->
             <template slot="title">
                 <span>尺码选择</span>
                 <div class="search_input_group">
@@ -1185,6 +1280,7 @@ export default {
         },//dialog选择尺码所有对应id规格组数据
         showSizeDialogData:[],//dialog左侧渲染数据
         innerVisible:false,//内层表格
+        innerVisible2:false,
         witchSpecgroup:[],//纪录选中规格组
         witchDialog:0,//纪录当前点击的规格编码id
         allSpecGroupSize:[],//纪录规格组下面的规格
@@ -1192,11 +1288,11 @@ export default {
         sizeTableData:[],
         pageIndex:1,//分页的当前页码
         totalPage:1,//当前分页总数
-        oneItem:2,//每页有多少条信息
+        oneItem:30,//每页有多少条信息
         page:1,//当前页
         leftDownBtn:false,//分页按钮是否显示
         leftAddBtn:false,//分页按钮是否显示
-        checkSize:[],//用户选中尺码
+        // checkSize:[],//用户选中尺码
         //创建商品规格
         creatSize:{
             "groupId": 1,
@@ -1213,6 +1309,18 @@ export default {
             "specValueId": 0,
             "seq": 0
         },
+// ------------内层穿梭dialog-------------
+            leftTableData:[],//右侧表格展示的数据
+            rightTableData:[],//左侧表格展示的数据
+
+            leftSelectData: [],//复选框选中数据
+            rightSelectData: [],//复选框选中数据
+
+            goLeftBtn:true,//可选
+            goRightBtn:true,//已选
+
+            searchLeftUser:'',//搜索      
+            searchRightUser:'',
 //---------------SKU------------------
        
 //---------------属性------------------
@@ -1693,6 +1801,7 @@ export default {
                         value.specGroup={}
                         value.spec=[]
                     })
+                    console.log(res.result)
                     _this.productSpec_ChildTable=res.result
                 },function(res){
 
@@ -1752,32 +1861,15 @@ export default {
             x={TotalItem:data.length,TotalPage:Math.ceil(data.length/oneItem),nowData:nowData};
             return x
         },
-        ifShowInnerDialog(){//点击新增，判断是否是全部，发送不同请求
-            let _this=this;
-            // _this.innerVisible=true
-            if(_this.witchSpecgroup[_this.witchDialog].spec=='all'){
-                _this.innerVisible=true
-            }else if(_this.witchSpecgroup[_this.witchDialog].spec=='one'){
-                //生成穿梭框，调用聚合接口，拼接数据，求差集
-                // _this.creatSizeOne.specgroupId=_this.witchSpecgroup[_this.witchDialog].id
-                // _this.$axios.posts('/api/services/app/SpecgroupContentManagement/Create',_this.creatSizeOne)
-                // .then(function(res){
-
-                // },function(res){
-                //     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
-                //     _this.errorMessage=true;
-                // })
-            }
-        },
     showGoodsDialog(data){//选中编辑规格组，显示dialog
         let _this=this;
         _this.witchDialog=data.itemSourceId;//纪录当前点击的规格编码id
         if(typeof(_this.allSpecGroupSize[_this.witchDialog])=='undefined'){
             _this.allSpecGroupSize[_this.witchDialog]=[];//初始化选中尺码值
         }
-        if(typeof(_this.checkSize[_this.witchDialog])=='undefined'){
-            _this.checkSize[_this.witchDialog]=[];//初始化选中尺码值
-        }
+        // if(typeof(_this.checkSize[_this.witchDialog])=='undefined'){
+        //     _this.checkSize[_this.witchDialog]=[];//初始化选中尺码值
+        // }
         if(typeof(_this.witchSpecgroup[_this.witchDialog])=='undefined'){
             _this.witchSpecgroup[_this.witchDialog]={spec:'all',id:_this.witchDialog,name:'/'}
         }
@@ -1936,7 +2028,7 @@ export default {
                     //   _this.allSpecGroupSize[_this.witchDialog]['all'].allData
                     console.log(_this.allSpecGroupSize[_this.witchDialog]['all'].allData)
                   }else if(_this.witchSpecgroup[_this.witchDialog].spec=='one'){
-                       let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+                      let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
                        console.log(_this.allSpecGroupSize[_this.witchDialog][groupId].allData)
                   }
             //  if(data.check){//选中
@@ -1968,49 +2060,99 @@ export default {
         },
         delSize(data,row){
             let _this=this;
-                if(_this.witchSpecgroup[row.itemSourceId].spec=='all'){
-                    let x=0;
-                    $.each(row.spec,function(i,v){
-                        if(v.id==data.id){
-                            x=i;
-                        }
-                    })
-                    row.spec.splice(x,1)
-                    _this.checkSize[_this.witchDialog]['all']=row.spec
-                    //  value.spec=_this.checkSize[_this.witchDialog]['all']
-                }else if(_this.witchSpecgroup[row.itemSourceId].spec=='one'){
-                    //  value.spec=_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]
-                    let x=0;
-                    $.each(row.spec,function(i,v){
-                        if(v.id==data.id){
-                            x=i;
-                        }
-                    })
-                    row.spec.splice(x,1)
-                    _this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]=row.spec
-                }
+            if(_this.witchSpecgroup[row.itemSourceId].spec=='all'){
+                let x=0;
+                $.each(row.spec,function(i,v){//表格中去除选中项
+                    if(v.id==data.id){
+                        x=i;
+                    }
+                })
+                $.each(_this.allSpecGroupSize[row.itemSourceId]['all'].allData,function(index,value){//在所有数据中去除选中项
+                    if(value.id==data.id){
+                        value.check=false;
+                    }
+                })
+                row.spec.splice(x,1)
+            }else if(_this.witchSpecgroup[row.itemSourceId].spec=='one'){
+                let x=0;
+                let groupId=_this.witchSpecgroup[row.itemSourceId]['id'];//当前用户组id
+                $.each(row.spec,function(i,v){//表格中去除选中项
+                    if(v.id==data.id){
+                        x=i;
+                    }
+                })
+                $.each(_this.allSpecGroupSize[row.itemSourceId][groupId].allData,function(index,value){//在所有数据中去除选中项
+                    if(value.id==data.id){
+                        value.check=false;
+                    }
+                })
+                row.spec.splice(x,1)
+            }
+            // if(_this.witchSpecgroup[row.itemSourceId].spec=='all'){
+            //     let x=0;
+            //     $.each(row.spec,function(i,v){
+            //         if(v.id==data.id){
+            //             x=i;
+            //         }
+            //     })
+            //     row.spec.splice(x,1)
+            //     _this.checkSize[_this.witchDialog]['all']=row.spec
+            //     //  value.spec=_this.checkSize[_this.witchDialog]['all']
+            // }else if(_this.witchSpecgroup[row.itemSourceId].spec=='one'){
+            //     //  value.spec=_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]
+            //     let x=0;
+            //     $.each(row.spec,function(i,v){
+            //         if(v.id==data.id){
+            //             x=i;
+            //         }
+            //     })
+            //     row.spec.splice(x,1)
+            //     _this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]=row.spec
+            // }
         },
         confirmCheckSize(){//dialog点击确认
-             let _this=this;
+            let _this=this;
              $.each(_this.productSpec_ChildTable,function(index,value){
                 if(value.itemSourceId==_this.witchDialog){
                     if(_this.witchSpecgroup[_this.witchDialog].spec=='all'){
                          value.spec=[]
-                         $.each(_this.checkSize[_this.witchDialog]['all'],function(i,v){
-                             value.spec.push(v)
+                         $.each(_this.allSpecGroupSize[_this.witchDialog]['all'].allData,function(i,v){
+                             if(v.check){
+                                 value.spec.push(v)
+                             }
                          })
-                        //  value.spec=_this.checkSize[_this.witchDialog]['all']
                     }else if(_this.witchSpecgroup[_this.witchDialog].spec=='one'){
+                        let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
                         value.spec=[]
-                         $.each(_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id],function(i,v){
-                             value.spec.push(v)
+                         $.each(_this.allSpecGroupSize[_this.witchDialog][groupId].allData,function(i,v){
+                             if(v.check){
+                                 value.spec.push(v)
+                             }
                          })
-                        //  value.spec=_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]
                     }
                     
                     value.specGroup=_this.witchSpecgroup[_this.witchDialog]
                 }
             })
+            //  $.each(_this.productSpec_ChildTable,function(index,value){
+            //     if(value.itemSourceId==_this.witchDialog){
+            //         if(_this.witchSpecgroup[_this.witchDialog].spec=='all'){
+            //              value.spec=[]
+            //              $.each(_this.checkSize[_this.witchDialog]['all'],function(i,v){
+            //                  value.spec.push(v)
+            //              })
+            //             //  value.spec=_this.checkSize[_this.witchDialog]['all']
+            //         }else if(_this.witchSpecgroup[_this.witchDialog].spec=='one'){
+            //             value.spec=[]
+            //              $.each(_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id],function(i,v){
+            //                  value.spec.push(v)
+            //              })
+            //             //  value.spec=_this.checkSize[_this.witchDialog][_this.witchSpecgroup[_this.witchDialog].id]
+            //         }
+                    
+            //         value.specGroup=_this.witchSpecgroup[_this.witchDialog]
+            //     }
+            // })
              _this.chooseSize=false;
         },
         // getSpecGroupSize(data){
@@ -2044,16 +2186,20 @@ export default {
             _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',{SpecgroupId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:1})
             .then(function(resp){//点击规格组,获取规格组的所有规格
                if(resp.result.totalCount>1){
-                    _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecgroupId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:resp.result.totalCount})
+                    _this.$axios.gets('/api/services/app/SpecgroupContentManagement/GetListByCondition',{SpecgroupId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:resp.result.totalCount})
                     .then(function(res){
+                        console.log(_this.witchSpecgroup[_this.witchDialog]['id'],res)
                         let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
                         let allData=res.result.items
                         let page=1
                         $.each(allData,function(index,value){//初始化数据，都未被用户选中,需要判断初始加载项的选中
                             value.check=false;
+                            value.specValueName=value.specValueId_SpecValueName;
+                            value.specValueCode =value.specValueId_SpecValueCode
                         })
                         let x=_this.paginationData(allData,_this.oneItem,page)
                         _this.allSpecGroupSize[_this.witchDialog][groupId]={allData:allData,nowData:x.nowData,totalItem:x.TotalItem,totalPage:x.TotalPage,page:page};
+                        _this.page=1
                         _this.totalPage=x.TotalPage;
                         _this.sizeTableData=x.nowData
                         _this.totalItem=x.TotalItem;
@@ -2079,14 +2225,17 @@ export default {
                 if(resp.result.totalCount>1){
                     _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.witchSpecgroup[_this.witchDialog]['id'],SkipCount:0,MaxResultCount:resp.result.totalCount})
                     .then(function(res){
+                        
                         let allData=res.result.items
                         let page=1
                         $.each(allData,function(index,value){//初始化数据，都未被用户选中,需要判断初始加载项的选中
                             value.check=false;
+                            value.specValueId=value.id;
                         })
                         let x=_this.paginationData(allData,_this.oneItem,page)
                         
                          _this.allSpecGroupSize[_this.witchDialog]['all']={allData:allData,nowData:x.nowData,totalItem:x.TotalItem,totalPage:x.TotalPage,page:page};
+                         _this.page=1
                          _this.totalPage=x.TotalPage;
                          _this.sizeTableData=x.nowData
                          _this.totalItem=x.TotalItem;
@@ -2188,7 +2337,18 @@ export default {
                     _this.creatSize.specId=_this.witchSpecgroup[_this.witchDialog].id
                     _this.$axios.posts('/api/services/app/SpecValueManagement/Create',_this.creatSize)
                     .then(function(res){
-                        console.log(res)
+                        res.result.check=false;
+                        _this.allSpecGroupSize[_this.witchDialog]['all'].allData.push(res.result)
+                        let x=_this.paginationData(_this.allSpecGroupSize[_this.witchDialog]['all'].allData,_this.oneItem,_this.allSpecGroupSize[_this.witchDialog]['all'].page)
+                        _this.allSpecGroupSize[_this.witchDialog]['all'].nowData=x.nowData;
+                        _this.allSpecGroupSize[_this.witchDialog]['all'].totalItem=x.TotalItem;
+                        _this.allSpecGroupSize[_this.witchDialog]['all'].totalPage=x.TotalPage;
+
+                        _this.page=_this.allSpecGroupSize[_this.witchDialog]['all'].page;
+                        _this.totalPage=_this.allSpecGroupSize[_this.witchDialog]['all'].totalPage;
+                        _this.sizeTableData=_this.allSpecGroupSize[_this.witchDialog]['all'].nowData
+                        _this.totalItem=_this.allSpecGroupSize[_this.witchDialog]['all'].totalItem;
+                        _this.btnIsShow()
                         _this.innerVisible=false;
                     },function(res){
                         if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
@@ -2196,6 +2356,115 @@ export default {
                     })
                 }
             });    
+        },
+//---------------内层穿梭框------------------
+        ifShowInnerDialog(){//点击新增，判断是否是全部，发送不同请求
+            let _this=this;
+            // _this.innerVisible=true
+            if(_this.witchSpecgroup[_this.witchDialog].spec=='all'){
+                _this.innerVisible=true
+            }else if(_this.witchSpecgroup[_this.witchDialog].spec=='one'){
+                //生成穿梭框，调用聚合接口，拼接数据，求差集
+                // _this.allSpecGroupSize[_this.witchDialog]['all'].initData=_this.allSpecGroupSize[_this.witchDialog][groupId].allData;//纪录打开内层穿梭框之前的当前规格组所有规格
+                let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+                let canChoose=_this.uniqueArrayFn(_this.allSpecGroupSize[_this.witchDialog]['all'].allData,_this.allSpecGroupSize[_this.witchDialog][groupId].allData,'specValueId','specValueId')
+                console.log(_this.allSpecGroupSize[_this.witchDialog]['all'].allData)
+                console.log(_this.allSpecGroupSize[_this.witchDialog][groupId].allData)
+                _this.leftTableData=_this.allSpecGroupSize[_this.witchDialog][groupId].allData;//左侧表格数据
+                _this.rightTableData=canChoose;//右侧表格数据
+                
+                // _this.creatSizeOne.specgroupId=_this.witchSpecgroup[_this.witchDialog].id
+                // _this.$axios.posts('/api/services/app/SpecgroupContentManagement/Create',_this.creatSizeOne)
+                // .then(function(res){
+
+                // },function(res){
+                //     if(res && res!=''){ _this.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)}
+                //     _this.errorMessage=true;
+                // })
+                 _this.innerVisible2=true;
+            }
+        },
+        chooseAllSize(){
+             let _this=this;
+             let groupId=_this.witchSpecgroup[_this.witchDialog]['id'];//当前用户组id
+            //  _this.allSpecGroupSize[_this.witchDialog][groupId].allData
+            //  console.log(_this.leftTableData)
+            //  console.log(_this.allSpecGroupSize[_this.witchDialog][groupId].allData)
+             let data={
+               "createList": [
+                //  {
+                //    "groupId": 1,
+                //    "specgroupId": groupId,
+                //    "specValueId": 0,
+                //    "seq": 0
+                //  }
+               ],
+               "updateList": [],
+               "deleteList": [
+                //  {
+                //    "id": 0
+                //  }
+               ]
+             }
+             $.each(_this.allSpecGroupSize[_this.witchDialog][groupId].allData,function(index,value){
+                var item = {"id": value.specValueId};
+                var repeat = false;
+                 $.each(_this.leftTableData,function(i,v){
+                     if(v.id==value.id){
+                        repeat = true;
+                     }
+                 })
+                 if (!repeat) {
+                    data.deleteList.push(item);
+                }
+             })
+             $.each(_this.leftTableData,function(index,value){
+                var item = {"groupId": 1,"specgroupId": groupId,"specValueId": value.specValueId,"seq": 0,};
+                var repeat = false;
+                 $.each(_this.allSpecGroupSize[_this.witchDialog][groupId].allData,function(i,v){
+                     if(v.id==value.id){
+                        repeat = true;
+                     }
+                 })
+                 if (!repeat) {
+                    data.createList.push(item);
+                }
+             })
+             console.log(data)
+             _this.$axios.posts('/api/services/app/SpecgroupContentManagement/CUDAggregate',data)
+             .then(function(res){
+                 console.log(res)
+             })
+            //  _this.innerVisible2=false;
+        },
+        leftSelect(val) {//内层穿梭框选中已选
+            let _this=this;
+            _this.leftSelectData = val;
+            if(val.length==0){
+                _this.goRightBtn=true
+            }else{
+                _this.goRightBtn=false
+            }
+        },
+        rightSelect(val) {//内层穿梭框选中可选
+            let _this=this;
+            _this.rightSelectData = val;
+            if(val.length==0){
+                _this.goLeftBtn=true
+            }else{
+                _this.goLeftBtn=false
+            }
+        },
+        goLeft(){//从右往左添加数据
+            let _this=this;
+            _this.rightTableData=_this.uniqueArrayFn(_this.rightTableData,_this.rightSelectData,'id','id')
+            _this.leftTableData=_this.rightSelectData.concat(_this.leftTableData)
+            // console.log(_this.rightSelectData)
+        },
+        goRight(){//从左往右添加数据
+            let _this=this;
+            _this.leftTableData=_this.uniqueArrayFn(_this.leftTableData,_this.leftSelectData,'id','id')
+            _this.rightTableData=_this.leftSelectData.concat(_this.rightTableData)
         },
 //----------------------使用组织------------------
         searchOuTable(){
