@@ -100,6 +100,7 @@
                     <div class="bgcolor bgLongWidth">
                     <label><small>*</small>密码</label>
                     <el-input 
+                    type="password"
                     @change="isUpdate"
                     class="password" 
                     :class="{redBorder : validation.hasError('addData.password')}" 
