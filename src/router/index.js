@@ -213,6 +213,8 @@ const commercialSpecificationDetails= ()=>//商品规格平台详情
     import ('../components/commodityManagement/commercialSpecificationDetails')
 const commercialSpecificationModify= ()=>//商品规格平台详情
     import ('../components/commodityManagement/commercialSpecificationModify')   
+const commodityPropertyofGoods= ()=>//商品规格
+    import ('../components/commodityManagement/commodityPropertyofGoods') 
 
 const specificationOfGoods= ()=>//商品规格
     import ('../components/commodityManagement/specificationOfGoods')  
@@ -465,6 +467,7 @@ const routes = [
                     { path: '/OuManage/OuManageList/:id', component: OuManageList, name: 'OuManageList' },
                 ]
             },
+            { path: '/commodityPropertyofGoods/:id', component: commodityPropertyofGoods, name: 'commodityPropertyofGoods' },
             {
                 path: '/menu',
                 component: menu,
