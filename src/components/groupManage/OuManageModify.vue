@@ -42,8 +42,8 @@
                             会计方案{{ validation.firstError('addData.accCchemeId') }}
                             </span>
                             <span 
-                            :class="{block : !validation.hasError('addData.accStartMonth')}">
-                            启用年月{{ validation.firstError('addData.accStartMonth') }},
+                            :class="{block : !validation.hasError('addData.basAccperiodContentId')}">
+                            启用年月{{ validation.firstError('addData.basAccperiodContentId') }},
                             </span>
                             <span 
                             :class="{block : !validation.hasError('addData.baseCurrencyId')}">
@@ -256,8 +256,7 @@
                         @node-click="nodeClick_ou"
                         >
                         </el-tree>
-                        <!-- <el-option v-show="false" :key="item_ou.id" :label="item_ou.ouName" :value="item_ou.id">
-                        </el-option> -->
+                        
                         <el-option v-show="false" v-for="item in selectData.ou" :key="item.id" :label="item.ouName" :value="item.id" :date="item.id">
                         </el-option>
                         <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
@@ -266,34 +265,25 @@
                 <div class="bgcolor">
                     <label><small>*</small>会计方案</label>
                     <el-select clearable filterable  class="accCchemeId"
-                     
-                    @change="getStartMonth"
                     @focus="showErrprTipsSelect"
                     :class="{redBorder : validation.hasError('addData.accCchemeId')}"
                     placeholder=""
+                    @change="seletChange"
                     v-model="addData.accCchemeId">
-                        <el-option 
-                        v-for="item in selectData.accCchemeId" 
-                        :key="item.itemValue" 
-                        :label="item.itemName" 
-                        :value="item.itemValue">
+                       <el-option v-for="item in accSchemeIdOptions" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
-                        <el-option v-show="false" :label="item_area_no.ouName" :value="item_area_no.id"></el-option>
+                       <el-option v-show="false" :key="item_area_no.id" :label="item_area_no.ouName" :value="item_area_no.id">
+                        </el-option>
                     </el-select>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>启用年月</label>
-                    <el-date-picker 
-                    disabled 
-                    
-                    @focus="showErrprTipsRangedate"
-                    :class="{redBorder : validation.hasError('addData.accStartMonth')}"
-                    class="accStartMonth datepicker" 
-                    format="yyyy-MM"
-                    value-format="yyyy-MM" 
-                    v-model="addData.accStartMonth" 
-                    type="month" 
-                    ></el-date-picker>
+                    <el-select v-model="addData.basAccperiodContentId" >
+                        <el-option v-for="item in accountYearOptions" :key="item.accperiodContentId" :label="item.accountYear" :value="item.accperiodContentId">
+                        </el-option>
+                       <el-option v-show="false" :key="item_area_no.id" :label="item_area_no.ouName" :value="item_area_no.id">
+                        </el-option>
+                    </el-select>
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>本位币种</label>
@@ -1069,7 +1059,8 @@ export default({
                 value:0,
                 label:""
             },
-          
+            accountYearOptions: [],
+            accSchemeIdOptions:[],
             test:'', 
             dateRange:[],//有效时间
             companys:1,
@@ -1083,8 +1074,8 @@ export default({
                 "ouName": "",
                 "ouFullname": "",
                 "ouParentid": "",//整数
-                "accCchemeId": "",//整数
-                "accStartMonth": "",
+                "accCchemeId": "",//整数会记期间方案 ,
+                "basAccperiodContentId": "",//启用年月
                 "baseCurrencyId": "",//整数
                 "companyOuId": "",//整数
                 "contactPerson": "",
@@ -1157,6 +1148,10 @@ export default({
                 message:'',
                 validationErrors:[],
             },
+            item_acc:{//记录会计
+                name:'',
+                id:'',    
+            },
 //----------名称全称联动----------
             isUpdateFlag:false,                 
         }
@@ -1177,7 +1172,7 @@ export default({
       'addData.accCchemeId': function (value) {//会计方案
          return this.Validator.value(value).required().integer();
       },
-      'addData.accStartMonth': function (value) {//启用年月
+      'addData.basAccperiodContentId': function (value) {//启用年月
          return this.Validator.value(value).required();
       },
       'addData.baseCurrencyId': function (value) {//本位币种id
@@ -1492,10 +1487,13 @@ export default({
     },
     created:function(){
         let _this=this;
+         _this.loadOuId();
+         _this.loadaccScheme();
          _this.loadTree();
          _this.getSelectData();
          _this.getData();
-    },  
+         
+    }, 
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
@@ -1614,10 +1612,6 @@ export default({
                 _this.selectData.ouParentid=res.result;
                 // console.log(res)
             })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
-            // 会计期间
-                _this.selectData.accCchemeId=res.result;
-            })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
                 _this.selectData.baseCurrencyId=res.result.items;
@@ -1639,7 +1633,6 @@ export default({
         getData(){
             let _this=this;
             _this.$axios.gets('/api/services/app/OuManagement/Get',{id:_this.$route.params.id})
-         
             .then(function(res){
                 _this.addData={
                     "ouCode": res.result.ouCode,
@@ -1647,7 +1640,7 @@ export default({
                     "ouFullname": res.result.ouFullname,
                     "ouParentid": res.result.ouParentid,//整数
                     "accCchemeId": res.result.accCchemeId,//整数
-                    "accStartMonth": res.result.accStartMonth,
+                    "basAccperiodContentId": res.result.basAccperiodContentId,
                     "baseCurrencyId": res.result.baseCurrencyId,//整数
                     "companyOuId": res.result.companyOuId,//整数
                     "contactPerson": res.result.contactPerson,
@@ -1658,8 +1651,7 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
-                _this.companyOuId=res.result.id;
-          
+                _this.loadbeginDate(res.result.accCchemeId);
                 _this.change_ouType()
              
                 if(res.result.basCompany!=null && typeof(res.result.basCompany)!='undefined' && res.result.basCompany!=[]){
@@ -1717,6 +1709,7 @@ export default({
                     modifiedTime:res.result.modifiedTime,
                 }
                 _this.saveSuccess=false;
+                // console.log(_this.saveSuccess,_this.firstModify,_this.secondModify ,_this.forthModify,_this.ifModify, _this.fiveModify)
                 _this.firstModify=false;
                 _this.secondModify=false;
                 _this.thirfModify=false;
@@ -1725,6 +1718,28 @@ export default({
                 _this.fiveModify=false;
             })
         },
+         seletChange(val){
+            let _this=this;
+            _this.addData.basAccperiodContentId=''
+            _this.loadbeginDate(val);
+                
+            },
+        loadbeginDate(data){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
+                _this.accountYearOptions=res.result;
+                if(_this.accountYearOptions.length==0){
+                    _this.addData.basAccperiodContentId="";
+                }
+                },function(res){
+                })
+            },
+        loadaccScheme(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
+            _this.accSchemeIdOptions=res.result;
+            })
+    },
         showErrprTips(e){
              $('.tipsWrapper').css({display:'none'})
             // $('.tipsWrapper').each(function(){
@@ -1836,6 +1851,17 @@ export default({
                     $(this).click()
                 }
             })
+        },
+         loadOuId(){//获取ouId
+            let _this=this;               
+            _this.$axios.gets('/api/services/app/User/GetCurrentUser').then(function(res){
+                _this.ouid=res.result.ouId;
+            }).catch(function(err){
+                _this.$message({
+                    type: 'warning',
+                    message: err.error.message
+                });
+            });
         },
         isBack(){
             let _this=this;
@@ -1985,6 +2011,7 @@ export default({
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
                         _this.addData.basCompany=_this.basCompany;
+                        _this.addData.companyOuId=_this.addData.id;
                         }
                         if(_this.Finance){
                             _this.addData.basBusiness=_this.basBusiness;
@@ -2111,14 +2138,6 @@ export default({
                 companyStatus:'' ,//公司启用状态
                 regtime:''//公司成立时间
             };
-        },
-        getStartMonth(){//根据会计期间生成启用年月
-            let _this=this;
-            _this.$axios.gets('/api/services/app/Accperiod/Get',{id:_this.addData.accCchemeId})
-            .then(function(res){
-                _this.addData.accStartMonth=res.result.beginDate
-            },function(res){
-            })
         },
         renderContent_companyOuId(h, { node, data, store }){
                 

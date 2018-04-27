@@ -64,7 +64,7 @@ export default new vuex.Store({
         repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
         repositoryData:{ name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
         repositoryModify:{ name: 'repositoryModify', url: '/repository/repositoryModify/:id', parent: 'repository' } ,
-
+        commodityPropertyofGoods:{name: 'commodityPropertyofGoods', url: '/commodityPropertyofGoods/:id', parent: 'commodityPropertyofGoods', default: '/commodityPropertyofGoods/:id' },//商品品牌
         customer:{ name: 'customer', url: '/customer/customerList/:id', parent: 'customer', default: '/customer/customerList/:id' } , //客户管理
         customerList:{ name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
         customerDetail:{ name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,

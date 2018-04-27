@@ -53,31 +53,31 @@
                                 <el-table v-loading="tableLoading" :data="tableData"  @row-click="rowClick" @selection-change="handleSelectionChange" border style="width: 100%">
                                     <el-table-column type="selection" label="" width="50">
                                     </el-table-column>
-                                    <el-table-column  label="规格名称" prop="specId_SpecName" width="150">
+                                    <el-table-column  label="属性名称" prop="specId_SpecName" width="150">
                                         <template slot-scope="scope">
                                            <el-select disabled="disabled"
                                             class="specId"
                                             placeholder=""
                                             :class="{errorclass:scope.row.specId==''&&isSave==true}"
-                                            v-model="scope.row.specId">
-                                                <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.specName" :value="item.id">
+                                            v-model="scope.row.propertyId">
+                                                <el-option v-for="item in selectData.userGroupId" :key="item.id" :label="item.propertyName" :value="item.id">
                                                 </el-option>
                                             </el-select>
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="specValueCode" label="规格值编码">
+                                    <el-table-column prop="propertyValueCode" label="属性值编码">
                                         <template slot-scope="scope">
-                                            <img :id="scope.row.id"  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.specValueCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>
+                                            <img :id="scope.row.id"  :if=updateArray.indexOf(scope.row.id)  v-show='updateArray.indexOf(scope.row.id)>=0||scope.row.propertyValueCode==""' class="update-icon" src="../../../static/image/content/redremind.png"/>
 
-                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.specValueCode==''&&isSave==true}" 
-                                                    v-model="scope.row.specValueCode" 
+                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.propertyValueCode==''&&isSave==true}" 
+                                                    v-model="scope.row.propertyValueCode" 
                                                     type="text"/>
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="specValueName" label="规格值名称">
+                                    <el-table-column prop="propertyValueName" label="属性值名称">
                                         <template slot-scope="scope">
-                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.specValueName==''&&isSave==true}" 
-                                                    v-model="scope.row.specValueName" 
+                                            <input @change="propertychange(scope.row)" class="input-need bluecolor" :class="{errorclass:scope.row.propertyValueName==''&&isSave==true}" 
+                                                    v-model="scope.row.propertyValueName" 
                                                     type="text"/>
                                         </template>
                                     </el-table-column>
@@ -100,13 +100,7 @@
                                             </el-select>
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="createdBy" label="创建人">
-                                    </el-table-column>
-                                    <el-table-column prop="createdTime" label="创建时间">
-                                    </el-table-column>
-                                    <el-table-column prop="modifiedBy" label="修改人" width="100">
-                                    </el-table-column>
-                                    <el-table-column prop="modifiedTime" label="修改时间" width="">
+                                    <el-table-column prop="createdBy" label="级联属性">
                                     </el-table-column>
                                     <el-table-column prop="address7" label="操作" width="" fixed="right">
                                         <template slot-scope="scope">
@@ -306,8 +300,8 @@ import Tree from '../../base/tree/tree'
                     increased: true
                 }]},
                 defaultProps: {
-                    children:'children',
-                    label:'specName'
+                    children:'childNodes',
+                    label:'propertyName'
                 },
                 controlTypeoptions: [{
                     value: 0,
@@ -444,15 +438,12 @@ import Tree from '../../base/tree/tree'
                         let newcol={
                             "groupId": 1,
                             "specId": _this.value1.id,
-                            "specValueCode": "",
-                            "specValueName": "",
+                            "propertyId": _this.value1.id,
+                            "propertyValueCode": "",
+                            "propertyValueName": "",
                             "seq": 0,
                             "status": 1,
                             "remark": "",
-                            "createdBy":this.$store.state.name,
-                            "createdTime":this.GetDateTime(),
-                            modifiedBy:this.$store.state.name,
-                            modifiedTime:this.GetDateTime()
                         };
                         this.tableData.unshift(newcol);
                         this.addData1.createList.unshift(newcol); 
@@ -490,7 +481,8 @@ import Tree from '../../base/tree/tree'
                         }
                         
                        _this.addData1.updateList= unique3(_this.amendData);
-                        _this.$axios.posts('/api/services/app/SpecValueManagement/CUDAggregate',_this.addData1).then(function(res){
+                       console.log(_this.addData1);
+                                               _this.$axios.posts('/api/services/app/PropertyValueManagement/CUDAggregate',_this.addData1).then(function(res){
                             _this.isUpdate=false;
                             _this.TreeNodeClick(_this.value1,false);
                             _this.isUpdate2 = true;
@@ -619,12 +611,14 @@ import Tree from '../../base/tree/tree'
                         _this.dialogUserConfirm = false;
                         // console.log(this.addArray);
                     }else{
-                        _this.$axios.deletes('/api/services/app/SpecValueManagement/Delete',{Id:_this.addabc.id}).then(function(res){
+                        _this.$axios.deletes('/api/services/app/PropertyValueManagement/Delete',{Id:_this.addabc.id}).then(function(res){
                             _this.loadTableData();
                             if(_this.value1 == ''){
-                               _this.TreeNodeClick1(0); 
+                               _this.TreeNodeClick1(0);
+                               alert(1) 
                             }else{
                                _this.TreeNodeClick(_this.value1,false); 
+                
                             }
                             _this.dialogUserConfirm = false;
                             _this.open('删除成功','el-icon-circle-check','successERP');              
@@ -648,13 +642,14 @@ import Tree from '../../base/tree/tree'
                                 return;
                         }
                     if(_this.idArray.ids.length>0){
-                        _this.$axios.posts('/api/services/app/SpecValueManagement/BatchDelete',_this.idArray).then(function(res){
+                        _this.$axios.posts('/api/services/app/PropertyValueManagement/BatchDelete',_this.idArray).then(function(res){
                             _this.loadTableData();
                             if(_this.value1 == ''){
                                _this.TreeNodeClick1(0); 
                             }else{
                                _this.TreeNodeClick(_this.value1,false); 
                             }
+                            
                             _this.dialogUserConfirm = false;
                             _this.open('删除成功','el-icon-circle-check','successERP');    
                         },function(res){
@@ -694,12 +689,13 @@ import Tree from '../../base/tree/tree'
             },
             loadTableData(){
                 let _this=this;
-                _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){ 
+                _this.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){ 
                     let totalAll = res.result.totalCount;
                     if(totalAll > 0){
-                        _this.$axios.gets('/api/services/app/SpecManagement/GetAll',{SkipCount:0,MaxResultCount:totalAll}).then(function(res){
+                        _this.$axios.gets('/api/services/app/PropertyManagement/GetAll',{SkipCount:0,MaxResultCount:totalAll}).then(function(res){
 
                             _this.selectData.userGroupId=res.result.items;
+                            console.log(res)
                             // console.log(_this.selectData.userGroupId)
                         })
                     }
@@ -709,19 +705,21 @@ import Tree from '../../base/tree/tree'
             loadTree(){//获取tree data
                     let _this=this;
                     _this.treeLoading=true;
-                    _this.$axios.gets('/api/services/app/SpecManagement/GetSpecTree')
+                    _this.$axios.gets('/api/services/app/PropertyManagement/GetPropertyTree')
                     .then(function(res){
-                        _this.componyTree = res.result;
-                        function compare(property){
-                            return function(a,b){
-                                var value1 = a[property];
-                                var value2 = b[property];
-                                return value1 - value2;
-                            }
-                        }
-                        _this.componyTree[0].children.sort(compare('seq'));
-                        _this.arrbiaoge2 = res.result;
-                        _this.arrbiaoge1 = res.result[0].children;
+                        console.log(res)
+                        console.log(1)
+                        _this.componyTree = res;
+                        // function compare(property){
+                        //     return function(a,b){
+                        //         var value1 = a[property];
+                        //         var value2 = b[property];
+                        //         return value1 - value2;
+                        //     }
+                        // }
+                        // _this.componyTree[0].children.sort(compare('seq'));
+                        _this.arrbiaoge2 = res;
+                        _this.arrbiaoge1 = res;
                         _this.treeLoading=false;
                 },function(res){
                     _this.treeLoading=false;
@@ -783,14 +781,14 @@ import Tree from '../../base/tree/tree'
                         _this.value1 = data;
                        
                         _this.ifTreeNode = true;
-
-                        _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
+                        _this.$axios.gets('/api/services/app/PropertyValueManagement/GetSpecId',{PropertyId:_this.value1.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){ 
+                        console.log(res)           
                             _this.tableData = res.result.items ;
                             _this.tableLoading = false;
-                            for(let i=0;i<_this.tableData.length;i++){
-                                _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
-                                _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
-                            }
+                            // for(let i=0;i<_this.tableData.length;i++){
+                            //     _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                            //     _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                            // }
                             _this.Init();
                             _this.totalItem=res.result.totalCount;
                             // _this.Init();
@@ -812,13 +810,14 @@ import Tree from '../../base/tree/tree'
                 }
 
                 _this.ifTreeNode = true;
-                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
+                _this.$axios.gets('/api/services/app/PropertyValueManagement/GetSpecId',{SpecId:_this.value1,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){ 
+                         console.log(res)           
                     _this.tableData = res.result.items ;
                     _this.tableLoading = false;
-                    for(let i=0;i<_this.tableData.length;i++){
-                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
-                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
-                    }
+                    // for(let i=0;i<_this.tableData.length;i++){
+                    //     _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                    //     _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                    // }
                     _this.totalItem=res.result.totalCount;
                     // _this.Init();
                     _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
@@ -897,14 +896,14 @@ import Tree from '../../base/tree/tree'
                     return (
                         <span class="el-tree-node__label" data-id={data.id}>
                         <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.specName}
+                            {data.propertyName}
                         </span>
                     );
                 }else{
                      return (
                         <span class="el-tree-node__label" data-id={data.id}>
                         <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
-                            {data.specName}
+                            {data.propertyName}
                         </span>
                     );
                 }
