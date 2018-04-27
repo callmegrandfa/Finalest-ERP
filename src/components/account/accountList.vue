@@ -598,7 +598,7 @@ import dialogBox from '../../base/dialog/dialog'
             },
             dialogConfirm(){
                 let _this=this;
-                console.log(_this.ifData)
+                //console.log(_this.ifData)
                 if(_this.ifData){
                     _this.dialogUserConfirm=false;
                 }else{
