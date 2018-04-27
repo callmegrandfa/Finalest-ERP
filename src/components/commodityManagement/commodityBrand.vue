@@ -127,6 +127,20 @@ import Transfer from '../../base/Transfer/Transfer'
                         SkipCount:'0',
                     }
                 },
+                selectedTable:[{
+                    groupId: 1,
+                    brandCode: "CHEE",
+                    brandName: "千百惠1",
+                    brandEname: "CHEE",
+                    status: 1,
+                    remark: "千百惠1",
+                    remark2: " ",
+                    seq: 0,
+                    statusTValue: '启用',
+                    createdBy: "admin",
+                    createdTime: "2018-04-04T17:20:02.667",
+                    id: 112
+                    }],
                 OptionalCols:[{
                     prop: 'brandCode',
                     label: '品牌编码'
@@ -335,6 +349,11 @@ import Transfer from '../../base/Transfer/Transfer'
                    $(this).css("background","#f4f4f5")
                 }  
             })
+            setTimeout(() => {
+				this.$store.commit('Init_TransferSelected',this.selectedTable)
+				//this.expandParams.expandId=this.$store.state[this.treeParams.treeName+'TreeData']
+			}, 1000);
+            
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏

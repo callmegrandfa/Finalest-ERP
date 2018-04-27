@@ -14,20 +14,20 @@
                 </div>    
             </el-col>    
             <el-col :span="24" class="transfer_table">
-                <el-table ref="multipleTable" :data="testSelectd" @selection-change="handleSelected" border style="width: 100%" height="250">
+                <el-table ref="multipleTable" :data="SelectedTable" @selection-change="handleSelected" border style="width: 100%" height="250">
                     <el-table-column type="selection" label="" width="50">
                     </el-table-column>
                     <el-table-column v-for="item in OptionalCols" :key="item.prop" :label="item.label" :prop="item.prop" >
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                    v-show='selectedTableFilter.length>0'
+                <!-- <el-pagination
+                    v-show='SelectedTable.length>0'
                     class="fr mt10"
                     small
                     layout="prev, pager, next"
-                    :total="selectedTableFilter.length"
+                    :total="SelectedTable.length"
                     @current-change='selectedHandlePagination'>
-                </el-pagination>
+                </el-pagination> -->
             </el-col>
         </el-col>
         <el-col :span="2" class="transfer_btns">
@@ -69,14 +69,16 @@
 </template>
 <script type="text/javascript">
 	export default{
-		props: ['transferHttpSetting','OptionalCols'], 
+        props: {transferHttpSetting:{type:Object},
+			// expandParams:{type:Object},
+			OptionalCols:{type:Array}}, 
 		data(){
 			return{
                 querySelected:'',//已选搜索
                 queryOptional:'',//可选搜索
                 OptionalHandle:[],//可选项勾选数据
                 selectedHanled:[],//已选项勾选数据
-                selectedTable:[],//已选表格数据模型
+                //selectedTable:[],//已选表格数据模型
                 testSelectd:[],
                 selectedCurrentPage:0,//已选表格当前页
                 toOptionalBtn:true,
@@ -87,30 +89,35 @@
 			}
 		},
 		created() {
+            this.array_diff([{name:1,sex:"男"}],[{name:1,sex:"男"}])
             this.$store.commit('setTransferName',this.transferHttpSetting.transferName)
             this.$store.commit('setTransferApi',this.transferHttpSetting.transferApi)
             this.$store.commit('setTransferParams',this.transferHttpSetting.transferParams)
             this.$store.dispatch('InitTransfer');//初始化可选表格数据
         },
         watch:{
-            selectedTable:{
-                handler:function(val,oldVal){
-                    this.$emit('transferConfirm',this.selectedTable);
-                },
-                deep:true
-            },
-            selectedCurrentPage:function(val){//监听已选表格当前页的变化
-                this.StartCount=(val-1)*this.EachPage;
-                this.EndCount=this.EachPage+this.StartCount;
-                this.testSelectd=this.selectedTable.slice(this.StartCount,this.EndCount);
-            },
-            testSelectd:function(val){
-                this.testSelectd=val;
-            },
+            
+            // selectedTable:{
+            //     handler:function(val,oldVal){
+            //         this.$emit('transferConfirm',this.selectedTable);
+            //     },
+            //     deep:true
+            // },
+            // selectedCurrentPage:function(val){//监听已选表格当前页的变化
+            //     this.StartCount=(val-1)*this.EachPage;
+            //     this.EndCount=this.EachPage+this.StartCount;
+            //     this.testSelectd=this.selectedTable.slice(this.StartCount,this.EndCount);
+            // },
+            // testSelectd:function(val){
+            //     this.testSelectd=val;
+            // },
         },
         computed:{
             OptionalTable(){
-                return  this.$store.state[this.transferHttpSetting.transferName+'Table'];   
+                return  this.$store.state[this.transferHttpSetting.transferName+'OptionalTable'];   
+            },
+            SelectedTable(){
+                return  this.$store.state[this.transferHttpSetting.transferName+'SelectedTable'];   
             },
             selectedTableFilter: function () {//已选表格数据过滤
                 var filterKey = this.querySelected && this.querySelected.toLowerCase()
@@ -142,28 +149,31 @@
                 }
             },
             seletedToOptional(){//已选到可选
-                for(let i in this.selectedHanled){//循环添加至已选数据模型
-                     this.$store.state[this.transferHttpSetting.transferName+'Table'].push(this.selectedHanled[i]);
-                }
-                this.selectedTable=this.array_diff(this.selectedHanled, this.selectedTable);
+                // for(let i in this.selectedHanled){//循环添加至已选数据模型
+                //     this.$store.state[this.transferHttpSetting.transferName+'OptionalTable'].push(this.selectedHanled[i]);
+                // }
+                this.$store.commit('Init_Transfer',this.array_diff(this.selectedHanled, this.$store.state[this.transferHttpSetting.transferName+'OptionalTable']));//重置可选列表
+                this.$store.commit('Init_TransferSelected',this.array_diff(this.selectedHanled, this.$store.state[this.transferHttpSetting.transferName+'SelectedTable']));//重置已选列表
                 this.selectedHanled=[];//置空选中集合
             },
             optionalToSeleted(){//可选到已选
-                for(let i in this.OptionalHandle){//循环添加至已选数据模型
-                    this.selectedTable.push(this.OptionalHandle[i]);
-                }
-                this.$store.state[this.transferHttpSetting.transferName+'Table']=this.array_diff(this.OptionalHandle, this.$store.state[this.transferHttpSetting.transferName+'Table']);
+                // for(let i in this.OptionalHandle){//循环添加至已选数据模型
+                //     this.$store.state[this.transferHttpSetting.transferName+'SelectedTable'].push(this.OptionalHandle[i]);
+                // }
+                this.$store.commit('Init_TransferSelected',this.array_diff(this.OptionalHandle, this.$store.state[this.transferHttpSetting.transferName+'SelectedTable']));//重置已选列表
+                this.$store.commit('Init_Transfer',this.array_diff(this.OptionalHandle, this.$store.state[this.transferHttpSetting.transferName+'OptionalTable']));//重置可选列表
                 this.OptionalHandle=[];//置空选中集合
             },
             selectedHandlePagination(val){//设置已选表格当前页
                 this.selectedCurrentPage=val;
             },
-            array_diff(a, b) {//求两个json数组的并集
+            array_diff(a, b) {//去重
                 return diff(a, b).concat( diff(b, a) );
                 function diff(a, b) {
                     var c = {};
                     b.forEach(function(o){ c[ JSON.stringify(o) ] = 0 });
                     a.forEach(function(o){ delete c[ JSON.stringify(o) ]; });
+                    console.log(Object.keys(c).map(JSON.parse));
                     return Object.keys(c).map(JSON.parse);
                 }
             }

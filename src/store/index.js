@@ -764,7 +764,8 @@ export default new vuex.Store({
         commodityClassHeadingTotalPagination:10,//总页数
         commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
-        ceshiTable:[],
+        ceshiSelectedTable:[],
+        ceshiOptionalTable:[],
         ceshiTransferApi:'',
         ceshiTransferParams:'',
         commodityBrandQueryApi:'',//查询接口
@@ -839,8 +840,11 @@ export default new vuex.Store({
         setTransferParams(state,obj){//设置穿梭框接口地址
             state[state.transferName+'TransferParams']=obj;
         },
-        Init_Transfer(state,array){//设置穿梭框表格数据
-            state[state.transferName+'Table']=array;
+        Init_Transfer(state,array){//设置穿梭框可选表格数据
+            state[state.transferName+'OptionalTable']=array;
+        },
+        Init_TransferSelected(state,array){//设置穿梭框可选表格数据
+            state[state.transferName+'SelectedTable']=array;
         },
         // 表格模块
         Init_Table(state,data){//表格数据模型
