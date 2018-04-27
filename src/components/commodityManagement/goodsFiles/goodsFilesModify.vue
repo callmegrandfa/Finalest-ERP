@@ -591,21 +591,17 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 商品属性 - - - - - - - - - - - - - - - - - - - - -  -->
             <el-tab-pane label="商品属性" name="property">
                 <el-row>
-                    <div class="bgcolor">
-                        <label>类别</label>
+                    <div class="bgcolor" v-for="(item,index) in productProperty_ChildTable" :key="index">
+                        <label>{{item.propertyId_PropertyName}}</label>
                         <el-input
-                        
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
-                        v-model="productProperty_ChildTable.propertyValueName" >
+                        v-model="item.propertyValueName" >
                         </el-input>
                     </div>
-                    <div class="bgcolor">
+                    <!-- <div class="bgcolor">
                         <label>系列</label>
                         <el-input
-                        
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
                         v-model="productProperty_ChildTable.propertyValueName" >
                         </el-input>
                     </div>
@@ -613,12 +609,10 @@
                     <div class="bgcolor">
                         <label>项目</label>
                         <el-input
-                        
                         @focus="showErrprTips"
-                        :class="{redBorder : validation.hasError('productProperty_ChildTable.propertyValueName')}"
                         v-model="productProperty_ChildTable.propertyValueName" >
                         </el-input>
-                    </div>
+                    </div> -->
                 </el-row>
             </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
@@ -1076,6 +1070,9 @@ export default {
     },
     data() {
         return{
+            firstModify:false,
+            ifModify:false,
+            saveSuccess:false,
             imageUrl:'',
             fileList: [
                 ],
@@ -1483,6 +1480,19 @@ export default {
                 delete this.product_MainTable.validDays;//保质天数
             }
       },
+      'productSpec_ChildTable'(val){//规格从表数据变动生成sku
+          let _this=this;
+          if(!_this.saveSuccess){
+               if(!_this.firstModify){
+                   _this.firstModify=!_this.firstModify;
+               }else{
+                   _this.ifModify=true
+               }
+          }else{
+              _this.ifModify=false
+          }
+
+      }
       
     },
     methods:{
@@ -1686,19 +1696,20 @@ export default {
                     modifiedTime:res.result.modifiedTime,//修改人
                     modifiedBy:res.result.modifiedBy//修改时间
                 }
-                //商品价格，多单位
-                 _this.$axios.gets('/api/services/app/ProductUnitManagement/GetProductUnitList',{productID:_this.$route.params.id,unitID:_this.product_MainTable.categoryId})
-                 .then(function(res){
-                     _this.productUnit_ChildTable=res.result;
-                    //  console.log(res)
-                 },function(res){
-                 })
+                // //商品价格，多单位
+                //  _this.$axios.gets('/api/services/app/ProductUnitManagement/GetProductUnitList',{productID:_this.$route.params.id,unitID:_this.product_MainTable.categoryId})
+                //  .then(function(res){
+                //      _this.productUnit_ChildTable=res.result;
+                //     //  console.log(1,res)
+                //  },function(res){
+                //  })
+                 _this.getMoreUnitList()//商品价格，多单位
                  _this.changeCategoryId()//获取商品规格
             },function(res){
             })
             
 //-----------------------获取商品属性数据----------------------
-             _this.$axios.gets('/api/services/app/ProductSpecManagement/Get',{id:_this.$route.params.id})
+             _this.$axios.gets('/api/services/app/ProductPropertyManagement/GetProductPropertyList',{productID:_this.$route.params.id})
             .then(function(res){
                 _this.productProperty_ChildTable=res.result;
                 // console.log(res)
@@ -1794,7 +1805,7 @@ export default {
                 })
 
                  _this.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{categoryID:_this.product_MainTable.categoryId,ItemType:2})
-                .then(function(res){//获取规
+                .then(function(res){//获取规格
                     // console.log(res)
                     $.each(res.result,function(index,value){
                         // let item={"id":_this.$route.params.id,'groupId':1,}
@@ -1806,6 +1817,14 @@ export default {
                 },function(res){
 
                 })
+
+                // //商品价格，多单位
+                //  _this.$axios.gets('/api/services/app/ProductUnitManagement/GetProductUnitList',{productID:_this.$route.params.id,unitID:_this.product_MainTable.categoryId})
+                //  .then(function(res){
+                //      _this.productUnit_ChildTable=res.result;
+                //      console.log(1,res)
+                //  },function(res){
+                //  })
             }
 
         },
@@ -1813,12 +1832,12 @@ export default {
              let _this=this;
             _this.productUnit_ChildTable=[]
             if(_this.product_MainTable.unitId!=''){
-                _this.$axios.gets('/api/services/app/UnitConvertManagement/GetDetail',{UnitId:_this.product_MainTable.unitId})
+              //商品价格，多单位
+                _this.$axios.gets('/api/services/app/ProductUnitManagement/GetProductUnitList',{productID:_this.$route.params.id,unitID:_this.product_MainTable.unitId})
                 .then(function(res){
-                    // console.log(res)
-                    _this.productUnit_ChildTable=res.result
+                    _this.productUnit_ChildTable=res.result;
+                    console.log(1,res)
                 },function(res){
-
                 })
             }
         },
@@ -1884,7 +1903,6 @@ export default {
                         _this.chooseSizeData[data.itemSourceId]=res.result.items;
                         _this.showSizeDialogData=_this.chooseSizeData[_this.witchDialog]
                         _this.chooseSize=true;
-                        // _this.productUnit_ChildTable=res.result
                     })
                 }else{
                     _this.chooseSizeData[_this.witchDialog]=[];
@@ -2272,6 +2290,7 @@ export default {
                 }
                 if(typeof(res.result.createList)!='undefined' && res.result.createList.length>0 && res.result.createList!=null){
                     $.each(res.result.createList,function(i,v){
+                        v.check=false;
                         v.specValueName=v.specValueName;
                         v.specValueCode=v.specValueId_SpecValueCode;
                         _this.allSpecGroupSize[_this.witchDialog][groupId].allData.push(v);//添加数据
@@ -2339,7 +2358,7 @@ export default {
                     newJson.push(val)
                 }
             })
-            let x=_this.paginationUserSearch(newJson,_this.ouOneItem,_this.ouPage)
+            let x=_this.paginationData(newJson,_this.ouOneItem,_this.ouPage)
             _this.showPageTableOu=x.nowData
             _this.ouTotalItem=x.TotalItem
             _this.ouTotalPage=x.TotalPage
