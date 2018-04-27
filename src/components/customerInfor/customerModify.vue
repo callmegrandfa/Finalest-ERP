@@ -710,7 +710,7 @@
                             </el-table>
                         </el-tab-pane>
                         <el-tab-pane label="使用组织" name="organization" class="getPadding" style="z-index:-1000">
-                            <button class="erp_bt bt_add" @click="addColOu">
+                            <!-- <button class="erp_bt bt_add" @click="addColOu">
                                 <div class="btImg">
                                     <img src="../../../static/image/common/bt_add.png">
                                 </div>
@@ -729,8 +729,15 @@
                                     <img src="../../../static/image/common/bt_auxiliary.png">
                                 </div>
                                 <span class="btDetail">辅助功能</span>
+                            </button> -->
+
+                            <button class="erp_bt bt_add" @click="dialogOuIsShow">
+                                <div class="btImg">
+                                    <img src="../../../static/image/common/bt_add.png">
+                                </div>
+                                <span class="btDetail">选取</span>
                             </button>
-                            
+<!--                             
                     
                             <el-table :data="ouData" stripe border style="width: 100%" @selection-change="handleSelectionChange3" class="all-table">
                                 <el-table-column type="selection"></el-table-column>
@@ -777,7 +784,65 @@
                                         <el-button v-on:click="handleDelete(scope.$index,scope.row,3)" type="text" size="small">删除</el-button>
                                     </template>
                                 </el-table-column>
+                            </el-table> -->
+                            <el-table :data="showPageTableOu" stripe border style="width: 100%" @selection-change="handleSelectionChange3">
+                                
+                                <el-table-column type="selection"></el-table-column>
+                                
+                                <el-table-column prop="ouName" label="业务组织" width="540">
+                                    <!-- <template slot-scope="scope">
+                                        <img class="abimg" src="../../../static/image/content/redremind.png"/>
+                                        <el-select v-model="scope.row.ouId" 
+                                                placeholder=""
+                                                @change='Modify()'>
+
+                                            <el-input placeholder="搜索..."
+                                                    class="selectSearch"
+                                                    v-model="ouSearch"></el-input> 
+                                            <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
+                                                    :data="ywAr"
+                                                    :props="selectYwProps"
+                                                    node-key="id"
+                                                    default-expand-all
+                                                    ref="tree"
+                                                    :filter-node-method="filterNode"
+                                                    :expand-on-click-node="false"
+                                                    @node-click="ywNodeClick"></el-tree> 
+                                            <el-option v-show="false"
+                                                    :key="countYw.id" 
+                                                    :label="countYw.ouName" 
+                                                    :value="countYw.id"
+                                                    id="yw_confirmSelect"></el-option>
+                                        </el-select>
+                                    </template> -->
+                                </el-table-column>
+
+                                <el-table-column prop="transportMethodId" label="运输方式" width="540">
+                                    <template slot-scope="scope">
+                                        <el-select  v-model="scope.row.transportMethodId" 
+                                                    :class="[scope.$index%2==0?'bgw':'bgp']">
+                                            <el-option  v-for="item in tranAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue" >
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+                                
+
+                                <el-table-column label='操作'>
+                                    <template slot-scope="scope" >
+                                        <el-button type="text" @click="delCheckOu(scope.row)">删除</el-button>
+                                    </template>
+                                </el-table-column>
                             </el-table>
+                            <el-pagination style="margin-top:20px;" 
+                                            class="text-right" 
+                                            background layout="total,prev, pager, next,jumper" 
+                                            @current-change="ouHandleCurrentChange"
+                                            :current-page="ouPageIndex"
+                                            :page-size="ouOneItem"
+                                            :total="ouTotalItem">
+                            </el-pagination>  
+
                         </el-tab-pane>
                     </el-tabs>
                 </el-col>
@@ -813,6 +878,57 @@
                 </div>                                  
             </el-col>
         </el-row>
+        <!-- 使用组织弹框 -->
+        <el-dialog :visible.sync="dialogOu"  class="transfer_dialog dialogOu" width="30%">
+            <span slot="title">
+                <span>分配组织</span>
+                <a  href="javascript:;" class="add" @click="addNewOu">+</a>
+                <div class="search_input_group">
+                    <div class="search_input_wapper">
+                        <el-input
+                            placeholder="搜索..."
+                            v-model="filterTextOu"
+                            class="search_input"
+                            >
+                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                    </div>
+                </div>
+            </span>
+            <el-col :span="24" class="transfer_warapper">
+                <el-col :span="24" class="checkBoxOuUser">
+                    <el-checkbox @change="CheckAllTree" v-model="checkAllOu" class="square_el"></el-checkbox><span>全选</span>
+                    <el-checkbox @change="showCheckTree" v-model="showCheck" class="square_el"></el-checkbox><span>查看已选</span>
+                </el-col>
+                <el-col :span="24" class="transfer_table">
+                    <vue-scroll :ops="$store.state.option">
+                        <el-tree
+                        :render-content="renderContent_ouTreeDataRight"
+                        :default-expanded-keys="expand.expandId_dialogOu"
+                        :data="ouTreeDataRight"
+                        show-checkbox
+                        :highlight-current="true"
+                        node-key="ouId"
+                        ref="tree"
+                        :filter-node-method="filterNode"
+                        @node-click="ouNodeClickRight"
+                        @check-change="isCheckAllOu"
+                        :expand-on-click-node="false"
+                        :props="ouDefaultPropsRight">
+                        </el-tree>
+                    </vue-scroll>
+                </el-col>
+                <!-- <el-button @click="getCheckedNodes">通过 node 获取</el-button>
+                <el-button @click="getCheckedKeys">通过 key 获取</el-button> -->
+                <!-- <el-button @click="setCheckedNodes">通过 node 设置</el-button>
+                <el-button @click="setCheckedKey">通过 key 设置</el-button> -->
+            </el-col>
+            <span slot="footer">
+                <button class="transfer_footer_btn transfer_confirm" @click="ouDialogSure">确 认</button>
+                <button class="transfer_footer_btn" @click="dialogOu = false">取 消</button>
+            </span>
+        </el-dialog>
+
 
         <!-- dialog数据变动提示 -->
         <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
@@ -894,6 +1010,9 @@ export default({
         let self = this;
         self.loadData();
         self.loadSelect();
+        self.getAllOulength();
+        self.loadOuTreeAll();
+
     },
     watch:{
         allData:{
@@ -906,6 +1025,16 @@ export default({
                 }
             },
             deep:true,
+        },
+        showPageTableOu:{
+            handler:function(val,oldVal){
+                let self = this;
+                if(!self.firstModify){
+                    self.firstModify = !self.firstModify;
+                }else{
+                    self.ifModify = true;
+                }
+            }     
         },
         // customerData:{
         //     handler: function (val, oldVal) {
@@ -1271,8 +1400,33 @@ export default({
             InitBankData:[],
             InitAddData:[],
             InitOuData:[],
-            //使用组织里业务组织树形搜索框-------
-            ywSearch:'',
+            //---使用组织---------------------------
+            dialogOu:false,
+            expand:{
+                expandId_dialogOu:[],//默认dialog组织树形展开id
+            },
+            ouTreeDataRight:[],//
+            ouDefaultPropsRight:{
+                children: 'children',
+                label: 'ouName',
+                id:'ouId'
+            },
+            oudel:false,//保存删除
+            ouindex:'',
+            showCheck:false,//查看已选
+            checkAllOu:false,//全选
+            filterTextOu:'',//搜索
+            addOu:'default',
+            //-------------table--------------    
+            searchTableOu:'',//搜索框值       
+            ouCheckAll:[],//分配组织数据
+            showPageTableOu:[],//展示分页后表格数据
+            ouPageIndex:1,//分页的当前页码
+            ouTotalPage:0,//当前分页总数
+            ouOneItem:10,//每页有多少条信息
+            ouPage:1,//当前页
+            ouTotalItem:0,//总共有多少条消息
+            ouTableLoading:false,
         }
     },
     validators: {
@@ -1397,7 +1551,35 @@ export default({
                         }
                     }     
                     //加载使用组织数据
-                    self.ouData = res.result.contactOu_ChildTable;
+                    //self.ouData = res.result.contactOu_ChildTable;
+                    if(res.result.contactOu_ChildTable.length!=0){
+                        $.each(res.result.contactOu_ChildTable,function(index,value){
+                              let ss={
+                                    groupId:'',
+                                    id:'',
+                                    ouFullname:"",
+                                    ouFullpathId:"",
+                                    ouFullpathName:"",
+                                    ouName:"",
+                                    ouParentid:'',
+                                    transportMethodId:'',
+                                    delid:''
+                                }
+                                self.showPageTableOu.push(ss)
+                                self.showPageTableOu[index].groupId=value.groupId;
+                                self.showPageTableOu[index].id=value.ouId;
+                                self.showPageTableOu[index].delid=value.id;
+                                self.showPageTableOu[index].transportMethodId=value.transportMethodId;
+                            self.$axios.gets('/api/services/app/OuManagement/Get',{id:value.ouId})
+                            .then(function(res){
+                                self.showPageTableOu[index].ouFullname=res.result.ouFullname;
+                                self.showPageTableOu[index].ouName=res.result.ouName;
+                                
+                            },function(res){
+                            })
+                        })
+                    }
+                    //self.showPageTableOu = res.result.contactOu_ChildTable;
                     //console.log(self.ouData)
                     self.InitOuData = self.deepCopy(res.result.contactOu_ChildTable);
                     self.ywItem.id = res.result.contactOu_ChildTable.ouId;
@@ -1699,6 +1881,210 @@ export default({
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
+       
+        getAllOulength(){
+            let _this=this;
+            let x= 0;
+            let y = 0;
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuType:1,SkipCount:0,MaxResultCount:1})
+            .then(function(res){
+                x=res.result.totalCount
+                // console.log(res)
+            })
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuType:1,SkipCount:0,MaxResultCount:1})
+            .then(function(res){
+                y=res.result.totalCount
+                // console.log(res)
+            })
+            _this.allOuLength = x +y;
+        },
+        addRouterButton(name,url){//添加router页签
+            let _this=this;
+            var flag=false;
+                if(_this.$store.state.slidbarData){
+                    _this.$store.state.temporary=_this.$store.state.slidbarData;
+                }
+                var temporary=_this.$store.state.temporary;
+                var name=name;
+                var menuUrl=url;
+                if(temporary.length==0){//temporary为空
+                    flag=true;
+                }else{//temporary不为空
+                    for(var i=0;i<temporary.length;i++){
+                        if(temporary[i].name==name){//相同页签
+                            flag=false;
+                            break;
+                        }else{
+                        flag=true;
+                        }   
+                    }
+                }
+                var pushItem={'name':name,'url':menuUrl};
+                
+                _this.$store.state.url=menuUrl;//储存当前url在router里的name
+                // this.$store.state.url='/'+menuUrl+'/'+'default';//储存当前url
+                
+                if(flag){
+                    temporary.push(pushItem);
+                }
+                window.localStorage.setItem('ERP',JSON.stringify(temporary));
+                _this.$router.push({name:this.$store.state.url})
+        },
+        addNewOu(){//新增组织
+            let _this=this;
+            // let data=_this.$refs.tree.getCheckedNodes();
+                _this.$store.state.OuManage.url='/OuManage/OuManageDetail/'+_this.addOu;//路由重定向
+                _this.addRouterButton('组织管理','OuManage')
+                _this.dialogOu=false;
+                _this.activeName_first='useOu'
+        },
+        dialogOuIsShow(){
+            let _this=this;
+            _this.dialogOu=true;
+            setTimeout(function(){
+                // console.log(_this.storeCheckOu)
+               _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+               _this.isCheckAllOu()
+            },200)
+            
+        },
+        ouNodeClickRight(data){//右侧树形节点点击
+            let _this=this;
+            _this.addOu=data.ouId;
+        },
+        loadOuTreeAll(){
+            let _this=this;
+            _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{OuType:[1,2]})
+            .then(function(res){
+                console.log(res)
+                _this.ouTreeDataRight=res.result;
+                _this.defauleExpandTree('','expandId_dialogOu',res.result,'ouId','children')
+            },function(res){
+            })
+        },
+        ouDialogSure(){//dialog点击确认
+            let _this=this;
+            _this.dialogOu=false;
+            // console.log(_this.$refs.tree.getCheckedKeys())
+            _this.ouCheckAll=_this.$refs.tree.getCheckedNodes();
+            let dialogSuredata=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)//dialog点击确认后获取的数据
+            $.each(dialogSuredata,function(index,value){
+                _this.showPageTableOu.push(value);
+            })     
+            // console.log(_this.ouCheckAll)
+        },
+        delCheckOu(row){//删除表格数据
+            let _this=this;
+            let indexs=null;
+            console.log(_this.showPageTableOu,row.id)
+            $.each(_this.showPageTableOu,function(index,val){
+                if(val.id==row.id){
+                    indexs=index;
+                    _this.ouindex=val.delid;
+                }
+            })
+            if(indexs!=null){
+                
+                _this.showPageTableOu.splice(indexs,1);
+                _this.oudel=true;
+            }
+             //_this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+        }, 
+        CheckAllTree(){//全选
+            let _this=this;
+            let topNode=[]
+            if(_this.checkAllOu){
+                // $.each(_this.ouTreeDataRight,function(index,val){
+                //     topNode.push(val)
+                // })
+                _this.$refs.tree.setCheckedNodes(_this.ouTreeDataRight);
+                 $('.el-tree-node__content').each(function(){
+                    $(this).css('display','block')
+                })
+            }else{
+                // _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+                _this.$refs.tree.setCheckedNodes([])
+                setTimeout(function(){
+                    if(_this.showCheck){
+                        $('.el-checkbox__input').each(function(){
+                            if(!$(this).hasClass('is-indeterminate') && !$(this).hasClass('is-checked')){
+                                $(this).parents('.el-tree-node__content').css('display','none')
+                            }
+                        })
+                    }
+                },100)
+            }
+            
+        },
+        isCheckAllOu(){//是否全选
+            let _this=this;
+            if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
+                _this.checkAllOu=true
+            }else{
+                _this.checkAllOu=false
+            }
+        },
+        paginationOu(checkAllata,oneItem,thisPage){//数据分页
+        //checkAllata分页数据
+        //oneItem每页有多少条信息
+        //thisPage当前页
+            let _this=this;
+            let nowData=[];
+            // console.log(checkAllata)
+            let startIndex=(thisPage-1)*oneItem;//起始数据所在位置
+            let endIndex=startIndex + oneItem;
+                if(checkAllata.length>0){
+                    if(endIndex>checkAllata.length){
+                        endIndex=checkAllata.length
+                    }
+                    for(startIndex;startIndex<endIndex;startIndex++){//获取当前页展示的oneItem条数据
+                        // console.log(checkAllata[startIndex])
+                        nowData.push(checkAllata[startIndex])
+                    }
+                }
+            _this.ouTotalItem=checkAllata.length;//总共多少条数据
+            _this.ouTotalPage=Math.ceil(checkAllata.length/oneItem);//有多少页
+            return nowData
+        },
+        showCheckTree(){//查看已选
+            let _this=this;
+            if(_this.showCheck){
+                $('.el-checkbox__input').each(function(){
+                    if(!$(this).hasClass('is-indeterminate') && !$(this).hasClass('is-checked')){
+                        $(this).parents('.el-tree-node__content').css('display','none')
+                    }
+                })
+            }else{
+                $('.el-tree-node__content').each(function(){
+                    $(this).css('display','block')
+                })
+            }
+            
+        },
+        ouHandleCurrentChange(val){//页码改变
+            let _this=this;
+            _this.ouPage=val;
+            _this.showPageTableOu=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)
+        },
+        renderContent_ouTreeDataRight(h, { node, data, store }){
+             if(typeof(data.childItems)!='undefined' && data.childItems!=null && data.childItems.length>0){
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i aria-hidden="true" class="preNode fa fa-folder-open" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }else{
+                    return (
+                        <span class="el-tree-node__label" data-id={data.ouId}>
+                        <i class="preNode fa fa-file" aria-hidden="true" style="color:#f1c40f;margin-right:5px"></i>
+                            {data.ouName}
+                        </span>
+                    );
+                }
+        },       
+
+
         cuFilterNode(value,data){
             if (!value) return true;
                 return data.className.indexOf(value) !== -1;
@@ -1836,6 +2222,20 @@ export default({
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
+                    console.log(self.showPageTableOu)
+                    //self.ouData.length=self.showPageTableOu.length;
+                    $.each(self.ouCheckAll,function(index,value){
+                            let oudetail={
+                                "id": 0,
+                                "contactId": 0,
+                                "ouId": '',
+                                "transportMethodId": '',
+                                "isDefault": true
+                            }
+                            self.ouData.push(oudetail);
+                            self.ouData[index].transportMethodId=self.showPageTableOu[index].transportMethodId
+                            self.ouData[index].ouId=value.id;
+                    })
                     let submitData = {};
                     submitData = {
                         contact_MainTable:self.customerData,
@@ -2130,11 +2530,12 @@ export default({
                     //self.open('删除新增行成功','el-icon-circle-check','successERP');
                 }
             }
-
-            if(self.who == 3){//使用组织单项删除
-                if(self.whoId>0){
-                    self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.whoId}).then(function(res){
-                        // self.open('删除使用组织成功','el-icon-circle-check','successERP');
+            if(self.oudel==true){//使用组织单项删除
+            console.log(self.ouindex)
+                if(self.ouindex>0){
+                    console.log(self.ouindex)
+                    self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.ouindex}).then(function(res){
+                        //self.open('删除使用组织成功','el-icon-circle-check','successERP');
                         // self.ouData.splice(self.whoIndex,1);
                         // self.dialogDelConfirm = false;
                     },function(res){
@@ -2709,5 +3110,43 @@ export default({
 .areaDrop .el-input__inner,.areaEntry .el-input__inner{
     height: 32px!important;
 }
+.customerBasicForm .checkBoxOuUser{
+    height: 50px;
+    background-color: #f2f2f2;
+    line-height: 50px;
+}
+.customerBasicForm .square_el{
+    margin-right:5px;
+    margin-left: 10px;
+}
+.customerBasicForm .add{
+    position: absolute;
+    top: 6px;
+    left: 18%;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+    background-color: #c7c7c7;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    text-decoration: none;
+    font-size: 23px;
+    font-weight: bold;
+}
+.customerBasicForm .search_input_group{
+    margin-top:6px;
+}
+.customerBasicForm .dialogOu .search_input_group{
+    width:40%;
+    position: absolute;
+    top: 2px;
+    right: 6%;
+}
+.customerBasicForm .dialogOu .search_input_group .search_input_wapper{
+    width:100%;
+}
+
   </style>
   
