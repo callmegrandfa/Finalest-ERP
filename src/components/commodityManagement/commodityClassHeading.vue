@@ -96,7 +96,7 @@
 	                </el-col>
                     <el-row style="float:left;width:100%;">
                         <el-col :span="5" class="tree-container">
-                            <Tree :defaultProps='defaultProps' :expandParams='expandParams' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
+                            <Tree :defaultProps='defaultProps' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
                         </el-col>
                         <el-col :span="19">
                             <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :tableName="tableModel"  :command="command"></Table>
@@ -263,10 +263,6 @@ import Tree from '../../base/tree/tree'
                     children:'childNodes',
                     label:'categoryName',
                     id:'id',
-                },
-                expandParams:{//默认展开节点参数控制
-                    expandId:'id',
-                    expandkey:[],
                 },
                 treeSearch:false,//是否包含树节点过滤功能
                 treeParams:{
