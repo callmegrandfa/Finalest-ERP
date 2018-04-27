@@ -270,7 +270,7 @@
                     placeholder=""
                     @change="seletChange"
                     v-model="addData.accCchemeId">
-                       <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemCode">
+                       <el-option v-for="item in accSchemeIdOptions" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                        <el-option v-show="false" :key="item_area_no.id" :label="item_area_no.ouName" :value="item_area_no.id">
                         </el-option>
@@ -1061,9 +1061,6 @@ export default({
             },
             accountYearOptions: [],
             accSchemeIdOptions:[],
-            accSchemeIdItem:{
-                accCchemeId:''
-                },
             test:'', 
             dateRange:[],//有效时间
             companys:1,
@@ -1173,7 +1170,7 @@ export default({
          return this.Validator.value(value).integer();
       },
       'addData.accCchemeId': function (value) {//会计方案
-         return this.Validator.value(value).required();
+         return this.Validator.value(value).required().integer();
       },
       'addData.basAccperiodContentId': function (value) {//启用年月
          return this.Validator.value(value).required();
@@ -1497,9 +1494,6 @@ export default({
          _this.getData();
          
     }, 
-    mounted() {
-            this.loadList();
-        }, 
      watch: {
       search(val) {
         this.$refs.tree.filter(val);
@@ -1618,10 +1612,6 @@ export default({
                 _this.selectData.ouParentid=res.result;
                 // console.log(res)
             })
-            _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
-            // 会计期间
-                _this.selectData.accCchemeId=res.result;
-            })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
                 _this.selectData.baseCurrencyId=res.result.items;
@@ -1661,9 +1651,7 @@ export default({
                     "id":res.result.id,
                     "ouTypes":res.result.ouTypes
                 };
-                console.log(res)
-                _this.companyOuId=res.result.id;
-          
+                _this.loadbeginDate(res.result.accCchemeId);
                 _this.change_ouType()
              
                 if(res.result.basCompany!=null && typeof(res.result.basCompany)!='undefined' && res.result.basCompany!=[]){
@@ -1720,21 +1708,6 @@ export default({
                     modifiedBy:res.result.modifiedBy,
                     modifiedTime:res.result.modifiedTime,
                 }
-                // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
-                //     // 会计期间方案下拉
-                //      _this.selectData.accCchemeId=res.result;
-                //      _this.firstModify=false;
-                       
-                // })
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(response){
-                        _this.list = response.result.items;
-                            for(let j in _this.list){
-                                if(_this.list[j].id==res.result.accCchemeId){
-                                   _this.addData.accCchemeId=_this.list[j].itemCode
-                                   _this.firstModify=false;
-                                }
-                            }
-                    });
                 _this.saveSuccess=false;
                 // console.log(_this.saveSuccess,_this.firstModify,_this.secondModify ,_this.forthModify,_this.ifModify, _this.fiveModify)
                 _this.firstModify=false;
@@ -1745,39 +1718,19 @@ export default({
                 _this.fiveModify=false;
             })
         },
-        loadList(){//获取系统字典值表 
-            let _this = this;
-            _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
-                if(res.result.totalCount>1){
-                    _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1000}).then(function(response){         
-                        _this.list = response.result.items;
-                        for(let j in _this.list){
-                            if(_this.list[j].itemCode==_this.addData.accCchemeId){
-                                // _this.updateAccSchemeId=_this.list[j].id
-                                // _this.AccSchemeIdChange=true;
-                                _this.addData.accCchemeId=_this.list[j].id
-                                // _this.item_acc.id=_this.list[j].id
-                                // _this.item_acc.name=_this.list[j].itemName
-                                _this.loadbeginDate(_this.list[j].id);
-                                _this.firstModify=false;
-                            }
-                        }
-                    })
-                }
-            }).catch(function(err){
-            })   
-        },
-         seletChange(){
+         seletChange(val){
             let _this=this;
-            _this.loadList();
             _this.addData.basAccperiodContentId=''
+            _this.loadbeginDate(val);
                 
             },
         loadbeginDate(data){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
                 _this.accountYearOptions=res.result;
-                console.log(res)
+                if(_this.accountYearOptions.length==0){
+                    _this.addData.basAccperiodContentId="";
+                }
                 },function(res){
                 })
             },
@@ -1785,9 +1738,7 @@ export default({
             let _this=this;
             _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
             _this.accSchemeIdOptions=res.result;
-            console.log(res);
-            },function(res){
-        })
+            })
     },
         showErrprTips(e){
              $('.tipsWrapper').css({display:'none'})
@@ -2051,17 +2002,16 @@ export default({
         },
         save(){
             let _this=this;
-          
             $('.tipsWrapper').css({display:'block'})
                 _this.$validate()
                 .then(function (success) {
-                    // _this.addData.accCchemeId=_this.addData.accCchemeId;
                     if (success) {
                         $('.tipsWrapper').css({display:'none'})
                         if(_this.Company){
                         _this.basCompany.businessStart=_this.dateRange[0];
                         _this.basCompany.businessEnd=_this.dateRange[1];
                         _this.addData.basCompany=_this.basCompany;
+                        _this.addData.companyOuId=_this.addData.id;
                         }
                         if(_this.Finance){
                             _this.addData.basBusiness=_this.basBusiness;

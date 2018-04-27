@@ -20,9 +20,8 @@
                 </div>
                 <div class="bgcolor reset">
                     <label>会计方案</label>
-
-                    <el-select  v-model="accSchemeIdItem.accSchemeId"  @change="seletChange">
-                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemCode">
+                    <el-select clearable v-model="entryItem.accSchemeId"  @change="seletChange">
+                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                     </el-select>
                 </div>
@@ -45,7 +44,7 @@
                 </div>
                 <div class="bgcolor reset">
                     <label>启用会计月份</label>
-                    <el-select  v-model="accountYearItem.accountYear" >
+                    <el-select  v-model="entryItem.basAccperiodContentId" >
                         <el-option v-for="item in accountYearOptions" :key="item.accperiodContentId" :label="item.accountYear" :value="item.accperiodContentId">
                         </el-option>
 
@@ -193,7 +192,7 @@
                 areaFullPathArray:[],
                 ouid:'',
                 accperiodSchemeID:'',
-                updateAccSchemeId:'',//修改时会计制度id
+                // updateAccSchemeId:'',//修改时会计制度id
                 AccSchemeIdChange:false,//判段会计制度是否更改
             }
         },
@@ -232,57 +231,16 @@
                 deep:true
         },
         },
-        mounted () {
-            this.loadList();
-        },
         created:function(){       
-                let _this=this;
+                let _this=this; 
                 _this.loadTableData();
                 _this.loadArea();
                 _this.loadCurrency();
                 _this.loadOuId();
-                // _this.loadbeginDate();
                 _this.loadaccScheme();
                 _this.loadTimeZone()
              },
-        methods:{
-           //---获取数据-------------------------------------------------------
-            loadList(){//获取系统字典值表 
-                let _this = this;
-                //  console.log(_this.accSchemeIdItem.accSchemeId)
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
-                    if(res.result.totalCount>1){
-                        _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:res.result.totalCount}).then(function(response){         
-                            _this.list = response.result.items;
-                            for(let j in _this.list){
-                                if(_this.list[j].itemCode==_this.accSchemeIdItem.accSchemeId){
-                                    _this.updateAccSchemeId=_this.list[j].id
-                                    _this.loadbeginDate(_this.updateAccSchemeId);
-                                    _this.AccSchemeIdChange=true;
-                                   
-                                }
-                            }
-                        })
-                    }
-                }).catch(function(err){
-                    // _this.$message({
-                    //     type: 'warning',
-                    //     message: err.error.message
-                    // });
-                })   
-            },
-            loadOuId(){//获取ouId
-                let _this=this;               
-                _this.$axios.gets('/api/services/app/User/GetCurrentUser').then(function(res){
-                    _this.ouid=res.result.ouId;
-                    //console.log(res)
-                }).catch(function(err){
-                    _this.$message({
-                        type: 'warning',
-                        message: err.error.message
-                    });
-                });
-            },
+        methods:{         
              open(tittle,iconClass,className) {
                 this.$notify({
                 position: 'bottom-right',
@@ -309,6 +267,29 @@
                 }
                 return res;
             },
+             loadOuId(){//获取ouId
+                let _this=this;               
+                _this.$axios.gets('/api/services/app/User/GetCurrentUser').then(function(res){
+                    _this.ouid=res.result.ouId;
+                    //console.log(res)
+                }).catch(function(err){
+                    _this.$message({
+                        type: 'warning',
+                        message: err.error.message
+                    });
+                });
+            },
+            //获取年月
+            loadbeginDate(data){
+                let _this=this;
+                _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
+                _this.accountYearOptions=res.result;
+                if( _this.accountYearOption.length==0){
+                    _this.entryItem.basAccperiodContentId='';
+                }
+                },function(res){
+                })
+            },
             loadTableData(){//表格
                  let _this=this;
                 _this.$axios.gets('/api/services/app/GroupManagement/Get',{SkipCount:(_this.page-1)*_this.oneItem,MaxResultCount:_this.oneItem}).then(function(res){
@@ -322,20 +303,17 @@
                     _this.entryItem.groupFullname=res.result.groupFullname;
                     _this.entryItem.localCurrencyId=res.result.localCurrencyId;
                     _this.entryItem.timeZoneId=res.result.timeZoneId;
-                    _this.accSchemeIdItem.accSchemeId=res.result.accSchemeId 
-                    console.log(res)
-                    _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(response){
-                        _this.list = response.result.items;
+                    _this.entryItem.accSchemeId=res.result.accSchemeId          
+                   _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(response){
+                        _this.list = response.result;
                             for(let j in _this.list){
-                                if(_this.list[j].id==res.result.accSchemeId){
-                                    console.log(_this.accSchemeIdItem.accSchemeId)
-                                    _this.accSchemeIdItem.accSchemeId=_this.list[j].itemCode
-                                    _this.AccSchemeIdChange=true;
+                                if(_this.list[j].itemValue==res.result.accSchemeId){
+                                    _this.loadbeginDate(res.result.accSchemeId)
                                 }
                             }
                     });
-                    console.log(res.result.accSchemeId);
-                    _this.accountYearItem.accountYear=res.result.basAccperiodContentId;
+                    // console.log(res.result.accSchemeId);
+                    _this.entryItem.basAccperiodContentId=res.result.basAccperiodContentId;
                     _this.entryItem.areaId=res.result.areaId;
                     _this.entryItem.industry=res.result.industry;
                     _this.entryItem.address=res.result.address;
@@ -345,7 +323,6 @@
                     _this.entryItem.status=res.result.status;
                     _this.entryItemBak=_this.entryItem;
                     _this.totalPage=Math.ceil(res.result.totalCount/_this.oneItem);
-                    // console.log( _this.accountYearItem.beginDate)
                     },function(res){
                 })
             },     
@@ -354,9 +331,6 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){
                     _this.currencyOptions=res.result.items;
-                  
-                    
-
                 })
             },
             loadArea(){
@@ -369,19 +343,15 @@
             loadaccScheme(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
-                    // _this.value=res.result[1].itemName;
                     _this.accSchemeIdOptions=res.result;
-                    console.log(res);
-                    _this.seletChange();
-
-                    // console.log(res)
                   },function(res){
                 })
             },
-             seletChange(){
+          
+             seletChange(val){
                  let _this=this;
-                _this.loadList();
-                _this.accountYearItem.accountYear=''
+                _this.entryItem.basAccperiodContentId='';
+                _this.loadbeginDate(val)
             },
             loadTimeZone(){
                 let _this=this;
@@ -414,13 +384,7 @@
                  
                }
             },
-             loadbeginDate(data){
-                let _this=this;
-                _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
-                _this.accountYearOptions=res.result;
-                },function(res){
-                })
-            },
+             
             ChoosePro(){//选择省份
                 let _this=this;
                 this.areaDis=false;
@@ -457,7 +421,7 @@
                     groupName: _this.entryItem.groupName,
                     groupFullname:_this.entryItem.groupFullname,
                     localCurrencyId: _this.entryItem.localCurrencyId,
-                    accSchemeId:_this.updateAccSchemeId,
+                    accSchemeId:_this.entryItem.accSchemeId,
                     // basAccperiodContentId: _this.entryItem.basAccperiodContentId,
                     areaId: 0,
                     industry: _this.entryItem.industry,
@@ -465,7 +429,7 @@
                     fax: _this.entryItem.fax,
                     remark:_this.entryItem.remark,
                     status: _this.entryItem.status,
-                    basAccperiodContentId:_this.accountYearItem.accountYear,
+                    basAccperiodContentId:_this.entryItem.basAccperiodContentId,
                     timeZoneId:this.entryItem.timeZoneId,
                 }
                 if(_this.entryItem.areaDisId!=""&&typeof(_this.entryItem.areaDisId)!="string"){
