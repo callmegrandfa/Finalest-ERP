@@ -279,10 +279,14 @@
                     placeholder=""
                     @change="seletChange"
                     v-model="addData.accCchemeId">
-                       <el-option v-for="item in accSchemeIdOptions" :key="item.itemValue" :label="item.itemName" :value="item.itemCode">
+                       <el-option v-for="item in accSchemeIdOptions" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                         </el-option>
                          <el-option v-show="false" :label="item_acc.name" :value="item_acc.id"></el-option>
                     </el-select>
+                     <!-- <el-select  v-model="entryItem.accSchemeId"  @change="seletChange">
+                        <el-option v-for="item in accSchemeIdOptions"  :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                        </el-option>
+                    </el-select> -->
                 </div>
                 <div class="bgcolor">
                     <label><small>*</small>启用年月</label>
@@ -1486,9 +1490,9 @@ export default({
             return this.ischeck;
             }  
     },
-    mounted() {
-            this.loadList();
-        },
+    // mounted() {
+    //         this.loadList();
+    //     },
     created:function(){
         let _this=this;
          _this.getDefault();
@@ -1576,18 +1580,11 @@ export default({
                 _this.addData.baseCurrencyId=resp.result.localCurrencyId;//本位币种id
                 _this.addData.accCchemeId=resp.result.accSchemeId;//会计期间
                 _this.addData.basAccperiodContentId=resp.result.basAccperiodContentId;//启用年月明细
-                _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
-                    // 会计期间方案下拉
-                     _this.selectData.accCchemeId=res.result;
-                       
-                })
-                _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:100}).then(function(response){
-                        _this.list = response.result.items;
+               _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(response){
+                        _this.list = response.result;
                             for(let j in _this.list){
-                                if(_this.list[j].id==resp.result.accSchemeId){
-                                   _this.addData.accCchemeId=_this.list[j].itemCode
-                                     _this.firstModify=false;
-                                     _this.ifModify=false;
+                                if(_this.list[j].itemValue==_this.addData.accCchemeId){
+                                    _this.loadbeginDate(_this.addData.accCchemeId)
                                 }
                             }
                     });
@@ -1599,36 +1596,13 @@ export default({
             }
 
         },
-           loadList(){//获取系统字典值表 
-            let _this = this;
-
-            _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1}).then(function(res){
-                if(res.result.totalCount>1){
-                    _this.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:0,MaxResultCount:1000}).then(function(response){         
-                        _this.list = response.result.items;
-                        for(let j in _this.list){
-                            if(_this.list[j].itemCode==_this.addData.accCchemeId){
-                                _this.firstModify=false;
-                                   _this.ifModify=false;
-                                // _this.updateAccSchemeId=_this.list[j].id
-                                // _this.AccSchemeIdChange=true;
-                                _this.addData.accCchemeId=_this.list[j].id
-                                _this.item_acc.id=_this.list[j].id
-                                _this.item_acc.name=_this.list[j].itemName
-                                _this.loadbeginDate(_this.item_acc.id);
-                                  
-                                
-                            }
-                        }
-                    })
-                }
-            }).catch(function(err){
-            })   
-        },
         loadbeginDate(data){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
                 _this.accountYearOptions=res.result;
+                if(_this.accountYearOptions.length==0){
+                   _this.addData.basAccperiodContentId="";
+                }  
                 console.log(res)
                 },function(res){
                 })
@@ -1643,9 +1617,9 @@ export default({
             // 上级业务单元(所属组织)
                 _this.selectData.ouParentid=res.result;
             })
-            // _this.$axios.gets('/api/services/app/AccperiodSheme/GetAll').then(function(res){ 
+            // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){ 
             // // 会计期间方案
-            //     _this.selectData.accCchemeId=res.result.items;
+            //     _this.selectData.accCchemeId=res.result;
             // })
             _this.$axios.gets('/api/services/app/CurrencyManagement/GetAll').then(function(res){ 
             // 本位币种
@@ -1672,11 +1646,11 @@ export default({
             },function(res){
         })
     },
-     seletChange(){
+     seletChange(val){
             let _this=this;
-            _this.loadList();
+            // _this.loadList();
             _this.addData.basAccperiodContentId=''
-                
+            _this.loadbeginDate(val);
             },
         showErrprTips(e){
             $('.tipsWrapper').css({display:'none'})
