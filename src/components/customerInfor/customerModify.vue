@@ -908,8 +908,8 @@
                         :data="ouTreeDataRight"
                         show-checkbox
                         :highlight-current="true"
-                        node-key="ouId"
-                        ref="tree"
+                        node-key="id"
+                        ref="fptree"
                         :filter-node-method="filterNode"
                         @node-click="ouNodeClickRight"
                         @check-change="isCheckAllOu"
@@ -1409,7 +1409,7 @@ export default({
             ouDefaultPropsRight:{
                 children: 'children',
                 label: 'ouName',
-                id:'ouId'
+                id:'id'
             },
             oudel:false,//保存删除
             ouindex:'',
@@ -1881,23 +1881,16 @@ export default({
             if (!value) return true;
                 return data.areaName.indexOf(value) !== -1;
         },
-       
+
         getAllOulength(){
             let _this=this;
-            let x= 0;
-            let y = 0;
-            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuType:1,SkipCount:0,MaxResultCount:1})
+            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{SkipCount:0,MaxResultCount:1})
             .then(function(res){
-                x=res.result.totalCount
-                // console.log(res)
+                _this.allOuLength=res.result.totalCount
+                console.log(res)
             })
-            _this.$axios.gets('/api/services/app/OuManagement/GetAll',{OuType:1,SkipCount:0,MaxResultCount:1})
-            .then(function(res){
-                y=res.result.totalCount
-                // console.log(res)
-            })
-            _this.allOuLength = x +y;
         },
+
         addRouterButton(name,url){//添加router页签
             let _this=this;
             var flag=false;
@@ -1942,15 +1935,26 @@ export default({
             let _this=this;
             _this.dialogOu=true;
             setTimeout(function(){
-                // console.log(_this.storeCheckOu)
-               _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
+
+                // $.each(_this.showPageTableOu,function(index,value){
+                //     let checkednodes={
+                //         label: 'ouName',
+                //         id:'ouId'
+                //     },
+                //     delete value.transportMethodId;
+                //     showSaveOu.push(value)
+                // })
+                // // console.log(showSaveOu);
+                // console.log(_this.ouTreeDataRight)
+               _this.$refs.fptree.setCheckedNodes(_this.showPageTableOu);
                _this.isCheckAllOu()
             },200)
             
         },
         ouNodeClickRight(data){//右侧树形节点点击
             let _this=this;
-            _this.addOu=data.ouId;
+            console.log(data)
+            _this.addOu=data.id;
         },
         loadOuTreeAll(){
             let _this=this;
@@ -1965,13 +1969,27 @@ export default({
         ouDialogSure(){//dialog点击确认
             let _this=this;
             _this.dialogOu=false;
-            // console.log(_this.$refs.tree.getCheckedKeys())
-            _this.ouCheckAll=_this.$refs.tree.getCheckedNodes();
+
+            _this.ouCheckAll=_this.$refs.fptree.getCheckedNodes();
             let dialogSuredata=_this.paginationOu(_this.ouCheckAll,_this.ouOneItem,_this.ouPage)//dialog点击确认后获取的数据
             $.each(dialogSuredata,function(index,value){
-                _this.showPageTableOu.push(value);
-            })     
-            // console.log(_this.ouCheckAll)
+                $.each(_this.showPageTableOu,function(i,val){
+                    if(val.id==value.id){
+                        console.log(index)
+                        delete dialogSuredata[index] 
+                    }else{
+                         //_this.showPageTableOu.push(value);
+                    }
+                })
+               
+            })  
+            $.each(dialogSuredata,function(index,value){
+                if(value!=undefined){
+                    value.delid=0;
+                    _this.showPageTableOu.push(value);
+                }
+                console.log(_this.showPageTableOu)
+            })
         },
         delCheckOu(row){//删除表格数据
             let _this=this;
@@ -1981,6 +1999,7 @@ export default({
                 if(val.id==row.id){
                     indexs=index;
                     _this.ouindex=val.delid;
+                    console.log(val.delid)
                 }
             })
             if(indexs!=null){
@@ -1992,18 +2011,21 @@ export default({
         }, 
         CheckAllTree(){//全选
             let _this=this;
-            let topNode=[]
+            let topNode=[];
             if(_this.checkAllOu){
+                console.log(_this.checkAllOu)
                 // $.each(_this.ouTreeDataRight,function(index,val){
                 //     topNode.push(val)
                 // })
-                _this.$refs.tree.setCheckedNodes(_this.ouTreeDataRight);
+                console.log(_this.ouTreeDataRight)
+                _this.$refs.fptree.setCheckedNodes(_this.ouTreeDataRight);
                  $('.el-tree-node__content').each(function(){
                     $(this).css('display','block')
                 })
             }else{
                 // _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
-                _this.$refs.tree.setCheckedNodes([])
+                console.log(_this.checkAllOu)
+                _this.$refs.fptree.setCheckedNodes([])
                 setTimeout(function(){
                     if(_this.showCheck){
                         $('.el-checkbox__input').each(function(){
@@ -2018,7 +2040,7 @@ export default({
         },
         isCheckAllOu(){//是否全选
             let _this=this;
-            if(_this.$refs.tree.getCheckedNodes().length==_this.allOuLength){
+            if(_this.$refs.fptree.getCheckedNodes().length==_this.allOuLength){
                 _this.checkAllOu=true
             }else{
                 _this.checkAllOu=false
@@ -2222,9 +2244,8 @@ export default({
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
-                    console.log(self.showPageTableOu)
-                    //self.ouData.length=self.showPageTableOu.length;
-                    $.each(self.ouCheckAll,function(index,value){
+
+                    $.each(self.showPageTableOu,function(index,value){
                             let oudetail={
                                 "id": 0,
                                 "contactId": 0,
@@ -2233,9 +2254,15 @@ export default({
                                 "isDefault": true
                             }
                             self.ouData.push(oudetail);
-                            self.ouData[index].transportMethodId=self.showPageTableOu[index].transportMethodId
+                            if(value.transportMethodId!=''||value.transportMethodId!=undefined){
+                                self.ouData[index].transportMethodId=value.transportMethodId;
+                                self.ouData[index].id=value.delid;                              
+                            }else{
+                                self.ouData[index].transportMethodId='';
+                            }
                             self.ouData[index].ouId=value.id;
                     })
+                    console.log(self.ouData,self.showPageTableOu);
                     let submitData = {};
                     submitData = {
                         contact_MainTable:self.customerData,
@@ -2244,16 +2271,16 @@ export default({
                         contactOu_ChildTable:self.ouData,
                     }
                     console.log(submitData)
-                    self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
-                        self.open('修改成功','el-icon-circle-check','successERP');
-                        self.ifModify = false;
-                        self.redBankAr = [];
-                        self.redOuAr = [];
-                        self.redAddAr = [];
-                    },function(res){
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                        self.errorMessage=true;
-                    })
+                        self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
+                            self.open('修改成功','el-icon-circle-check','successERP');
+                            self.ifModify = false;
+                            self.redBankAr = [];
+                            self.redOuAr = [];
+                            self.redAddAr = [];
+                        },function(res){
+                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                            self.errorMessage=true;
+                        })
                     self.sureDel();
                 }
             });
@@ -2266,6 +2293,19 @@ export default({
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
+
+                    $.each(self.ouCheckAll,function(index,value){
+                            let oudetail={
+                                "id": 0,
+                                "contactId": 0,
+                                "ouId": '',
+                                "transportMethodId": '',
+                                "isDefault": true
+                            }
+                            self.ouData.push(oudetail);
+                            self.ouData[index].transportMethodId=self.showPageTableOu[index].transportMethodId
+                            self.ouData[index].ouId=value.id;
+                    })
                     let submitData = {};
                     submitData = {
                         contact_MainTable:self.customerData,
@@ -2535,7 +2575,7 @@ export default({
                 if(self.ouindex>0){
                     console.log(self.ouindex)
                     self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.ouindex}).then(function(res){
-                        //self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                        self.open('删除使用组织成功','el-icon-circle-check','successERP');
                         // self.ouData.splice(self.whoIndex,1);
                         // self.dialogDelConfirm = false;
                     },function(res){
@@ -3090,9 +3130,15 @@ export default({
 }
 .customerBasicForm .bgw .el-input__inner{
     background-color:white;
+    text-align: center;
 }
 .customerBasicForm .bgg .el-input__inner{
     background-color:#FAFAFA;
+    text-align: center;
+}
+.customerBasicForm .bgp .el-input__inner{
+    background-color:#FAFAFA;
+    text-align: center;
 }
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;
