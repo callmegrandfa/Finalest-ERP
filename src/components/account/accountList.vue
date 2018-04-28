@@ -6,9 +6,9 @@
                       <el-select v-model="value" placeholder="请选择" class="width" @change="seletChange">
                         <el-option 
                         v-for="item in options" 
-                        :key="item.itemCode" 
+                        :key="item.itemValue" 
                         :label="item.itemName"
-                        :value="item.itemName">
+                        :value="item.itemValue">
                         </el-option>
                     </el-select>
                     <el-input placeholder="搜索..."
@@ -372,7 +372,7 @@ import dialogBox from '../../base/dialog/dialog'
             loadSelect(){//获取select
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'AccountScheme'}).then(function(res){
-                    _this.value=res.result[0].itemName;
+                    _this.value=res.result[0].itemValue;
                     _this.options=res.result;
                     //console.log(_this.list)
                     //调取默认数据
@@ -382,7 +382,7 @@ import dialogBox from '../../base/dialog/dialog'
                     let l=_this.treeData.length;
                     var y=_this.treeData[l-1];
                     var x={'label':y}
-                    //_this.$refs.tree.setCurrentKey("2018");
+                    _this.$refs.tree.setCurrentKey("2018");
                     //console.log(_this.chooseDate)
                     _this.TreeNodeClick(x);
                 }),function(res){
@@ -392,11 +392,12 @@ import dialogBox from '../../base/dialog/dialog'
             seletChange(){
                 let _this=this;
                 _this.loadList();
-                $.each(_this.list,function(index,value){
-                    if(_this.list[index].itemName==_this.value){
-                        _this.accperiodSchemeID=_this.list[index].id;
-                    }
-                });
+                _this.accperiodSchemeID=_this.value
+                // $.each(_this.list,function(index,value){
+                //     if(_this.list[index].itemName==_this.value){
+                //         _this.accperiodSchemeID=_this.list[index].id;
+                //     }
+                // });
                 _this.loadTree();
                 //console.log(_this.treeData)
             },
