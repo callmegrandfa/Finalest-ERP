@@ -519,7 +519,7 @@
             let self=this;
             self.treeLoading=true;
             self.$axios.gets('api/services/app/DeptManagement/GetAllTree',{ouId:id}).then(function(res){
-                //console.log(res)
+                console.log(res)
                 self.selectParentTree=res.result;
                 self.dpExpandId=self.defauleExpandTree(res.result,'id')          
                 self.loadIcon();

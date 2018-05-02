@@ -32,7 +32,7 @@
             </el-col>
             
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10 pl5">
+                <el-row class="h48 pt5 pr10 pl5 fixed" >
 
                     <button class="erp_bt bt_add" @click="goDetail">
                         <div class="btImg">
@@ -308,6 +308,41 @@ export default {
       this.$refs.tree.filter(val);
     }
   },
+  mounted:function(){
+        let _this=this;
+        $(window).scroll(function(){
+            if($(window).scrollTop()>61){
+            if(!_this.$store.state.show){
+                let w=$('.fixed').parent().width();
+                $('.fixed').width(w);
+                $('.fixed').css({
+                "position":'fixed',
+                "top":'93px',
+                "z-index":'998',
+                "backgroundColor":"#fff"
+                }).next('div').css({marginTop:'47px'})
+            }else{
+                let w=$('.fixed').parent().width();
+                $('.fixed').width(w);
+                $('.fixed').css({
+                position:'fixed',
+                top:'93px',
+                zIndex:'998',
+                transition: 'width 0s'
+                }).next('div').css({marginTop:'47px'})
+            }
+            _this.$store.commit('go1');
+            }else{
+            $('.fixed').css({
+                position:'relative',
+                top:'0',
+                transition: 'width 0s'
+            }).next('div').css({marginTop:0})
+            _this.$store.commit('go2');
+            }
+        })
+
+    }, 
   methods: {
       defauleExpandTree(data,key){
                 if(typeof(data[0])!='undefined'

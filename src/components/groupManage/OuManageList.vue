@@ -579,7 +579,7 @@
                 _this.treeLoading=true;
                 _this.$axios.gets('/api/services/app/OuManagement/GetTreeWithOuType',{ouType:1})
                 .then(function(res){
-                 
+                     console.log(res)
                     _this.selectTreeCompany=res.result;
                     _this.expand_companyOuId=_this.defauleExpandTree(res.result,'id')
                 },function(res){

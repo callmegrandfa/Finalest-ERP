@@ -11,7 +11,7 @@
             </el-col>
         </el-row>
         <el-row>
-          <el-col :span="24"  class="pt15">
+          <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单编码</label>
@@ -26,7 +26,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>菜单名称</label>
@@ -41,7 +41,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>子系统</label>
@@ -60,7 +60,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                     <label>上级菜单</label>
@@ -99,7 +99,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>状态</label>
@@ -116,7 +116,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth" style="position: relative;">
                         <label>图标</label>
@@ -141,7 +141,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>路由地址</label>
@@ -156,7 +156,22 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
+                <div class="bgMarginAuto">
+                    <div class="bgcolor bgLongWidth">
+                        <label>排序</label>
+                        <el-input 
+                        class="seq" 
+                         @change="isUpdate"
+                        :class="{redBorder : validation.hasError('addData.seq')}" 
+                        v-model="addData.seq"  
+                        placeholder=""></el-input>
+                    </div>
+                    <div class="error_tips_info">{{ validation.firstError('addData.seq') }}</div>
+                </div>    
+            </el-col>  
+
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label>备注</label>
@@ -173,7 +188,7 @@
                 </div>    
             </el-col>
 
-            <el-col :span="24"  class="pt15">
+            <el-col :span="24"  >
                 <div class="bgMarginAuto">
                     <div class="bgcolor bgLongWidth">
                         <label><small>*</small>功能权限</label>
@@ -486,6 +501,13 @@
       },
       'addData.remark': function (value) {//
          return this.Validator.value(value).maxLength(200);
+      },
+      'addData.seq': function (value) {//排序
+         return this.Validator.value(value).integer().custom(function () {
+            if (value<0) {
+                return '必须是正整数'
+            }
+        });
       },
       'checked': function (value) {//
             return this.Validator.value(value).custom(function () {

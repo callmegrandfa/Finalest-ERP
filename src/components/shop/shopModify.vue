@@ -866,15 +866,15 @@ export default({
         contactData:{
             handler:function(val,oldVal){
                 let self = this;
-                if(!self.firstModify){
-                    self.firstModify = !self.firstModify;
-                }else{
+                // if(!self.firstModify){
+                //     self.firstModify = !self.firstModify;
+                // }else{
                     // console.log(self.addList.length)
                     // if(self.addList.length>0){
                         //self.ifModify = true;
                     // }
                     
-                } 
+                // } 
                 // console.log('123')
                 self.redAr = [];
                 for(let i in val){
@@ -913,19 +913,14 @@ export default({
                     console.log(res)
                     //---对返回数据进行保存------------
                     self.shopData = res.result;
-                    self.contactData = self.shopData.shopContacts;
+                    self.contactData = res.result.shopContacts;
                     self.InitData = self.deepCopy(res.result.shopContacts);
                     self.getOuId = self.shopData.ouId;//保存加载时获取的ouid
-                    // if(self.contactData.length>0){
-                    //     for(let i in self.contactData){
-                    //         if(self.contactData[i].isDefault == true){
-                    //             self.checkedAr = self.contactData[i]
-                    //         }
-                    //     }
-                    // }
+                    
                     //-------------------------------
                     self.shopData.createdTime=self.resdatetime(new Date(self.shopData.createdTime));
-                    self.shopData.modifiedTime=self.resdatetime(new Date(self.shopData.modifiedTime));                        
+                    self.shopData.modifiedTime=self.resdatetime(new Date(self.shopData.modifiedTime));    
+                    self.ifModify = false;                    
 
 
 
@@ -979,8 +974,9 @@ export default({
                     //------------------------------
 
                     //---开店日期扯淡----------------
-                    if(self.shopData.openingDate == '3000-12-31T00:00:00'){
+                    if(self.shopData.openingDate.indexOf('3000')!= -1||self.shopData.openingDate.indexOf('3001')!= -1){
                         self.shopData.openingDate = '';
+                        self.ifModify = false;
                     }
                     //------------------------------
 
@@ -1112,7 +1108,7 @@ export default({
             });
 
             //商圈
-            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'busCircle'}).then(function(res){
+            self.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'TradingArea'}).then(function(res){
                 // console.log(res);
                 self.busAr = res.result;
             },function(res){

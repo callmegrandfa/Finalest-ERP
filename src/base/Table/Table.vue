@@ -430,16 +430,16 @@ table .el-input__inner{
 .normalTable .el-table__body tr.hover-row>td,
 .normalTable .el-table__body tr.hover-row>td input,
 .normalTable .el-table__body tr.hover-row>td input[disabled]{
-    background: #d4e3f5;
+    background: #d1ddf1!important;
 }
 /* 得到焦点背景为白色 */
 .normalTable .el-table__body tr>td input:focus{
-    background: #fff;
+    background: #fff!important;
 }
 /* 清空动画 */
 .normalTable.el-table--enable-row-transition .el-table__body td{
-    transition:background-color 0s ease;
-    -webkit-transition: background-color 0s ease;
+    transition:background-color 0s ease!important;
+    -webkit-transition: background-color 0s ease!important;
 }
 /* 重置禁用input样式 */
 .normalTable .el-input.is-disabled .el-input__inner{

@@ -26,7 +26,7 @@
 		//props: ['defaultProps','expandParams','treeSearch'], 
 		props:{
 			defaultProps:{type:Object},
-			expandParams:{type:Object},
+			// expandParams:{type:Object},
 			treeSearch:{type:Boolean},
 			treeParams:{type:Object}
 		},
@@ -34,6 +34,10 @@
 			return{
 				treeLoading:true,//加载动画
 				treeQuery:'',//树节点过滤条件
+				expandParams:{//默认展开节点参数控制
+                    expandId:'id',
+                    expandkey:[],
+                },
 			}
 		},
 		created() {
@@ -42,17 +46,27 @@
 			this.$store.dispatch('InitTree');//初始化树型数据
 			setTimeout(() => {
 				this.treeLoading=false;
+				//this.expandParams.expandId=this.$store.state[this.treeParams.treeName+'TreeData']
 			}, 800);
 		},
 		computed:{
 			treeData(){
+				if(this.$store.state[this.treeParams.treeName+'TreeData'].length>0){
+					 this.expandParams.expandkey.push(this.$store.state[this.treeParams.treeName+'TreeData'][0].id)
+				}
 				return this.$store.state[this.treeParams.treeName+'TreeData']
 			},
 		},
 		watch:{
 			treeQuery(val) {
                 this.$refs.tree.filter(val);
-            }
+			},
+			expandParams:{
+				handler:function(val,oldVal){
+                        this.expandParams=val;
+                },
+                deep:true
+			}
 		},
 	    methods:{
 			filterNode(value, data) {//根据输入条件过滤树型

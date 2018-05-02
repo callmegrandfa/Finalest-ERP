@@ -95,7 +95,7 @@
                         <el-col :span="24" class="mt10">
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
-                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols'></Transfer> -->
+                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols' @transferConfirm='transferConfirm'></Transfer> -->
                         </el-col> 
                     </el-row>
                 </el-col>
@@ -117,13 +117,37 @@ import Transfer from '../../base/Transfer/Transfer'
             return {
                 transferHttpSetting:{
                     transferName:'ceshi',
-                    transferApi:'/api/services/app/SpecManagement/GetAll',
+                    transferApi:'/api/services/app/BrandManagement/GetListByCondition',
                     transferParams:{
-                        MaxResultCount:'1000',
+                        BrandCode:'',//品牌编码
+                        BrandName:'',//品牌名称
+                        BrandEname:'',//品牌名称(英文)
+                        Status:'',//状态
+                        MaxResultCount:'100',
                         SkipCount:'0',
                     }
                 },
-                OptionalCols:[{ prop: 'name',label: '测试'},{prop: 'id',label: 'id'}],
+                selectedTable:[{
+                    groupId: 1,
+                    brandCode: "CHEE",
+                    brandName: "千百惠1",
+                    brandEname: "CHEE",
+                    status: 1,
+                    remark: "千百惠1",
+                    remark2: " ",
+                    seq: 0,
+                    statusTValue: '启用',
+                    createdBy: "admin",
+                    createdTime: "2018-04-04T17:20:02.667",
+                    id: 112
+                    }],
+                OptionalCols:[{
+                    prop: 'brandCode',
+                    label: '品牌编码'
+                    },{
+                    prop: 'brandName',
+                    label: '品牌名称'
+                    }],
                 queryParams:{
                     BrandCode:'',//品牌编码
                     BrandName:'',//品牌名称
@@ -208,10 +232,10 @@ import Transfer from '../../base/Transfer/Transfer'
                     controls:'text',
                     required:true,
                     flag:true,//更改标识
-                    isFix:"",
                     width:"auto",
                     isDisable:false,
                     sortable:false,
+                    isFix:''
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
@@ -325,6 +349,11 @@ import Transfer from '../../base/Transfer/Transfer'
                    $(this).css("background","#f4f4f5")
                 }  
             })
+            setTimeout(() => {
+				this.$store.commit('Init_TransferSelected',this.selectedTable)
+				//this.expandParams.expandId=this.$store.state[this.treeParams.treeName+'TreeData']
+			}, 1000);
+            
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -402,6 +431,9 @@ import Transfer from '../../base/Transfer/Transfer'
             //     this.addArray=[];
             //     this.updateId="";
             // },
+            transferConfirm(data){
+                //console.log(data);
+            },
             InitStatus(){//获取状态枚举表
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){

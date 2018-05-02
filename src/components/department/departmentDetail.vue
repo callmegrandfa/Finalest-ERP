@@ -608,6 +608,7 @@
         },
 
         ouNodeClick:function(data){
+            console.log(data)
             let self = this;
             self.ouItem.id = data.id;
             self.ouItem.ouFullname = data.ouFullname;

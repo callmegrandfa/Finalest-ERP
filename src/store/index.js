@@ -64,7 +64,7 @@ export default new vuex.Store({
         repositoryList:{ name: 'repositoryList', url: '/repository/repositoryList/:id', parent: 'repository' } ,
         repositoryData:{ name: 'repositoryData', url: '/repository/repositoryData/:id', parent: 'repository' } ,
         repositoryModify:{ name: 'repositoryModify', url: '/repository/repositoryModify/:id', parent: 'repository' } ,
-
+        commodityPropertyofGoods:{name: 'commodityPropertyofGoods', url: '/commodityPropertyofGoods/:id', parent: 'commodityPropertyofGoods', default: '/commodityPropertyofGoods/:id' },//商品品牌
         customer:{ name: 'customer', url: '/customer/customerList/:id', parent: 'customer', default: '/customer/customerList/:id' } , //客户管理
         customerList:{ name: 'customerList', url: '/customer/customerList/:id', parent: 'customer' } ,
         customerDetail:{ name: 'customerDetail', url: '/customer/customerDetail/:id', parent: 'customer' } ,
@@ -764,7 +764,8 @@ export default new vuex.Store({
         commodityClassHeadingTotalPagination:10,//总页数
         commodityClassHeadingEachPage:10,//每页显示条数
         //商品品牌
-        ceshiTable:[],
+        ceshiSelectedTable:[],
+        ceshiOptionalTable:[],
         ceshiTransferApi:'',
         ceshiTransferParams:'',
         commodityBrandQueryApi:'',//查询接口
@@ -839,8 +840,11 @@ export default new vuex.Store({
         setTransferParams(state,obj){//设置穿梭框接口地址
             state[state.transferName+'TransferParams']=obj;
         },
-        Init_Transfer(state,array){//设置穿梭框表格数据
-            state[state.transferName+'Table']=array;
+        Init_Transfer(state,array){//设置穿梭框可选表格数据
+            state[state.transferName+'OptionalTable']=array;
+        },
+        Init_TransferSelected(state,array){//设置穿梭框可选表格数据
+            state[state.transferName+'SelectedTable']=array;
         },
         // 表格模块
         Init_Table(state,data){//表格数据模型
@@ -932,8 +936,7 @@ export default new vuex.Store({
             axios.get(context.state[context.state.transferName+'TransferApi'],{
                 params:context.state[context.state.transferName+'TransferParams']
             }).then(function(res){
-                console.log(res.result.items);
-                context.commit('Init_Transfer',res.result.items);
+                context.commit('Init_Transfer',res.data.result.items);
                 }).catch(function(err){
                     console.log(err)
                 })

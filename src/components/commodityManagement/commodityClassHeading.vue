@@ -96,7 +96,7 @@
 	                </el-col>
                     <el-row style="float:left;width:100%;">
                         <el-col :span="5" class="tree-container">
-                            <Tree :defaultProps='defaultProps' :expandParams='expandParams' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
+                            <Tree :defaultProps='defaultProps' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree>
                         </el-col>
                         <el-col :span="19">
                             <Table  :methodsUrl="httpUrl" :pluginSetting='pluginSetting' :queryParams="queryParams" :cols="column" :tableName="tableModel"  :command="command"></Table>
@@ -191,21 +191,19 @@ import Tree from '../../base/tree/tree'
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
+                    isFix:'',
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'categoryName',
                     label: '类目名称',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'status',
                     label: '状态',
@@ -213,21 +211,18 @@ import Tree from '../../base/tree/tree'
                     isDisable:true,
                     sortable:false,
                     dataSource:[],
-                    isFix:"",
                     }, {
                     prop: 'mnemonic',
                     label: '助记码',
                     controls:'text',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                     }, {
                     prop: 'isService',
                     label: '服务类',
                     controls:'checkbox',
                     isDisable:true,
                     sortable:false,
-                    isFix:"",
                 }],
                 pluginSetting:{
                     hasPagination:true,
@@ -268,10 +263,6 @@ import Tree from '../../base/tree/tree'
                     children:'childNodes',
                     label:'categoryName',
                     id:'id',
-                },
-                expandParams:{//默认展开节点参数控制
-                    expandId:'id',
-                    expandkey:[],
                 },
                 treeSearch:false,//是否包含树节点过滤功能
                 treeParams:{

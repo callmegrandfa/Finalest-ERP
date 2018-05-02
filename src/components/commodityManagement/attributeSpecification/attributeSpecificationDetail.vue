@@ -327,8 +327,6 @@ export default({
         let self = this;
         self.loadDefault();
         self.loadTree();
-        self.loadAttribute();
-        self.loadSpec();
     },
     watch: {
         //-----------属性------------------------------------------------------------------
@@ -606,6 +604,9 @@ export default({
             expandId:[],
             //-------------------
 
+            //---父节点从表数据---
+            attFaData:[],
+            specFaData:[],
             //---商品属性弹框-----
             onePageShow:10,
             attData:[],//生成的属性表格数据
@@ -720,6 +721,24 @@ export default({
                         })
                     }
                     // self.attData = res.result;
+                    self.attributeChooseData = self.attData;
+                   
+                    let y = [];
+                    for(let i in self.attributeAllData){
+                        let flag = true;
+
+                        for(let j in self.attData){
+                            if(self.attributeAllData[i].itemSourceId == self.attData[j].itemSourceId){
+                                flag = false
+                            }
+                        }
+
+                        if(flag){
+                            y.push(self.attributeAllData[i])
+                        }
+                    }
+                    console.log(y)
+                    self.attributeAllData = y;
                 }
             },function(res){
 
@@ -744,6 +763,22 @@ export default({
                         })
                     }
                     // self.specData = res.result;
+                    self.specChooseData = self.specData;
+
+                    let y = [];
+                    for(let i in self.specAllData){
+                        let flag = true;
+
+                        for(let j in self.specData){
+                            if(self.specAllData[i].itemSourceId == self.specData[j].itemSourceId){
+                                flag = false;
+                            }
+                        }
+                        if(flag){
+                            y.push(self.specAllData[i])
+                        }
+                    }
+                    self.specAllData = y;
                 }
             },function(res){
                 
@@ -754,20 +789,24 @@ export default({
         //---属性弹窗内右侧表格数据--
         loadAttribute:function(){//商品属性
             let self = this;
+            // self.attributeAllData = [];
             self.$axios.gets('/api/services/app/PropertyManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
                 console.log(res);
                 let x = [];
                 x = res.result.items;
                 for(let i in x){
                     self.attributeAllData.push({
-                        itemSourceId:x[i].id,
+                        id:0,
                         groupId:x[i].groupId,
+                        itemSourceId:x[i].id,
+                        itemType:1,
+                        categoryFeatureId:self.categoryFeatureId,
                         propertyCode:x[i].propertyCode,
                         propertyName:x[i].propertyName,
-                        statusTValue:x[i].statusTValue
+                        statusTValue:x[i].statusTValue,
                     })
                 }
-                // self.attributeAllData = res.result.items;
+                
                 self.totalPageRightAtt = Math.ceil(res.result.totalCount/self.onePageShow);
             },function(res){
                 console.log('err'+res)
@@ -780,7 +819,21 @@ export default({
             let self = this;
             self.$axios.gets('/api/services/app/SpecManagement/GetAll',{MaxResultCount:'100',SkipCount:'0'}).then(function(res){
                 console.log(res);
-                self.specAllData = res.result.items;
+                let x = [];
+                x = res.result.items; 
+                for(let i in x){
+                    self.specAllData.push({
+                        id:0,
+                        groupId:x[i].groupId,
+                        itemSourceId:x[i].id,
+                        itemType:2,
+                        categoryFeatureId:self.categoryFeatureId,
+                        specCode:x[i].specCode,
+                        specName:x[i].specName,
+                        statusTValue:x[i].statusTValue
+                    })
+                }
+                
                 self.totalPageRightSpec = Math.ceil(res.result.totalCount/self.onePageShow);
             },function(res){
                 console.log('err'+res)
@@ -799,23 +852,43 @@ export default({
             self.submitData.categoryFeature_MainTable.lotMgt = self.ifBatch;
             self.submitData.categoryFeature_MainTable.validityMgt = self.ifPeriod;
             self.submitData.categoryFeature_MainTable.attributeInherited = self.ifInherit;
+            console.log(self.specData)
             // console.log(12)
-            self.submitData.categoryFeatureItem_ChildTable = self.attData;
+            let x = [];
+            for(let i in self.attData){
+                x.push({
+                    id:self.attData[i].id,
+                    groupId:self.attData[i].groupId,
+                    categoryFeatureId:self.attData[i].categoryFeatureId,
+                    itemType:self.attData[i].itemType,
+                    itemSourceId:self.attData[i].itemSourceId,
+                })
+            }
+            for(let i in self.specData){
+                x.push({
+                    id:self.specData[i].id,
+                    groupId:self.specData[i].groupId,
+                    categoryFeatureId:self.specData[i].categoryFeatureId,
+                    itemType:self.specData[i].itemType,
+                    itemSourceId:self.specData[i].itemSourceId,
+                })
+            }
+            self.submitData.categoryFeatureItem_ChildTable = x;
             // for(let i in self.attData){
                 // self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.attData[i].id,
                 // itemType:'1',
                 // categoryFeatureId:self.submitData.categoryFeature_MainTable.id,
                 // groupId:self.defaultGroupId})
             // }
-            console.log(self.submitData.categoryFeatureItem_ChildTable)
+            // console.log(self.submitData.categoryFeatureItem_ChildTable)
             // 
-            for(let i in self.specData){
-                self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.specData[i].id,
-                itemType:'2',
-                categoryFeatureId:self.submitData.categoryFeature_MainTable.id,
-                groupId:self.defaultGroupId,
-                id:self.specData[i].id})
-            }
+            // for(let i in self.specData){
+            //     self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.specData[i].id,
+            //     itemType:'2',
+            //     categoryFeatureId:self.submitData.categoryFeature_MainTable.id,
+            //     groupId:self.defaultGroupId,
+            //     id:self.specData[i].id})
+            // }
             console.log(self.submitData)
             self.$axios.posts('/api/services/app/CategoryFeatureManagement/AggregateCreateOrUpdate',self.submitData).then(function(res){
                 // console.log(res);
@@ -910,7 +983,7 @@ export default({
             for(let i in self.attributeAllData){
                 let flag = true;
                 for(let j in self.multipleSelection){
-                    if(self.attributeAllData[i].id == self.multipleSelection[j].id){
+                    if(self.attributeAllData[i].itemSourceId == self.multipleSelection[j].itemSourceId){
                         flag = false;
                     }
                 }
@@ -936,7 +1009,7 @@ export default({
             for(let i in self.attributeChooseData){
                 let flag = true;
                 for(let j in self.multipleSelectionLeft){
-                    if(self.attributeChooseData[i].id == self.multipleSelectionLeft[j].id){
+                    if(self.attributeChooseData[i].itemSourceId == self.multipleSelectionLeft[j].itemSourceId){
                         flag = false;
                     }
                 }
@@ -963,7 +1036,7 @@ export default({
             for(let i in self.specAllData){
                 let flag = true;
                 for(let j in self.multipleSelectionSpec){
-                    if(self.specAllData[i].id == self.multipleSelectionSpec[j].id){
+                    if(self.specAllData[i].itemSourceId == self.multipleSelectionSpec[j].itemSourceId){
                         flag = false;
                     }
                 }
@@ -988,7 +1061,7 @@ export default({
             for(let i in self.specChooseData){
                 let flag = true;
                 for(let j in self.multipleSelectionLeftSpec){
-                    if(self.specChooseData[i].id == self.multipleSelectionLeftSpec[j].id){
+                    if(self.specChooseData[i].itemSourceId == self.multipleSelectionLeftSpec[j].itemSourceId){
                         flag = false;
                     }
                 }
@@ -1084,24 +1157,10 @@ export default({
             let self = this;
             let x = [];
             x = self.deepCopy(self.attributeChooseData);
-            let y = [];
-            for(let i in x){
-                // x[i].itemSourceId = x[i].id;
-                y.push({
-                    id:0,
-                    groupId:x[i].groupId,
-                    itemSourceId:x[i].itemSourceId,
-                    itemType:1,
-                    categoryFeatureId:self.categoryFeatureId,
-                    propertyCode:x[i].propertyCode,
-                    propertyName:x[i].propertyName,
-                    statusTValue:x[i].statusTValue
-                })
-            };
             
-            console.log(y)
-            for(let i in y){
-                self.attData.push(y[i])
+            self.attData = [];
+            for(let i in x){
+                self.attData.push(x[i])
             }
             console.log(self.attData)
             
@@ -1119,22 +1178,22 @@ export default({
             let self = this;
             let x = [];
             x = self.deepCopy(self.specChooseData);
-            let y = [];
+            // let y = [];
+            // for(let i in x){
+            //     y.push({
+            //         id:0,
+            //         groupId:x[i].groupId,
+            //         itemSourceId:x[i].itemSourceId,
+            //         itemType:2,
+            //         categoryFeatureId:self.categoryFeatureId,
+            //         specCode:x[i].specCode,
+            //         specName:x[i].specName,
+            //         statusTValue:x[i].statusTValue
+            //     })
+            // }
+            self.specData = [];
             for(let i in x){
-                y.push({
-                    id:0,
-                    groupId:x[i].groupId,
-                    itemSourceId:x[i].itemSourceId,
-                    itemType:1,
-                    categoryFeatureId:self.categoryFeatureId,
-                    specCode:x[i].specCode,
-                    specName:x[i].specName,
-                    statusTValue:x[i].statusTValue
-                })
-            }
-
-            for(let i in y){
-                self.specData.push(y[i])
+                self.specData.push(x[i])
             }
             console.log(self.specData)
             // self.specData = self.deepCopy(self.specChooseData);
@@ -1199,7 +1258,6 @@ export default({
             self.categoryName = data.categoryName;
             //---获取主表数据-------
             self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.id}).then(function(res){
-                // console.log(123)
                 console.log(res)
                 if(res&&res.result){
                     self.ifInherit = res.result.attributeInherited;
@@ -1208,15 +1266,30 @@ export default({
                     self.ifPeriod = res.result.validityMgt;
                     self.submitData.categoryFeature_MainTable.id = res.result.id;
                     self.categoryFeatureId = res.result.id;
+                    //---获取弹出框的数据---
+                    self.loadAttribute();
+                    self.loadSpec();
                     //---获取从表数据-------
                     self.loadTableAtt(self.categoryId,res.result.id);
                     self.loadTableSpec(self.categoryId,res.result.id)
-                    //---------------------
                 }
                 
             },function(res){
                 console.log(self.submitData.categoryFeature_MainTable.id)
+                self.submitData.categoryFeature_MainTable.id = 0;
                 self.categoryFeatureId = self.submitData.categoryFeature_MainTable.id;
+
+                //---获取弹出框的数据---
+                self.loadAttribute();
+                self.loadSpec();
+            })
+            //---查询点击的节点的父节点主表数据---
+            self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.categoryParentid}).then(function(res){
+                console.log(res)
+                
+                
+            },function(res){
+                
             })
             
         },
@@ -1231,6 +1304,12 @@ export default({
             self.ifOne = false;//唯一码管理
             self.ifBatch = false;//批次管理
             self.ifPeriod = false;//保质期管理
+            self.attributeChooseData = [];
+            self.attributeAllData = [];
+            self.specChooseData = [];
+            self.specAllData = [];
+            // self.loadAttribute();
+            // self.loadSpec();
         },
         //-----------------------
 

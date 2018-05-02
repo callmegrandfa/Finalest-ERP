@@ -80,7 +80,7 @@
                         <span class="btDetail">新增</span>
                     </button>
 
-                    <button class="erp_bt bt_del" @click="dialogUserConfirm = true">
+                    <button class="erp_bt bt_del" @click="dialogConfirm" :class="{erp_fb_bt:ifData}">
                         <div class="btImg">
                             <img src="../../../static/image/common/bt_del.png">
                         </div>
@@ -265,9 +265,10 @@ import dialogBox from '../../base/dialog/dialog'
                 creatTime:'',//创建时间
                 modifyBy:'',//修改人
                 modifyTime:'',//修改时间
+                ifData:false,
                 addData:{
                     "groupID": 1,
-                    "ouID": 10,
+                    "ouID": '',
                     "accperiodSchemeID": '',
                     "periodYear":'' ,
                     "periodNum": '',
@@ -359,6 +360,7 @@ import dialogBox from '../../base/dialog/dialog'
                 let _this=this;               
                 _this.$axios.gets('/api/services/app/User/GetCurrentUser').then(function(res){
                     _this.ouid=res.result.ouId;
+                    _this.addData.ouID=res.result.ouId;
                     //console.log(res)
                 }).catch(function(err){
                     _this.$message({
@@ -403,10 +405,13 @@ import dialogBox from '../../base/dialog/dialog'
                 _this.treeLoading=true;
                 //console.log(_this.ouid,_this.accperiodSchemeID)
                 _this.$axios.gets('/api/services/app/Accperiod/GetByAccoperiodSchemeID',{OuId:_this.ouid,AccperiodSchemeID:_this.accperiodSchemeID}).then(function(res){
-                    console.log(res)
+                    console.log(_this.ouid,res)
                     _this.componyTreeData=res.result;
                     if(_this.componyTreeData.length==0){
                         _this.modifyflag=false;
+                        _this.ifData=true;
+                    }else{
+                        _this.ifData=false;
                     }
                     _this.treeData=[];
                     _this.componyTree[0].children=[];
@@ -590,6 +595,16 @@ import dialogBox from '../../base/dialog/dialog'
                         })   
                     }
                 });        
+            },
+            dialogConfirm(){
+                let _this=this;
+                //console.log(_this.ifData)
+                if(_this.ifData){
+                    _this.dialogUserConfirm=false;
+                }else{
+                    _this.dialogUserConfirm=true;
+                }
+
             },
             del(){
                 let _this=this;
