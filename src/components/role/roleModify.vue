@@ -1012,7 +1012,7 @@ export default({
                         ouAssigns.push(val.ouId)
                     });
                     _this.addData.ouAssigns=ouAssigns;
-                    // console.log(_this.addData)
+                    console.log(_this.addData)
                     //ajax
                     _this.$axios.puts('/api/services/app/Role/Update',_this.addData)
                     .then(function(res){
@@ -1238,7 +1238,7 @@ export default({
             _this.dialogOu=true;
             // _this.loadIcon();
             setTimeout(function(){
-                // console.log(_this.storeCheckOu)
+                console.log(_this.ouCheckAll)
                _this.$refs.tree.setCheckedNodes(_this.ouCheckAll);
                _this.isCheckAllOu()
             },200)

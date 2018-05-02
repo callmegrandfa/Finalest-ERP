@@ -1094,7 +1094,7 @@ export default({
             addressData:[],//地址数据列表，开始为空
             addAddressList:[],//需要添加的地址信息
 
-            // ouData:[],//组织数据列表，开始为空
+            ouData:[],//组织数据列表，开始为空
             updataOuList:[],//修改的组织信息
             addOuList:[],//需要添加的组织信息
 
@@ -1425,6 +1425,19 @@ export default({
             let self = this;
             console.log(self.ouTreeDataRight)
             $('.tipsWrapper').css({display:'block'});
+            $.each(self.ouCheckAll,function(index,value){
+                    let oudetail={
+                        "id": 0,
+                        "contactId": 0,
+                        "ouId": '',
+                        "transportMethodId": '',
+                        "isDefault": true
+                    }
+                    self.ouData.push(oudetail);
+                    self.ouData[index].transportMethodId=self.showPageTableOu[index].transportMethodId
+                    self.ouData[index].ouId=value.id;
+            })
+            console.log(self.ouCheckAll,self.ouData)
             let submitData = {};
             submitData = {
                 contact_MainTable:self.createContactParams,
@@ -2452,6 +2465,10 @@ export default({
     background-color:#FAFAFA;
     text-align: center;
     border:1px solid white;
+}
+.customerBasicForm .bgp .el-input__inner{
+    background-color:#FAFAFA;
+    text-align: center;
 }
 .customerBasicForm .el-select-dropdown__item{
     text-align: center;

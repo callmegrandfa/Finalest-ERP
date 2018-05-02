@@ -284,7 +284,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
                 _this.accountYearOptions=res.result;
-                if( _this.accountYearOption.length==0){
+                if( _this.accountYearOptions.length==0){
                     _this.entryItem.basAccperiodContentId='';
                 }
                 },function(res){
