@@ -490,11 +490,11 @@
                                             type="text"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="productId" label="折扣率">
+                            <el-table-column prop="discount" label="折扣率">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
                                             :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.productId" 
+                                            v-model="scope.row.discount" 
                                             type="text"/>
                                 </template>
                             </el-table-column>
@@ -1187,23 +1187,24 @@ export default {
                 }
             ],
             "sku_ChildTable": [//SKU从表
-                {
-                "id": 0,
-                "groupId": 1,
-                "productId": '',//商品ID
-                "skuCode": "",//SKU商品编码
-                "skuName": "",//SKU商品名称
-                "barcode": "",//条码
-                "unitId": '',//基本单位 
-                "purchasePrice": '',//进货价
-                "wholePrice": '',//批发价 
-                "discount": '',//折扣 
-                "vipPrice": '',//会员价 
-                "retailPrice": '',//零售价 
-                "status": 1
-                }
+                // {
+                // "id": 0,
+                // "groupId": 1,
+                // "productId": '',//商品ID
+                // "skuCode": "",//SKU商品编码
+                // "skuName": "",//SKU商品名称
+                // "barcode": "",//条码
+                // "unitId": '',//基本单位 
+                // "purchasePrice": '',//进货价
+                // "wholePrice": '',//批发价 
+                // "discount": '',//折扣 
+                // "vipPrice": '',//会员价 
+                // "retailPrice": '',//零售价 
+                // "status": 1
+                // }
             ],
             skuTableHeader:[],//sku孙表的表头
+            skuData:[],
             "skuSpecValue_GrandTable": [//SKU规格值孙表
                 {
                 "id": 0,
@@ -1735,17 +1736,13 @@ export default {
             },function(res){
             })
 //----------------------SKU主表------------------------
-            // sku_ChildTable
             _this.$axios.gets('/api/services/app/SkuManagement/GetSKUList',{productID:_this.$route.params.id})
             .then(function(res){//SKU主表
-                // console.log(res)
-                _this.sku_ChildTable=res.result;
                 _this.skuTableHeader=[]
-                $.each(_this.sku_ChildTable,function(index,value){
+                $.each(res.result,function(index,value){
                     _this.$axios.gets('/api/services/app/SkuSpecValueManagement/GetSKUSpecValueList',{productID:_this.$route.params.id,skuID:value.id})
                     .then(function(resp){//sku孙表
                         value.skuSpecValue_GrandTable=resp.result;
-                        
                         $.each(value.skuSpecValue_GrandTable,function(i,v){
                             v.productSpecId=v.id;
                             if(index==0){//获取表头信息
@@ -1754,7 +1751,7 @@ export default {
                         })
                     })
                 })
-               
+               _this.sku_ChildTable=res.result;
             },function(res){
             })
         },
@@ -2169,6 +2166,7 @@ export default {
                         let page=1
                         $.each(allData,function(index,value){//初始化数据，都未被用户选中,需要判断初始加载项的选中
                             value.check=false;
+                            value.specId=_this.witchDialog;
                             value.specValueName=value.specValueId_SpecValueName;
                             value.specValueCode =value.specValueId_SpecValueCode
                             $.each(_this.productSpec_ChildTable,function(i,v){
@@ -2652,37 +2650,38 @@ export default {
                 }
         },
 //----------------------SKU-------------------
+       combine(arr) {  
+            var r = [];  
+            (function f(t, a, n) {  
+                if (n == 0) return r.push(t);  
+                for (var i = 0; i < a[n-1].length; i++) {  
+                    f(t.concat(a[n-1][i]), a, n - 1);  
+                }  
+            })([], arr, arr.length);  
+            return r;  
+        },
         buildSKU(){//生成sku
             let _this=this;
             // productSpec_ChildTable//规格从表
             // productSpecValue_GrandTable//规格值孙表
             // console.log(_this.sku_ChildTable)
             _this.skuTableHeader=[]
-            _this.sku_ChildTable=[]
+            let buildSkuData=[]
             $.each(_this.productSpec_ChildTable,function(index,value){
                 // value.skuSpecValue_GrandTable=[]
                 _this.skuTableHeader.push({specId:value.specId,specId_SpecName:value.specId_SpecName});//获取表头数据
-
-                $.each(value.spec,function(i,v){
-                    console.log(v)
-                    //  $.each(_this.sku_ChildTable,function(i1,v1){//条件1，specId不等。2，规格id不能全等
-                    //       let repeatSpecId=false
-                    //       let repeatProductSpecId=false
-                    //       v1.skuSpecValue_GrandTable=[];
-                    //       let item={barcode:'',discount:'',groupId:1,id:0,productId:'',purchasePrice:'',retailPrice:'',skuCode:'自动生成',skuName:'',skuSpecValue_GrandTable:[],status:1,statusTValue:'启用',unitId:'',vipPrice:'',wholePrice:''}
-                    //       $.each(v1.skuSpecValue_GrandTable,function(i2,v2){
-                    //           if(v.productSpecId==v2.productSpecId){
-                    //               repeatProductSpecId=true
-                    //           }
-                    //           if(v.specId==v2.specId){
-                    //               repeatSpecId=true
-                    //           }
-                    //       })
-                    //       if(!(repeatProductSpecId && repeatSpecId)){
-                    //          item.skuSpecValue_GrandTable.push(v)
-                    //       }
-                    //  })
-                })
+                buildSkuData.push(value.spec)
+            })
+            _this.skuData=_this.combine(buildSkuData)
+            // console.log(_this.skuData)
+            _this.sku_ChildTable=[]
+            $.each(_this.skuData,function(index,val){
+               let item={
+                barcode:'',discount:'',groupId:1,id:0,productId:_this.$route.params.id,
+                purchasePrice:'',retailPrice:'',skuCode:'',skuName:'',skuSpecValue_GrandTable:val,
+                status:1,statusTValue:'启用',unitId:'',vipPrice:'',wholePrice:'',
+               }
+               _this.sku_ChildTable.push(item)
             })
             // console.log(_this.sku_ChildTable)
         },
