@@ -449,9 +449,15 @@
                                             type="text"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="specId1" label="颜色"></el-table-column>
-                            <el-table-column prop="specId2" label="尺码"></el-table-column>
-                            <el-table-column prop="specId3" label="单位"></el-table-column>
+
+                            <el-table-column v-for="(item,index) in skuTableHeader" :key="index" :label="item.specId_SpecName">
+                                <template slot-scope="scope">
+                                    <span v-for="(item1,index1) in scope.row.skuSpecValue_GrandTable" :key="index1" v-if="item.specId==item1.specId">{{item1.specValueName}}</span>
+                                </template>
+                            </el-table-column>
+                            <!-- <el-table-column prop="specId2" label="尺码"></el-table-column>
+                            <el-table-column prop="specId3" label="单位"></el-table-column> -->
+
                             <el-table-column prop="purchasePrice" label="进货价">
                                 <template slot-scope="scope">
                                     <input class="input-need" 
@@ -512,7 +518,7 @@
                             </el-table-column>
                         </el-table> 
                         <!-- 启用多单位表格 -->
-                        <el-table :data="skuSpecValue_GrandTable" border style="width: 100%" stripe v-if="product_MainTable.multiUnitEnabled">
+                        <el-table :data="sku_ChildTable" border style="width: 100%" stripe v-if="product_MainTable.multiUnitEnabled">
                             
                             <el-table-column prop="skuCode" label="SKU"></el-table-column>   
                             <el-table-column prop="skuName" label="SKU名称">
@@ -533,6 +539,7 @@
                                             type="text"/>
                                 </template>
                             </el-table-column>
+
                             <el-table-column prop="specId1" label="颜色"></el-table-column>
                             <el-table-column prop="specId2" label="尺码"></el-table-column>
                             <el-table-column prop="specId3" label="单位"></el-table-column>
@@ -1196,6 +1203,7 @@ export default {
                 "status": 1
                 }
             ],
+            skuTableHeader:[],//sku孙表的表头
             "skuSpecValue_GrandTable": [//SKU规格值孙表
                 {
                 "id": 0,
@@ -1693,7 +1701,9 @@ export default {
              _this.$axios.gets('/api/services/app/ProductSpecManagement/GetAllSpec',{productID:_this.$route.params.id})
             .then(function(res){
               _this.productSpec_ChildTable_init=[]; 
-               $.each(res.result,function(i,v){
+              _this.$axios.gets('/api/services/app/ProductSpecValueManagement/GetProductSpecValueList',{productSpecID:4})
+                .then(function(response){
+                $.each(res.result,function(i,v){
                    v.specName=v.specId_SpecName;
                    v.specCode=v.specId_SpecCode;
                    v.specGroup={}
@@ -1710,17 +1720,41 @@ export default {
                         v.specGroup=_this.witchSpecgroup[v.itemSourceId]
                         //之后需要和点击dialog时getSpecGroupSize()里面allData比较获取初始选中值，还有showGoodsDialog()左侧规格组高亮 
                     }
-                   _this.$axios.gets('/api/services/app/ProductSpecValueManagement/GetProductSpecValueList',{productSpecID:v.id})
-                   .then(function(response){
-                       $.each(response.result,function(index,value){//获取详细规格
-                           value.check=true;
-                       })
-                       v.spec=response.result
-                   })
+                     $.each(response.result,function(index,value){//获取详细规格,规格孙表
+                        value.check=true;
+                        if(v.specId==value.specId){
+                            v.spec.push(value)
+                        }
+                    })
+                   
                })
                _this.productSpec_ChildTable=res.result;
                _this.productSpec_ChildTable_init=res.result;//初始获取商品档案从表
-
+                //    console.log(res.result)
+            })
+            },function(res){
+            })
+//----------------------SKU主表------------------------
+            // sku_ChildTable
+            _this.$axios.gets('/api/services/app/SkuManagement/GetSKUList',{productID:_this.$route.params.id})
+            .then(function(res){//SKU主表
+                // console.log(res)
+                _this.sku_ChildTable=res.result;
+                _this.skuTableHeader=[]
+                $.each(_this.sku_ChildTable,function(index,value){
+                    _this.$axios.gets('/api/services/app/SkuSpecValueManagement/GetSKUSpecValueList',{productID:_this.$route.params.id,skuID:value.id})
+                    .then(function(resp){//sku孙表
+                        value.skuSpecValue_GrandTable=resp.result;
+                        
+                        $.each(value.skuSpecValue_GrandTable,function(i,v){
+                            v.productSpecId=v.id;
+                            if(index==0){//获取表头信息
+                                _this.skuTableHeader.push({specId:v.specId,specId_SpecName:v.specId_SpecName})
+                            }
+                        })
+                    })
+                })
+               
             },function(res){
             })
         },
@@ -2103,6 +2137,7 @@ export default {
                          value.spec=[]
                          $.each(_this.allSpecGroupSize[_this.witchDialog]['all'].allData,function(i,v){
                              if(v.check){
+                                 console.log(v)
                                  value.spec.push(v)
                              }
                          })
@@ -2111,6 +2146,7 @@ export default {
                         value.spec=[]
                          $.each(_this.allSpecGroupSize[_this.witchDialog][groupId].allData,function(i,v){
                              if(v.check){
+                                 console.log(v)
                                  value.spec.push(v)
                              }
                          })
@@ -2617,7 +2653,38 @@ export default {
         },
 //----------------------SKU-------------------
         buildSKU(){//生成sku
+            let _this=this;
+            // productSpec_ChildTable//规格从表
+            // productSpecValue_GrandTable//规格值孙表
+            // console.log(_this.sku_ChildTable)
+            _this.skuTableHeader=[]
+            _this.sku_ChildTable=[]
+            $.each(_this.productSpec_ChildTable,function(index,value){
+                // value.skuSpecValue_GrandTable=[]
+                _this.skuTableHeader.push({specId:value.specId,specId_SpecName:value.specId_SpecName});//获取表头数据
 
+                $.each(value.spec,function(i,v){
+                    console.log(v)
+                    //  $.each(_this.sku_ChildTable,function(i1,v1){//条件1，specId不等。2，规格id不能全等
+                    //       let repeatSpecId=false
+                    //       let repeatProductSpecId=false
+                    //       v1.skuSpecValue_GrandTable=[];
+                    //       let item={barcode:'',discount:'',groupId:1,id:0,productId:'',purchasePrice:'',retailPrice:'',skuCode:'自动生成',skuName:'',skuSpecValue_GrandTable:[],status:1,statusTValue:'启用',unitId:'',vipPrice:'',wholePrice:''}
+                    //       $.each(v1.skuSpecValue_GrandTable,function(i2,v2){
+                    //           if(v.productSpecId==v2.productSpecId){
+                    //               repeatProductSpecId=true
+                    //           }
+                    //           if(v.specId==v2.specId){
+                    //               repeatSpecId=true
+                    //           }
+                    //       })
+                    //       if(!(repeatProductSpecId && repeatSpecId)){
+                    //          item.skuSpecValue_GrandTable.push(v)
+                    //       }
+                    //  })
+                })
+            })
+            // console.log(_this.sku_ChildTable)
         },
 //----------------------图片------------------
         fileChange(data){//上传图片
