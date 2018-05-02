@@ -322,7 +322,7 @@ import Transfer from '../../base/Transfer/Transfer'
                 },{
                     text:'导出',
                     class:'bt_out',
-                    icon:'icon-daochu1',
+                    icon:'icon-daochu',
                     disabled:false,
                 }],//按钮组
                 cancelDisable:true,
