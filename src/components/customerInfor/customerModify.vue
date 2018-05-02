@@ -1563,6 +1563,7 @@ export default({
                                     ouName:"",
                                     ouParentid:'',
                                     transportMethodId:'',
+                                    contactId:'',
                                     delid:''
                                 }
                                 self.showPageTableOu.push(ss)
@@ -1570,6 +1571,7 @@ export default({
                                 self.showPageTableOu[index].id=value.ouId;
                                 self.showPageTableOu[index].delid=value.id;
                                 self.showPageTableOu[index].transportMethodId=value.transportMethodId;
+                                self.showPageTableOu[index].contactId=value.contactId;
                             self.$axios.gets('/api/services/app/OuManagement/Get',{id:value.ouId})
                             .then(function(res){
                                 self.showPageTableOu[index].ouFullname=res.result.ouFullname;
@@ -1986,6 +1988,7 @@ export default({
             $.each(dialogSuredata,function(index,value){
                 if(value!=undefined){
                     value.delid=0;
+                    value.contactId=_this.$route.params.id;
                     _this.showPageTableOu.push(value);
                 }
                 console.log(_this.showPageTableOu)
@@ -1999,6 +2002,7 @@ export default({
                 if(val.id==row.id){
                     indexs=index;
                     _this.ouindex=val.delid;
+                    _this.idArrayOu.ids.push(val.delid)
                     console.log(val.delid)
                 }
             })
@@ -2253,6 +2257,7 @@ export default({
                                 "transportMethodId": '',
                                 "isDefault": true
                             }
+                            oudetail.contactId=value.contactId;
                             self.ouData.push(oudetail);
                             if(value.transportMethodId!=''||value.transportMethodId!=undefined){
                                 self.ouData[index].transportMethodId=value.transportMethodId;
@@ -2262,7 +2267,7 @@ export default({
                             }
                             self.ouData[index].ouId=value.id;
                     })
-                    console.log(self.ouData,self.showPageTableOu);
+                    //console.log(self.ouData,self.showPageTableOu);
                     let submitData = {};
                     submitData = {
                         contact_MainTable:self.customerData,
@@ -2270,17 +2275,17 @@ export default({
                         contactAddress_ChildTable:self.addressData,
                         contactOu_ChildTable:self.ouData,
                     }
-                    console.log(submitData)
-                        self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
-                            self.open('修改成功','el-icon-circle-check','successERP');
-                            self.ifModify = false;
-                            self.redBankAr = [];
-                            self.redOuAr = [];
-                            self.redAddAr = [];
-                        },function(res){
-                            self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                            self.errorMessage=true;
-                        })
+                    //console.log(submitData)
+                    self.$axios.posts('/api/services/app/ContactManagement/AggregateCreate',submitData).then(function(res){
+                        self.open('修改成功','el-icon-circle-check','successERP');
+                        self.ifModify = false;
+                        self.redBankAr = [];
+                        self.redOuAr = [];
+                        self.redAddAr = [];
+                    },function(res){
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                        self.errorMessage=true;
+                    })
                     self.sureDel();
                 }
             });
@@ -2293,8 +2298,7 @@ export default({
             self.$validate().then(function(success){
                 if(success){
                     $('.tipsWrapper').css({display:'none'});
-
-                    $.each(self.ouCheckAll,function(index,value){
+                    $.each(self.showPageTableOu,function(index,value){
                             let oudetail={
                                 "id": 0,
                                 "contactId": 0,
@@ -2302,8 +2306,14 @@ export default({
                                 "transportMethodId": '',
                                 "isDefault": true
                             }
+                            oudetail.contactId=value.contactId;
                             self.ouData.push(oudetail);
-                            self.ouData[index].transportMethodId=self.showPageTableOu[index].transportMethodId
+                            if(value.transportMethodId!=''||value.transportMethodId!=undefined){
+                                self.ouData[index].transportMethodId=value.transportMethodId;
+                                self.ouData[index].id=value.delid;                              
+                            }else{
+                                self.ouData[index].transportMethodId='';
+                            }
                             self.ouData[index].ouId=value.id;
                     })
                     let submitData = {};
@@ -2572,10 +2582,10 @@ export default({
             }
             if(self.oudel==true){//使用组织单项删除
             console.log(self.ouindex)
-                if(self.ouindex>0){
+                if(self.idArrayOu.ids.length==1){
                     console.log(self.ouindex)
                     self.$axios.deletes('/api/services/app/ContactOuManagement/Delete',{id:self.ouindex}).then(function(res){
-                        self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                        //self.open('删除使用组织成功','el-icon-circle-check','successERP');
                         // self.ouData.splice(self.whoIndex,1);
                         // self.dialogDelConfirm = false;
                     },function(res){
@@ -2583,11 +2593,18 @@ export default({
                         self.errorMessage=true;
                         self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
                     })
-                }else{
-                    // self.ouData.splice(self.whoIndex,1);
-                    // self.addOuList.splice(self.whoIndex,1);
-                    // self.dialogDelConfirm = false;
-                    // self.open('删除新增行成功','el-icon-circle-check','successERP');
+                }
+                if(self.idArrayOu.ids.length>1){
+                    console.log(self.idArrayOu)
+                    self.$axios.posts('/api/services/app/ContactOuManagement/BatchDelete',self.idArrayOu).then(function(res){
+                        //self.open('删除使用组织成功','el-icon-circle-check','successERP');
+                        // self.loadOuData();
+                        //self.dialogDelConfirm = false;
+                    },function(res){
+                        //self.dialogDelConfirm = false;
+                        self.errorMessage = true;
+                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
+                    })                      
                 }
             }
 

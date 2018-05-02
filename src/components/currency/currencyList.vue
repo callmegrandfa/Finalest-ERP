@@ -2,146 +2,13 @@
     <div class="cu-list">
         <el-row class="bg-white">
             <el-col :span='24'>
-                <el-row class="h48 pt5">
-                    <button class="erp_bt bt_add" @click="addCol">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_add.png">
-                        </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-
-                    <button class="erp_bt bt_save" @click="save">
-                        <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                        </div>
-                        <span class="btDetail">保存</span>
-                    </button>
-
-                    <button class="erp_bt bt_del" @click="delMore(2)">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_del.png">
-                        </div>
-                        <span class="btDetail">删除</span>
-                    </button>
-
-                    <button class="erp_bt bt_in">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_inOut.png">
-                        </div>
-                        <span class="btDetail">导入</span>
-                    </button>
-
-                    <button class="erp_bt bt_out">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_inOut.png">
-                        </div>
-                        <span class="btDetail">导出</span>
-                    </button>
-
+                <el-row class="pb5">
+                    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
                 </el-row>
 
                 <el-row class="pb10">
                     <el-col :span="24">
-                        <el-table :data="allList" border style="width: 100%" stripe @selection-change="handleSelectionChange">
-                            <el-table-column type="selection" fixed></el-table-column>
-
-                            <el-table-column prop="currencyCode" label="*币种编码" fixed>
-                                <template slot-scope="scope">
-                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                                    <input class="input-need"
-                                            :class="{'input-bgw':scope.$index%2==0,'input-bgp':scope.$index%2!=0,'redBorder' : validation.hasError('allList.currencyCode')}"
-                                            v-model="scope.row.currencyCode"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                            <!-- :class="[scope.$index%2==0?'input-bgw':'input-bgp']"  -->
-                                            <!-- redBorder : validation.hasError('customerData.contactClassId') -->
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="currencyName" label="*币种名称" fixed>
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']"
-                                            v-model="scope.row.currencyName" 
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="increment" label="最小递增额">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.increment"
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="status" label="*状态">
-                                <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.status" @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in statusAr" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="remark" label="备注">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.remark" 
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="createBy" label="创建人">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createdBy" 
-                                            disabled
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="createdTime" label="创建时间">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createdTime" 
-                                            disabled
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-                            
-                            <el-table-column label="操作" fixed='right'>
-                                <template slot-scope="scope">
-                                    <el-button v-on:click="delRow(scope.$index,scope.row,1)" type="text" size="small">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-
-                        <el-row>
-                            <el-col :span='6'>
-                                <div style="margin-top:20px;" class="ml10">
-                                        记录<span>{{total}}</span>，当前第<span>{{page}}</span>页，共<span>{{totalPage}}</span>页
-                                </div>
-                                
-                            </el-col>
-                            <el-col :span="18">
-                                <el-pagination style="margin-top:20px;" 
-                                               class="text-right" 
-                                               background 
-                                               layout="total, prev, pager, next" 
-                                               :current-page.sync="pageIndex"  
-                                               :page-count="totalPage" 
-                                               v-on:current-change="handleCurrentChange"></el-pagination>
-                            </el-col>
-                        </el-row>
-                        
+                        <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams" :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                     </el-col>
                 </el-row>
 
@@ -149,7 +16,7 @@
         </el-row>
 
         <!-- dialog是否删除提示 -->
-        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
+        <!-- <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
@@ -164,11 +31,11 @@
                 <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
         <!-- dialog -->
 
         <!-- dialog错误信息提示 -->
-        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
+        <!-- <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
             <template slot="title">
                 <span class="dialog_font">提示</span>
             </template>
@@ -197,12 +64,17 @@
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
                 <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
         <!-- dialog -->  
+        <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>     
+
     </div>
 </template>
 
 <script>
+import Table from '../../base/Table/Table'
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'currencyList', 
         data(){
@@ -216,7 +88,7 @@
                 idArray:{
                     ids:[]
                 },//复选框选中数据id
-                
+                SelectionChange:[],
                 pageIndex:1,//分页的当前页码
                 totalPage:0,//当前分页总数
                 total:'',//数据总条数
@@ -239,7 +111,118 @@
                 ar:[],
                 turnPage:-1,
                 pageFlag:true,
-               
+                pluginSetting:{
+                    hasPagination:true,
+                    mutiSelect:true,//多选栏
+                    isDisable:false,
+                },
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogVisible:false,
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                dialogCommand:[],//底部按钮组控制组
+                httpUrl:{
+                    query:'/api/services/app/CurrencyManagement/GetAll',//条件查询
+                    delete:'/api/services/app/CurrencyManagement/Delete',//行内删除
+                },
+                column: [{
+                    prop: 'currencyCode',
+                    label: '*币种编码',
+                    controls:'text',
+                    required:true,
+                    flag:true,//更改标识
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    isFix:''
+                    },{
+                    prop: 'currencyName',
+                    label: '*币种名称',
+                    controls:'text',
+                    required:true,
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'increment',
+                    label: '最小递增额',
+                    controls:'text',
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'status',
+                    label: '*状态',
+                    controls:'select',
+                    width:"auto",
+                    required:true,
+                    isDisable:false,
+                    sortable:false,
+                    dataSource:[]
+                    },{
+                    prop: 'remark',
+                    label: '备注',
+                    controls:'text',
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'createdBy',
+                    label: '创建人',
+                    controls:'text',
+                    width:"auto",
+                    isDisable:true,
+                    sortable:false,
+                    },{
+                    prop: 'createdTime',
+                    label: '创建时间',
+                    controls:'datetime',
+                    width:"auto",
+                    isDisable:true,
+                    sortable:true,
+                    }],
+                queryParams:{
+                    SkipCount:(this.$store.state.currencyListCurrentPage-1)*this.$store.state.currencyListEachPage,
+                    MaxResultCount:this.$store.state.currencyListEachPage
+                }, 
+                tableModel:'currencyList',
+                command:[{
+                    text:'删除',
+                    class:'blue'
+                }],
+                isSave:false,
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                },{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'导入',
+                    class:'bt_in',
+                    icon:'icon-daoru',
+                    disabled:false,
+                },{
+                    text:'导出',
+                    class:'bt_out',
+                    icon:'icon-daochu',
+                    disabled:false,
+                }],//按钮组
                 //---确认删除-----------------               
                 dialogDelConfirm:false,//用户删除保存提示信息
                 //-------------------- ------
@@ -273,7 +256,6 @@
             }
         },
         created:function(){
-            this.loadAllList();      
             this.loadSelect();
         },
         validators:{
@@ -281,32 +263,19 @@
                 return this.Validator.value(value).required();
             },
         },
+        components:{
+            Table,
+            buttonGroup,
+            dialogBox
+        },
         methods:{
-        //---获取数据-------------------------------------------------------
-            loadAllList:function(){//获取所有列表数据
-                let self = this;
-                this.$axios.gets('/api/services/app/CurrencyManagement/GetAll',{SkipCount:(self.page-1)*self.eachPage,MaxResultCount:self.eachPage}).then(function(res){
-                    // console.log(res);
-                    self.allList = res.result.items;
-                    $.each(self.allList,function(index,value){
-                        // console.log(value.createdTime)
-                        let createdTime = value.createdTime.slice(0,value.createdTime.indexOf('.')).replace('T',' ');
-                        // console.log(createdTime)
-                        self.allList[index].createdTime = createdTime;
-                        // console.log(self.allList[index].createdTime)
-                    })
-                    self.total = res.result.totalCount;
-                    self.totalPage = Math.ceil(self.total/self.eachPage)
-                },function(res){
-                    console.log('err'+res)
-                })
-            },
-        //------------------------------------------------------------------
+
         //---获取下拉数据----------------------------------------------------
             loadSelect:function(){
                 let self = this;
                 this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status002'}).then(function(res){
-                    self.statusAr = res.result;
+                    //self.statusAr = res.result;
+                    self.column[3].dataSource=res.result
                 },function(res){
                     console.log('err'+res)
                 })
@@ -315,48 +284,48 @@
 
         // ---创建数据，修改数据---------------------------------------------
             save:function(){//点击保存按钮
-                let self = this;
-                
-                if(self.addList.length>0){
-                    // self.$validate().then(function(success){
-                    //     if(success){
-                            self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){         
-                                self.open('创建货币资料成功','el-icon-circle-check','successERP');
-                                self.loadAllList();
-                                self.addList = [];
-                            },function(res){
-                                // console.log(res)
-                                self.open('创建货币资料失败','el-icon-error','faildERP');
-                                self.errorMessage = true;
-                                // console.log(res.error.message)
-                                self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                            })
-                    //     }
-                    // })
+                let _this=this;
+                let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
+                let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
+                let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
+                let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
+                let tableData=_this.$store.state[_this.tableModel+'Table'];
+                // 新增保存
+                if(newArrayLength>0){//新增保存
+                    _this.isSave=true;
+                    for(let i in newArray){
+                        if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'error'
+                            });
+                            return;
+                        }
+                    }
                 }
-                
-                if(self.updateList.length>0){
-                    self.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
-                        // console.log(res);
-                        self.open('修改货币资料成功','el-icon-circle-check','successERP');
-                        self.loadAllList()
-                        self.ar = [];
-                        self.updateList = [];
-                    },function(res){
-                        // console.log(res)
-                        self.open('修改货币资料失败','el-icon-error','faildERP');
-                        self.errorMessage = true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    })
-                }
+                if(newArrayLength>0||updateArrayLength>0){
+                      _this.$axios.posts('api/services/app/CurrencyManagement/CUDAggregate',{createList:newArray,updateList:updateArray,deleteList:[]}).then(function(res){
+                            _this.$store.commit('setAddColArray',[])//置空新增集合
+                            _this.$store.commit('get_RowId',"")//置空修改行id
+                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                            _this.$store.dispatch('InitTable');
+                            _this.isSave=false;
+                            _this.open('保存货币资料成功','el-icon-circle-check','successERP');  
+                        }).catch(function(err){
+                            _this.dialogSetting.dialogType="submit";
+                            _this.dialogSetting.dialogName='saveDialog'
+                            _this.dialogSetting.message="信息提报有误";
+                            _this.errorTips.message=err.error.message;
+                            _this.errorTips.details='';
+                            _this.dialogCommand=[{text:'确定',class:'btn-confirm'}];
+                            _this.dialogVisible=true;
+                            _this.isSave=false;
+                        })   
+                }  
+
             },
             addCol:function(){//增行
-                let self = this;
-                self.x++;
-                let newCol = 'newCol'+self.x;
-                // console.log(newCol)
-                // console.log(self.rows)
-                self.rows.newCol ={
+                let newcol={
                     group_id: 1,
                     currencyCode: "",
                     currencyName: "",
@@ -364,9 +333,19 @@
                     seq: 0,
                     status: 1,
                     remark: ""
-                };
-                self.allList.unshift(self.rows.newCol);
-                self.addList.unshift(self.rows.newCol);
+                }
+
+                let newArrayLength=this.$store.state[this.tableModel+'NewColArray'].length;
+                if(newArrayLength>2){
+                    this.$message({
+                        type: 'info',
+                        message: '请先编辑保存新增项'
+                    });
+                }else{
+                    this.isSave=false;
+                    this.$store.dispatch('addCol',newcol);//表格行内新增
+                }  
+
             },
         //-----------------------------------------------------------------
 
@@ -383,86 +362,26 @@
             },
         //------------------------------------------------------------------
 
-        //---控制修改及分页--------------------------------------------------
-            handleSelectionChange:function(val){//点击复选框选中的数据
-                this.multipleSelection = val;
-            },
-
-            handleCurrentChange:function(val){//获取点击页码
-                let self = this;
-                if(self.updateList.length>0&&self.pageFlag){
-                    self.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.pageIndex=val;
-                            self.page = val;
-                            self.updateList = [];
-                            self.ar = [];
-                            self.loadAllList();
-                        }).catch(() => {
-                            self.pageIndex=self.turnPage;
-                            self.page = self.turnPage;
-                            this.pageFlag=false;
-                            console.log(self.page)
-   
-                    });
-                }else{
-                    self.pageIndex=val;
-                    self.page = val;
-                    self.loadAllList();
-                } 
-                 setTimeout(() => {self.pageFlag = true}, 1000) 
-                
-            },
-
-            handleChange:function(index,row){
-                let self = this;
-                let map = false;
-                if(self.ar.length==0){//修改后表格前红标
-                    self.ar.push(row.id)
-                }else if(self.ar.length>=1){
-                    for(let i in self.ar){
-                        if(row.id!=self.ar[i]){
-                            map = true;
-                        }else{
-                            map = false;
-                            break;
-                        }
-                    }
-                }
-                if(map){
-                    self.ar.push(row.id)
-                    console.log(self.ar)
-                }
-
-
-                let flag = false;
-                if(self.updateList.length==0&&row.id>0){//修改过的数据
-                    flag = true;
-                }else if(self.updateList.length>=1&&row.id>0){
-                    for(let i in self.updateList){
-                        if(row.id != self.updateList[i].id){
-                            flag = true;
-                            // console.log(flag) 
-                        }else{
-                            flag= false;
-                            break;        
-                        }
-                    }
-                }
-
-                if(flag){
-                    self.updateList.push(row);
-                    this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
-                    console.log(self.updateList)
-                }
-                
-            },
         //------------------------------------------------------------------
+        btnClick(btn){//按钮组点击事件
+            if(btn=="新增"){//新增事件
+                this.addCol();
+            }else if(btn=="删除"){//删除事件
+                this.delBatch();
+            }else if(btn=="保存"){//保存事件
+                this.save();
+            }else if(btn=="取消"){//取消事件
+                this.cancel();
+            }else if(btn=="启用"){
+                this.handleStatus(1);
+            }else if(btn=="停用"){
+                this.handleStatus(0);
+            }
+        },
 
+        dialogColse(){//对话框关闭回调事件
+            this.dialogVisible=false;
+        },  
         //---确认删除-------------------------------------------------------
         sureDel:function(){
             let self = this;
@@ -516,6 +435,66 @@
         //-----------------------------------------------------------------
 
         //---多项删除-------------------------------------------------------
+        delBatch(){//批量删除
+            this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+            if(this.SelectionChange.length==0){
+                this.$message({
+                    type: 'info',
+                    message: '请勾选需要更改删除的记录！'
+                });
+            }else{
+                this.dialogSetting.dialogName='delDialog'
+                this.dialogSetting.message="确定删除？";
+                this.dialogSetting.dialogType="confirm";
+                this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                this.dialogVisible=true;
+            }                
+        },
+        dialogClick(parmas){
+            if(parmas.dialogButton=="确定"){
+                if(parmas.dialogName=="delDialog"){//删除对话框
+                    this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                    for(var i in this.SelectionChange){
+                        this.idArray.ids.push(this.SelectionChange[i].id)
+                    }
+                    console.log( this.idArray)
+                    let _this=this;
+                    if(_this.idArray.ids.indexOf(undefined)!=-1){
+                            _this.$message({
+                                type: 'warning',
+                                message: '新增数据请在行内删除'
+                            });
+                            _this.dialogVisible=false;
+                            this.idArray.ids=[];
+                            return;
+                    }
+                    if(_this.idArray.ids.length>0){
+                        _this.$axios.posts('/api/services/app/CurrencyManagement/BatchDelete',_this.idArray).then(function(res){
+                            _this.$store.dispatch('InitTable');
+                            _this.$store.commit('setTableSelection',[])
+                            _this.idArray.ids=[];
+                            _this.dialogVisible=false;
+                            _this.open('删除成功','el-icon-circle-check','successERP');    
+                        })
+                    }
+                }else if(parmas.dialogName=="saveDialog"){//保存提交对话框
+                    this.dialogVisible=false;
+                }else if(parmas.dialogName=="cancelDialog"){//取消对话框
+                    this.isSave=false;
+                    this.dialogVisible=false;//关闭对话框
+                    this.$store.dispatch('InitTable');
+                    this.$store.commit('setAddColArray',[])//置空新增集合
+                    this.$store.commit('setUpdateColArray',[])//置空修改增集合
+                }
+            }else if(parmas.dialogButton=="取消"){
+                if(parmas.dialogName=="delDialog"){//多选删除取消操作
+                    this.$store.commit('setTableSelection',[])//置空多选
+                }
+                this.dialogVisible=false;
+            }
+
+        },
+
         delMore:function(num){
             let self = this;
             self.idArray.ids = [];
@@ -587,6 +566,9 @@
     }
     .mt5{
         margin-top: 5px;
+    }
+    .pb5{
+        padding-bottom: 5px;
     }
     .mt10{
         margin-top: 10px;
