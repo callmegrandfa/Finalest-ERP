@@ -9,6 +9,8 @@
                     <img :id="scope.row.id" v-show='(scope.row.id==""||typeof(scope.row.id)=="undefined"||updateIDColArray.indexOf(scope.row.id)>=0)&&item.flag' class="update-icon" src="../../../static/image/content/redremind.png"/> 
                     <!-- 复选框 -->
                     <el-checkbox v-if="item.controls=='checkbox'" :disabled="item.isDisable" v-model='scope.row[item.prop]'></el-checkbox>
+                    <!-- 按钮 -->
+                    <el-button v-if="item.controls=='button'" type="text" size="small"  @click="modify(scope.row)">{{scope.row[item.prop]}}</el-button>
                     <!-- 文本框 -->
                     <el-input :disabled="item.isDisable" :class="[{errorclass:item.required&&scope.row[item.prop]==''&&ifSave==true}]"   class="noEdit" v-if="item.controls=='text'" v-model="scope.row[item.prop]"></el-input>
                     <!-- 时间显示 -->
@@ -134,9 +136,9 @@
             },
         },
         watch:{
-            $route(to) {//页签切换,重置表格数据模型名称
-                  this.$store.commit('setTableName',to.name)
-            },
+            // $route(to) {//页签切换,重置表格数据模型名称
+            //       this.$store.commit('setTableName',to.name)
+            // },
             cols:{//动态表头参数
                 handler:function(val,oldVal){
                         this.cols=val;
@@ -429,11 +431,15 @@ table .el-input__inner{
 /* hover行高亮 */
 .normalTable .el-table__body tr.hover-row>td,
 .normalTable .el-table__body tr.hover-row>td input,
-.normalTable .el-table__body tr.hover-row>td input[disabled]{
+.normalTable .el-table__body tr.hover-row>td input[disabled],
+.normalTable.el-table--enable-row-hover .el-table__body tr:hover>td, 
+.normalTable.el-table--enable-row-hover .el-table__body tr:hover>td input, 
+.normalTable.el-table__body tr:hover>td input[disabled]{
     background: #d1ddf1!important;
 }
 /* 得到焦点背景为白色 */
-.normalTable .el-table__body tr>td input:focus{
+.normalTable .el-table__body tr>td input:focus,
+.normalTable.el-table--enable-row-hover .el-table__body tr>td input:focus{
     background: #fff!important;
 }
 /* 清空动画 */

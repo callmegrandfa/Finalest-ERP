@@ -188,10 +188,9 @@ import Tree from '../../base/tree/tree'
                 column: [{
                     prop: 'categoryParentid_CategoryName',
                     label: '上级类目',
-                    controls:'text',
+                    controls:'button',
                     isDisable:true,
                     sortable:false,
-                    isFix:'',
                     }, {
                     prop: 'categoryCode',
                     label: '类目编码',
