@@ -87,12 +87,12 @@
                                     <span class='open-search'>+</span>
                                 </div>
                             </el-col>
-                            <el-col :span="ifWidth?24:22" class="pt5"> 
+                            <el-col :span="ifWidth?24:22" > 
                             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
                             </el-col>                   
                     </el-row>
                      <el-row>
-                        <el-col :span="24" class="mt10">
+                        <el-col :span="24">
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
                             <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols' @transferConfirm='transferConfirm'></Transfer> -->
@@ -341,7 +341,6 @@ import Transfer from '../../base/Transfer/Transfer'
             }
         },
         created:function(){
-            console.log("迁移");
             this.InitStatus();//初始化状态枚举表
             $(document).on("click",".pageActive .el-pager>li",function(){
                 if(_this.turnPage==false){
