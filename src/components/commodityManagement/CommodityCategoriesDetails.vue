@@ -326,16 +326,14 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
             }
         },
         created(){
-            if(this.$route.params.id=="default"){//新增操作
+            if(this.$route.params.id=="default"){
                 this.isAdd=true;
-                this.buttonGroup[1].disabled=true;
-                this.buttonGroup[2].disabled=false;
-                this.buttonGroup[3].disabled=false;
+                this.loadTree();
+                //this.buttonGroup[3].disabled=false;
             }else{
                 this.InitModify();
                 //this.buttonGroup[3].disabled=true;
             }
-            this.loadTree();
         },
         validators: {
             // 'addItem.categoryParentid': function (value) {//上级商品类目
@@ -400,16 +398,11 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
             },
             btnClick(btn){             
                 if(btn=="取消"){//取消确认对话框
-                    if(this.$route.params.id=="default"&&this.changeTimes<2){//新增操作
-                        this.$store.state.url='/commodityleimu/commodityClassHeading/default'
-           		        this.$router.push({path:this.$store.state.url})//点击切换路由
-                    }else{
-                        this.dialogSetting.dialogName='cancelDialog'
-                        this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
-                        this.dialogSetting.dialogType="confirm";
-                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
-                        this.dialogVisible=true;
-                    }
+                    this.dialogSetting.dialogName='cancelDialog'
+                    this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
                 }else if(btn=="保存"){
                     this.save();
                 }else if(btn=="删除"){//删除确认对话框
@@ -562,8 +555,8 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
                             this.validation.reset();
                             this.isAdd=true;
                             this.InitData();                       
-                            this.$store.state.url='/commodityleimu/commodityClassHeading/default'
-                            this.$router.push({path:this.$store.state.url})//点击切换路由
+                            // this.$store.state.url='/commodityleimu/commodityClassHeading/default'
+                            // this.$router.push({path:this.$store.state.url})//点击切换路由
                         }else{
                             this.InitModify();
                         }

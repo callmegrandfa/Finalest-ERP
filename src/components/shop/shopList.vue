@@ -148,8 +148,8 @@
                         
                     </el-col>
 
-                    <el-col :span='24' class="pt5">
-                        <button class="erp_bt bt_add" @click="goDetail">
+                    <el-col :span='22'>
+                        <!-- <button class="erp_bt bt_add" @click="goDetail">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
@@ -175,9 +175,11 @@
                                 <img src="../../../static/image/common/bt_print.png">
                             </div>
                             <span class="btDetail">打印</span>
-                        </button>
+                        </button> -->
 
-                        <div class="search_input_group">
+                        <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick' class="inline-block-need"></buttonGroup>
+
+                        <div class="search_input_group inline-block-need">
                             <div class="search_input_wapper" @keyup.enter="submitSearch">
                                 <el-input v-model="searchKey"
                                           placeholder="搜索..."
@@ -307,8 +309,12 @@
 </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
     export default{
         name:'customerList',
+        components:{
+            buttonGroup
+        },
         data(){
             return {
                 allList:[],//所有数据列表
@@ -405,6 +411,28 @@
                 whoIndex:'',//单项删除的index
                 //----------------------------
                 searchKey:'',
+                //-------------------
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                },{
+                    text:'辅助功能',
+                    class:'bt_auxiliary',
+                    icon:'icon-daochu',
+                    disabled:false,
+                },{
+                    text:'打印',
+                    class:'bt_print',
+                    icon:'icon-print',
+                    disabled:false,
+                }],//按钮组
             }
         },
         created:function(){
@@ -619,6 +647,20 @@
         },
         //------------------------------------------------------------------
 
+        //-----------------------
+        btnClick(btn){//按钮组点击事件
+            let self = this;
+            if(btn=="新增"){//
+                self.goDetail();
+            }else if(btn=="删除"){//
+                self.delMore(2);
+            }else if(btn=="辅助功能"){//
+                // this.save();
+            }else if(btn=="打印"){//
+                // this.cancel();
+            }
+        },
+
         //---树通用----------------------------------------
         defauleExpandTree(data,key){
             if(typeof(data[0])!='undefined'
@@ -781,7 +823,7 @@
 </script>
 
 <style scoped>
-.store-data-wrapper{
+.shop-list{
     width: 100%;
     height: auto;
 }
@@ -789,13 +831,16 @@
     background: white;
     border-radius: 3px;
 }
+.inline-block-need{
+    display: inline-block;
+}
 .input-need{
     outline: none;
     border:none;
     width: 90%;
     height: 28px;
 }
-.h48{
+.shop-list .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;

@@ -2,7 +2,8 @@
     <div class="departmentDetail">
         <el-row class="fixed">
             <el-col :span="24" >
-                <button class="erp_bt bt_back" @click="isBack">
+                <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick' class="inline-block-need"></buttonGroup>
+                <!-- <button class="erp_bt bt_back" @click="isBack">
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
                     </div>
@@ -42,7 +43,7 @@
                         <img src="../../../static/image/common/bt_del.png">
                     </div>
                     <span class="btDetail">删除</span>
-                </button>
+                </button> -->
             </el-col>
         </el-row>
 
@@ -274,7 +275,11 @@
 </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
     export default({
+        components:{
+            buttonGroup
+        },
         data(){
             return{
                 ifModify:false,//判断是否修改过
@@ -350,6 +355,38 @@
                     validationErrors:[],
                 },
                 //-----------------------------
+                // 新增删除保存保持现状取消
+                buttonGroup:[{
+                    text:'返回',
+                    class:'bt_back',
+                    icon:'icon-fanhui',
+                    disabled:false,
+                },{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:true,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:true,
+                },{
+                    text:'保存',
+                    class:'bt_saveAdd',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'保存并新增',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:false,
+                }],//按钮组
             }
         },
      validators: {
@@ -522,6 +559,25 @@
             self.back();
         },
         //-------------------------------------------------------
+        //------------------------------------------------
+        btnClick(btn){//按钮组点击事件
+            let self = this;
+            if(btn=="返回"){//
+                self.isBack();
+            }else if(btn=="新增"){//
+                
+            }else if(btn=="删除"){//
+                
+            }else if(btn=="保存"){//
+                self.save();
+            }else if(btn=="保存并新增"){//
+                self.saveAdd();
+            }else if(btn=="取消"){
+                self.isBack();
+            }
+        },
+
+        //---树通用----------------------------------------
 
         //---open---路由切换--------------------------------------
         open(tittle,iconClass,className) {
