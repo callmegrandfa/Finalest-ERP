@@ -184,20 +184,20 @@ export default {
           column: [{
                     prop: 'classCode',
                     label: '客户分类编码',
-                    controls:'text',
+                    controls:'button',
                     isDisable:true,
                     sortable:false,
                     isFix:'',
                     }, {
                     prop: 'className',
                     label: '客户分类名称',
-                    controls:'text',
+                    controls:'button',
                     isDisable:true,
                     sortable:false,
                     }, {
                     prop: 'classParentId_ClassName',
                     label: '上级客户分类',
-                    controls:'text',
+                    controls:'button',
                     isDisable:true,
                     sortable:false,
                     }, {
