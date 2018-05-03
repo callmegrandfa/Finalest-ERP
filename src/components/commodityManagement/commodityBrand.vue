@@ -87,12 +87,12 @@
                                     <span class='open-search'>+</span>
                                 </div>
                             </el-col>
-                            <el-col :span="ifWidth?24:22" class="pt5"> 
+                            <el-col :span="ifWidth?24:22" > 
                             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
                             </el-col>                   
                     </el-row>
                      <el-row>
-                        <el-col :span="24" class="mt10">
+                        <el-col :span="24">
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
                             <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols'></Transfer> -->
