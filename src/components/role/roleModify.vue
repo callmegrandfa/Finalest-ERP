@@ -1596,7 +1596,7 @@ export default({
             _this.fnTreeLoading=true;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
-                // console.log(res)
+                console.log(res)
                 _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
                 _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')

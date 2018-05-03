@@ -21,7 +21,7 @@
                     </el-table-column>
                 </el-table>
                 <el-row class="mt10 tr">
-                    <span>共 {{OptionalTotalPage}} 页</span>
+                    <span class="f14">共 {{OptionalTotalPage}} 页</span>
                     <el-button type="primary" :disabled="OptionalPre" @click="handleOptionalPre" size="mini" icon="el-icon-arrow-left"></el-button>
                     <el-button type="primary" class="mr10" :disabled="OptionalNext" @click="handleOptionalNext" size="mini" icon="el-icon-arrow-right"></el-button>
                 </el-row>
@@ -54,7 +54,7 @@
                     </el-table-column>
                 </el-table>
                 <el-row class="mt10 tr">
-                    <span>共 {{SelectedTotalPage}} 页</span>
+                    <span class="f14">共 {{SelectedTotalPage}} 页</span>
                     <el-button type="primary" :disabled="SelectedPre" @click="handleSelectedPre" size="mini" icon="el-icon-arrow-left"></el-button>
                     <el-button type="primary" class="mr10" :disabled="SelectedNext" @click="handleSelectedNext" size="mini" icon="el-icon-arrow-right"></el-button>
                 </el-row>
