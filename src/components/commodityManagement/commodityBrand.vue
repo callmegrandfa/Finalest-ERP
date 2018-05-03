@@ -95,7 +95,7 @@
                         <el-col :span="24" class="mt10">
                             <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams"  :tableName="tableModel" :command="command" :ifSave="isSave"></Table>
                             <!-- 穿梭框 -->
-                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols' @transferConfirm='transferConfirm'></Transfer> -->
+                            <!-- <Transfer :transferHttpSetting='transferHttpSetting' :OptionalCols='OptionalCols'></Transfer> -->
                         </el-col> 
                     </el-row>
                 </el-col>

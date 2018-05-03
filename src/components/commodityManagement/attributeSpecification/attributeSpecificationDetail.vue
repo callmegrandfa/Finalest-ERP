@@ -1,41 +1,7 @@
 <template>
     <div class="at-sp-detail">
         <el-row class="bg-white h48 pt5 fixed">
-
-            <button class="erp_bt bt_out">
-                <div class="btImg">
-                    <img src="../../../../static/image/common/bt_inOut.png">
-                </div>
-                <span class="btDetail">导出</span>
-            </button>
-
-            <button class="erp_bt bt_start">
-                <div class="btImg">
-                    <img src="../../../../static/image/common/bt_start.png">
-                </div>
-                <span class="btDetail">启用</span>
-            </button>
-
-            <button class="erp_bt bt_stop">
-                <div class="btImg">
-                    <img src="../../../../static/image/common/bt_stop.png">
-                </div>
-                <span class="btDetail">停用</span>
-            </button>
-
-            <button class="erp_bt bt_save" @click="save">
-                <div class="btImg">
-                    <img src="../../../../static/image/common/bt_save.png">
-                </div>
-                <span class="btDetail">保存</span>
-            </button>
-
-            <button class="erp_bt bt_cancel">
-                <div class="btImg">
-                    <img src="../../../../static/image/common/bt_cancel.png">
-                </div>
-                <span class="btDetail">取消</span>
-            </button>
+            <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
         </el-row>   
         <el-row class="bg-white">
             <el-col :span="5">
@@ -95,7 +61,7 @@
                     </el-row>
                 </el-row>
 
-                <el-row class="section-style bg-gray-in mt15">
+                <el-row class="section-style bg-gray-in mt20">
                     <el-col :span='24' class="pl10">
                         <span class="header-title">商品属性</span>
                         <div class="choose-add" @click="dialogAttributeShow">
@@ -133,7 +99,7 @@
                     </el-collapse-transition>
                 </el-row>
 
-                <el-row class="section-style bg-gray-in mt15">
+                <el-row class="section-style bg-gray-in mt20">
                     <el-col :span='24' class="pl10">
                         <span class="header-title">商品规格</span>
                         <div class="choose-add" @click="dialogSpecShow">
@@ -207,8 +173,8 @@
 
                 <el-col :span="2" class="transfer_btns">
                     <el-col :span="24" class="transfer_btn_wrapper">
-                        <el-button class="el_transfer" :disabled="if_r_to_l_att" @click="goLeftAtt" type="primary" icon="el-icon-arrow-left" round></el-button>
-                        <el-button class="el_transfer" :disabled="if_l_to_r_att" @click="goRightAtt" type="primary" icon="el-icon-arrow-right" round></el-button>
+                        <el-button class="el_transfer" :disabled="if_r_to_l_att" type="primary" icon="el-icon-arrow-left" round></el-button>
+                        <el-button class="el_transfer" :disabled="if_l_to_r_att" type="primary" icon="el-icon-arrow-right" round></el-button>
                     </el-col>
                 </el-col>
 
@@ -331,8 +297,12 @@
 </template>
 
 <script>
+import buttonGroup from '../../../base/buttonGroup/buttonGroup'
 export default({
     name:'attributeSpecificationDetail',
+    components:{
+        buttonGroup
+    },
     created () {
         let self = this;
         self.loadDefault();
@@ -693,6 +663,33 @@ export default({
             leftNextBtnSpec:true,//判定规格左侧向下翻页
             leftBackBtnSpec:true,//判定规格左侧向上翻页
             //-------------------
+
+            buttonGroup:[{
+                text:'保存',
+                class:'bt_save',
+                icon:'icon-baocun',
+                disabled:false,
+            },{
+                text:'取消',
+                class:'bt_cancel',
+                icon:'icon-quxiao',
+                disabled:true,
+            },{
+                text:'导出',
+                class:'bt_out',
+                icon:'icon-daochu',
+                disabled:false,
+            },{
+                text:'启用',
+                class:'bt_version',
+                icon:'icon-qiyong',
+                disabled:false,
+            },{
+                text:'停用',
+                class:'bt_auxiliary',
+                icon:'icon-tingyong',
+                disabled:false,
+            }],//按钮组
         }
     },
     methods:{
@@ -1014,6 +1011,7 @@ export default({
             }else{
                 self.if_l_to_r_att= true;
             }
+            self.goRightAtt();
         },
         rightChoose:function(val){
             let self = this;
@@ -1023,6 +1021,8 @@ export default({
             }else{
                 self.if_r_to_l_att = true;
             }
+
+            self.goLeftAtt();
         },
         //------------------------
 
@@ -1402,6 +1402,23 @@ export default({
             // self.loadSpec();
         },
         //-----------------------
+        btnClick(btn){//按钮组点击事件
+            let self = this;
+            if(btn=="保存"){//
+                // this.addCol();
+                self.save();
+            }else if(btn=="删除"){//
+                // this.delBatch();
+            }else if(btn=="保存"){//
+                // this.save();
+            }else if(btn=="取消"){//
+                // this.cancel();
+            }else if(btn=="启用"){
+                // this.handleStatus(1);
+            }else if(btn=="停用"){
+                // this.handleStatus(0);
+            }
+        },
 
         //------------------------------------------------------
         getType(obj){
@@ -1480,10 +1497,10 @@ export default({
     background:#EDF0F4;
     padding:10px 0 0 10px;
 }
-.bg-gray-in{
+.at-sp-detail .bg-gray-in{
     background:#F9F9F9;
 }
-.h48{
+.at-sp-detail .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;
@@ -1494,8 +1511,8 @@ export default({
 .pl10{
     padding-left:10px;
 }
-.mt15{
-    margin-top: 10px;
+.mt20{
+    margin-top: 20px;
 }
 .showBtn{
     display: inline-block;
@@ -1530,7 +1547,7 @@ export default({
 .section-style{
     padding-top: 5px;
 }
-.header-title{
+.at-sp-detail .header-title{
     font-size: 16px;
     display: inline-block;
     border-bottom: 3px solid #00CACA;

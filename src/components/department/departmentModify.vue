@@ -345,13 +345,6 @@
                     }else{
                         self.ifModify = true;
                     }
-
-                    // self.changeTimes++
-                    // if(this.changeTimes==2){
-                    //     self.ifModify = true;
-                    // }else{
-                    //     self.ifModify=false;
-                    // }
                 },
                 deep: true,
             }
@@ -919,7 +912,7 @@
     height:35px !important;
 }
 
-.h48{
+.departmentModify .h48{
     height: 48px;
     line-height: 48px;
     border-bottom: 1px solid #E4E4E4;

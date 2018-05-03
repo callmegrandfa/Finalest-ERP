@@ -29,9 +29,9 @@
             </el-col>
             
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pr10 pl5">
-                    <div class="fixed  pt5">
-                        <button class="erp_bt bt_add" @click="goDetail">
+                <el-row class="h48 pr10">
+                    <div class="fixed">
+                        <!-- <button class="erp_bt bt_add" @click="goDetail">
                             <div class="btImg">
                                 <img src="../../../static/image/common/bt_add.png">
                             </div>
@@ -57,9 +57,11 @@
                                 <img src="../../../static/image/common/bt_inOut.png">
                             </div>
                             <span class="btDetail">导出</span>
-                        </button>
+                        </button> -->
 
-                        <div class="search_input_group">
+                        <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick' class="inline-block-need"></buttonGroup>
+
+                        <div class="search_input_group inline-block-need">
                             <div class="search_input_wapper" @keyup.enter="submitSearch">
                                 <el-input v-model="searchKey"
                                             placeholder="搜索..."
@@ -184,8 +186,12 @@
 </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
     export default{
         name:'customerInfor',
+        components:{
+            buttonGroup
+        },
         data(){
             return {
                 searchLeft:'',
@@ -261,6 +267,28 @@
                 //---------------------------
                 searchKey:'',
                 selfAr:[],//根据id获得树形节点本身
+                //-------------------
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                },{
+                    text:'导入',
+                    class:'bt_in',
+                    icon:'icon-daoru',
+                    disabled:false,
+                },{
+                    text:'导出',
+                    class:'bt_out',
+                    icon:'icon-daochu',
+                    disabled:false,
+                }],//按钮组
 
             }
         },
@@ -582,6 +610,19 @@
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
             },
+            //-----------------------
+            btnClick(btn){//按钮组点击事件
+                let self = this;
+                if(btn=="新增"){
+                    self.goDetail();
+                }else if(btn=="删除"){
+                    self.delMore(2);
+                }else if(btn=="导入"){
+                    
+                }else if(btn=="导出"){
+                    
+                }
+            },
             
             //---------------------------------------------------------------
             // SimpleSearch(){//简单搜索
@@ -679,11 +720,11 @@
             },
             searchTable:function(){
                 let self = this;
-                self.$axios.gets('/api/services/app/ShopManagement/GetAll',{ShopCode:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
+                self.$axios.gets('/api/services/app/DeptManagement/GetAll',{DeptName:self.searchKey,SkipCount:'0',MaxResultCount:'10'}).then(function(res){
                     console.log(res);
 
-                    self.allList = res.result.items;
-                    self.total = res.result.items.length;
+                    self.tableData = res.result.items;
+                    self.total = res.result.totalCount;
                     self.totalPage = Math.ceil(self.total/self.eachPage)
                 },function(res){
                     console.log('err'+res)
@@ -702,6 +743,9 @@
     height: 15px;
     line-height: 15px;
     color: #f66;
+}
+.inline-block-need{
+    display: inline-block;
 }
 .dialogBtn{
     display: block;

@@ -1,8 +1,9 @@
 <template>
  <div class="customerBasicForm">
-     <el-row>
-         <el-col :span="24"  class="fixed bg-white bb1 pb5 pt5">
-            <button class="erp_bt bt_back" @click="isBack">
+     <el-row> 
+         <el-col :span="24"  class="fixed bg-white bb1">
+             <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick' class="inline-block-need"></buttonGroup>
+            <!-- <button class="erp_bt bt_back" @click="isBack">
                 <div class="btImg">
                     <img src="../../../static/image/common/bt_back.png">
                 </div>
@@ -42,9 +43,9 @@
                     <img src="../../../static/image/common/bt_del.png">
                 </div>
                 <span class="btDetail">删除</span>
-            </button>
+            </button> -->
             <!-- <span>{{"sdtgdyh"+createShopParams.contactName}}</span> -->
-            <span @click="ifShow = !ifShow" class="upBt">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
+            <span @click="ifShow = !ifShow" class="upBt inline-block-need">收起<i class="el-icon-arrow-down" @click="ifShow = !ifShow" :class="{rotate : !ifShow}"></i></span>
         </el-col>
     </el-row>
     <el-collapse-transition>
@@ -595,8 +596,12 @@
 </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
 export default({
     name:'shopDetail',
+    components:{
+        buttonGroup
+    },
     created () {
         let self=this;
         self.loadSelect();
@@ -1031,6 +1036,24 @@ export default({
         },
         //------------------------------------------------
 
+        //------------------------------------------------
+        btnClick(btn){//按钮组点击事件
+            let self = this;
+            if(btn=="返回"){//
+                self.isBack();
+            }else if(btn=="新增"){//
+                
+            }else if(btn=="删除"){//
+                
+            }else if(btn=="保存"){//
+                self.save();
+            }else if(btn=="保存并新增"){//
+                self.saveAdd();
+            }else if(btn=="取消"){
+                self.isBack();
+            }
+        },
+
         //---树通用----------------------------------------
         defauleExpandTree(data,key){
             if(typeof(data[0])!='undefined'
@@ -1345,6 +1368,39 @@ export default({
             who:'',//删除的是谁以及是否是多项删除
             // whoId:'',//单项删除的id
             whoIndex:'',//单项删除的index
+            //-------------------
+            // 新增删除保存保持现状取消
+            buttonGroup:[{
+                text:'返回',
+                class:'bt_back',
+                icon:'icon-fanhui',
+                disabled:false,
+            },{
+                text:'新增',
+                class:'bt_add',
+                icon:'icon-xinzeng',
+                disabled:true,
+            },{
+                text:'删除',
+                class:'bt_del',
+                icon:'icon-shanchu',
+                disabled:true,
+            },{
+                text:'保存',
+                class:'bt_saveAdd',
+                icon:'icon-baocun',
+                disabled:false,
+            },{
+                text:'保存并新增',
+                class:'bt_save',
+                icon:'icon-baocun',
+                disabled:false,
+            },{
+                text:'取消',
+                class:'bt_cancel',
+                icon:'icon-quxiao',
+                disabled:false,
+            }],//按钮组
         }
     },
        
@@ -1353,135 +1409,138 @@ export default({
   </script>
 
   <style>
-  .block{
-    display: none;
-}
+    .block{
+        display: none;
+    }
     .bg-white{
         background: white;
     }
-  .customerBasicForm{
-      font-family: 'microsoft yahei';
-  }
-  .bb1{
-    border-bottom: 1px solid #cccccc;
-  }
-  .pb5{
-    padding-bottom: 5px;
-  }
-  .pt5{
-    padding-top: 5px;
-  }
- /*收起*/
- .customerBasicForm .upBt{
-     font-size: 12px;
-     float: right;
-     margin-right: 10px;
-     margin-top: 10px;
-     cursor: pointer;
- }
- .customerBasicForm .upBt i{
-    transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s; 
-    color:#cacaca;
-    margin-left: 5px;
- }
- .customerBasicForm .upBt i.rotate{
-     transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);	
- }
+    .customerBasicForm{
+        font-family: 'microsoft yahei';
+    }
+    .bb1{
+        border-bottom: 1px solid #cccccc;
+    }
+    .pb5{
+        padding-bottom: 5px;
+    }
+    .pt5{
+        padding-top: 5px;
+    }
+    /*收起*/
+    .customerBasicForm .upBt{
+        font-size: 12px;
+        float: right;
+        margin-right: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+    .customerBasicForm .upBt i{
+        transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+        -o-transition: all 0.5s; 
+        color:#cacaca;
+        margin-left: 5px;
+    }
+    .customerBasicForm .inline-block-need{
+        display: inline-block;
+    }
+    .customerBasicForm .upBt i.rotate{
+        transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);	
+    }
 
-.customerBasicForm  .errorTips{
-    margin-bottom: 10px;
-}  
-.customerBasicForm .el-row:first-child{
-      padding:5px 0;
-}
-  .customerBasicForm .el-row{
-     padding:15px 0;
-     background-color: #fff;
-  }
-  .customerBasicForm .el-row:last-child{
-      border-bottom:none;
-  }
+    .customerBasicForm  .errorTips{
+        margin-bottom: 10px;
+    }  
+    .customerBasicForm .el-row:first-child{
+        padding:5px 0;
+    }
+    .customerBasicForm .el-row{
+        padding:15px 0;
+        background-color: #fff;
+    }
+    .customerBasicForm .el-row:last-child{
+        border-bottom:none;
+    }
 
-.customerBasicForm .tabZoo{
-     overflow: hidden;
-     background-color: #fff;
- }
+    .customerBasicForm .tabZoo{
+        overflow: hidden;
+        background-color: #fff;
+    }
 
- .customerBasicForm  .getPadding,.tabZoo .el-tabs__nav-scroll{
-     padding: 0 10px;
- }
- .customerBasicForm .tabZoo .auditInformation{
-     margin-top: 15px;
- }
+    .customerBasicForm  .getPadding,.tabZoo .el-tabs__nav-scroll{
+        padding: 0 10px;
+    }
+    .customerBasicForm .tabZoo .auditInformation{
+        margin-top: 15px;
+    }
 
-.customerBasicForm .tabZoo .erp_bt:first-child{
-    margin-left: 0;
-}
-.customerBasicForm .nopadding{
-    padding-top: 0;
-}
-.customerBasicForm .el-table th {
-    white-space: nowrap;
-    overflow: hidden;
-    user-select: none;
-    text-align: left;
-    padding: 5px 0;
-    text-align: center;
-    background-color: #ececec;
-}
-.customerBasicForm .el-table td{
-    padding: 3px 0;
-}
-.customerBasicForm .el-table__body{
-    text-align: center;
-}
-.customerBasicForm .el-table .cell{
-    padding-left:0px;
-    padding-right:0px;
-}
-.mb10{
-    margin-bottom: 10px;
-}
-.customerBasicForm .el-input__inner{
-    height:35px !important;
-    border:1px solid white;
-    /* border-color:white !important; */
-}
-.customerBasicForm .all-table .el-input__inner{
-    height:35px !important;
-    text-align: center !important;
-    border:none !important;
-}
-.customerBasicForm .bgw .el-input__inner{
-    background-color:white;
-    text-align: center;
-}
-.customerBasicForm .bgp .el-input__inner{
-    background-color:#FAFAFA;
-    text-align: center;
-}
-.customerBasicForm .el-select-dropdown__item{
-    text-align: center;
-}
-.customerBasicForm .area{
-    width:510px;
-    margin-right:0px;
-}
-.el-select.areaDrop,.el-input.areaEntry{
-    width: 136px;
-}
-.areaDrop input,.areaEntry input{
-    border: none!important;
-}
-.areaDrop .el-input__inner,.areaEntry .el-input__inner{
-    height: 32px!important;
-}
+    .customerBasicForm .tabZoo .erp_bt:first-child{
+        margin-left: 0;
+    }
+    .customerBasicForm .nopadding{
+        padding-top: 0;
+    }
+    .customerBasicForm .el-table th {
+        white-space: nowrap;
+        overflow: hidden;
+        user-select: none;
+        text-align: left;
+        padding: 5px 0;
+        text-align: center;
+        background-color: #ececec;
+    }
+    .customerBasicForm .el-table td{
+        padding: 3px 0;
+    }
+    .customerBasicForm .el-table__body{
+        text-align: center;
+    }
+    .customerBasicForm .el-table .cell{
+        padding-left:0px;
+        padding-right:0px;
+    }
+    .mb10{
+        margin-bottom: 10px;
+    }
+    .customerBasicForm .el-input__inner{
+        height:35px !important;
+        border:1px solid white;
+        /* border-color:white !important; */
+    }
+    .customerBasicForm .all-table .el-input__inner{
+        height:35px !important;
+        text-align: center !important;
+        border:none !important;
+    }
+    .customerBasicForm .bgw .el-input__inner{
+        background-color:white;
+        text-align: center;
+    }
+    .customerBasicForm .bgp .el-input__inner{
+        background-color:#FAFAFA;
+        text-align: center;
+    }
+    .customerBasicForm .el-select-dropdown__item{
+        text-align: center;
+    }
+    .customerBasicForm .area{
+        width:510px;
+        margin-right:0px;
+    }
+    .el-select.areaDrop,.el-input.areaEntry{
+        width: 136px;
+    }
+    .areaDrop input,.areaEntry input{
+        border: none!important;
+    }
+    .areaDrop .el-input__inner,.areaEntry .el-input__inner{
+        height: 32px!important;
+    }
   </style>
   
