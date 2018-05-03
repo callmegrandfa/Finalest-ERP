@@ -1,46 +1,9 @@
 <template>
     <div class="customerClassDetail">
         <el-row class="fixed">
-            <el-col :span="24">
-                <button @click="isBack" class="erp_bt bt_back">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_back.png">
-                    </div>
-                    <span class="btDetail">返回</span>
-                </button>     
-
-                <button plain @click="save"  class="erp_bt bt_save">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                    </div>
-                    <span class="btDetail">保存</span>
-                </button>
-                <button @click="isBack"class="erp_bt bt_cancel">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_cancel.png">
-                    </div>
-                    <span class="btDetail">取消</span>
-                </button>
-                <button  plain @click='saveAdd' class="erp_bt bt_saveAdd">
-                    <div class="btImg">
-                        <img src="../../../static/image/common/bt_saveAdd.png">
-                    </div>
-                    <span class="btDetail">保存并新增</span>
-                </button>
-               <button class="erp_fb_bt bt_add" >
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_add.png">
-                </div>
-                <span class="btDetail">新增</span>
-               </button>
-
-              <button class="erp_fb_bt bt_del">
-                <div class="btImg">
-                    <img src="../../../static/image/common/bt_del.png">
-                </div>
-                <span class="btDetail">删除</span>
-              </button>
-            </el-col>
+           <div class="btnGroup-box">
+                    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
+            </div>
         </el-row>
 
         <el-row>
@@ -52,7 +15,6 @@
                                    clearable filterable 
                                    :class="{redBorder : validation.hasError('addData.classParentId')}" 
                                    placeholder=""
-                                   @change="isUpdate"
                                    v-model="addData.classParentId">
                             <el-input placeholder="搜索..."
                                       class="selectSearch"
@@ -74,9 +36,6 @@
                             </el-tree>
                              
                             <el-option  v-show="false" v-for="item in selectData.customerClass" :key="item.id" :label="item.className" :value="item.id" :date="item.id"></el-option>
-                        
-                        
-                        
                         </el-select>                    
                     </div>
                     <div class="error_tips">{{ validation.firstError('addData.classParentId') }}</div>
@@ -88,7 +47,6 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类编码</label>
                         <el-input class="classCode" 
-                                  @change="isUpdate"
                                   :class="{redBorder : validation.hasError('addData.classCode')}" 
                                   v-model="addData.classCode">
                         </el-input>
@@ -102,8 +60,6 @@
                     <div class="bgcolor longWidth">
                         <label><small>*</small>客户分类名称</label>
                         <el-input  class="className"
-                                    
-                                    @change="isUpdate"
                                    :class="{redBorder : validation.hasError('addData.className')}" 
                                    v-model="addData.className"></el-input>
                     </div>
@@ -117,7 +73,6 @@
                         <label>备注</label>
                         <el-input class="remark" 
                                   :class="{redBorder : validation.hasError('addData.remark')}" 
-                                   @change="isUpdate"
                                   v-model="addData.remark"
                                   type="textarea"
                                   :autosize="{ minRows: 4, maxRows: 4}">
@@ -133,7 +88,6 @@
                         <label><small>*</small>状态</label>
                         <el-select  class="status" 
                                     clearable filterable
-                                    @change="isUpdate"
                                     :class="{redBorder : validation.hasError('addData.status')}" 
                                     placeholder=""
                                     v-model="addData.status">
@@ -180,58 +134,15 @@
         </div>                                  
     </el-col>
 </el-row>       
-       <!-- dialog数据变动提示 -->
-        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
-                </el-col>
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
-            </span>
-        </el-dialog>
-        <!-- dialog创建保存失败错误提示-->
-        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" class="detail_message_btnWapper">
-                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
-            </el-col>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">{{response.message}}</p>
-                </el-col>
-                <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="$store.state.option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll>  
-                        </el-col>
-                    
-                </el-collapse-transition>   
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
-            </span>
-        </el-dialog>
-        <!-- dialog -->
+ <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>      
   </div>
   </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
+import Table from '../../base/Table/Table'
+import dialogBox from '../../base/dialog/dialog'
+import Tree from '../../base/tree/tree'
     export default({
         data(){
             return{
@@ -292,7 +203,52 @@
                     isHere_addDataOu:false,//是否存在id于树形
                     expandId_dialogOu:[],//默认dialog组织树形展开id
                     expandId_mmenu:[],//默认分配功能树形展开id
-        }
+             },
+              buttonGroup:[{
+                    text:'返回',
+                    class:'bt_back',
+                    icon:'icon-fanhui',
+                    disabled:false,
+                },{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:false,
+                },{
+                    text:'保存并新增',
+                    class:'bt_saveAdd',
+                    icon:'icon-msnui-task-add',
+                    disabled:false,
+                },{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:true,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:true,
+                }],
+                dialogCommand:[],//底部按钮组控制组
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                isAdd:false,
+                changeTimes:0,
 
             }
         },
@@ -325,19 +281,56 @@
         parentSearch(val) {
            this.$refs.tree.filter(val);
         },
-        // addData:{
-        //     handler:function(val,oldVal){
-        //         let _this=this;
-        //         if(!_this.firstModify){
-        //             _this.firstModify=!_this.firstModify;
-        //         }else{
-        //             _this.update=true
-        //         }
-        //     },
-        //     deep:true,
-        // },
+        addData:{
+            handler: function (val, oldVal) {
+                this.changeTimes++
+                if(this.changeTimes>=1){
+                    this.buttonGroup[1].disabled=false;
+                    this.buttonGroup[2].disabled=false;
+                    this.buttonGroup[3].disabled=false;
+                    this.buttonGroup[4].disabled=true;
+                    this.buttonGroup[5].disabled=true;
+                }
+        },
+        deep:true
+    },
     },
     methods: {
+          btnClick(btn){             
+                if(btn=="取消"){//取消确认对话框
+                    if((this.$route.params.id!="default"&&this.changeTimes<2)||(this.$route.params.id=="default"&&this.changeTimes<1)){//新增操作
+                        this.$store.state.url='/customerClass/customerClassList/default'
+           		        this.$router.push({path:this.$store.state.url})//点击切换路由
+                    }else{
+                        this.dialogSetting.dialogName='cancelDialog'
+                        this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                        this.dialogSetting.dialogType="confirm";
+                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                        this.dialogVisible=true;
+                    }
+                }else if(btn=="保存"){
+                    this.save();
+                }else if(btn=="删除"){//删除确认对话框
+                    this.dialogSetting.dialogName='delDialog'
+                    this.dialogSetting.message="确定删除？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
+                }else if(btn=="返回"){
+                     if((this.$route.params.id!="default"&&this.changeTimes<2)||(this.$route.params.id=="default"&&this.changeTimes<1)){//新增操作
+                       this.$store.state.url='/customerClass/customerClassList/default'
+                       this.$router.push({path:this.$store.state.url})//点击切换路由
+                     }else{
+                        this.dialogSetting.dialogName='cancelDialog'
+                        this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                        this.dialogSetting.dialogType="confirm";
+                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                        this.dialogVisible=true;
+                     }
+                }else if(btn="保存并新增"){
+                   this.saveAdd();
+                }
+            },
         getSelectData(){
             let _this=this;
             // _this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){ 
@@ -509,7 +502,6 @@
         },
         // ----------------------------按钮组------------------------
         back(row){
-
             this.$store.state.url='/customerClass/customerClassList/default'
             this.$router.push({path:this.$store.state.url})//点击切换路由
         },
@@ -588,9 +580,6 @@
                 self.back()
             }
         },
-        isUpdate(){//判断是否修改过信息
-            this.update=true;
-        },
         isCancel(){
             let self=this;
             if(self.update){
@@ -659,7 +648,54 @@
                 );
             }
         },
-    }
+         dialogClick(parmas){//对话框点击事件
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="cancelDialog"){//取消操作确认操作
+                        if(this.$route.params.id=="default"||this.$route.params.id=="self.detailParentId"||this.changeTimes>0){  
+                            this.changeTimes=0;      
+                            this.$store.state.url='/customerClass/customerClassList/default'
+                            this.$router.push({path:this.$store.state.url})//点击切换路由
+                        }else{
+                            this.getDefault();
+                        }
+                        
+                        // this.buttonGroup[1].disabled=true;
+                        // this.buttonGroup[2].disabled=true;
+                        // this.buttonGroup[3].disabled=true;
+                        // this.buttonGroup[5].disabled=false;
+                        // this.buttonGroup[4].disabled=false;
+                        this.dialogVisible=false; 
+                    }else if(parmas.dialogName=="delDialog"){//删除确认操作
+                        let _this=this;
+                        _this.$axios.deletes('/api/services/app/ContactClassManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
+                            _this.$store.state.url='/customerClass/customerClassList/default'
+                            _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                            _this.open('删除成功','el-icon-circle-check','successERP'); 
+                            _this.dialogVisible=false; 
+                        }).catch(function(err){
+                            _this.dialogVisible=false;  
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        }) 
+                    }else if(parmas.dialogName=="saveDialog"){//保存报错对话框
+                        this.dialogVisible=false
+                    }
+                }else{
+                    this.dialogVisible=false; 
+                }
+            },
+            dialogColse(){
+                this.dialogVisible=false;
+            },
+    },
+     components:{
+        buttonGroup,
+        Table,
+        dialogBox,
+        Tree
+        }
 
 })
 </script>
@@ -680,13 +716,11 @@
 }
  .customerClassDetail .el-row{
    padding: 15px 0;
-    border-bottom: 1px solid #e4e4e4;
     background-color: #fff;
  }
 
  .customerClassDetail .el-row:first-child{
    padding: 7px 0;
-   border-bottom: 1px solid #e4e4e4;
   }
  .customerClassDetail .el-row:last-child {
   padding-bottom: 15px;

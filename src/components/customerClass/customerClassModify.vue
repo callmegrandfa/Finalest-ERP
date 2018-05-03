@@ -1,7 +1,7 @@
 <template>
     <div class="customerClassModify">
         <el-row class="fixed">
-            <el-col :span="24">
+            <!-- <el-col :span="24">
                 <button @click="isBack(1)" class="erp_bt bt_back" >
                     <div class="btImg">
                         <img src="../../../static/image/common/bt_back.png">
@@ -39,7 +39,10 @@
                     </div>
                     <span class="btDetail">删除</span>
                 </button>
-            </el-col>
+            </el-col> -->
+            <div class="btnGroup-box">
+                    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
+            </div>
         </el-row>
 
         <el-row>
@@ -179,80 +182,15 @@
                 </div>                                  
             </el-col>
         </el-row>  
-      <!-- dialog数据变动提示 -->
-        <el-dialog :visible.sync="dialogUserConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">此操作将忽略您的更改，是否继续？</p>
-                </el-col>
-            </el-col>
-            <!--  -->
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDoing">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogUserConfirm = false">取 消</button>
-            </span>
-        </el-dialog>
-        <!-- dialog -->
-
-        <!-- dialog是否删除提示 -->
-        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">确认删除？</p>
-                </el-col>
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
-            </span>
-        </el-dialog>
-        <!-- dialog -->
-
-        <!-- dialog错误信息提示 -->
-        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" class="detail_message_btnWapper">
-                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
-            </el-col>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">{{response.message}}!</p>
-                </el-col>
-                <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
-                </el-collapse-transition>   
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font dialog_footer_bt_long" @click="errorMessage = false">确 认</button>
-                <!-- <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button> -->
-            </span>
-        </el-dialog>
-        <!-- dialog -->  
+        <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>      
   </div>
 </template>
 
 <script>
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
+import Table from '../../base/Table/Table'
+import dialogBox from '../../base/dialog/dialog'
+import Tree from '../../base/tree/tree'
 export default {
   created: function() {
     // let self = this;
@@ -273,22 +211,35 @@ export default {
     parentSearch(val) {
       this.$refs.tree.filter(val);
     },
-    customerClassData:{
+    // customerClassData:{
       
-        handler: function (val, oldVal) {
-           let self=this;
-           if(!self.saveSuccess){
-            if(!self.firstModify){
-                self.firstModify = !self.firstModify;
-            }else{
-                self.ifModify = true;
-            }
-        }else{
-              self.ifModify=true;
-             }
-        },
-        deep: true,
-    }
+    //     handler: function (val, oldVal) {
+    //        let self=this;
+    //        if(!self.saveSuccess){
+    //         if(!self.firstModify){
+    //             self.firstModify = !self.firstModify;
+    //         }else{
+    //             self.ifModify = true;
+    //         }
+    //     }else{
+    //           self.ifModify=true;
+    //          }
+    //     },
+    //     deep: true,
+    // },
+      customerClassData:{
+          handler: function (val, oldVal) {
+              this.changeTimes++
+              if(this.changeTimes>=2){
+                  this.buttonGroup[1].disabled=false;
+                  this.buttonGroup[2].disabled=false;
+                  this.buttonGroup[3].disabled=false;
+                  this.buttonGroup[4].disabled=true;
+                  this.buttonGroup[5].disabled=true;
+              }
+          },
+          deep:true
+      },
 
   },
   data() {
@@ -362,8 +313,53 @@ export default {
             isHere_addDataOu:false,//是否存在id于树形
             expandId_dialogOu:[],//默认dialog组织树形展开id
             expandId_mmenu:[],//默认分配功能树形展开id
-        }
-      //-----------------------------
+        },
+       buttonGroup:[{
+                    text:'返回',
+                    class:'bt_back',
+                    icon:'icon-fanhui',
+                    disabled:false,
+                },{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:true,
+                },{
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:true,
+                },{
+                    text:'保存并新增',
+                    class:'bt_saveAdd',
+                    icon:'icon-msnui-task-add',
+                    disabled:true,
+                },{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                }],
+                dialogCommand:[],//底部按钮组控制组
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                isUpdate:false,//是否修改
+                isAdd:false,
+                changeTimes:0,
     };
   },
   validators: {
@@ -394,6 +390,41 @@ export default {
     }
   },
   methods: {
+     btnClick(btn){             
+                if(btn=="取消"){//取消确认对话框
+                    if(this.$route.params.id=="default"&&this.changeTimes<2){//新增操作
+                        this.$store.state.url='/customerClass/customerClassList/default'
+           		        this.$router.push({path:this.$store.state.url})//点击切换路由
+                    }else{
+                        this.dialogSetting.dialogName='cancelDialog'
+                        this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                        this.dialogSetting.dialogType="confirm";
+                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                        this.dialogVisible=true;
+                    }
+                }else if(btn=="保存"){
+                    this.save();
+                }else if(btn=="删除"){//删除确认对话框
+                    this.dialogSetting.dialogName='delDialog'
+                    this.dialogSetting.message="确定删除？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
+                }else if(btn=="返回"){
+                    if(this.$route.params.id!=="default"&&this.changeTimes<2){//新增操作
+                        this.$store.state.url='/customerClass/customerClassList/default'
+                        this.$router.push({path:this.$store.state.url})//点击切换路由
+                    }else{
+                        this.dialogSetting.dialogName='backDialog'
+                        this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                        this.dialogSetting.dialogType="confirm";
+                        this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                        this.dialogVisible=true;
+                    }
+                }else if(btn="保存并新增"){
+                   this.saveAdd();
+                }
+            },
     //---加载数据---------------------------------------------
     loadData: function() {
       //根据id加载信息
@@ -609,8 +640,14 @@ export default {
                         }
                   self.open("修改成功", "el-icon-circle-check", "successERP");
                     // 修改成功，点返回不弹出对话框
-                   self.ifModify = false;
-                   self.saveSuccess = false;
+                    self.ifModify = false;
+                    self.saveSuccess = false;
+                    self.buttonGroup[1].disabled=true;//取消按钮
+                    self.buttonGroup[2].disabled=true;//保存按钮
+                    self.buttonGroup[3].disabled=true;//保存按钮
+                    self.buttonGroup[4].disabled=false;//新增按钮
+                    self.buttonGroup[5].disabled=false;//删除按钮
+                    
                 },
                 function(res) {
                   // self.open("修改失败", "el-icon-error", "faildERP");
@@ -786,8 +823,58 @@ export default {
                 );
             }
     },
+    dialogClick(parmas){//对话框点击事件
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="cancelDialog"){//取消操作确认操作
+                        if(this.$route.params.id=="default"){
+                            this.validation.reset();                 
+                            this.$store.state.url='/customerClass/customerClassDetail/default'
+                            this.$router.push({path:this.$store.state.url})//点击切换路由
+                        }else{
+                            this.loadData();
+                        }
+                        this.changeTimes=0;
+                        this.buttonGroup[1].disabled=true;
+                        this.buttonGroup[2].disabled=true;
+                        this.buttonGroup[3].disabled=true;
+                        this.buttonGroup[5].disabled=false;
+                        this.buttonGroup[4].disabled=false;
+                        this.dialogVisible=false; 
+                    }else if(parmas.dialogName=="delDialog"){//删除确认操作
+                        let _this=this;
+                        _this.$axios.deletes('/api/services/app/ContactClassManagement/Delete',{Id:_this.$route.params.id}).then(function(res){
+                            _this.$store.state.url='/customerClass/customerClassList/default'
+                            _this.$router.push({path:_this.$store.state.url})//点击切换路由
+                            _this.open('删除成功','el-icon-circle-check','successERP'); 
+                            _this.dialogVisible=false; 
+                        }).catch(function(err){
+                            _this.dialogVisible=false;  
+                            _this.$message({
+                                type: 'warning',
+                                message: err.error.message
+                            });
+                        }) 
+                    }else if(parmas.dialogName=="saveDialog"){//保存报错对话框
+                        this.dialogVisible=false
+                    }else if(parmas.dialogName=="backDialog"){//返回主页面对话框
+                         this.$store.state.url='/customerClass/customerClassList/default'
+                         this.$router.push({path:this.$store.state.url})//点击切换路由
+                    }
+                }else{
+                    this.dialogVisible=false; 
+                }
+            },
+            dialogColse(){
+                this.dialogVisible=false;
+            },
     //------------------------------------------------------
-  }
+  },
+  components:{
+    buttonGroup,
+    Table,
+    dialogBox,
+    Tree
+        }
 };
 </script>
 
