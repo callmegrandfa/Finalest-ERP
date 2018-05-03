@@ -799,6 +799,23 @@ export default new vuex.Store({
         currencyListTotalCount:0,//总条数
         currencyListEachPage:10,//每页显示条数
         currencyListDialogVisible:false,//对话框是否显示
+        //系统字典
+        //dictionaryListQueryApi:'',//查询接口
+        dictionaryListTable:[],//品牌表格数据
+        //dictionaryListTableClone:[],//品牌表格数据clone
+        //dictionaryListQueryParams:"",//条件查询参数
+        dictionaryListNewCol:'',
+        dictionaryListNewColArray:[],//表格内新增数据集合
+        dictionaryListUpdateColArray:[],//表格内修改数据集合
+        dictionaryListSelection:[],//选中数据集合
+        dictionaryListUpdateRow:'',//修改表格行数据
+        dictionaryListUpdateRowId:'',//修改的表格行ID
+        dictionaryListCurrentPage:1,
+        dictionaryListTotalPagination:10,//总页数
+        dictionaryListTotalCount:0,//总条数
+        dictionaryListEachPage:10,//每页显示条数
+        dictionaryListDialogVisible:false,//对话框是否显示
+
 
         //仓库资料列表演示
         storeHouseHttpApi:'',//接口

@@ -14,57 +14,6 @@
 
             </el-col>
         </el-row>
-
-        <!-- dialog是否删除提示 -->
-        <!-- <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">确认删除？</p>
-                </el-col>
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
-            </span>
-        </el-dialog> -->
-        <!-- dialog -->
-
-        <!-- dialog错误信息提示 -->
-        <!-- <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" class="detail_message_btnWapper">
-                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
-            </el-col>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
-                </el-col>
-                <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
-                </el-collapse-transition>   
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
-            </span>
-        </el-dialog> -->
         <!-- dialog -->  
         <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>     
 
@@ -291,10 +240,11 @@ import dialogBox from '../../base/dialog/dialog'
                 let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
                 let tableData=_this.$store.state[_this.tableModel+'Table'];
                 // 新增保存
+                console.log(newArray)
                 if(newArrayLength>0){//新增保存
                     _this.isSave=true;
                     for(let i in newArray){
-                        if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
+                        if(newArray[i].currencyCode==""||newArray[i].currencyName==""||newArray[i].status==""){
                             this.$message({
                                 message: '红色框内为必填项！',
                                 type: 'error'
