@@ -341,6 +341,7 @@ import Transfer from '../../base/Transfer/Transfer'
             }
         },
         created:function(){
+            console.log("迁移");
             this.InitStatus();//初始化状态枚举表
             $(document).on("click",".pageActive .el-pager>li",function(){
                 if(_this.turnPage==false){

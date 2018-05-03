@@ -1,8 +1,16 @@
 <template>
     <div>
-		<el-input v-show="treeSearch" v-model="treeQuery" class="search_input" placeholder="搜索...">
+		<el-input
+			v-show="treeSearch"
+			placeholder="搜索..."
+			v-model="treeQuery"
+			class="search_input mt5 mb5"
+			>
 			<i slot="prefix" class="el-input__icon el-icon-search"></i>
 		</el-input>
+		<!-- <el-input v-show="treeSearch" v-model="treeQuery" class="search_input" placeholder="搜索...">
+			<i slot="prefix" class="el-input__icon el-icon-search"></i>
+		</el-input> -->
 		<vue-scroll :ops="$store.state.option"> 
 			<el-tree
 			:render-content="renderContent_componyTree"
@@ -52,6 +60,7 @@
 		computed:{
 			treeData(){
 				if(this.$store.state[this.treeParams.treeName+'TreeData'].length>0){
+					
 					 this.expandParams.expandkey.push(this.$store.state[this.treeParams.treeName+'TreeData'][0].id)
 				}
 				return this.$store.state[this.treeParams.treeName+'TreeData']
@@ -98,4 +107,7 @@
 </script>
 <style>
 @import"//at.alicdn.com/t/font_561828_maf6xgd190be29.css";
+.search_input .el-input__icon{
+	line-height: 25px;
+}
 </style>
