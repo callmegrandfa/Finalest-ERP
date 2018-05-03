@@ -19,251 +19,52 @@
                              ref="tree"
                              :expand-on-click-node="false"
                              :filter-node-method="filterNode"
+                             highlight-current
                              @node-click="nodeClick">
                     </el-tree>
                 </el-col>   
             </el-col>
             
             <el-col :span='19' class="border-left">
-                <el-row class="h48 pt5 pr10 pl5">
-                    <button class="erp_bt bt_save" @click="saveValue">
-                        <div class="btImg">
-                        <img src="../../../static/image/common/bt_save.png">
-                        </div>
-                        <span class="btDetail">保存</span>
-                    </button>
+                <el-row class="h48 pr10 pl5">
+                    <el-col :span="10">
+                        <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>    
+                    </el-col>
 
-                    <button class="erp_bt bt_add" @click="addCol">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_add.png">
+                    <div class="search_input_group pt5">
+                        <div class="search_input_wapper" @keyup.enter="submitSearch">
+                            <el-input v-model="searchKey"
+                                        placeholder="搜索..."
+                                        class="search_input">
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                            </el-input>
                         </div>
-                        <span class="btDetail">新增</span>
-                    </button>
-
-                    <button @click="delMore(2)" class="erp_bt bt_del">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_del.png">
+                        <div class="search_button_wrapper">
+                            <button class="userDefined">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>自定义
+                            </button>
                         </div>
-                        <span class="btDetail">删除</span>
-                    </button>
-
-                    <button class="erp_bt bt_out">
-                        <div class="btImg">
-                            <img src="../../../static/image/common/bt_inOut.png">
-                        </div>
-                        <span class="btDetail">导出</span>
-                    </button>
-
-                    <div class="formSearch">
-                        <input type="text" class="inputForm">
-                        <button>搜索</button>
                     </div>
                 </el-row>
 
                 <el-row class="data-table">
                     <el-col :span='24'>
-                        <el-table v-loading="tableLoading" :data="tableData" style="width: 100%" stripe @selection-change="handleSelectionChange" border ref="multipleTable">
-                            
-                            <el-table-column type="selection" fixed></el-table-column>
-
-                            <el-table-column prop="itemCode" label="编码" fixed>
-                                <template slot-scope="scope">
-                                    
-                                    <img v-show='ar.indexOf(scope.row.id)>=0' class="abimg" src="../../../static/image/content/redremind.png"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemCode"
-                                            v-if="scope.row.isSystem==true"
-                                            disabled
-                                            type="text"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemCode"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="itemName" label="名称" fixed>
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemName"
-                                            v-if="scope.row.isSystem"
-                                            disabled
-                                            type="text"/>     
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemName"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="itemValue" label="值">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemValue"
-                                            type="text"/>     
-                                    <!-- <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.itemValue"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/> -->
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="dictId_DictName" label="类型">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.dictId_DictName"
-                                            v-if="scope.row.isSystem"
-                                            disabled
-                                            type="text"/>     
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.dictId_DictName"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="manager" label="系统默认">
-                                <template slot-scope="scope">
-                                    <el-checkbox v-model="scope.row.isSystem" disabled v-if="scope.row.isSystem"></el-checkbox>
-                                    <el-checkbox v-model="scope.row.isSystem" disabled v-else></el-checkbox>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="status" label="状态">
-                                <template slot-scope="scope">
-                                    <el-select  v-model="scope.row.status" v-if="scope.row.isSystem==true" disabled :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                                        </el-option>
-                                    </el-select>
-
-                                    <el-select  v-model="scope.row.status" v-else @change="handleChange(scope.$index,scope.row)" :class="scope.$index%2==0?'bgw':'bgg'">
-                                        <el-option  v-for="item in status" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column prop="remark" label="备注">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.remark"
-                                            v-if="scope.row.isSystem==true"
-                                            disabled
-                                            type="text"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.remark"
-                                            v-else
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-                            
-                            <el-table-column prop='createdTime' width="180" label="时间">
-                                <template slot-scope="scope">
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createdTime"
-                                            v-if="scope.row.isSystem==true"
-                                            disabled
-                                            type="text"/>
-                                    <input class="input-need" 
-                                            :class="[scope.$index%2==0?'input-bgw':'input-bgp']" 
-                                            v-model="scope.row.createdTime"
-                                            v-else
-                                            disabled
-                                            @change='handleChange(scope.$index,scope.row)'
-                                            type="text"/>
-                                </template>
-                            </el-table-column>
-
-                            <el-table-column label="操作" fixed='right'>
-                                 <template slot-scope="scope">
-                                    <el-button type="text" size="small" v-show='scope.row.isSystem==false' @click="delRow(scope.$index,scope.row,1)" >删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-pagination style="margin-top:20px;" 
-                                        class="text-right" 
-                                        background 
-                                        layout="total,prev, pager, next,jumper" 
-                                        @current-change="handleCurrentChange"
-                                        :current-page.sync="pageIndex" 
-                                        :page-size="oneItem"
-                                        :total="totalItem"></el-pagination>   
+                        <Table  :methodsUrl="httpUrl" :pluginSetting="pluginSetting"  :cols="column" :queryParams="queryParams" :tableName="tableModel" :command="command" :ifSave="isSave"></Table>                        
                     </el-col>
                 </el-row>
 
             </el-col>
         </el-row>
-
-        <!-- dialog是否删除提示 -->
-        <el-dialog :visible.sync="dialogDelConfirm" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">确认删除？</p>
-                </el-col>
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="sureDel">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="dialogDelConfirm = false">取 消</button>
-            </span>
-        </el-dialog>
-        <!-- dialog -->
-        <!-- dialog错误信息提示 -->
-        <el-dialog :visible.sync="errorMessage" class="dialog_confirm_message" width="25%">
-            <template slot="title">
-                <span class="dialog_font">提示</span>
-            </template>
-            <el-col :span="24" class="detail_message_btnWapper">
-                <span @click="detail_message_ifShow = !detail_message_ifShow" class="upBt">详情<i class="el-icon-arrow-down" @click="detail_message_ifShow = !detail_message_ifShow" :class="{rotate : !detail_message_ifShow}"></i></span>
-            </el-col>
-            <el-col :span="24" style="position: relative;">
-                <el-col :span="24">
-                    <p class="dialog_body_icon"><i class="el-icon-warning"></i></p>
-                    <p class="dialog_font dialog_body_message">数据提交有误!</p>
-                </el-col>
-                <el-collapse-transition>
-                    
-                        <el-col :span="24" v-show="detail_message_ifShow" class="dialog_body_detail_message">
-                            <vue-scroll :ops="option">
-                                <span class="dialog_font">{{response.message}}</span>
-                                <h4 class="dialog_font dialog_font_bold">其他信息:</h4>
-                                <span class="dialog_font">{{response.details}}<br><span :key="index" v-for="(value,index) in response.validationErrors"><span :key="ind" v-for="(val,ind) in value.members">{{val}}</span><br></span></span>
-                            </vue-scroll> 
-                        </el-col>
-                      
-                </el-collapse-transition>   
-            </el-col>
-            
-            <span slot="footer">
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">确 认</button>
-                <button class="dialog_footer_bt dialog_font" @click="errorMessage = false">取 消</button>
-            </span>
-        </el-dialog>
         <!-- dialog -->  
+        <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>     
+
     </div>
 </template>
 
 <script>
+import Table from '../../base/Table/Table'
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
         data(){
@@ -288,6 +89,124 @@
                     label: '行政地区'
                 }],
                 status: [],
+                dialogCommand:[],//底部按钮组控制组
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                pluginSetting:{
+                    hasPagination:true,
+                    mutiSelect:true,//多选栏
+                    isDisable:false,
+                },
+                httpUrl:{
+                    delete:'/api/services/app/DictItemManagement/Delete',//行内删除
+                    query:'/api/services/app/DictItemManagement/GetAll',//条件查询
+                },
+                queryParams:{
+                    SkipCount:(this.$store.state.dictionaryListCurrentPage-1)*this.$store.state.dictionaryListEachPage,
+                    MaxResultCount:this.$store.state.dictionaryListEachPage
+                }, 
+                column: [{
+                    prop: 'itemCode',
+                    label: '编码',
+                    controls:'text',
+                    required:true,
+                    flag:true,//更改标识
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    isFix:''
+                    },{
+                    prop: 'itemName',
+                    label: '名称',
+                    controls:'text',
+                    required:true,
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'itemValue',
+                    label: '值',
+                    controls:'text',
+                    required:true,
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'dictId_DictName',
+                    label: '类型',
+                    controls:'text',
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    },{
+                    prop: 'isSystem',
+                    label: '系统默认',
+                    controls:'checkbox',
+                    width:"auto",
+                    isDisable:true,
+                    sortable:false
+                    },{
+                    prop: 'status',
+                    label: '状态',
+                    controls:'select',
+                    width:"auto",
+                    isDisable:false,
+                    sortable:false,
+                    dataSource:[]
+                    },{
+                    prop: 'remark',
+                    label: '备注',
+                    controls:'text',
+                    width:"auto",
+                    isDisable:false,
+                    sortable:true,
+                    },{
+                    prop: 'createdTime',
+                    label: '时间',
+                    controls:'datetime',
+                    width:"auto",
+                    isDisable:true,
+                    sortable:true,
+                    }],
+                isSave:false,
+                enableEdit:false,
+                tableModel:'dictionaryList',
+                command:[{
+                    text:'删除',
+                    class:'blue'
+                }],
+                buttonGroup:[{
+                    text:'新增',
+                    class:'bt_add',
+                    icon:'icon-xinzeng',
+                    disabled:false,
+                },{
+                    text:'删除',
+                    class:'bt_del',
+                    icon:'icon-shanchu',
+                    disabled:false,
+                },{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'导出',
+                    class:'bt_out',
+                    icon:'icon-daochu',
+                    disabled:false,
+                }],//按钮组
+
+
                 tableData:[],
                 componyTree:  [
                     // {areaName:'根目录',id:'0',items:[]},
@@ -329,33 +248,7 @@
                 //---确认删除-----------------               
                 dialogDelConfirm:false,//用户删除保存提示信息
                 //-------------------- ------
-                //---错误提示框----------------
-                option: {
-                    vRail: {
-                        width: '5px',
-                        pos: 'right',
-                        background: "#9093994d",
-                    },
-                    vBar: {
-                        width: '5px',
-                        pos: 'right',
-                        background: '#9093994d',
-                    },
-                    hRail: {
-                        height: '0',
-                    },
-                },
-                errorMessage:false,
-                detail_message_ifShow:false,
-                response:{
-                    details:'',
-                    message:'',
-                    validationErrors:[],
-                },
-                //-----------------------------
-                who:'',//删除的是谁以及是否是多项删除
-                whoId:'',//单项删除的id
-                whoIndex:'',//单项删除的index
+
             }
         },
         created:function(){       
@@ -364,20 +257,6 @@
             self.loadTree();
             self.loadSelect();
         },
-        // validators: {
-        //     'dialogData.dictCode':function(value){//字典编码
-        //         return this.Validator.value(value).required().maxLength(50)
-        //     },
-        //     'dialogData.dictName':function(value){//字典名称
-        //         return this.Validator.value(value).required().maxLength(50)
-        //     },
-        //     'dialogData.seq': function (value) {//排序
-        //         return this.Validator.value(value).required().integer();
-        //     },
-        //     'dialogData.remark': function (value) {//备注
-        //         return this.Validator.value(value).required().maxLength(200);
-        //     },
-        // }, 
         watch: {
             searchLeft(val) {
                 this.$refs.tree.filter(val);
@@ -435,69 +314,126 @@
             loadSelect:function(){
                 let self = this;
                 this.$axios.gets('/api/services/app/DataDictionary/GetDictItem',{dictName:'Status001'}).then(function(res){
-                    self.status = res.result;
-                    console.log(self.status);
+                    self.column[5].dataSource = res.result;
                 },function(res){
                     console.log('err'+res)
                 })
             },
             //---------------------------------------------------------------
+            btnClick(btn){//按钮组点击事件
+                if(btn=="新增"){//新增事件
+                    this.addCol();
+                }else if(btn=="删除"){//删除事件
+                    this.delBatch();
+                }else if(btn=="保存"){//保存事件
+                    this.saveValue();
+                }
+            },
+            delBatch(){//批量删除
+                this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                if(this.SelectionChange.length==0){
+                    this.$message({
+                        type: 'info',
+                        message: '请勾选需要更改删除的记录！'
+                    });
+                }else{
+                    this.dialogSetting.dialogName='delDialog'
+                    this.dialogSetting.message="确定删除？";
+                    this.dialogSetting.dialogType="confirm";
+                    this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                    this.dialogVisible=true;
+                }                
+            },
+            dialogClick(parmas){
+                if(parmas.dialogButton=="确定"){
+                    if(parmas.dialogName=="delDialog"){//删除对话框
+                        this.SelectionChange= this.$store.state[this.tableModel+'Selection'];
+                        for(var i in this.SelectionChange){
+                            this.idArray.ids.push(this.SelectionChange[i].id)
+                        }
+                        let _this=this;
+                        if(_this.idArray.ids.indexOf(undefined)!=-1){
+                                _this.$message({
+                                    type: 'warning',
+                                    message: '新增数据请在行内删除'
+                                });
+                                _this.dialogVisible=false;
+                                this.idArray.ids=[];
+                                return;
+                        }
+                        if(_this.idArray.ids.length>0){
+                            _this.$axios.posts('/api/services/app/DictItemManagement/BatchDelete',_this.idArray).then(function(res){
+                                _this.$store.dispatch('InitTable');
+                                _this.$store.commit('setTableSelection',[])
+                                _this.idArray.ids=[];
+                                _this.dialogVisible=false;
+                                _this.open('删除成功','el-icon-circle-check','successERP');    
+                            })
+                        }
+                    }else if(parmas.dialogName=="saveDialog"){//保存提交对话框
+                        this.dialogVisible=false;
+                    }else if(parmas.dialogName=="cancelDialog"){//取消对话框
+                        this.isSave=false;
+                        this.dialogVisible=false;//关闭对话框
+                        this.$store.dispatch('InitTable');
+                        this.$store.commit('setAddColArray',[])//置空新增集合
+                        this.$store.commit('setUpdateColArray',[])//置空修改增集合
+                    }
+                }else if(parmas.dialogButton=="取消"){
+                    if(parmas.dialogName=="delDialog"){//多选删除取消操作
+                        this.$store.commit('setTableSelection',[])//置空多选
+                    }
+                    this.dialogVisible=false;
+                }
+
+            },
+            dialogColse(){//对话框关闭回调事件
+                this.dialogVisible=false;
+            },  
 
             //---保存--------------------------------------------------------
-            // save:function(){
-            //     let self = this;
-            //     console.log(self.dialogData)
-            //     self.$validate().then(function(success){
-            //         if(success){
-            //             if(self.dialogData.id!=''&&self.dialogData.id!=0){//判断参数id值，为''是新增，其他为创建
-            //                 self.$axios.puts('/api/services/app/DictManagement/Update',self.dialogData).then(function(res){
-            //                     self.dialogFormVisible=false;
-            //                     // self.loadTableData();
-            //                     self.loadTree();
-            //                 },function(res){    
-            //                     console.log('error')
-            //                 })
-            //             }else{
-            //                 self.$axios.posts('/api/services/app/DictManagement/Create',self.dialogData).then(function(res){
-            //                     self.dialogFormVisible=false;
-            //                     self.loadTree();
-            //                     // self.loadTableData();
-            //                     // self.clearAddDate();
-            //                 },function(res){    
-            //                     console.log('error')
-            //                 })
-            //             }
-            //         }
-            //     })
-            // },
             saveValue:function(){//保存值表的修改和新增
                 
-                let self = this;
-                console.log(self.addList)
-                if(self.addList.length>0){
-                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:self.addList,updateList:[],deleteList:[]}).then(function(res){
-                        self.open('创建字典系统值成功','el-icon-circle-check','successERP');
-                        self.addList = [];
-                        self.ar = [];
-                        // self.loadTableData();
-                    },function(res){ 
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    })
-                    
+                let _this=this;
+                let newArray=_this.$store.state[_this.tableModel+'NewColArray'];
+                let newArrayLength=_this.$store.state[_this.tableModel+'NewColArray'].length;
+                let updateArray=_this.$store.state[_this.tableModel+'UpdateColArray'];
+                let updateArrayLength=_this.$store.state[_this.tableModel+'UpdateColArray'].length;
+                let tableData=_this.$store.state[_this.tableModel+'Table'];
+                // 新增保存
+                if(newArrayLength>0){//新增保存
+                    _this.isSave=true;
+                    for(let i in newArray){
+                        if(newArray[i].brandCode==""||newArray[i].brandName==""||newArray[i].brandEname==""){
+                            this.$message({
+                                message: '红色框内为必填项！',
+                                type: 'error'
+                            });
+                            return;
+                        }
+                    }
                 }
+                console.log(newArray)
+                if(newArrayLength>0||updateArrayLength>0){
+                      _this.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:newArray,updateList:[],deleteList:[]}).then(function(res){
+                            _this.$store.commit('setAddColArray',[])//置空新增集合
+                            _this.$store.commit('get_RowId',"")//置空修改行id
+                            _this.$store.commit('setUpdateColArray',[])//置空修改集合
+                            _this.isSave=false;
+                            _this.open('保存字典系统值成功','el-icon-circle-check','successERP');  
+                        }).catch(function(err){
+                                    //err.status;
+                            _this.dialogSetting.dialogType="submit";
+                            _this.dialogSetting.dialogName='saveDialog'
+                            _this.dialogSetting.message="信息提报有误";
+                            _this.errorTips.message=err.error.message;
+                            _this.errorTips.details='';
+                            _this.dialogCommand=[{text:'确定',class:'btn-confirm'}];
+                            _this.dialogVisible=true;
+                            _this.isSave=false;
+                        })   
+                }                                           
 
-                if(self.updateList.length>0){   
-                    self.$axios.posts('/api/services/app/DictItemManagement/CUDAggregate',{createList:[],updateList:self.updateList,deleteList:[]}).then(function(res){
-                        self.open('修改字典系统值成功','el-icon-circle-check','successERP');
-                        self.updateList = [];
-                        self.ar = [];
-                        // self.loadTableData();
-                    },function(res){
-                        self.errorMessage=true;
-                        self.getErrorMessage(res.error.message,res.error.details,res.error.validationErrors)
-                    })
-                }
             },
             //----------------------------------------------------------------
             //---清除数据--------------------------------------------------
@@ -521,22 +457,29 @@
             addCol:function(){//增行
                 let self = this;
                 if(self.dictId!=''){
-                    self.x++;
-                    let newCol = 'newCol'+self.x;
-                    self.rows.newCol = {
-                            groupId: 1,
-                            dictId: self.dictId,
-                            itemName: "",
-                            itemCode: "",
-                            itemValue: '',
-                            dictId_DictName:self.dictId_DictName,
-                            seq: 0,
-                            remark: "",
-                            status: 1,
-                            isSystem: false,
-                        };
-                    self.tableData.unshift(self.rows.newCol);
-                    self.addList.unshift(self.rows.newCol);
+                    let newcol={
+                        groupId: 1,
+                        dictId: self.dictId,
+                        itemName: "",
+                        itemCode: "",
+                        itemValue: '',
+                        dictId_DictName:self.dictId_DictName,
+                        seq: 0,
+                        remark: "",
+                        status: 1,
+                        isSystem: false,
+                    }
+
+                    let newArrayLength=this.$store.state[this.tableModel+'NewColArray'].length;
+                    if(newArrayLength>2){
+                        this.$message({
+                            type: 'info',
+                            message: '请先编辑保存新增项'
+                        });
+                    }else{
+                        this.isSave=false;
+                        this.$store.dispatch('addCol',newcol);//表格行内新增
+                    }  
                     // console.log(self.rows)
                 }else{
                     self.$message({
@@ -545,90 +488,6 @@
                     });
                 }
             },
-            //----------------------------------------------------------------
-
-            //---控制编辑------分页--------------------------------------------
-            handleChange:function(index,row){
-                let self = this;
-                
-                let map = false;
-                if(self.ar.length==0){//修改后表格前红标
-                    self.ar.push(row.id)
-                }else if(self.ar.length>=1){
-                    for(let i in self.ar){
-                        if(row.id!=self.ar[i]){
-                            map = true;
-                        }else{
-                            map = false;
-                            break;
-                        }
-                    }
-                }
-                if(map){
-                    self.ar.push(row.id)
-                    console.log(self.ar)
-                }
-
-
-
-                if(row.id>0){
-                    let flag = false;
-                    if(self.updateList.length==0){
-                        flag = true;
-                    }else if(self.updateList.length>=1){
-                        for(let i in self.updateList){
-                            if(row.id != self.updateList[i].id){
-                                flag = true;
-                                console.log(flag) 
-                            }else{
-                                flag= false;
-                                break;        
-                            }
-                        }
-                    };
-
-                    if(flag){
-                        self.updateList.push(row);
-                        this.turnPage=$(document).find(".pageActive.is-background .el-pager li.active").html();
-                    }
-                    console.log(self.updateList)
-                }  
-            },
-            handleCurrentChange(val) {//页码改变
-                 let self=this;
-                //  self.page=val;
-                //  if(self.load){
-                //      self.loadTableData();
-                //  }
-
-                 if(self.updateList.length>0&&self.pageFlag){
-                    self.$confirm('当前存在未保存修改项，是否继续查看下一页?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning',
-                        center: true
-                        }).then(() => {
-                            self.pageIndex=val;
-                            self.page = val;
-                            self.updateList = [];
-                            self.ar = [];
-                            self.loadTableData();
-                        }).catch(() => {
-                            self.pageIndex=self.turnPage;
-                            self.page = self.turnPage;
-                            this.pageFlag=false;
-                            console.log(self.page)
-   
-                    });
-                }else{
-                    self.pageIndex=val;
-                    self.page = val;
-                    self.loadTableData();
-                } 
-                 setTimeout(() => {self.pageFlag = true}, 1000)
-            },
-            //-----------------------------------------------------
-
             //---复选框--------------------------------------------
             handleSelectionChange(val) {//点击复选框选中的数据
                 this.multipleSelection = val;
@@ -752,12 +611,17 @@
                 self.dictId = data.id;
                 self.dictId_DictName = data.dictName;
                 if(self.dictId==0){
-                    self.loadTableData()
+                    self.$axios.gets('/api/services/app/DictItemManagement/GetAll',{SkipCount:(self.page-1)*self.oneItem,MaxResultCount:self.oneItem}).then(function(res){ 
+                        console.log(res)
+                        self.$store.state[self.tableModel+'Table'] = res.result.items;
+                        },function(res){
+                    })
                 }else{
                     self.$axios.gets('/api/services/app/DictItemManagement/GetDictId',{DictId:data.id,SkipCount:'0',MaxResultCount:'100'}).then(function(res){ 
                         console.log(res)
-                        self.tableData = res.result.items;
-                        self.totalItem=res.result.totalCount;
+                        self.$store.state[self.tableModel+'Table'] = res.result.items;
+                        self.$store.state[self.tableModel+'otalCount'] = res.result.totalCount;
+                        //self.totalItem=res.result.totalCount;
                     },function(res){
                         self.tableLoading=false;
                     })
@@ -793,6 +657,11 @@
             },
             //-----------------------------------------------------------------
         },
+        components:{
+            Table,
+            dialogBox,
+            buttonGroup
+        }
     }
 </script>
 
@@ -801,6 +670,9 @@
     height: 15px;
     line-height: 15px;
     color: #f66;
+}
+.search_input .el-input__inner{
+    padding-left: 30px !important;
 }
 .dialogBtn{
     display: block;
@@ -911,9 +783,7 @@
 .dic-list .el-input--suffix .el-input__inner{
     padding:0;
 }
-.dic-list .el-input__inner{
-    padding:0;
-}
+
 .dic-list .bgw .el-input__inner{
     background-color:white;
 }

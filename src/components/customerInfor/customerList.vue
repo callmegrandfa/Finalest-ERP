@@ -20,7 +20,7 @@
                                    clearable
                                    v-model="queryCu">
                             <el-input placeholder="搜索..."
-                                      class="selectSearch"
+                                      class="selectSearch select-search"
                                       v-model="cuSearch"></el-input>
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
@@ -53,7 +53,7 @@
                                    clearable
                                    v-model="queryOu">
                             <el-input placeholder="搜索..."
-                                      class="selectSearch"
+                                      class="selectSearch select-search"
                                       v-model="ouSearch"></el-input>
 
                             <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" style="-moz-user-select: none" 
@@ -1022,6 +1022,14 @@
     float: right;
     margin-right: 10px;
 } 
+.select-search {
+    border-radius: 20px;
+    margin: 0px 10px 5px;
+    width: inherit
+}
+.selectSearch .select-search input{
+    border-radius: 20px !important;
+}
 </style>
 
 <style>
