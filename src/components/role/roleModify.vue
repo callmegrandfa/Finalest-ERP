@@ -1248,25 +1248,6 @@ export default({
             let _this=this;
             _this.addOu=data.ouId;
         },
-        // loadOuTable(){//获取分配组织数据
-        //     let _this=this;
-        //     _this.ouTableLoading=true
-
-        //     _this.$axios.gets('/api/services/app/Role/GetOuAssignList',{Id:_this.$route.params.id,SkipCount:(_this.ouPage-1)*_this.ouOneItem,MaxResultCount:_this.ouOneItem})
-        //     .then(function(res){
-        //         _this.ouCheckAll=res.result.items;
-        //         _this.ouTotalItem=res.result.totalCount
-        //         _this.ouTotalPage=Math.ceil(res.result.totalCount/_this.ouOneItem);
-        //         _this.ouTableLoading=false;
-        //         // _this.storeCheckOu=[];
-        //         // $.each(res.result.items,function(index,val){
-        //         //     _this.storeCheckOu.push(val.ouId)
-        //         // })           
-        //         _this.loadOuTreeAll();
-        //         },function(res){
-        //         _this.ouTableLoading=false;
-        //     })
-        // },
         getAllCheckOu(){//获取所有关联权限
              let _this=this;
              _this.ouTableLoading=true
@@ -1596,7 +1577,7 @@ export default({
             _this.fnTreeLoading=true;
             _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree')
             .then(function(res){
-                // console.log(res)
+                console.log(res)
                 _this.fnTreeData=res;
                 _this.fnTreeLoading=false;
                 _this.defauleExpandTree('','expandId_mmenu',res,'id','childNodes')
