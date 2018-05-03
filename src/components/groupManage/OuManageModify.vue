@@ -419,9 +419,7 @@
     <el-col :span="24" class="getPadding"> <h4 class="h4">组织类型</h4></el-col>
     <el-col :span="24" class="getPadding"> 
         <el-col :span="6">  
-            <el-checkbox-group 
-             
-            
+            <el-checkbox-group
             v-model="addData.ouTypes"
             :min="1">
             <el-checkbox v-for="item in selectData.OUType" :label="item.itemValue" :key="item.itemValue" @change="change_ouType">{{item.itemName}}</el-checkbox>

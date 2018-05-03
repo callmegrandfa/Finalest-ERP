@@ -2,13 +2,16 @@
     <div class="groupList">
         <el-row class="h48 pt5 bg-white fixed" >
             <!-- <button v-on:click="Update()" class="erp_bt bt_modify"><div class="btImg"><img src="../../../static/image/common/bt_modify.png"></div><span class="btDetail">修改</span></button>            -->
-            <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
+            <!-- <button v-on:click="Save()"  class="erp_bt bt_save"><div class="btImg"><img src="../../../static/image/common/bt_save.png"></div><span class="btDetail">保存</span></button>
             <button v-on:click="Cancel()" :disabled="isCancel" class="erp_bt bt_cancel"><div class="btImg"><img src="../../../static/image/common/bt_cancel.png"></div><span class="btDetail">取消</span></button>
-            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button> 
-               
-        
+            <button class="erp_bt bt_print"><div class="btImg"><img src="../../../static/image/common/bt_print.png"></div><span class="btDetail">打印</span></button>  -->
+             <!-- <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>     -->
+                <div class="btnGroup-box">
+                    <buttonGroup :buttonGroup="buttonGroup" @btnClick='btnClick'></buttonGroup>   
+                </div>
         </el-row>
-        <el-row class="bg-white pt20">
+        
+        <el-row class="bg-white pt20" :ifSave="isSave">
                 <div class="bgcolor reset">
                     <label>集团编码</label><el-input v-model="entryItem.groupCode"></el-input>
                 </div>
@@ -104,10 +107,13 @@
                 </el-row>
             </el-col>
         </el-row> 
+          <dialogBox :dialogSetting='dialogSetting'  :errorTips='errorTips' :dialogVisible="dialogVisible"  :dialogCommand='dialogCommand'  @dialogClick="dialogClick" @dialogColse='dialogColse'></dialogBox>     
     </div>
 </template>
 	
 <script> 
+import buttonGroup from '../../base/buttonGroup/buttonGroup'
+import dialogBox from '../../base/dialog/dialog'
     export default{
         name:'customerInfor',
         data(){
@@ -171,6 +177,36 @@
                     id:0,
                     ouName:' '
                 },
+                buttonGroup:[{
+                    text:'保存',
+                    class:'bt_save',
+                    icon:'icon-baocun',
+                    disabled:false,
+                },{
+                    text:'取消',
+                    class:'bt_cancel',
+                    icon:'icon-quxiao',
+                    disabled:true,
+                },{
+                    text:'打印',
+                    class:'bt_print',
+                    icon:'icon-print',
+                    disabled:false,
+                }],//按钮组\
+                dialogCommand:[],//底部按钮组控制组
+                //dialogVisible:false,//对话框是否显示
+                dialogVisible:false,
+                errorTips:{//对话框 错误提示
+                    message:'',
+                    details:'',
+                },
+                dialogSetting:{
+                    message:'',//提示信息
+                    dialogName:'',//对话框名称
+                    dialogType:'',//对话框类型
+                },
+                isSave:false,
+                ifWidth:true,
                 areaCity:true,
                 areaDis:true,
                 areaStr:true,
@@ -193,7 +229,6 @@
                 ouid:'',
                 accperiodSchemeID:'',
                 // updateAccSchemeId:'',//修改时会计制度id
-                AccSchemeIdChange:false,//判段会计制度是否更改
             }
         },
         watch:{
@@ -230,6 +265,13 @@
                 },
                 deep:true
         },
+        isCancel:function(val,oldVal){//监听是否修改或新增数据
+                if(!val){
+                    this.buttonGroup[1].disabled=false
+                }else{
+                    this.buttonGroup[1].disabled=true
+                }
+            },
         },
         created:function(){       
                 let _this=this; 
@@ -250,6 +292,22 @@
                 duration: 3000,
                 customClass:className
                 });
+            },
+            btnClick(btn){//按钮组点击事件
+                if(btn=="保存"){//保存事件
+                   this.Save();
+                }else if(btn=="取消"){//取消事件
+                    this.cancel();
+                }else if(btn=="打印"){//打印事件
+                   this.print();
+                }
+            },
+            cancel(){//数据恢复到初始化状态 取消
+                this.dialogSetting.dialogName='cancelDialog'
+                this.dialogSetting.message="此操作将忽略您的更改，是否继续？";
+                this.dialogSetting.dialogType="confirm";
+                this.dialogCommand=[{text:'确定',class:'btn-confirm'},{text:'取消',class:'btn-cancel'}];
+                this.dialogVisible=true;
             },
           JsonDistinct:function(json, key) {
                 var res = [json[0]];
@@ -284,7 +342,7 @@
                 let _this=this;
                 _this.$axios.gets('/api/services/app/Accperiod/GetAccountYear',{OuId:_this.ouid,AccperiodShemeId:data}).then(function(res){
                 _this.accountYearOptions=res.result;
-                if( _this.accountYearOptions.length==0){
+                if(_this.accountYearOptions.length==0){
                     _this.entryItem.basAccperiodContentId='';
                 }
                 },function(res){
@@ -415,6 +473,26 @@
             ChooseDis(){//选择区
                 
             },
+            dialogClick(parmas){
+                if(parmas.dialogButton=="确定"){
+                  if(parmas.dialogName=="saveDialog"){//保存提交对话框
+                        this.dialogVisible=false;
+                    }else if(parmas.dialogName=="cancelDialog"){//取消对话框
+                        // this.isCancel=true;
+                       
+                        this.dialogVisible=false;//关闭对话框
+                        this.loadTableData();
+                        
+                        
+                    }
+                }else if(parmas.dialogButton=="取消"){
+                    if(parmas.dialogName=="delDialog"){//多选删除取消操作
+                        this.$store.commit('setTableSelection',[])//置空多选
+                    }
+                    this.dialogVisible=false;
+                }
+
+            },
             Save(){
                 let _this=this;
                 let updateItem={
@@ -443,24 +521,24 @@
                 }
                 // console.log(updateItem);
              
-                if(!_this.isCancel||_this.AccSchemeIdChange){
+                if(!_this.isCancel){
                     _this.$axios.puts('/api/services/app/GroupManagement/Update',updateItem).then(function(res){ 
-                        console.log(updateItem)
+                        _this.isSave=true;
+                        _this.isCancel=true;
                         _this.open('修改成功','el-icon-circle-check','successERP');
                         _this.isEdit=!_this.isEdit;
                         },function(res){
                         _this.open('修改失败','el-icon-error','faildERP');
                     });
-                    _this.isCancel=true;
-                    _this.AccSchemeIdChange=false;
+                   
+                 
                 }else{
                     _this.open('没有需要保存的项目','el-icon-warning','noticERP');
                 }
             },
-            Cancel(){
-                this.loadTableData();
-                
-            },
+            dialogColse(){//对话框关闭回调事件
+                this.dialogVisible=false;
+            }, 
             loadTree(){
                 let _this=this;
                 _this.$axios.gets('/api/services/app/DeptManagement/GetAllByOuId',{id:1})
@@ -557,7 +635,12 @@
                 this.$store.state.url='/OuManage/OuManageModify/'+row.id
                 this.$router.push({path:this.$store.state.url})//点击切换路由OuManage
             },
+          
         },
+          components:{
+            dialogBox,
+            buttonGroup,    
+        }
     }
 </script>
 

@@ -826,7 +826,18 @@ export default new vuex.Store({
         totalPage:10,//总页数
         eachPage:10,//每页显示条数
         httpApi:'',
-    } ,
+        //客户分类
+        customerClassListQueryApi:'',//查询接口
+        customerClassListTreeData:[],//树型数据集合
+        customerClassListTable:[],//客户分类表格数据
+        customerClassListCurrentPage:1,//当前分页
+        customerClassListTotalPagination:10,//总页数
+        customerClassListTotalCount:0,//总条数
+        customerClassListEachPage:10,//每页显示条数
+        customerClassListQueryParams:"",//条件查询参数
+        customerClassListTreeApi:'',//初始化树型接口
+        customerClassListSelection:[],//选中数据集合
+    } , 
     mutations: {
         go(state) { //控制slidebar显示隐藏
             state.show = !state.show
