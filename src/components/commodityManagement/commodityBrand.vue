@@ -235,7 +235,6 @@ import Transfer from '../../base/Transfer/Transfer'
                     width:"auto",
                     isDisable:false,
                     sortable:false,
-                    isFix:''
                     },{
                     prop: 'brandName',
                     label: '品牌名称',
@@ -322,7 +321,7 @@ import Transfer from '../../base/Transfer/Transfer'
                 },{
                     text:'导出',
                     class:'bt_out',
-                    icon:'icon-daochu1',
+                    icon:'icon-daochu',
                     disabled:false,
                 }],//按钮组
                 cancelDisable:true,
@@ -376,6 +375,9 @@ import Transfer from '../../base/Transfer/Transfer'
                     return true
                 }
             },
+            transferSelected(){
+                return this.$store.state[this.transferName+'SelectedTable']
+            },
         },
         watch:{
             isUpdate:function(val,oldVal){
@@ -390,6 +392,12 @@ import Transfer from '../../base/Transfer/Transfer'
                     this.buttonGroup[3].disabled=true
                 }
             },
+            transferSelected:{
+                handler:function(val,oldVal){
+                    console.log(val);
+                },
+                deep:true
+            }
         },
         methods:{
             closeLeft:function(){

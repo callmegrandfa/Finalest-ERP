@@ -328,6 +328,7 @@ import buttonGroup from '../../base/buttonGroup/buttonGroup'
         created(){
             if(this.$route.params.id=="default"){//新增操作
                 this.isAdd=true;
+                this.buttonGroup[1].disabled=true;
                 this.buttonGroup[2].disabled=false;
                 this.buttonGroup[3].disabled=false;
             }else{

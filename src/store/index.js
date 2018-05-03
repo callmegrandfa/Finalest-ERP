@@ -783,6 +783,23 @@ export default new vuex.Store({
         commodityBrandTotalCount:0,//总条数
         commodityBrandEachPage:10,//每页显示条数
         commodityBrandDialogVisible:false,//对话框是否显示
+        //货币资料
+        //currencyListQueryApi:'',//查询接口
+        currencyListTable:[],//品牌表格数据
+        //currencyListTableClone:[],//品牌表格数据clone
+        //currencyListQueryParams:"",//条件查询参数
+        currencyListNewCol:'',
+        currencyListNewColArray:[],//表格内新增数据集合
+        currencyListUpdateColArray:[],//表格内修改数据集合
+        currencyListSelection:[],//选中数据集合
+        currencyListUpdateRow:'',//修改表格行数据
+        currencyListUpdateRowId:'',//修改的表格行ID
+        currencyListCurrentPage:1,
+        currencyListTotalPagination:10,//总页数
+        currencyListTotalCount:0,//总条数
+        currencyListEachPage:10,//每页显示条数
+        currencyListDialogVisible:false,//对话框是否显示
+
         //仓库资料列表演示
         storeHouseHttpApi:'',//接口
         storeHouseParams:'',

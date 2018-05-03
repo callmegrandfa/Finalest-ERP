@@ -39,6 +39,14 @@
         </el-row>   
         <el-row class="bg-white">
             <el-col :span="5">
+                <el-col class="h48 pl15 pr15" :span="24">
+                    <el-input placeholder="搜索..."
+                              v-model="searchKey" 
+                              class="bAreaSearch">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    </el-input>
+                </el-col>
+
                 <el-col :span="24" class="tree-container transfer_fixed">
                     <vue-scroll :ops='$store.state.option'>
                         <el-tree v-loading="treeLoading" 
@@ -48,7 +56,9 @@
                                 node-key="id"
                                 :render-content="renderContent"
                                 ref="tree"
+                                :filter-node-method="filterNode"
                                 :expand-on-click-node="false"
+                                highlight-current
                                 @node-click="nodeClick">
                         </el-tree>
                     </vue-scroll>
@@ -85,8 +95,8 @@
                     </el-row>
                 </el-row>
 
-                <el-row class="section-style pl10">
-                    <el-col :span='24' class="mb10 pl10">
+                <el-row class="section-style bg-gray-in mt15">
+                    <el-col :span='24' class="pl10">
                         <span class="header-title">商品属性</span>
                         <div class="choose-add" @click="dialogAttributeShow">
                             <img src="../../../../static/image/common/bt_add_white.png">
@@ -123,8 +133,8 @@
                     </el-collapse-transition>
                 </el-row>
 
-                <el-row class="section-style pl10">
-                    <el-col :span='24' class="mb10 pl10">
+                <el-row class="section-style bg-gray-in mt15">
+                    <el-col :span='24' class="pl10">
                         <span class="header-title">商品规格</span>
                         <div class="choose-add" @click="dialogSpecShow">
                             <img src="../../../../static/image/common/bt_add_white.png">
@@ -329,6 +339,13 @@ export default({
         self.loadTree();
     },
     watch: {
+        searchKey:{
+            handler:function(val,oldVal){
+                console.log(123)
+                this.$refs.tree.filter(val);
+            },
+            deep:true,
+        },
         //-----------属性------------------------------------------------------------------
         attributeAllData:{//监听属性右侧列表的总数据变化
             handler:function(val,oldVal){
@@ -571,6 +588,7 @@ export default({
     },
     data() {
         return{
+            searchKey:'',
             defaultGroupId:'',
             categoryId:'',
             categoryName:'',
@@ -605,8 +623,12 @@ export default({
             //-------------------
 
             //---父节点从表数据---
+            ifFaInherit:false,//父节点是否有点击继承到子类目
             attFaData:[],
             specFaData:[],
+            categoryFaId:'',//父节点类目id
+
+
             //---商品属性弹框-----
             onePageShow:10,
             attData:[],//生成的属性表格数据
@@ -852,28 +874,78 @@ export default({
             self.submitData.categoryFeature_MainTable.lotMgt = self.ifBatch;
             self.submitData.categoryFeature_MainTable.validityMgt = self.ifPeriod;
             self.submitData.categoryFeature_MainTable.attributeInherited = self.ifInherit;
-            console.log(self.specData)
-            // console.log(12)
-            let x = [];
-            for(let i in self.attData){
-                x.push({
-                    id:self.attData[i].id,
-                    groupId:self.attData[i].groupId,
-                    categoryFeatureId:self.attData[i].categoryFeatureId,
-                    itemType:self.attData[i].itemType,
-                    itemSourceId:self.attData[i].itemSourceId,
-                })
+            
+            if(self.ifFaInherit){
+                let k = [];
+                for(let i in self.attData){
+                    let flag = true;
+                    for(let j in self.attFaData){
+                        if(self.attData[i].itemSourceId == self.attFaData[j].itemSourceId){
+                            flag = false;
+                        }
+                    };
+                    if(flag){
+                        k.push(self.attData[i])
+                    };
+                    
+                };
+                let w = [];
+                for(let i in self.specData){
+                    let flag = true;
+                    for(let j in self.specFaData){
+                        if(self.specData[i].itemSourceId == self.specFaData[j].itemSourceId){
+                            flag = false;
+                        }
+                    };
+                    if(flag){
+                        w.push(self.specData[i])
+                    };
+                };
+                let d = [];
+                for(let i in k){
+                    d.push({
+                        id:k[i].id,
+                        groupId:k[i].groupId,
+                        categoryFeatureId:k[i].categoryFeatureId,
+                        itemType:k[i].itemType,
+                        itemSourceId:k[i].itemSourceId,
+                    })
+                };
+                for(let i in w){
+                    d.push({
+                        id:w[i].id,
+                        groupId:w[i].groupId,
+                        categoryFeatureId:w[i].categoryFeatureId,
+                        itemType:w[i].itemType,
+                        itemSourceId:w[i].itemSourceId,
+                    })
+                }
+                self.submitData.categoryFeatureItem_ChildTable = d;
+            }else{
+                let x = [];
+                for(let i in self.attData){
+                    x.push({
+                        id:self.attData[i].id,
+                        groupId:self.attData[i].groupId,
+                        categoryFeatureId:self.attData[i].categoryFeatureId,
+                        itemType:self.attData[i].itemType,
+                        itemSourceId:self.attData[i].itemSourceId,
+                    })
+                }
+                for(let i in self.specData){
+                    x.push({
+                        id:self.specData[i].id,
+                        groupId:self.specData[i].groupId,
+                        categoryFeatureId:self.specData[i].categoryFeatureId,
+                        itemType:self.specData[i].itemType,
+                        itemSourceId:self.specData[i].itemSourceId,
+                    })
+                }
+                self.submitData.categoryFeatureItem_ChildTable = x;
             }
-            for(let i in self.specData){
-                x.push({
-                    id:self.specData[i].id,
-                    groupId:self.specData[i].groupId,
-                    categoryFeatureId:self.specData[i].categoryFeatureId,
-                    itemType:self.specData[i].itemType,
-                    itemSourceId:self.specData[i].itemSourceId,
-                })
-            }
-            self.submitData.categoryFeatureItem_ChildTable = x;
+
+
+            
             // for(let i in self.attData){
                 // self.submitData.categoryFeatureItem_ChildTable.push({itemSourceId:self.attData[i].id,
                 // itemType:'1',
@@ -918,6 +990,9 @@ export default({
         },
         searchRightAttribute:function(){
             let self = this;
+            let newJson = [];
+            let keyWord = new RegExp(self.searchRightAtt);
+            // $.each(self.attributeAllData)
         },
         //------------------------
 
@@ -1254,8 +1329,9 @@ export default({
             //---清空数据-----------
             self.clearData();
             //---保存上床值---------
-            self.categoryId= data.id;
+            self.categoryId= data.id;//类目id
             self.categoryName = data.categoryName;
+            self.categoryFaId = data.categoryParentid;
             //---获取主表数据-------
             self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.id}).then(function(res){
                 console.log(res)
@@ -1286,7 +1362,21 @@ export default({
             //---查询点击的节点的父节点主表数据---
             self.$axios.gets('/api/services/app/CategoryFeatureManagement/GetCategoryFeature',{categoryID:data.categoryParentid}).then(function(res){
                 console.log(res)
-                
+                self.ifFaInherit = res.result.attributeInherited;
+                //加载从表数据
+                self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:self.categoryFaId,ItemType:'1',CategoryFeatureId:res.result.id}).then(function(res){
+                    // console.log(res)
+                    self.attFaData = res.result;//父节点属性数据
+                },function(res){
+                    
+                })
+
+                self.$axios.gets('/api/services/app/CategoryFeatureItemManagement/GetAllItem',{CategoryId:self.categoryFaId,ItemType:'2',CategoryFeatureId:res.result.id}).then(function(res){
+                    // console.log(res)
+                    self.specFaData = res.result;//父节点属性数据
+                },function(res){
+                    
+                })
                 
             },function(res){
                 
@@ -1369,6 +1459,10 @@ export default({
             customClass:className
             });
         },
+        filterNode(value, data) {
+            if (!value) return true;
+                return data.categoryName.indexOf(value) !== -1;
+        },
         //------------------
         
     },
@@ -1384,6 +1478,7 @@ export default({
 }
 .bg-gray{
     background:#EDF0F4;
+    padding:10px 0 0 10px;
 }
 .bg-gray-in{
     background:#F9F9F9;
@@ -1398,6 +1493,9 @@ export default({
 }
 .pl10{
     padding-left:10px;
+}
+.mt15{
+    margin-top: 10px;
 }
 .showBtn{
     display: inline-block;
@@ -1435,7 +1533,7 @@ export default({
 .header-title{
     font-size: 16px;
     display: inline-block;
-    border-bottom: 2px solid #00CACA;
+    border-bottom: 3px solid #00CACA;
     padding: 5px 1px;
     float: left;
 }
@@ -1464,6 +1562,10 @@ export default({
     float: left;
     margin-left: 10px;
 }
+.at-sp-detail .bAreaSearch .el-input__inner{
+    height: 30px;
+    border-radius: 30px;
+} 
 </style>
 
 
