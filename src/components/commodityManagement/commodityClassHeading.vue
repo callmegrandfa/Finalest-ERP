@@ -188,7 +188,7 @@ import Tree from '../../base/tree/tree'
                 column: [{
                     prop: 'categoryParentid_CategoryName',
                     label: '上级类目',
-                    controls:'button',
+                    controls:'text',
                     isDisable:true,
                     sortable:false,
                     }, {
@@ -353,7 +353,7 @@ import Tree from '../../base/tree/tree'
                     _this.column[3].dataSource=res.result;
                 })
             },
-            TreeNodeClick(data){//树节点点击回调             
+            TreeNodeClick(data){//树节点点击回调            
                 let _this=this;
                 _this.queryParams.CategoryId=data.id;
                 _this.routerCategoryName=data.categoryName

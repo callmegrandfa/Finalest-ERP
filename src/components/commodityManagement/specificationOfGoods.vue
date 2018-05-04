@@ -4,17 +4,8 @@
         <div id="bgl">
             <el-row class="bg-white">
                 <el-col :span="24" class="border-left" id="bg-white">
-
                         <el-col :span="5" >
-                            <!-- <div class="transfer_search" style="width:100%;" >
-                                
-                            </div> -->
                             <el-col class="h48 pl15 pr15" :span="24">
-                                <!-- <el-input
-                                    placeholder="搜索..."
-                                    v-model="searchLeft" class="search_input">
-                                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                                </el-input> -->
                                 <el-input
                                     placeholder="搜索..."
                                     v-model="searchLeft"
@@ -26,7 +17,7 @@
                             <el-col :span='24' class="tree-container">
                                 <vue-scroll :ops="$store.state.option">
                                     <div class="propertyParentid">
-                                        <el-tree oncontextmenu="return false" ondragstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
+                                        <el-tree oncontextmenu="return false" ondragstart="return false" onselectstart="return false"  onbeforecopy="return false" style="-moz-user-select: none"
                                             :data="componyTree"
                                             v-loading="treeLoading" 
                                             :filter-node-method="filterNode"
@@ -38,10 +29,10 @@
                                             :expand-on-click-node="false"
                                             :render-content="renderContent_moduleParentId"
                                             @node-click="TreeNodeClick">
-                                            
                                         </el-tree>
                                     </div>
                                 </vue-scroll>
+                                <!-- <Tree :defaultProps='defaultProps' :treeSearch='treeSearch' :treeParams='treeParams' @nodeClick="TreeNodeClick"></Tree> -->
                             </el-col>
                         </el-col>
                         
@@ -218,6 +209,11 @@ import Tree from '../../base/tree/tree'
         name:'customerInfor',
         data(){
             return {
+                treeSearch:false,
+                treeParams:{
+                    treeName:'SpecName',//树节点名称
+                    treeApi:'/api/services/app/SpecManagement/GetSpecTree',//接口地址
+                },
                 try:{
                 "groupId": 2,
                 "stockId": 1,
@@ -366,6 +362,7 @@ import Tree from '../../base/tree/tree'
                 arrbiaoge1:[],
                 arrbiaoge2:[],
                 addbac: [],
+                adddata:'',
                 addabc:''
             }
         },
@@ -373,6 +370,7 @@ import Tree from '../../base/tree/tree'
             this.loadTree();   
             this.loadTableData();
             this.TreeNodeClick1(0);
+            this.adddata = new Date().getTime();
         },
         mounted:function(){   
             let content1=document.getElementById('bg-white');//设置高度为全屏
@@ -402,13 +400,14 @@ import Tree from '../../base/tree/tree'
             },
             tableData:{
                 handler: function (val, oldVal) {
-                            let _this = this;
-                            if(!_this.isnewSave){
-                               _this.isnewSave = !_this.isnewSave
-                            }else{
-                               _this.statusButton(true,true,false) 
-                               _this.isUpdate = true; 
-                            }
+                        let _this = this;
+                        if(!_this.isnewSave){
+                           _this.isnewSave = !_this.isnewSave
+                        }else{
+                           _this.statusButton(true,true,false) 
+                           _this.isUpdate = true; 
+                           alert(1)
+                        }
                     },
                 deep: true
             }
@@ -768,7 +767,6 @@ import Tree from '../../base/tree/tree'
             },
             TreeNodeClick(data,val){//树节点点击回调
                 let _this=this; 
-                
                 if(val.key == _this.value1.id && _this.isUpdate){
                     return ; 
                 }else{
@@ -776,26 +774,34 @@ import Tree from '../../base/tree/tree'
                         _this.dialogUserConfirm2 = true;
                         _this.value2 = data
                     }else{
+                        _this.isnewSave = false;
                         _this.tableLoading=true;
                         _this.isaddac = false;
-                        _this.isnewSave = false;
+                        
                         
                         _this.value1 = data;
                        
                         _this.ifTreeNode = true;
+                        let t1 = new Date().getTime();
+                            if(t1 - _this.adddata>500){//至少2秒触发一次
+                                _this.adddata = t1;
+                                _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){ 
 
-                        _this.$axios.gets('/api/services/app/SpecValueManagement/GetSpecId',{SpecId:_this.value1.id,SkipCount:(_this.currentPage-1)*_this.eachPage,MaxResultCount:_this.eachPage}).then(function(res){            
-                            _this.tableData = res.result.items ;
-                            _this.tableLoading = false;
-                            for(let i=0;i<_this.tableData.length;i++){
-                                _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
-                                _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                                  
+                                    _this.tableData = res.result.items ;
+                                    _this.tableLoading = false;
+                                    for(let i=0;i<_this.tableData.length;i++){
+                                        _this.tableData[i].createdTime = _this.tableData[i].createdTime.substr(0,10)
+                                        _this.tableData[i].modifiedTime = _this.tableData[i].modifiedTime.substr(0,10)
+                                    }
+                                    _this.Init();
+                                    _this.totalItem=res.result.totalCount;
+                                    // _this.Init();
+                                    _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
+                                })
                             }
-                            _this.Init();
-                            _this.totalItem=res.result.totalCount;
-                            // _this.Init();
-                            _this.totalPage = Math.ceil(_this.totalItem/_this.eachPage);
-                        })
+                            
+                        
                     } 
                 }
                 

@@ -1029,7 +1029,8 @@ export default({
         showPageTableOu:{
             handler:function(val,oldVal){
                 let self = this;
-                if(!self.firstModify){
+                console.log(val,oldVal)
+                if(self.firstModify){
                     self.firstModify = !self.firstModify;
                 }else{
                     self.ifModify = true;
@@ -1417,6 +1418,8 @@ export default({
             checkAllOu:false,//全选
             filterTextOu:'',//搜索
             addOu:'default',
+            modify1:1,
+            modify2:2,
             //-------------table--------------    
             searchTableOu:'',//搜索框值       
             ouCheckAll:[],//分配组织数据

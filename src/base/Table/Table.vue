@@ -78,6 +78,7 @@
 			}
         },
         created:function(){
+            console.log("a");
             this.classMap=['Disabled','Enabled','Frozen'];
             this.$store.commit('setTableName',this.tableName)//传递具体数据模型名称
             this.$store.commit('setQueryApi', this.methodsUrl.query);//传递查询数据初始化api
@@ -136,9 +137,9 @@
             },
         },
         watch:{
-            // $route(to) {//页签切换,重置表格数据模型名称
-            //       this.$store.commit('setTableName',to.name)
-            // },
+            $route(to) {//页签切换,重置表格数据模型名称
+                  this.$store.commit('setTableName',to.name)
+            },
             cols:{//动态表头参数
                 handler:function(val,oldVal){
                         this.cols=val;

@@ -297,8 +297,8 @@
                     class="basAccperiodContentId" 
                    v-model="addData.basAccperiodContentId" 
                     ><el-option> -->
-                   <el-select v-model="addData.basAccperiodContentId" >
-                        <el-option v-for="item in accountYearOptions" :key="item.accperiodContentId" :label="item.accountYear" :value="item.accperiodContentId">
+                   <el-select v-model="addData.basAccperiodContentId" :disabled="isAbled">
+                        <el-option v-for="item in accountYearOptions":key="item.accperiodContentId" :label="item.accountYear" :value="item.accperiodContentId">
                         </el-option>
 
                     </el-select>
@@ -1015,6 +1015,7 @@ export default({
             groupId:1,
             firstModify:false,
             ifModify:false,
+            isAbled:true,
             // 错误信息提示开始
             detail_message_ifShow:false,
             errorMessage:false,
@@ -1648,8 +1649,8 @@ export default({
     },
      seletChange(val){
             let _this=this;
-            // _this.loadList();
-            _this.addData.basAccperiodContentId=''
+            _this.addData.basAccperiodContentId='';
+             _this.isAbled=false;      
             _this.loadbeginDate(val);
             },
         showErrprTips(e){
