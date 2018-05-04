@@ -225,7 +225,7 @@ export default {
     },
     created:function(){
         let _this=this;
-        _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0})
+        _this.$axios.gets('/api/services/app/ModuleManagement/GetModulesTree',{id:0,sorting:'seq asc'})//seq asc升序，seq desc降序
         .then(function(res){
             // console.log(res);
             // console.log(res[1].childNodes);
