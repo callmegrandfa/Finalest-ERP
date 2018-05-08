@@ -612,33 +612,32 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
             <el-tab-pane label="图片" name="picture">
                 <el-row>
-                       <!-- <li>
-                           <div>主图</div>
-                           <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            :before-remove="beforeRemove"
-                            :on-exceed="handleExceed"
-                            :file-list="fileList"
-                            :auto-upload="false"
-                            :limit="1"
-                            :show-file-list="false"
-                            :on-change="changePicture"
-                            :on-success="handleAvatarSuccess"
-                            ref="upload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
-                            
-                       </li> -->
-                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
-                            <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
+                    <el-col v-for="(item,index) in productPicture_ChildTable" :key="index">
+                        <el-col :span="24" class="uploadHeader">
+                            <div class="leftSpec">
+                                <label>{{item.basSpecgroupId_SpecgroupName}}</label>
+                                <span>{{item.specId_SpecName}}</span>
+                            </div>
+                            <div class="batchUpload">
+                                <span>批量上传</span>
+                            </div>
+                        </el-col>
+                        <el-col :span="24" v-for="(items,i) in item.picture" :key="i">
+                            <app-loadImg :data="items" @fileChange="fileChange"></app-loadImg>
+                            <!-- <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
                             <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
-                    </el-row>
-                </el-tab-pane>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg> -->
+                        
+                        </el-col>
+                    </el-col>   
+                </el-row>
+            </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="使用组织" name="useOu">
                     <el-row>
@@ -1180,13 +1179,67 @@ export default {
                 // "groupId": 1,
                 // "productId": '',//商品ID 
                 // "specId": '',//规格ID 
-                // "pictureType": '',//图片类型 
                 // "pictureUrl": "",// 图片路径
                 // "pictureCode": "",// 图片代码
                 // "pictureName": "",//图片名
                 // "isMain": true,//是否主图 
                 // "seq": true
                 // }
+                {
+                    "basSpecgroupId_SpecgroupName": '颜色',//颜色，尺码
+                    "specId":1,
+                    "specId_SpecName":'红色',
+                    "picture":[{
+                    "id": 0,
+                    "groupId": 1,
+                    "productId": 0,
+                    "specId": 1,//规格ID 
+                    "specId_SpecName":'红色',
+                    "pictureUrl": "",// 图片路径
+                    "pictureCode": "",// 图片代码
+                    "pictureName": "",//图片名
+                    "isMain": true,//是否主图 
+                    "seq": 0
+                    },{
+                    "id": 0,
+                    "groupId": 1,
+                    "productId": 0,//商品ID 
+                    "specId": 1,//规格ID 
+                    "specId_SpecName":'红色',
+                    "pictureUrl": "",// 图片路径
+                    "pictureCode": "",// 图片代码
+                    "pictureName": "",//图片名
+                    "isMain": false,//是否主图 
+                    "seq": 1
+                    }],
+                },{
+                    "basSpecgroupId_SpecgroupName": '颜色',//颜色，尺码
+                    "specId":2,
+                    "specId_SpecName":'黑色',
+                    "picture":[{
+                    "id": 0,
+                    "groupId": 1,
+                    "productId": 0,
+                    "specId": 2,//规格ID 
+                    "specId_SpecName":'黑色',
+                    "pictureUrl": "",// 图片路径
+                    "pictureCode": "",// 图片代码
+                    "pictureName": "",//图片名
+                    "isMain": false,//是否主图 
+                    "seq": 0
+                    },{
+                    "id": 0,
+                    "groupId": 1,
+                    "productId": 0,//商品ID 
+                    "specId": 2,//规格ID 
+                    "specId_SpecName":'黑色',
+                    "pictureUrl": "",// 图片路径
+                    "pictureCode": "",// 图片代码
+                    "pictureName": "",//图片名
+                    "isMain": true,//是否主图 
+                    "seq": 1
+                    }],
+                }
             ],
             "sku_ChildTable": [//SKU从表
                 // {
@@ -2594,10 +2647,10 @@ export default {
                         skuCode+=v.specValueCode;
                         skuName+=v.specValueName;
                     })
-                    let items={
+                    let skuItem={//sku
                         barcode:skuCode,
                         discount:0,
-                        groupId:1,
+                        groupId:_this.product_MainTable.groupId,
                         id:0,
                         productId:0,
                         purchasePrice:0,
@@ -2612,7 +2665,50 @@ export default {
                         vipPrice:0,
                         wholePrice:0,
                     }
-                    _this.sku_ChildTable.push(items)
+                    _this.sku_ChildTable.push(skuItem)
+                    //picture
+                    _this.productSpec_ChildTable=[];
+                    if(index==0){
+                        $.each(val,function(i,v){
+                            let pictureItem={
+                                "basSpecgroupId_SpecgroupName":v.basSpecgroupId_SpecgroupName ,//颜色，尺码
+                                "specId":v.specId,
+                                "specId_SpecName":v.specId_SpecName,
+                                "picture":[{
+                                "id": 0,
+                                "groupId": _this.product_MainTable.groupId,
+                                "productId": 0,
+                                "specId": v.specId,//规格ID 
+                                "specId_SpecName":v.specId_SpecName,
+                                "pictureUrl": "",// 图片路径
+                                "pictureCode": "",// 图片代码
+                                "pictureName": "",//图片名
+                                "isMain": true,//是否主图 
+                                "seq": 0
+                                },{
+                                "id": 0,
+                                "groupId": _this.product_MainTable.groupId,
+                                "productId": 0,//商品ID 
+                                "specId": v.specId,//规格ID 
+                                "specId_SpecName":v.specId_SpecName,
+                                "pictureUrl": "",// 图片路径
+                                "pictureCode": "",// 图片代码
+                                "pictureName": "",//图片名
+                                "isMain": false,//是否主图 
+                                "seq": 1
+                                }],
+                            }
+                            let repeatSpec=false
+                            $.each(_this.productPicture_ChildTable,function(i1,v1){
+                               if(v.specId==v1.specId){
+                                  repeatSpec=true;
+                               }
+                            })
+                            if(!repeatSpec){
+                                _this.productPicture_ChildTable.push(pictureItem)
+                            }
+                        })
+                    }
             })
         },
         changeIsUse(data){
@@ -2950,6 +3046,30 @@ export default {
 }
 .sizeName{
     cursor: pointer;
+}
+.goodsFilesDetail .uploadHeader{
+    height: 35px;
+    line-height: 35px;
+    font-size: 12px;
+    background-color: #f1f4f7;
+    padding:0 10px;
+}
+.goodsFilesDetail .uploadHeader .leftSpec{
+    float: left;
+}
+.goodsFilesDetail .uploadHeader .leftSpec label{
+    color: #999DA6;
+}
+.goodsFilesDetail .uploadHeader .leftSpec span{
+    color: #333333;
+}
+.goodsFilesDetail .uploadHeader .batchUpload{
+    float: right;
+    cursor: pointer;
+    color: #999DA6;
+}
+.goodsFilesDetail .uploadHeader .batchUpload:hover{
+    color: #33CCCC;
 }
 </style>
   

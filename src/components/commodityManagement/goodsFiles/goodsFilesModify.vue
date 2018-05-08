@@ -612,32 +612,31 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 图片 - - - - - - - - - - - - - - - - - - - - -  -->
             <el-tab-pane label="图片" name="picture">
                 <el-row>
-                       <!-- <li>
-                           <div>主图</div>
-                           <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            :before-remove="beforeRemove"
-                            :on-exceed="handleExceed"
-                            :file-list="fileList"
-                            :auto-upload="false"
-                            :limit="1"
-                            :show-file-list="false"
-                            :on-change="changePicture"
-                            :on-success="handleAvatarSuccess"
-                            ref="upload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
-                            
-                       </li> -->
-                            <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
-                            <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
-                            <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
-                    </el-row>
+                    <el-col>
+                        <el-col :span="24" class="uploadHeader">
+                            <div class="leftSpec">
+                                <label>颜色：</label>
+                                <span>红色</span>
+                            </div>
+                            <div class="batchUpload">
+                                <span>批量上传</span>
+                            </div>
+                        </el-col>
+                        <el-col :span="24">
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="红色" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="白色" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        <app-loadImg :files="files" tittle="主图" @fileChange="fileChange"></app-loadImg>
+                        
+                        </el-col>
+                    </el-col>   
+                </el-row>
                 </el-tab-pane>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - 使用组织 - - - - - - - - - - - - - - - - - - - - -  -->
                 <el-tab-pane label="使用组织" name="useOu">
@@ -2889,12 +2888,12 @@ export default {
                 }
                 if(!allEqual&&val.length!=0){//不全等
                    
-                    let items={
+                    let skuItem={
                         barcode:skuCode,
                         discount:0,
-                        groupId:1,
+                        groupId:_this.product_MainTable.groupId,
                         id:0,
-                        productId:_this.$route.params.id,
+                        productId:_this.product_MainTable.id,
                         purchasePrice:0,
                         retailPrice:0,
                         skuCode:skuCode,
@@ -2907,7 +2906,7 @@ export default {
                         vipPrice:0,
                         wholePrice:0,
                     }
-                    _this.sku_ChildTable.push(items)
+                    _this.sku_ChildTable.push(skuItem)
                 }
             }else{//不是初始化类目
                     let skuCode=_this.product_MainTable.productCode;
@@ -2916,12 +2915,12 @@ export default {
                         skuCode+=v.specValueCode;
                         skuName+=v.specValueName;
                     })
-                    let items={
+                    let skuItem={
                         barcode:skuCode,
                         discount:0,
-                        groupId:1,
+                        groupId:_this.product_MainTable.groupId,
                         id:0,
-                        productId:_this.$route.params.id,
+                        productId:_this.product_MainTable.id,
                         purchasePrice:0,
                         retailPrice:0,
                         skuCode:skuCode,
@@ -2934,7 +2933,7 @@ export default {
                         vipPrice:0,
                         wholePrice:0,
                     }
-                    _this.sku_ChildTable.push(items)
+                    _this.sku_ChildTable.push(skuItem)
                 }
             })
         },
@@ -3274,6 +3273,30 @@ export default {
 }
 .sizeName{
     cursor: pointer;
+}
+.goodsFilesModify .uploadHeader{
+    height: 35px;
+    line-height: 35px;
+    font-size: 12px;
+    background-color: #f1f4f7;
+    padding:0 10px;
+}
+.goodsFilesModify .uploadHeader .leftSpec{
+    float: left;
+}
+.goodsFilesModify .uploadHeader .leftSpec label{
+    color: #999DA6;
+}
+.goodsFilesModify .uploadHeader .leftSpec span{
+    color: #333333;
+}
+.goodsFilesModify .uploadHeader .batchUpload{
+    float: right;
+    cursor: pointer;
+    color: #999DA6;
+}
+.goodsFilesModify .uploadHeader .batchUpload:hover{
+    color: #33CCCC;
 }
 </style>
   

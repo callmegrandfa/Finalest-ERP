@@ -22,7 +22,7 @@
             <el-col :sm="12" :md="12" :lg="12" :xl="12" :offset="6" class="lgbox">   
             	<el-col class="lgfrom">
                 <el-col class="formInput name">
-                    <el-input placeholder="Admin" v-model="login.userNameOrEmailAddress"></el-input>
+                    <el-input placeholder="Admin" v-model="login.username"></el-input>
                 </el-col>
                 <el-col class="formInput psw">
                    <el-input placeholder="123qwe" v-model="login.password"></el-input>
@@ -74,9 +74,11 @@ export default {
       return{
           ischecked:false,
           login:{
-              userNameOrEmailAddress:'admin',
+              client_id:'HKERP2.0',
+              client_secret:'ClientKey',
+              grant_type:'password',
+              username:'admin',
               password:'123qwe',
-              rememberClient:true,
           }
       }
   },
@@ -96,8 +98,15 @@ export default {
       loginAjax:function(){
           let _this=this;
           //if(表单验证通过)发送ajax
-          _this.$axios.posts('/api/TokenAuth/Authenticate',_this.login)
+          let data = new FormData();
+          data.append('client_id', _this.login.client_id);
+          data.append('client_secret', _this.login.client_secret);
+          data.append('grant_type', _this.login.grant_type);
+          data.append('username', _this.login.username);
+          data.append('password', _this.login.password);
+          _this.$axios.instancePosts('http://192.168.100.107:8083','/connect/token',data)
           .then(function (res) {
+            //   console.log(res)
                 //成功之后处理逻辑
                 _this.getOuId();
                 let flag=false;
@@ -109,7 +118,7 @@ export default {
                     flag=true;
                 }else{//temporary不为空
                     for(var i=0;i<temporaryLogin.length;i++){
-                        if(temporaryLogin[i].name==_this.login.userNameOrEmailAddress){//相同用户登录
+                        if(temporaryLogin[i].name==_this.login.username){//相同用户登录
                             flag=false;
                             break;
                         }else{
@@ -118,7 +127,7 @@ export default {
                     }
                 }
                 if(flag){
-                    let pushItem={'name':_this.login.userNameOrEmailAddress,'accessToken':'Bearer '+res.result.accessToken};
+                    let pushItem={'name':_this.login.username,'accessToken':'Bearer '+res.access_token};
                     temporaryLogin.push(pushItem);
                 }
                 
@@ -126,7 +135,7 @@ export default {
                 // console.log('Bearer '+res.result.accessToken)
                 window.sessionStorage.setItem('_ERP',JSON.stringify(temporaryLogin));
                 _this.$store.commit('username');
-                //_this.sessionStorage(_this.login.userNameOrEmailAddress,'Bearer '+res.result.accessToken);//sessionStorage
+                //_this.sessionStorage(_this.login.username,'Bearer '+res.result.accessToken);//sessionStorage
                 _this.$store.state.alerts=true;
                 window.localStorage.removeItem('ERP');
                 _this.$store.state.url='/home';
@@ -134,8 +143,6 @@ export default {
                 },function (res) {
                 //失败之后处理逻辑
                 // alert('用户名或密码错误')
-                // _this.switch('/home');
-                console.log(res);
             }) 
       },
       getOuId:function(){//获取组织单元id

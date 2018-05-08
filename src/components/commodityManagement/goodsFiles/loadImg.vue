@@ -280,6 +280,7 @@
     width: 141px;
     height: 141px;
     border-left: none;
+    margin-bottom: 3px;
   }
  
   .upload_triangle{
@@ -324,7 +325,8 @@
   }
   .upload_showImg{
     position: absolute;
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     cursor: pointer;
   }
 </style>

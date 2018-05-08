@@ -133,4 +133,20 @@ axios.interceptors.request.use((config) => {
           })
       })
     },
+    instancePosts(baseURL,url, params) {
+      axios.defaults.baseURL=baseURL
+      axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
+      // console.log(axios.defaults.headers)
+      return new Promise((resolve, reject) => {
+        axios.post(url, params)
+          .then(response => {
+            resolve(response.data);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
   }
