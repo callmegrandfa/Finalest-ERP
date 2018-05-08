@@ -1,14 +1,23 @@
 <template>
   <div class="upload_img">
-      <div class="upload_tittle">{{tittle}}</div>
-      <div class="upload_body">
-        <div class="upload_warp_img_div">
-            <img v-show="chooseImg" :src="file.src" @click="fileDel()">
-            <img v-show="!chooseImg" src="../../../../static/image/goodsFiles/upoad.png">
-        </div>
+      <!-- 左上角三角形 -->
+      <img  class="upload_triangle" src="../../../../static/image/goodsFiles/triangle.png">
+      <!-- 主图文字 -->
+      <span class="upload_tittle">{{tittle}}</span>
+      <!-- 展示图片 -->
+      <img class="upload_showImg" v-show="chooseImg" :src="file.src">
+      <!-- 删除图片 -->
+      <div class="upload_delImg_wrapper" @click="fileDel()">
+        <img  class="upload_delImg" v-show="chooseImg" src="../../../../static/image/goodsFiles/del.png">
       </div>
-      <div class="upload_bt" @click="fileClick">上传</div>
-      <input @change="fileChange($event)" type="file" class="upload_file" multiple style="display: none"/>
+      
+      <div class="upload_body">
+      <!-- 上传区域 -->
+            <div class="upload_addZoo" v-show="!chooseImg" @click="fileClick">+</div>
+            <!-- <img v-show="!chooseImg" src="../../../../static/image/goodsFiles/upoad.png"> -->
+      </div>
+      <!-- <div class="upload_bt" @click="fileClick">上传</div> -->
+      <input @change="fileChange($event)" type="file" class="upload_file" style="display: none"/>
   </div>
 </template>
 
@@ -198,17 +207,13 @@
     vertical-align: middle;
   }
 .upload_body{
-  height: 99px;
-  width: 135px;
+  position: relative;
+
+  top:calc(50% - 40px);
+  
   background-color: #fff;
 }
   .upload_warp_img_div {
-    position: relative;
-    margin: auto;
-    top: 3px;
-    height: 92px;
-    width: 95px;
-    border: none;
     cursor: pointer;
     z-index: 2;
   }
@@ -258,29 +263,68 @@
     margin: 14px;
     height: 130px;
   }
-
+.upload_tittle{
+  position: absolute;
+  top: 5px;
+  left: 3px;
+  color: #fff;
+  font-size: 12px;
+  z-index: 6;
+}
   
 
   .upload_img {
-    border-right: 1px solid #f1f4f7;
+    position: relative;
+    border: 1px solid #f1f4f7;
     float: left;
-    width: 135px;
-    height: 170px;
-    margin-bottom: 15px;
+    width: 141px;
+    height: 141px;
+    border-left: none;
   }
-  .upload_tittle,.upload_bt{
-    width: 135px;
-    height: 35px;
-    text-align: center;
-    line-height: 35px;
-    font-size: 12px;
+ 
+  .upload_triangle{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: 5;
   }
-  .upload_tittle{
-    background-color: #f1f4f7;
+  .upload_delImg_wrapper{
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top:0;
+    right: 0;
+    z-index: 5;
+    cursor: pointer;
+    background-color: #fff;
+  }
+  .upload_delImg{
+    width: 18px;
+    height: 18px;
+    position: relative;
   }
   .upload_bt{
-    background-color: #fbfcfd;
+    background-color: #e4e4e4;
     cursor: pointer;
     color: #6dcccc;
+  }
+  .upload_addZoo{
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+    background-color: #f2f2f2;
+    color: #c2cad8;
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    font-size: 32px;
+    line-height: 80px;
+  }
+  .upload_showImg{
+    position: absolute;
+    width: 100%;
+    cursor: pointer;
   }
 </style>
